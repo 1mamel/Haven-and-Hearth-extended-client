@@ -191,20 +191,39 @@ public class OptWnd extends Window {
 	{ /* AUDIO TAB */
 	    tab = body.new Tab(new Coord(140, 0), 60, "Audio");
 
-	    new Label(new Coord(10, 40), tab, "Sound volume:");
-	    new Frame(new Coord(10, 65), new Coord(20, 206), tab);
-	    final Label sfxvol = new Label(new Coord(35, 69 + (int)(getsfxvol() * 1.86)),  tab, String.valueOf(100 - getsfxvol()) + " %");
-	    new Scrollbar(new Coord(25, 70), 196, tab, 0, 100) {{ val = getsfxvol(); }
+	    new Label(new Coord(35, 40), tab, "Volume");
+	    new Label(new Coord(10,280), tab, "SFX");
+	    new Frame(new Coord(15, 65), new Coord(20, 206), tab);
+	    final Label sfxvol = new Label(new Coord(40, 69 + (int)((100-CustomConfig.sfxVol) * 1.86)),  tab, String.valueOf(CustomConfig.sfxVol) + " %");
+	    new Scrollbar(new Coord(30, 70), 196, tab, 0, 100) {{ val = 100-CustomConfig.sfxVol; }
 		public void changed() {
-		    Audio.setvolume((100 - val) / 100.0);
-		    sfxvol.c.y = 69 + (int)(val * 1.86);
-		    sfxvol.settext(String.valueOf(100 - val) + " %");
+		    CustomConfig.sfxVol = 100 - val;
+		    sfxvol.c.y = 69 + (int)((val) * 1.86);
+		    sfxvol.settext(String.valueOf(100-val) + " %");
 		}
 		public boolean mousewheel(Coord c, int amount) {
 		    val = Utils.clip(val + amount, min, max);
 		    changed();
 		    return(true);
 		}};
+		new Label (new Coord(70, 280), tab, "Music");
+		final Label musVol = new Label(new Coord(95, 69 + (int)((100-CustomConfig.musicVol) * 1.86)), tab, String.valueOf(CustomConfig.musicVol) + " %");
+		new Frame(new Coord(75, 65), new Coord(20,206), tab);
+		new Scrollbar(new Coord(90, 70), 196, tab, 0, 100){{ val = 100-CustomConfig.musicVol; }
+		public void changed() {
+			CustomConfig.musicVol = 100-val;
+			musVol.c.y = 69 + (int)((val) * 1.86);
+			musVol.settext(String.valueOf(100-val) + " %");
+		}
+		public boolean mousewheel(Coord c, int amount){
+			val = Utils.clip(val + amount, min, max);
+			changed();
+			return true;
+		}};
+	}
+	{ /*IRC TAB */
+		tab = body.new Tab(new Coord(210, 0), 60, "IRC");
+		
 	}
 
 	new Frame(new Coord(-10, 20), new Coord(420, 330), this);

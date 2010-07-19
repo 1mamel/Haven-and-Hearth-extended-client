@@ -5,7 +5,7 @@
 // $Date: 2001/04/08 22:44:16 $
 //-----------------------------------------------------------------------------
 
-package org.relayirc.chatengine;
+package haven.org.relayirc.chatengine;
 
 import org.relayirc.util.*;
 import org.relayirc.core.*;
