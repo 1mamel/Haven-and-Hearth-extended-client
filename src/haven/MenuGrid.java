@@ -42,10 +42,6 @@ public class MenuGrid extends Widget {
     private Resource cur, pressed, dragging, layout[][] = new Resource[gsz.x][gsz.y];
     private int curoff = 0;
     private Map<Character, Resource> hotmap = new TreeMap<Character, Resource>();
-    private Resource hover = null, prevhover = null;
-    private Text curtt = null;
-    private long hoverstart = 0;
-    private boolean withpg;
 	
     static {
 	Widget.addtype("scm", new WidgetFactory() {
@@ -168,22 +164,6 @@ public class MenuGrid extends Widget {
 		}
 	    }
 	}
-	if(pressed == null && hover != null) {
-	    long now = System.currentTimeMillis();
-	    if(hover != prevhover) {
-		curtt = rendertt(hover, withpg);
-		if(!withpg)
-		    hoverstart = now;
-	    } else {
-		if(!withpg && ((now - hoverstart) > 500))
-		    curtt = rendertt(hover, withpg = true);
-	    }
-	    ui.tooltip = curtt;
-	} else {
-	    hoverstart = 0;
-	    withpg = false;
-	}
-	prevhover = hover;
 	if(dragging != null) {
 	    final Tex dt = dragging.layer(Resource.imgc).tex();
 	    ui.drawafter(new UI.AfterDraw() {
@@ -191,6 +171,29 @@ public class MenuGrid extends Widget {
 			g.image(dt, ui.mc.add(dt.sz().div(2).inv()));
 		    }
 		});
+	}
+    }
+	
+    private Resource curttr = null;
+    private boolean curttl = false;
+    private Text curtt = null;
+    private long hoverstart;
+    public Object tooltip(Coord c, boolean again) {
+	Resource res = bhit(c);
+	long now = System.currentTimeMillis();
+	if((res != null) && (res.layer(Resource.action) != null)) {
+	    if(!again)
+		hoverstart = now;
+	    boolean ttl = (now - hoverstart) > 500;
+	    if((res != curttr) || (ttl != curttl)) {
+		curtt = rendertt(res, ttl);
+		curttr = res;
+		curttl = ttl;
+	    }
+	    return(curtt);
+	} else {
+	    hoverstart = now;
+	    return("");
 	}
     }
 
@@ -201,25 +204,17 @@ public class MenuGrid extends Widget {
 	else
 	    return(null);
     }
-
-    private void updhover(Coord c) {
-	hover = bhit(c);
-	if((hover != null) && (hover.layer(Resource.action) == null))
-	    hover = null;
-    }
-
+	
     public boolean mousedown(Coord c, int button) {
 	Resource h = bhit(c);
 	if((button == 1) && (h != null)) {
 	    pressed = h;
 	    ui.grabmouse(this);
 	}
-	updhover(c);
 	return(true);
     }
 
     public void mousemove(Coord c) {
-	updhover(c);
 	if((dragging == null) && (pressed != null)) {
 	    Resource h = bhit(c);
 	    if(h != pressed)
@@ -258,7 +253,6 @@ public class MenuGrid extends Widget {
 	    ui.grabmouse(null);
 	}
 	updlayout();
-	updhover(c);
 	return(true);
     }
 
