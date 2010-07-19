@@ -490,10 +490,6 @@ public class Widget {
 	prevtt = null;
 	return(null);
     }
-
-    public void hide() {
-	visible = false;
-    }
     public boolean toggle()
     {
     	if(visible)

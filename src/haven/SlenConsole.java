@@ -2,9 +2,8 @@ package haven;
 import java.util.*;
 import java.awt.event.KeyEvent;
 import java.awt.Color;
-import org.relayirc.util.*;
-import org.relayirc.core.*;
-import org.relayirc.chatengine.*;
+import haven.org.relayirc.core.*;
+import haven.org.relayirc.util.*;
 
 public class SlenConsole extends ChatHW implements IRCConnectionListener
 {
@@ -44,8 +43,8 @@ public class SlenConsole extends ChatHW implements IRCConnectionListener
 	    	IRC.setIRCConnectionListener(this);
 	    	IRC.open();
     	}
-    	Debug.setDebug(false);
-    	ui.sess.IRC = IRC;
+    //	Debug.setDebug(false);
+    	ui.sess.IRC = this.IRC;
     	initialized = true;
     	out.append("Press ` to bring down the console.");
     	out.append("Press CTRL + O to open the options menu.");

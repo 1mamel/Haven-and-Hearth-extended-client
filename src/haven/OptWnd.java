@@ -209,7 +209,7 @@ public class OptWnd extends Window {
 		new Label (new Coord(70, 280), tab, "Music");
 		final Label musVol = new Label(new Coord(95, 69 + (int)((100-CustomConfig.musicVol) * 1.86)), tab, String.valueOf(CustomConfig.musicVol) + " %");
 		new Frame(new Coord(75, 65), new Coord(20,206), tab);
-		new Scrollbar(new Coord(90, 70), 196, tab, 0, 100){{ val = 100-CustomConfig.musicVol; }
+		new Scrollbar(new Coord(90, 70), 196, tab, 0, 100){ {val = 100-CustomConfig.musicVol;} 
 		public void changed() {
 			CustomConfig.musicVol = 100-val;
 			musVol.c.y = 69 + (int)((val) * 1.86);
@@ -219,6 +219,7 @@ public class OptWnd extends Window {
 			val = Utils.clip(val + amount, min, max);
 			changed();
 			return true;
+		}};
 	    new CheckBox(new Coord(10, 280), tab, "Music enabled") {
 		public void changed(boolean val) {
 		    Music.enable(val);
