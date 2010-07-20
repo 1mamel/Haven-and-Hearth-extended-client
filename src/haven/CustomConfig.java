@@ -325,7 +325,7 @@ public class CustomConfig {
     	try{
     			BufferedWriter writer;
     			if(ResCache.global != null){
-    				writer = new BufferedWriter(new OutputStreamWriter(ResCache.global.store("config.xml")));
+    				writer = new BufferedWriter(new OutputStreamWriter(ResCache.global.store("config.xml"), "UTF-8"));
     			}else {
     				writer = new BufferedWriter(new FileWriter(new File("config.xml")));
     			}
