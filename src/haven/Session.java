@@ -29,7 +29,7 @@ package haven;
 import java.net.*;
 import java.util.*;
 import java.io.*;
-import haven.org.relayirc.core.IRCConnection;
+import org.relayirc.core.IRCConnection;
 
 public class Session {
     public static final int PVER = 34;

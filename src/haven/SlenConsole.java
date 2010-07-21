@@ -2,8 +2,8 @@ package haven;
 import java.util.*;
 import java.awt.event.KeyEvent;
 import java.awt.Color;
-import haven.org.relayirc.core.*;
-import haven.org.relayirc.util.*;
+import org.relayirc.core.*;
+import org.relayirc.util.*;
 
 public class SlenConsole extends ChatHW implements IRCConnectionListener
 {
