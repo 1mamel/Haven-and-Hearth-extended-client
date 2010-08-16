@@ -1,0 +1,1 @@
+"c:\program files\java\jdk1.6.0_18\bin\jarsigner" -keystore ../etc/IRCEKEYS -storepass autosign haven.jar Pacho

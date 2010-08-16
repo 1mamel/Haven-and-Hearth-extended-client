@@ -106,7 +106,7 @@
   </target>
   
   <target name="make-key" unless="has-sign-key">
-  	<exec executable="dist\keygen.bat"/>
+  	<exec executable="etc\genkey.bat"/>
   </target>
   
   <target name="signer" depends="jars, make-key">
