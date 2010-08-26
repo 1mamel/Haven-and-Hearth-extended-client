@@ -8,7 +8,7 @@
     <mkdir dir="build" />
     <mkdir dir="build/classes" />
     <available property="has-res-jar" file="build/haven-res.jar" />
-    <available property="has-sign-key" file="dist\IRC-Extended-Key"/>
+    <available property="has-sign-key" file="etc\IRCEKEYS"/>
     <available property="has-buildinfo" file="build/classes/buildinfo" />
     <available property="unpacked-lib" file="build/classes-lib" />
   </target>
@@ -115,32 +115,33 @@
   </target>
   
   <target name="update-zips" depends="signer">
+  	<copy file="lib\haven-res.jar" todir="dist"/>
   	<zip destfile="dist\update-patch-current.zip" basedir="dist" includes="haven.jar"
   		update="true" whenempty="create"/>
   	<zip destfile="dist\update-patch-${tstamp.date}.zip" basedir="dist" includes="haven.jar"
   		update="true" whenempty="create"/>
   	<zip destfile="dist\haven-32bit-windows-full.zip" filesonly="true" update="true" whenempty="create">
-  		<zipfileset dir="dist\jogl-windows-i586\lib" excludes="*.jar" prefix=""/>
+  		<zipfileset dir="dist\32bit-jogl-windows" excludes="*.jar" prefix=""/>
   		<zipfileset dir="dist" includes="haven.jar,haven-res.jar,jorbis.jar,jogg.jar,gluegen-rt.jar,jogl.jar,run.bat"/>
   	</zip>
   	<zip destfile="dist\haven-64bit-windows-full.zip" filesonly="true" update="true" whenempty="create">
-  		<zipfileset dir="dist\jogl-windows-amd64\lib" excludes="*.jar" prefix=""/>
+  		<zipfileset dir="dist\64bit-jogl-windows" excludes="*.jar" prefix=""/>
   		<zipfileset dir="dist" includes="haven.jar,haven-res.jar,jorbis.jar,jogg.jar,gluegen-rt.jar,jogl.jar,run.bat"/>
   	</zip>
   	<zip destfile="dist\haven-32bit-linux-full.zip" filesonly="true" update="true" whenempty="create">
-  		<zipfileset dir="dist\jogl-linux-i586\lib" excludes="*.jar" prefix=""/>
+  		<zipfileset dir="dist\32bit-jogl-linux" excludes="*.jar" prefix=""/>
   		<zipfileset dir="dist" includes="haven.jar,haven-res.jar,jorbis.jar,jogg.jar,gluegen-rt.jar,jogl.jar,run.bat"/>
   	</zip>
   	<zip destfile="dist\haven-64bit-linux-full.zip" filesonly="true" update="true" whenempty="create">
-  		<zipfileset dir="dist\jogl-linux-amd64\lib" excludes="*.jar" prefix=""/>
+  		<zipfileset dir="dist\64bit-jogl-linux" excludes="*.jar" prefix=""/>
   		<zipfileset dir="dist" includes="haven.jar,haven-res.jar,jorbis.jar,jogg.jar,gluegen-rt.jar,jogl.jar,run.bat"/>
   	</zip>
   	<zip destfile="dist\haven-macosx-ppc-full.zip" filesonly="true" update="true" whenempty="create">
-  		<zipfileset dir="dist\jogl-macosx-ppc\lib" excludes="*.jar" prefix=""/>
+  		<zipfileset dir="dist\ppc-jogl-macosx" excludes="*.jar" prefix=""/>
   		<zipfileset dir="dist" includes="haven.jar,haven-res.jar,jorbis.jar,jogg.jar,gluegen-rt.jar,jogl.jar,run.bat"/>
   	</zip>
   	<zip destfile="dist\haven-macosx-universal-full.zip" filesonly="true" update="true" whenempty="create">
-  		<zipfileset dir="dist\jogl-macosx-universal\lib" excludes="*.jar" prefix=""/>
+  		<zipfileset dir="dist\universal-jogl-macosx" excludes="*.jar" prefix=""/>
   		<zipfileset dir="dist" includes="haven.jar,haven-res.jar,jorbis.jar,jogg.jar,gluegen-rt.jar,jogl.jar,run.bat"/>
   	</zip>
   </target>
