@@ -410,6 +410,11 @@ public class Widget {
     }
 	
     public boolean keyup(KeyEvent ev) {
+        if ((ev.getKeyCode() == KeyEvent.VK_X) && ((ev.getModifiers() & InputEvent.CTRL_MASK) != 0)) {
+            Config.xray = !Config.xray;
+            return(true);
+        }
+
 	if(focusctl) {
 	    if(focused != null) {
 		if(focused.keyup(ev))
