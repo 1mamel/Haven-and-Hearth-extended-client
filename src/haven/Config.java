@@ -45,6 +45,7 @@ public class Config {
     public static boolean nopreload;
     public static String loadwaited, allused;
     public static boolean xray;
+    public static boolean nightvision;
     
     static {
 	try {
@@ -68,6 +69,7 @@ public class Config {
 	    resdir = getprop("haven.resdir", null);
 	    nopreload = getprop("haven.nopreload", "no").equals("yes");
         xray = false;
+        nightvision = false;
 	} catch(java.net.MalformedURLException e) {
 	    throw(new RuntimeException(e));
 	}
