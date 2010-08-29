@@ -1,1 +1,2 @@
-"c:\program files\java\jdk1.6.0_18\bin\jarsigner" -keystore etc/IRCEKEYS -storepass autosign dist/haven.jar Pacho
+"c:\program files\java\jdk1.6.0_18\bin\jarsigner" -verbose -keystore etc/IRCEKEYS -storepass autosign dist/haven.jar Pacho
+"c:\program files\java\jdk1.6.0_18\bin\jarsigner" -verbose -keystore etc/IRCEKEYS -storepass autosign dist/log4j-1.2.15.jar Pacho
