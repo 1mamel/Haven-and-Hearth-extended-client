@@ -455,7 +455,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
 	setcanfocus(true);
 	glob = ui.sess.glob;
 	map = glob.map;
-	mask = new ILM(sz, glob.oc);
+	mask = new ILM(MainFrame.getScreenSize(), glob.oc);
     }
 	
     public static Coord m2s(Coord c) {

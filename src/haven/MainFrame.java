@@ -137,6 +137,10 @@ public class MainFrame extends Frame implements Runnable, FSMan {
     setExtendedState(getExtendedState() | MAXIMIZED_BOTH);
     }
 
+    public static Coord getScreenSize() {
+        return new Coord(Toolkit.getDefaultToolkit().getScreenSize());
+    }
+
     public static Coord getInnerSize() {
         return new Coord(innerSize.width, innerSize.height);
     }
