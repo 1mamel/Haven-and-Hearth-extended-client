@@ -71,7 +71,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
     static {
 	Widget.addtype("mapview", new WidgetFactory() {
 		public Widget create(Coord c, Widget parent, Object[] args) {
-		    Coord sz = (Coord)args[0];
+		    Coord sz = MainFrame.getInnerSize();
 		    Coord mc = (Coord)args[1];
 		    int pgob = -1;
 		    if(args.length > 2)
@@ -1030,6 +1030,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
     }
 
     public void draw(GOut g) {
+    sz = MainFrame.getInnerSize();
 	checkmappos();
 	Coord requl = mc.add(-500, -500).div(tilesz).div(cmaps);
 	Coord reqbr = mc.add(500, 500).div(tilesz).div(cmaps);
