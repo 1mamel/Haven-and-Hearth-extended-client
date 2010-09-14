@@ -227,13 +227,14 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
     }
 
     private void loadBelts() {
-        File inputFile = new File("haven.conf");
+        String configFileName = "belts_" + Config.currentCharName.replaceAll("[^a-zA-Z()]", "_") + ".conf";
+        File inputFile = new File(configFileName);
         if (!inputFile.exists()) {
             return;
         }
         Properties configFile = new Properties();
         try {
-            configFile.load(new FileInputStream("haven.conf"));
+            configFile.load(new FileInputStream(configFileName));
             for (int beltNr = 0; beltNr < 10; beltNr++) {
                 for (int slot  = 0; slot < 10; slot++) {
                     String icon = configFile.getProperty("belt_" + beltNr + "_" + slot, "");
@@ -249,6 +250,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
     }
 
     private void saveBelts() {
+        String configFileName = "belts_" + Config.currentCharName.replaceAll("[^a-zA-Z()]", "_") + ".conf";
         Properties configFile = new Properties();
         for (int beltNr = 0; beltNr < 10; beltNr++) {
             for (int slot  = 0; slot < 10; slot++) {
@@ -257,7 +259,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
             }
         }
         try {
-            configFile.store(new FileOutputStream("haven.conf"), "");
+            configFile.store(new FileOutputStream(configFileName), "Belts icons for " + Config.currentCharName);
         } catch (IOException e) {
             System.out.println(e);
         }
@@ -368,11 +370,14 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
 	if(msg == "err") {
 	    error((String)args[0]);
 	} else if(msg == "setbelt") {
-	    if(args.length < 2) {
-		belt[currentBelt][(Integer)args[0]] = null;
-	    } else {
-		belt[currentBelt][(Integer)args[0]] = ui.sess.getres((Integer)args[1]);
-	    }
+        synchronized(belt)
+		{
+            if (args.length < 2) {
+                belt[currentBelt][(Integer) args[0]] = null;
+            } else {
+                //belt[currentBelt][(Integer) args[0]] = ui.sess.getres((Integer) args[1]);
+            }
+        }
 	} else {
 	    super.uimsg(msg, args);
 	}

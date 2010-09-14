@@ -46,6 +46,7 @@ public class Config {
     public static String loadwaited, allused;
     public static boolean xray;
     public static boolean nightvision;
+    public static String currentCharName;
     
     static {
 	try {
@@ -70,6 +71,7 @@ public class Config {
 	    nopreload = getprop("haven.nopreload", "no").equals("yes");
         xray = false;
         nightvision = false;
+        currentCharName = "";
 	} catch(java.net.MalformedURLException e) {
 	    throw(new RuntimeException(e));
 	}
