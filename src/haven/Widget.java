@@ -418,6 +418,10 @@ public class Widget {
             Config.nightvision = !Config.nightvision;
             return(true);
         }
+        if ((ev.getKeyCode() == KeyEvent.VK_H) && ((ev.getModifiers() & InputEvent.CTRL_MASK) != 0)) {
+            Config.hide = !Config.hide;
+            return(true);
+        }
 
 	if(focusctl) {
 	    if(focused != null) {
