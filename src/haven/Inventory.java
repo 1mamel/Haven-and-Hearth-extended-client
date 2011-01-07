@@ -61,7 +61,7 @@ public class Inventory extends Widget implements DTarget {
 	    wdgmsg("xfer", 1, ui.modflags());
 	return(true);
     }
-    
+
     public boolean drop(Coord cc, Coord ul) {
 	wdgmsg("drop", ul.add(new Coord(15, 15)).div(invsq.sz()));
 	return(true);
@@ -72,7 +72,7 @@ public class Inventory extends Widget implements DTarget {
     }
 	
     public void uimsg(String msg, Object... args) {
-	if(msg == "sz") {
+	if(msg.equals("sz")) {
 	    isz = (Coord)args[0];
 	    sz = invsq.sz().add(new Coord(-1, -1)).mul(isz).add(new Coord(1, 1));
 	}

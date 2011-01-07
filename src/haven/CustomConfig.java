@@ -7,8 +7,9 @@
  */
 
 package haven;
+import java.awt.*;
+import java.awt.event.*;
 import java.io.*;
-import java.text.NumberFormat;
 import javax.swing.JFrame;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
@@ -17,29 +18,223 @@ import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JCheckBox;
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.awt.Container;
-import java.awt.FlowLayout;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.KeyEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 import javax.xml.parsers.*;
 import org.xml.sax.*;
 import org.xml.sax.helpers.*;
-import java.util.Hashtable;
+
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 
 public class CustomConfig {
+    public static int hpMeterId;
+    public static int energyMeterId;
+    public static int happyMeterId;
+    public static int hungryMeterId;
+    public static int authorityMeterId;
+    static UI ui;
+    public static OpenedInv.InvItem atMouseItem = null;
 
-	static class FilteredTextField extends JTextField {
+    public static int getEnergy() {
+        try {
+        Widget wdg = ui.getWidgetById(energyMeterId);
+        if(wdg != null)
+            return ((IMeter)wdg).meters.get(0).a;
+        } catch (Exception e) {}
+        return -1;
+    }
+    public static int getAuthority() {
+        try {
+        Widget wdg = ui.getWidgetById(authorityMeterId);
+        if(wdg != null)
+            return ((IMeter)wdg).meters.get(0).a;
+        } catch (Exception e) {}
+        return -1;
+    }
+    public static int getHHP() {
+        try {
+        Widget wdg = ui.getWidgetById(hpMeterId);
+        if(wdg != null)
+            return ((IMeter)wdg).meters.get(1).a;
+        } catch (Exception e) {}
+        return -1;
+    }
+    public static int getSHP() {
+        try {
+        Widget wdg = ui.getWidgetById(hpMeterId);
+        if(wdg != null)
+            return ((IMeter)wdg).meters.get(0).a;
+        } catch (Exception e) {}
+        return -1;
+    }
+    public static int getHappy() {
+        //TODO may be unhappy...
+        try {
+        Widget wdg = ui.getWidgetById(happyMeterId);
+        if(wdg != null)
+            return ((IMeter)wdg).meters.get(0).a;
+        } catch (Exception e) {}
+        return -1;
+    }
+    public static int getHungry() {
+        //TODO !
+        try {
+        Widget wdg = ui.getWidgetById(hungryMeterId);
+        if(wdg != null)
+            return ((IMeter)wdg).meters.get(0).a;
+        } catch (Exception e) {}
+        return -1;
+    }
+
+    public static void openInventory(int id, String name, Coord size, Coord pos) {
+        openedInventories.put(id, new OpenedInv(id,name,size,pos));
+    }
+
+    public static void closeInventory(int id) {
+        if (openedInventories.containsKey(id))
+            openedInventories.remove(id);
+    }
+
+    public static void closeWidget(int id) {
+        try{
+            closeInventory(id);
+            //TODO widget type maybe Item
+            if((atMouseItem!=null) && (id == atMouseItem.getId())) atMouseItem = null;
+            Widget wtd = ui.getWidgetById(id);
+            int parent = ui.getIdByWidget(wtd.parent);
+            if (openedInventories.containsKey(parent)) {
+                openedInventories.get(parent).deleteItem(id);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace(System.err);
+        }
+    }
+
+    public static void newItem(int parent, int id, int itype, int iquality, Coord position) {
+        try{
+            if(parent == 0) {
+                atMouseItem = new OpenedInv.InvItem(itype,iquality,id);
+            }
+
+            if(!openedInventories.containsKey(parent)) return;
+            OpenedInv.InvItem item = new OpenedInv.InvItem(itype,iquality,id);
+            OpenedInv inventory = openedInventories.get(parent);
+            inventory.setItem( position.add(new Coord(-1,-1).div(new Coord(31,31))) ,item);
+        } catch (Exception e) {
+            e.printStackTrace(System.err);
+        }
+    }
+
+    static Thread robotThread;
+    public static void startRobot(final CustomConsole cons) {
+        robotThread = new Thread(HackThread.tg(), "SomeRobot thread"){
+            CustomConsole console = cons;
+            public void run(){
+                try {
+                    Robot robot = new Robot();
+
+                    robot.delay(2000);
+                    console.append("Robot says: Hello, World!");
+                    console.append("Robot says: You have shp="+CustomConfig.getSHP()+" and hhp="+CustomConfig.getHHP()+
+                        " and emergy="+CustomConfig.getEnergy());
+                    // Simulate a mouse click
+                    robot.mousePress(InputEvent.BUTTON1_MASK);
+                    robot.mouseRelease(InputEvent.BUTTON1_MASK);
+                    robot.delay(2000);
+
+                    // Simulate a key press
+                    robot.keyPress(KeyEvent.VK_A);
+                    robot.keyRelease(KeyEvent.VK_A);
+
+                    console.append("Robot shutting down..");
+                } catch (AWTException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        robotThread.start();
+
+    }
+    public static void stopRobot() {
+        robotThread.interrupt();
+    }
+
+    public static class OpenedInv {
+        public static class InvItem {
+            int type;
+            int quality;
+            int id;
+
+            public InvItem(int type, int quality, int id) {
+                this.type = type;
+                this.quality = quality;
+                this.id = id;
+            }
+
+            public int getType() {
+                return type;
+            }
+
+            public int getQuality() {
+                return quality;
+            }
+
+            public int getId() {
+                return id;
+            }
+
+        }
+        Map<Coord,InvItem> items;
+        Coord size;
+        String name;
+        int id;
+        Coord screenCoordinates;
+
+        public OpenedInv(int id, String name, Coord size, Coord position) {
+            this.id = id;
+            this.name = name;
+            this.size = size;
+            this.screenCoordinates = position;
+            this.items = new HashMap<Coord,InvItem>();
+        }
+        public void setItem(Coord position, InvItem item) {
+            items.put(position,item);
+        }
+        public void deleteItem(Coord position) {
+            if(items.containsKey(position))
+                items.remove(position);
+        }
+        public void deleteItem(int id) {
+            for(Map.Entry<Coord,InvItem> itempair: items.entrySet())
+                if (itempair.getValue().getId() == id) {
+                    items.remove(itempair.getKey());
+                    return;
+                }
+
+        }
+        public InvItem getItem(Coord position) {
+            return items.get(position);
+        }
+        public Coord getItemScreenPosition(Coord position) {
+            return position.add(new Coord(position.x,position.y).mul(31).add(1,1));
+        }
+        public Coord getSize() {
+            return size;
+        }
+        public String getName() {
+            return name;
+        }
+        public int getId() {
+            return id;
+        }
+    }
+    public static Map<Integer,OpenedInv> openedInventories = new HashMap<Integer,OpenedInv>();
+
+    static class FilteredTextField extends JTextField {
 
 	    String defbadchars = "`~!@#$%^&*()_-+=\\|\"':;?/>.<, ";
 	    String badchars = defbadchars;
@@ -111,6 +306,17 @@ public class CustomConfig {
 			return "Name=\"" + name + "\"";
 		}
 	}
+    //Vlad's Code Begin
+    //windows last positions
+    public static Map<String,Coord> windowsCoordinates = new HashMap<String,Coord>();
+    public static void setWindowPosition (String windowName,Coord coordinate) {
+        windowsCoordinates.put(windowName,coordinate);
+    }
+    public static Coord getWindowPosition (String windowName,Coord defcoordinates) {
+        if(!windowsCoordinates.containsKey(windowName)) return defcoordinates;
+        return windowsCoordinates.get(windowName);
+    }
+
 	public static Coord windowSize = new Coord(800, 600);
 	public static Coord windowCenter = windowSize.div(2);
 	public static Coord invCoord = Coord.z;
@@ -164,7 +370,7 @@ public class CustomConfig {
 	public static void setDefaults()
 	{
 		setWindowSize(800, 600);
-		
+
 		sfxVol = 100;
 		musicVol = 100;
 		ircServerAddress = "irc.synirc.net";
@@ -470,12 +676,12 @@ public class CustomConfig {
     		constraints.gridy = 2;
     		constraints.insets.top = 10;
     		clientSettingsPanel.add(startBtn, constraints);
-    		
+
     		constraints.gridx = 1;
     		constraints.gridy = 3;
     		constraints.insets.top = 0;
     		clientSettingsPanel.add(ircOn, constraints);
-    		
+
     		ircOn.addActionListener(new ActionListener(){
     			public void actionPerformed(ActionEvent e){
     				isIRCOn = ircOn.isSelected();

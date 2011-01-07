@@ -324,4 +324,15 @@ public class UI {
 	       (modmeta?4:0) |
 	       (modsuper?8:0));
     }
+
+    public Widget getWidgetById(int id) {
+        synchronized(this) {
+            return widgets.get(id);
+        }
+    }
+    public int getIdByWidget(Widget wdg) {
+        synchronized(this) {
+            return rwidgets.get(wdg);
+        }
+    }
 }

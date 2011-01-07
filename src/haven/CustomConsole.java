@@ -1,11 +1,16 @@
 package haven;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
+
 class CustomConsole extends Window {
 	public static Textlog out;
 	public TextEntry in;
 	public static String log = "IRC-Extended Client Console - Type HELP for a list of commands";
 	public static String newText = "";
+    public static List<String> lastCommands = new ArrayList<String>();
+    public static int lastCommandId;
 	public static boolean logChanged = false;
 	public static void log(String text)
 	{
@@ -43,6 +48,13 @@ class CustomConsole extends Window {
 					parent.toggle();
 					return true;
 				}
+                if(ev.getKeyCode() == KeyEvent.VK_DOWN) {
+                    buf.line = lastCommands.get(lastCommandId++);
+                    if(lastCommandId >= lastCommands.size()) lastCommandId = lastCommands.size() - 1;
+                } else if (ev.getKeyCode() == KeyEvent.VK_UP) {
+                    buf.line = lastCommands.get(lastCommandId--);
+                    if(lastCommandId < 0) lastCommandId = 0;
+                }
 				return super.type(c, ev);
 			}
 		};
@@ -73,6 +85,8 @@ class CustomConsole extends Window {
 		if(sender == in)
 		{
 			if (args[0] != null || ((String)args[0]).length() > 0){
+                lastCommands.add(((String)args[0]).trim());
+                lastCommandId++;
 		   		String cmdText = ((String)args[0]).trim().toUpperCase();
 		   		String cmd = cmdText.contains(" ") ? cmdText.substring(0, cmdText.indexOf(" ")).trim() : cmdText;
 		   		cmdText = cmdText.contains(" ") ? cmdText.substring(cmdText.indexOf(" ")).trim() : "";
@@ -87,6 +101,15 @@ class CustomConsole extends Window {
 		   					CustomConfig.hasNightVision = false;
 		   			} else{
 		   				append("NIGHTVISION - " + (CustomConfig.hasNightVision ? "ON" : "OFF"));
+		   			}
+		   		}else if(cmd.equals("ROBOT1")){
+		   			if(!cmdArgs[0].trim().equals("")){
+		   				if(cmdArgs[0].equals("ON") || cmdArgs[0].equals("TRUE"))
+		   					CustomConfig.startRobot(this);
+		   				if(cmdArgs[0].equals("OFF") || cmdArgs[0].equals("FALSE"))
+		   					CustomConfig.stopRobot();
+		   			} else{
+		   				append("ROBOT1 - " + (CustomConfig.hasNightVision ? "ON" : "OFF"));
 		   			}
 		   		}else if(cmd.equals("IRC")){
 		   			if(!cmdArgs[0].trim().equals("")){
