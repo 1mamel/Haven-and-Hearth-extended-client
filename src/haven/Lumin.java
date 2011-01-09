@@ -27,13 +27,14 @@
 package haven;
 
 public class Lumin extends GAttrib {
-    Coord off;
-    int sz, str;
-	
+    final Coord off;
+    final int sz;
+    final int str;
+
     public Lumin(Gob g, Coord off, int sz, int str) {
-	super(g);
-	this.off = off;
-	this.sz = sz;
-	this.str = str;
+        super(g);
+        this.off = off;
+        this.sz = sz;
+        this.str = str;
     }
 }

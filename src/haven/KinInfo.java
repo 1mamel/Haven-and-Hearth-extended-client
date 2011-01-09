@@ -32,24 +32,24 @@ public class KinInfo extends GAttrib {
     public int group, type;
     public long seen = 0;
     private Tex rnm = null;
-    
+
     public KinInfo(Gob g, String name, int group, int type) {
-	super(g);
-	this.name = name;
-	this.group = group;
-	this.type = type;
+        super(g);
+        this.name = name;
+        this.group = group;
+        this.type = type;
     }
-    
+
     public void update(String name, int group, int type) {
-	this.name = name;
-	this.group = group;
-	this.type = type;
-	rnm = null;
+        this.name = name;
+        this.group = group;
+        this.type = type;
+        rnm = null;
     }
-    
+
     public Tex rendered() {
-	if(rnm == null)
-	    rnm = new TexI(Utils.outline2(((Text)nfnd.render(name, BuddyWnd.gc[group])).img, Utils.contrast(BuddyWnd.gc[group])));
-	return(rnm);
+        if (rnm == null)
+            rnm = new TexI(Utils.outline2(nfnd.render(name, BuddyWnd.gc[group]).img, Utils.contrast(BuddyWnd.gc[group])));
+        return (rnm);
     }
 }

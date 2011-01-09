@@ -26,128 +26,130 @@
 
 package haven;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Equipory extends Window implements DTarget {
-    List<Inventory> epoints;
-    List<Item> equed;
+    final List<Inventory> epoints;
+    final List<Item> equed;
     static final Tex bg = Resource.loadtex("gfx/hud/equip/bg");
     int avagob = -1;
-	
-    static Coord ecoords[] = {
-	new Coord(0, 0),
-	new Coord(244, 0),
-	new Coord(0, 31),
-	new Coord(244, 31),
-	new Coord(0, 62),
-	new Coord(244, 62),
-	new Coord(0, 93),
-	new Coord(244, 93),
-	new Coord(0, 124),
-	new Coord(244, 124),
-	new Coord(0, 155),
-	new Coord(244, 155),
-	new Coord(0, 186),
-	new Coord(244, 186),
-	new Coord(0, 217),
-	new Coord(244, 217),
+
+    static final Coord[] ecoords = {
+            new Coord(0, 0),
+            new Coord(244, 0),
+            new Coord(0, 31),
+            new Coord(244, 31),
+            new Coord(0, 62),
+            new Coord(244, 62),
+            new Coord(0, 93),
+            new Coord(244, 93),
+            new Coord(0, 124),
+            new Coord(244, 124),
+            new Coord(0, 155),
+            new Coord(244, 155),
+            new Coord(0, 186),
+            new Coord(244, 186),
+            new Coord(0, 217),
+            new Coord(244, 217),
     };
-	
+
     static {
-	Widget.addtype("epry", new WidgetFactory() {
-		public Widget create(Coord c, Widget parent, Object[] args) {
-		    return(new Equipory(c, parent));
-		}
-	    });
+        Widget.addtype("epry", new WidgetFactory() {
+            public Widget create(Coord c, Widget parent, Object[] args) {
+                return (new Equipory(c, parent));
+            }
+        });
     }
-	
+
     public Equipory(Coord c, Widget parent) {
-	super(c, new Coord(0, 0), parent, "Equipment");
-	epoints = new ArrayList<Inventory>();
-	equed = new ArrayList<Item>(ecoords.length);
-	//new Img(new Coord(32, 0), bg, this);
-	for(int i = 0; i < ecoords.length; i++) {
-	    epoints.add(new Inventory(ecoords[i], new Coord(1, 1), this));
-	    equed.add(null);
-	}
-	pack();
+        super(c, new Coord(0, 0), parent, "Equipment");
+        epoints = new ArrayList<Inventory>();
+        equed = new ArrayList<Item>(ecoords.length);
+        //new Img(new Coord(32, 0), bg, this);
+        for (Coord ecoord : ecoords) {
+            epoints.add(new Inventory(ecoord, new Coord(1, 1), this));
+            equed.add(null);
+        }
+        pack();
     }
-	
+
     public void uimsg(String msg, Object... args) {
-	if(msg == "set") {
-	    synchronized(ui) {
-		int i = 0, o = 0;
-		while(i < equed.size()) {
-		    if(equed.get(i) != null)
-			equed.get(i).unlink();
-		    int res = (Integer)args[o++];
-		    if(res >= 0) {
-			int q = (Integer)args[o++];
-			Item ni = new Item(Coord.z, res, q, epoints.get(i), null);
-			equed.set(i++, ni);
-			if((o < args.length) && (args[o] instanceof String))
-			    ni.tooltip = (String)args[o++];
-		    } else {
-			equed.set(i++, null);
-		    }
-		}
-	    }
-	} else if(msg == "setres") {
-	    int i = (Integer)args[0];
-	    Indir<Resource> res = ui.sess.getres((Integer)args[1]);
-	    equed.get(i).chres(res, (Integer)args[2]);
-	} else if(msg == "settt") {
-	    int i = (Integer)args[0];
-	    String tt = (String)args[1];
-	    equed.get(i).tooltip = tt;
-	} else if(msg == "ava") {
-	    avagob = (Integer)args[0];
-	}
+        if (msg.equals("set")) {
+            //noinspection SynchronizeOnNonFinalField
+            synchronized (ui) {
+                int i = 0, o = 0;
+                while (i < equed.size()) {
+                    if (equed.get(i) != null)
+                        equed.get(i).unlink();
+                    int res = (Integer) args[o++];
+                    if (res >= 0) {
+                        int q = (Integer) args[o++];
+                        Item ni = new Item(Coord.z, res, q, epoints.get(i), null);
+                        equed.set(i++, ni);
+                        if ((o < args.length) && (args[o] instanceof String))
+                            ni.tooltip = (String) args[o++];
+                    } else {
+                        equed.set(i++, null);
+                    }
+                }
+            }
+        } else if (msg.equals("setres")) {
+            int i = (Integer) args[0];
+            Indir<Resource> res = ui.sess.getres((Integer) args[1]);
+            equed.get(i).chres(res, (Integer) args[2]);
+        } else if (msg.equals("settt")) {
+            int i = (Integer) args[0];
+            equed.get(i).tooltip = (String) args[1];
+        } else if (msg.equals("ava")) {
+            avagob = (Integer) args[0];
+        }
     }
-	
+
+    @SuppressWarnings({"SuspiciousMethodCalls"})
     public void wdgmsg(Widget sender, String msg, Object... args) {
-	int ep;
-	if((ep = epoints.indexOf(sender)) != -1) {
-	    if(msg == "drop") {
-		wdgmsg("drop", ep);
-		return;
-	    } else if(msg == "xfer") {
-		return;
-	    }
-	}
-	if((ep = equed.indexOf(sender)) != -1) {
-	    if(msg == "take")
-		wdgmsg("take", ep, args[0]);
-	    else if(msg == "itemact")
-		wdgmsg("itemact", ep);
-	    else if(msg == "transfer")
-		wdgmsg("transfer", ep, args[0]);
-	    else if(msg == "iact")
-		wdgmsg("iact", ep, args[0]);
-	    return;
-	}
-	super.wdgmsg(sender, msg, args);
+        int ep;
+        if ((ep = epoints.indexOf(sender)) != -1) {
+            if (msg.equals("drop")) {
+                wdgmsg("drop", ep);
+                return;
+            } else if (msg.equals("xfer")) {
+                return;
+            }
+        }
+        if ((ep = equed.indexOf(sender)) != -1) {
+            if (msg.equals("take"))
+                wdgmsg("take", ep, args[0]);
+            else if (msg.equals("itemact"))
+                wdgmsg("itemact", ep);
+            else if (msg.equals("transfer"))
+                wdgmsg("transfer", ep, args[0]);
+            else if (msg.equals("iact"))
+                wdgmsg("iact", ep, args[0]);
+            return;
+        }
+        super.wdgmsg(sender, msg, args);
     }
-	
+
     public boolean drop(Coord cc, Coord ul) {
-	wdgmsg("drop", -1);
-	return(true);
+        wdgmsg("drop", -1);
+        return (true);
     }
-	
+
     public boolean iteminteract(Coord cc, Coord ul) {
-	return(false);
+        return (false);
     }
-	
+
     public void cdraw(GOut g) {
-	Coord avac = new Coord(32, 0);
-	g.image(bg, avac);
-	if(avagob != -1) {
-	    Gob gob = ui.sess.glob.oc.getgob(avagob);
-	    if(gob != null) {
-		Avatar ava = gob.getattr(Avatar.class);
-		if(ava != null)
-		    g.image(ava.rend, avac);
-	    }
-	}
+        Coord avac = new Coord(32, 0);
+        g.image(bg, avac);
+        if (avagob != -1) {
+            Gob gob = ui.sess.glob.oc.getgob(avagob);
+            if (gob != null) {
+                Avatar ava = gob.getattr(Avatar.class);
+                if (ava != null)
+                    g.image(ava.rend, avac);
+            }
+        }
     }
 }

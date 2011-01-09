@@ -1,7 +1,7 @@
 /*
  *  This file is part of the Haven & Hearth game client.
  *  Copyright (C) 2009 Fredrik Tolf <fredrik@dolda2000.com>, and
- *                     Björn Johannessen <johannessen.bjorn@gmail.com>
+ *                     Bjï¿½rn Johannessen <johannessen.bjorn@gmail.com>
  *
  *  Redistribution and/or modification of this file is subject to the
  *  terms of the GNU Lesser General Public License, version 3, as
@@ -27,151 +27,145 @@
 package haven;
 
 import java.awt.*;
-import java.awt.geom.Rectangle2D;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.KeyEvent;
-import java.awt.datatransfer.*;
 import java.io.IOException;
 
 public class TextEntry extends Widget {
-    LineEdit buf;
+    final LineEdit buf;
     int sx;
-    static Text.Foundry fnd = new Text.Foundry(new Font("SansSerif", Font.PLAIN, 12), Color.BLACK);
+    static final Text.Foundry fnd = new Text.Foundry(new Font("SansSerif", Font.PLAIN, 12), Color.BLACK);
     Text.Line tcache = null;
     public String text;
     public String badchars = "";
-    public boolean noNumbers = false;
-    public boolean noLetters = false;
+    public final boolean noNumbers = false;
+    public final boolean noLetters = false;
     int pos, limit = 0;
     boolean prompt = false, pw = false;
     int cw = 0;
 
     static {
-	Widget.addtype("text", new WidgetFactory() {
-		public Widget create(Coord c, Widget parent, Object[] args) {
-		    return(new TextEntry(c, (Coord)args[0], parent, (String)args[1]));
-		}
-	    });
+        Widget.addtype("text", new WidgetFactory() {
+            public Widget create(Coord c, Widget parent, Object[] args) {
+                return (new TextEntry(c, (Coord) args[0], parent, (String) args[1]));
+            }
+        });
     }
 
     public void settext(String text) {
-	buf.setline(text);
+        buf.setline(text);
     }
 
     public void uimsg(String name, Object... args) {
-	if(name == "settext") {
-	    settext((String)args[0]);
-	} else if(name == "get") {
-	    wdgmsg("text", buf.line);
-	} else if(name == "pw") {
-	    pw = ((Integer)args[0]) == 1;
-	} else {
-	    super.uimsg(name, args);
-	}
+        if (name.equals("settext")) {
+            settext((String) args[0]);
+        } else if (name.equals("get")) {
+            wdgmsg("text", buf.line);
+        } else if (name.equals("pw")) {
+            pw = ((Integer) args[0]) == 1;
+        } else {
+            super.uimsg(name, args);
+        }
     }
-	
+
     public void draw(GOut g) {
-	super.draw(g);
-	String dtext;
-	if(pw) {		//	Replace the text with stars if its a password
-	    dtext = "";
-	    for(int i = 0; i < buf.line.length(); i++)
-		dtext += "*";
-	} else {
-	    dtext = buf.line != null ? buf.line : "";
-	}
-	g.frect(Coord.z, sz);
-	if((tcache == null) || !tcache.text.equals(dtext))
-	    tcache = fnd.render(dtext);
-	int cx = tcache.advance(buf.point);
-	if(cx < sx) sx = cx;
-	if(cx > sx + (sz.x - 1)) sx = cx - (sz.x - 1);
-	g.image(tcache.tex(), new Coord(-sx, 0));
-	if(hasfocus && ((System.currentTimeMillis() % 1000) > 500)) {
-	    int lx = cx - sx + 1;
-	    g.chcolor(0, 0, 0, 255);
-	    g.line(new Coord(lx, 1), new Coord(lx, tcache.sz().y - 1), 1);
-	    g.chcolor();
-	}
+        super.draw(g);
+        String dtext;
+        if (pw) {        //	Replace the text with stars if its a password
+            StringBuilder b = new StringBuilder();
+            for (int i = 0; i < buf.line.length(); i++)
+                b.append('*');
+            dtext = b.toString();
+        } else {
+            dtext = buf.line != null ? buf.line : "";
+        }
+        g.frect(Coord.z, sz);
+        if ((tcache == null) || !tcache.text.equals(dtext))
+            tcache = fnd.render(dtext);
+        int cx = tcache.advance(buf.point);
+        if (cx < sx) sx = cx;
+        if (cx > sx + (sz.x - 1)) sx = cx - (sz.x - 1);
+        g.image(tcache.tex(), new Coord(-sx, 0));
+        if (hasfocus && ((System.currentTimeMillis() % 1000) > 500)) {
+            int lx = cx - sx + 1;
+            g.chcolor(0, 0, 0, 255);
+            g.line(new Coord(lx, 1), new Coord(lx, tcache.sz().y - 1), 1);
+            g.chcolor();
+        }
     }
-	
+
     public TextEntry(Coord c, Coord sz, Widget parent, String deftext) {
-	super(c, sz, parent);
-	buf = new LineEdit(text = deftext) {
-		protected void done(String line) {
-		    activate(line);
-		}
-		
-		protected void changed() {
-		    TextEntry.this.text = line;
-		}
-	    };
-	setcanfocus(true);
+        super(c, sz, parent);
+        buf = new LineEdit(text = deftext) {
+            protected void done(String line) {
+                activate(line);
+            }
+
+            protected void changed() {
+                TextEntry.this.text = line;
+            }
+        };
+        setcanfocus(true);
     }
-	
+
     public void activate(String text) {
-	if(canactivate)
-	    wdgmsg("activate", text);
+        if (canactivate)
+            wdgmsg("activate", text);
     }
 
     public boolean type(char c, KeyEvent ev) {
-	if(Character.isDigit(c) && noNumbers && !ev.isAltDown() || badchars.indexOf(c) > -1)
-	        {
-	            ev.consume();
-	            return true;
-	        }
-        if(Character.isLetter(c) && noLetters && !ev.isAltDown() || badchars.indexOf(c) > -1)
-	        {
-	        	ev.consume();
-	        	return true;
-	        }
-	return(buf.key(ev));
+        if (Character.isDigit(c) && noNumbers && !ev.isAltDown() || badchars.indexOf(c) > -1) {
+            ev.consume();
+            return true;
+        }
+        if (Character.isLetter(c) && noLetters && !ev.isAltDown() || badchars.indexOf(c) > -1) {
+            ev.consume();
+            return true;
+        }
+        return (buf.key(ev));
     }
 
     public boolean keydown(KeyEvent e) {
-	buf.key(e);
-	return(true);
+        buf.key(e);
+        return (true);
     }
 
     public boolean mousedown(Coord c, int button) {
-	parent.setfocus(this);
-	if(tcache != null) {
-	    buf.point = tcache.charat(c.x + sx);
-	}
-	return(true);
+        parent.setfocus(this);
+        if (tcache != null) {
+            buf.point = tcache.charat(c.x + sx);
+        }
+        return (true);
     }
 
-	/**
-	 * Method lostOwnership
-	 *
-	 *
-	 * @param clipboard
-	 * @param contents
-	 *
-	 */
-	public void lostOwnership(Clipboard clipboard, Transferable contents) {
-		// TODO: Add your code here
-	}
-	public String getClipboardContents()
-	{
-    	String result = "";
-	    Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-	    //odd: the Object param of getContents is not currently used
-	    Transferable contents = clipboard.getContents(null);
-	    boolean hasTransferableText = (contents != null) && contents.isDataFlavorSupported(DataFlavor.stringFlavor);
-		if (hasTransferableText)
-		{
-			try
-			{
-		 		result = (String)contents.getTransferData(DataFlavor.stringFlavor);
-			}
-			catch(UnsupportedFlavorException ufe)
-			{
-				ufe.printStackTrace();
-			}
-			catch (IOException e) {
-				e.printStackTrace();
-			}
-	    }
-		return result;
-	}
+    /**
+     * Method lostOwnership
+     *
+     * @param clipboard
+     * @param contents
+     */
+    public void lostOwnership(Clipboard clipboard, Transferable contents) {
+        // TODO: Add your code here
+    }
+
+    public static String getClipboardContents() {
+        String result = "";
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        //odd: the Object param of getContents is not currently used
+        Transferable contents = clipboard.getContents(null);
+        boolean hasTransferableText = (contents != null) && contents.isDataFlavorSupported(DataFlavor.stringFlavor);
+        if (hasTransferableText) {
+            try {
+                result = (String) contents.getTransferData(DataFlavor.stringFlavor);
+            } catch (UnsupportedFlavorException ufe) {
+                ufe.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
 }

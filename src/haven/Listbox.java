@@ -26,112 +26,109 @@
 
 package haven;
 
-import java.awt.Color;
-import java.awt.event.KeyEvent;
-import java.util.*;
+import java.awt.*;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Listbox extends Widget {
-    public List<Option> opts;
+    public final List<Option> opts;
     public Option chosen;
     public List<? extends Widget> items;
-    Scrollbar scrollBar;
-    int height;
+    final Scrollbar scrollBar;
+    final int height;
 
     static {
-	Widget.addtype("lb", new WidgetFactory() {
-		public Widget create(Coord c, Widget parent, Object[] args) {
-		    List<Option> opts = new LinkedList<Option>();
-		    for(int i = 1; i < args.length; i += 2)
-			opts.add(new Option((String)args[i], (String)args[i + 1]));
-		    return(new Listbox(c, (Coord)args[0], parent, opts));
-		}
-	    });
+        Widget.addtype("lb", new WidgetFactory() {
+            public Widget create(Coord c, Widget parent, Object[] args) {
+                List<Option> opts = new LinkedList<Option>();
+                for (int i = 1; i < args.length; i += 2)
+                    opts.add(new Option((String) args[i], (String) args[i + 1]));
+                return (new Listbox(c, (Coord) args[0], parent, opts));
+            }
+        });
     }
 
     public static class Option {
-		public String name, disp;
-		int y1, y2;
+        public String name, disp;
+        int y1, y2;
 
-		public Option(String name, String disp) {
-		    this.name = name;
-		    this.disp = disp;
-		}
-		public boolean containsString(String data)
-		{
-			return (data.equals(name) || data.equals(disp));
-		}
-		public String toString()
-		{
-			return "Name="+name+":\tDisp="+disp;
-		}
+        public Option(String name, String disp) {
+            this.name = name;
+            this.disp = disp;
+        }
+
+        public boolean containsString(String data) {
+            return (data.equals(name) || data.equals(disp));
+        }
+
+        public String toString() {
+            return "Name=" + name + ":\tDisp=" + disp;
+        }
     }
 
     public void draw(GOut g) {
-		for(int i = 0; i < height && scrollBar != null; i++) {
-			Color c;
-			if(i + scrollBar.val >= opts.size())
-			    continue;
-			Option b = opts.get(i + scrollBar.val);
-			if(b.equals(chosen)) {
-				c = FlowerMenu.pink;
-		    }
-		    else {
-				c = Color.BLACK;
-		    }
-		    g.chcolor(c);
-			g.text(b.disp, new Coord(0,i*10));
-		}
-		g.chcolor();
-		super.draw(g);
+        for (int i = 0; i < height && scrollBar != null; i++) {
+            Color c;
+            if (i + scrollBar.val >= opts.size())
+                continue;
+            Option b = opts.get(i + scrollBar.val);
+            if (b.equals(chosen)) {
+                c = FlowerMenu.pink;
+            } else {
+                c = Color.BLACK;
+            }
+            g.chcolor(c);
+            g.text(b.disp, new Coord(0, i * 10));
+        }
+        g.chcolor();
+        super.draw(g);
     }
 
     public Listbox(Coord c, Coord sz, Widget parent, List<Option> opts) {
-	super(c, sz, parent);
-	this.opts = opts;
-	height = sz.y / 10;
-	scrollBar = new Scrollbar(Coord.z.add(sz.x,0), sz.y, this, 0, 50);
-	chosen = !opts.isEmpty() ? opts.get(0) : null;
-	setcanfocus(true);
+        super(c, sz, parent);
+        this.opts = opts;
+        height = sz.y / 10;
+        scrollBar = new Scrollbar(Coord.z.add(sz.x, 0), sz.y, this, 0, 50);
+        chosen = !opts.isEmpty() ? opts.get(0) : null;
+        setcanfocus(true);
     }
 
     static List<Option> makelist(Option[] opts) {
-	List<Option> ol = new LinkedList<Option>();
-	for(Option o : opts)
-	    ol.add(o);
-	return(ol);
+        List<Option> ol = new LinkedList<Option>();
+        ol.addAll(Arrays.asList(opts));
+        return (ol);
     }
 
     public Listbox(Coord c, Coord sz, Widget parent, Option[] opts) {
-	this(c, sz, parent, makelist(opts));
+        this(c, sz, parent, makelist(opts));
     }
 
     public void sendchosen() {
-	wdgmsg("chose", chosen.name);
+        wdgmsg("chose", chosen.name);
     }
 
     public boolean mousedown(Coord c, int button) {
-		int i = 0;
-		if(button == 1 && c.x < sz.x-25) {
-			int sel = (c.y / 10) + scrollBar.val;
-			if(sel >= opts.size()){
-				sel = -1;
-			}
-			if(sel < 0){
-				chosen = null;
-			} else {
-				chosen = opts.get(sel);
-			}
-		    changed(chosen);
-		    return(true);
-		}
-		return scrollBar.mousedown(c, button);
-
-    }
-    public boolean mousewheel(Coord c, int amount)
-    {
-    	return scrollBar.mousewheel(c, amount);
+        if (button == 1 && c.x < sz.x - 25) {
+            int sel = (c.y / 10) + scrollBar.val;
+            if (sel >= opts.size()) {
+                sel = -1;
+            }
+            if (sel < 0) {
+                chosen = null;
+            } else {
+                chosen = opts.get(sel);
+            }
+            changed(chosen);
+            return (true);
+        }
+        return scrollBar.mousedown(c, button);
     }
 
-    public void changed(Option changed)
-    {}
+    public boolean mousewheel(Coord c, int amount) {
+        return scrollBar.mousewheel(c, amount);
+    }
+
+    public void changed(Option changed) {
+    }
 }

@@ -26,11 +26,11 @@
 
 package haven;
 
-import java.awt.Color;
+import java.awt.*;
 
 public class Buff {
     public static final Text.Foundry nfnd = new Text.Foundry("SansSerif", 10);
-    int id;
+    final int id;
     Indir<Resource> res;
     String tt = null;
     int ameter = -1;
@@ -40,15 +40,15 @@ public class Buff {
     long gettime;
     Tex ntext = null;
     boolean major = false;
-    
+
     public Buff(int id, Indir<Resource> res) {
-	this.id = id;
-	this.res = res;
+        this.id = id;
+        this.res = res;
     }
-    
+
     Tex nmeter() {
-	if(ntext == null)
-	    ntext = new TexI(Utils.outline2(nfnd.render(Integer.toString(nmeter), Color.WHITE).img, Color.BLACK));
-	return(ntext);
+        if (ntext == null)
+            ntext = new TexI(Utils.outline2(nfnd.render(Integer.toString(nmeter), Color.WHITE).img, Color.BLACK));
+        return (ntext);
     }
 }

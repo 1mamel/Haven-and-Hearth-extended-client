@@ -26,43 +26,43 @@
 
 package haven;
 
-import java.awt.Color;
+import java.awt.*;
 
 public class RichTextBox extends Widget {
     public Color bg = Color.BLACK;
     private final RichText.Foundry fnd;
     private RichText text;
-    private Scrollbar sb;
-    
+    private final Scrollbar sb;
+
     public RichTextBox(Coord c, Coord sz, Widget parent, String text, RichText.Foundry fnd) {
-	super(c, sz, parent);
-	this.fnd = fnd;
-	this.text = fnd.render(text, sz.x - 20);
-	this.sb = new Scrollbar(new Coord(sz.x, 0), sz.y, this, 0, this.text.sz().y + 20 - sz.y);
+        super(c, sz, parent);
+        this.fnd = fnd;
+        this.text = fnd.render(text, sz.x - 20);
+        this.sb = new Scrollbar(new Coord(sz.x, 0), sz.y, this, 0, this.text.sz().y + 20 - sz.y);
     }
-    
+
     public RichTextBox(Coord c, Coord sz, Widget parent, String text, Object... attrs) {
-	this(c, sz, parent, text, new RichText.Foundry(attrs));
+        this(c, sz, parent, text, new RichText.Foundry(attrs));
     }
-    
+
     public void draw(GOut g) {
-	if(bg != null) {
-	    g.chcolor(bg);
-	    g.frect(Coord.z, sz);
-	    g.chcolor();
-	}
-	g.image(text.tex(), new Coord(10, 10 - sb.val));
-	super.draw(g);
+        if (bg != null) {
+            g.chcolor(bg);
+            g.frect(Coord.z, sz);
+            g.chcolor();
+        }
+        g.image(text.tex(), new Coord(10, 10 - sb.val));
+        super.draw(g);
     }
-    
+
     public void settext(String text) {
-	this.text = fnd.render(text, sz.x - 20);
-	sb.max = this.text.sz().y + 20 - sz.y;
-	sb.val = 0;
+        this.text = fnd.render(text, sz.x - 20);
+        sb.max = this.text.sz().y + 20 - sz.y;
+        sb.val = 0;
     }
-    
+
     public boolean mousewheel(Coord c, int amount) {
-	sb.ch(amount * 20);
-	return(true);
+        sb.ch(amount * 20);
+        return (true);
     }
 }

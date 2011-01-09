@@ -27,135 +27,142 @@
 package haven;
 
 public class RemoteUI implements UI.Receiver {
-    Session sess;
+    final Session sess;
     UI ui;
 
     public RemoteUI(Session sess) {
-	this.sess = sess;
-	Widget.initbardas();
+        this.sess = sess;
+        Widget.initbardas();
     }
 
     public void rcvmsg(int id, String name, Object... args) {
-	Message msg = new Message(Message.RMSG_WDGMSG);
-	msg.adduint16(id);
-	msg.addstring(name);
-	msg.addlist(args);
-	sess.queuemsg(msg);
+        Message msg = new Message(Message.RMSG_WDGMSG);
+        msg.adduint16(id);
+        msg.addstring(name);
+        msg.addlist(args);
+        sess.queuemsg(msg);
     }
 
     public void run(UI ui) throws InterruptedException {
-	this.ui = ui;
-    CustomConfig.ui = ui;
-	ui.setreceiver(this);
-	while(sess.alive()) {
-	    Message msg;
-	    while((msg = sess.getuimsg()) != null) {
-		if(msg.type == Message.RMSG_NEWWDG) {
-		    int id = msg.uint16(); // New widget Id
-		    String type = msg.string(); // New widget Type
-		    Coord c = msg.coord(); // New widget coordinates
-		    int parent = msg.uint16(); //Parent Id for new widget
-		    Object[] args = msg.list(); // Arguments for widget creator (WidgetFabrick)
-		    if(type.equals("cnt")){
-		    	args[0] = CustomConfig.windowSize;
-		    }else if(type.equals("img") && args.length >= 1 && (args[0] instanceof String) ){
-                String arg0 = (String) args[0];
-                //
-                if(arg0.contains("gfx/hud/prog/")) // Hourglass (progress bar) at center of screen
-                    c = CustomConfig.windowCenter;
-                //
-		    	if(arg0.equals("gfx/ccscr"))
-		    		c = CustomConfig.windowCenter.add(-400, -300);
-		    	if(arg0.equals("gfx/logo2"))
-		    		c = CustomConfig.windowCenter.add(-415, -300);
-		    }else if(type.equals("charlist") && args.length >= 1){
-		    	c = CustomConfig.windowCenter.add(-380, -50);
-		    }else if(type.equals("ibtn") && args.length >= 2){ // New User Button
-		    	if(((String)args[0]).equals("gfx/hud/buttons/ncu") && ((String)args[1]).equals("gfx/hud/buttons/ncd")){
-		    		c = CustomConfig.windowCenter.add(86, 214);
-		    	}
-		    }else if(type.equals("wnd") && c.x == 400 && c.y == 200){
-                System.err.println("Strange window name="+args[1].toString());                      
-		    	c = CustomConfig.windowCenter.add(0,-100);
-		    }else if(type.equals("wnd") && args.length >= 2){
-		    	c = 	CustomConfig.invCoord.x > 0 && CustomConfig.invCoord.y > 0
-		    		&&	CustomConfig.invCoord.x < CustomConfig.windowSize.x-100 
-		    		&&	CustomConfig.invCoord.y < CustomConfig.windowSize.y-100
-		    		&&	((String)args[1]).equals("Inventory")
-		    		?	CustomConfig.invCoord   : c;
-		    }
-            if (type.equals("inv")) {
-                Coord pos = ui.widgets.get(parent).c; //on screen position
-                String name = ((Window)ui.widgets.get(parent)).cap.text;
-                Coord size = (Coord)args[0];
-                CustomConfig.openInventory(id,name,size,pos);
-            }
-            if (type.equals("item")) {
-                int itype = (Integer)args[0];
-                int iquality = (Integer)args[1];
-                Coord position = c;
-                CustomConfig.newItem(parent,id,itype,iquality,position);
-            }
-            if (type.equals("wnd")) {
-                c = CustomConfig.getWindowPosition((String)args[1],c); //Try to restore window on last position
-            }else if (type.equals("im")) { // Saving Meters Ids
-                String imagename = (String)args[0];
-                if (imagename.equals("gfx/hud/meter/hp")) { //HP meter
-                    CustomConfig.hpMeterId = id;
-                } else if (imagename.equals("gfx/hud/meter/nrj")) { // Energy Meter
-                    CustomConfig.energyMeterId = id;
-                } else if (imagename.equals("gfx/hud/meter/hngr")) { // Hungry Meter
-                    CustomConfig.hungryMeterId = id;
-                } else if (imagename.equals("gfx/hud/meter/happy")) { // Happyness Meter
-                    CustomConfig.happyMeterId = id;
-                } else if (imagename.equals("gfx/hud/meter/auth")) { // Authority Meter
-                    CustomConfig.authorityMeterId = id;
-                } else {
-                    System.err.println("Unexpected IMeter with imagename="+imagename);
-                }
-            }     // TODO !!!
-            System.out.println("Creating Widget id="+id+" parentId="+parent+" type='"+type+"' in coord "+c.toString());
-            if(args.length>0) {
-                System.out.print("  with args: ");
-                try{for(Object o : args) System.out.print(o.toString()+"; ");
-                }catch (Exception e) {}
-                System.out.print("\n");
-            }
-		    ui.newwidget(id, type, c, parent, args);
-		    
-		} else if(msg.type == Message.RMSG_WDGMSG) {
-		    int id = msg.uint16();
-		    String type = msg.string();
-		    Object[] args = msg.list();
-            if(type.equals("set")) {
+        this.ui = ui;
+        CustomConfig.ui = ui;
+        ui.setreceiver(this);
+        while (sess.alive()) {
+            Message msg;
+            while ((msg = sess.getuimsg()) != null) {
+                if (msg.type == Message.RMSG_NEWWDG) {
+                    int id = msg.uint16(); // New widget Id
+                    String type = msg.string(); // New widget Type
+                    Coord c = msg.coord(); // New widget coordinates
+                    int parent = msg.uint16(); //Parent Id for new widget
+                    Object[] args = msg.list(); // Arguments for widget creator (WidgetFabrick)
+                    if (type.equals("cnt")) {
+                        args[0] = CustomConfig.windowSize;
+                    } else if (type.equals("img") && args.length >= 1 && (args[0] instanceof String)) {
+                        String arg0 = (String) args[0];
+                        //
+                        if (arg0.contains("gfx/hud/prog/")) // Hourglass (progress bar) at center of screen
+                            c = CustomConfig.windowCenter;
+                        //
+                        if (arg0.equals("gfx/ccscr"))
+                            c = CustomConfig.windowCenter.add(-400, -300);
+                        if (arg0.equals("gfx/logo2"))
+                            c = CustomConfig.windowCenter.add(-415, -300);
+                    } else if (type.equals("charlist") && args.length >= 1) {
+                        c = CustomConfig.windowCenter.add(-380, -50);
+                    } else if (type.equals("ibtn") && args.length >= 2) { // New User Button
+                        if (args[0].equals("gfx/hud/buttons/ncu") && args[1].equals("gfx/hud/buttons/ncd")) {
+                            c = CustomConfig.windowCenter.add(86, 214);
+                        }
+                    } else if (type.equals("wnd") && c.x == 400 && c.y == 200) {
+                        System.err.println("Strange window name=" + args[1].toString());
+                        c = CustomConfig.windowCenter.add(0, -100);
+                    } else if (type.equals("wnd") && args.length >= 2) {
+                        c = CustomConfig.invCoord.x > 0 && CustomConfig.invCoord.y > 0
+                                && CustomConfig.invCoord.x < CustomConfig.windowSize.x - 100
+                                && CustomConfig.invCoord.y < CustomConfig.windowSize.y - 100
+                                && args[1].equals("Inventory")
+                                ? CustomConfig.invCoord : c;
+                    }
+                    if (type.equals("inv")) {
+                        Coord pos = ui.widgets.get(parent).c; //on screen position
+                        String name = ((Window) ui.widgets.get(parent)).cap.text;
+                        Coord size = (Coord) args[0];
+                        CustomConfig.openInventory(id, name, size, pos);
+                    }
+                    if (type.equals("item")) {
+                        int itype = (Integer) args[0];
+                        int iquality = (Integer) args[1];
+                        CustomConfig.newItem(parent, id, itype, iquality, c);
+                    }
+                    if (type.equals("wnd")) {
+                        c = CustomConfig.getWindowPosition((String) args[1], c); //Try to restore window on last position
+                    } else if (type.equals("im")) { // Saving Meters Ids
+                        String imagename = (String) args[0];
+                        if (imagename.equals("gfx/hud/meter/hp")) { //HP meter
+                            CustomConfig.hpMeterId = id;
+                        } else if (imagename.equals("gfx/hud/meter/nrj")) { // Energy Meter
+                            CustomConfig.energyMeterId = id;
+                        } else if (imagename.equals("gfx/hud/meter/hngr")) { // Hungry Meter
+                            CustomConfig.hungryMeterId = id;
+                        } else if (imagename.equals("gfx/hud/meter/happy")) { // Happyness Meter
+                            CustomConfig.happyMeterId = id;
+                        } else if (imagename.equals("gfx/hud/meter/auth")) { // Authority Meter
+                            CustomConfig.authorityMeterId = id;
+                        } else {
+                            System.err.println("Unexpected IMeter with imagename=" + imagename);
+                        }
+                    }     // TODO !!!
+                    System.out.println("Creating Widget id=" + id + " parentId=" + parent + " type='" + type + "' in coord " + c.toString());
+                    if (args.length > 0) {
+                        System.out.print("  with args: ");
+                        try {
+                            for (Object o : args) System.out.print(o.toString() + "; ");
+                        } catch (Exception ignored) {
+                        }
+                        System.out.print("\n");
+                    }
+                    ui.newwidget(id, type, c, parent, args);
+
+                } else if (msg.type == Message.RMSG_WDGMSG) {
+                    int id = msg.uint16();
+                    String type = msg.string();
+                    Object[] args = msg.list();
+                    if (type.equals("set")) {
 //                if(id == CustomConfig.energyMeterId) {
 //                    CustomConfig.energyMeterId
 //                }
-            }
-            try{System.out.println("Message (type='"+type+"') for widget (id="+id+")");
-            if(args.length > 0) {
-                System.out.print("  contains: ");
-                try{for(Object o : args) System.out.print(o.toString()+"; ");
-                }catch (Exception e) {}
-                System.out.print("\n");
-            }   } catch (Exception e) {}
-		    ui.uimsg(id, type, args);
-	   
-		} else if(msg.type == Message.RMSG_DSTWDG) {
-		    int id = msg.uint16();
-		    if(ui.widgets.get(new Integer(id)) instanceof Window){
-		    	Window wnd = (Window)ui.widgets.get(new Integer(id));
-                CustomConfig.setWindowPosition(wnd.cap.text,wnd.c); //Save window on last position
-		    }
-            CustomConfig.closeWidget(id);
-            System.out.println("Deleting Widget id="+id);
-            ui.destroy(id);
-		}
-	    }
-	    synchronized(sess) {
-		sess.wait();
-	    }
+                    }
+                    try {
+                        System.out.println("Message (type='" + type + "') for widget (id=" + id + ')');
+                        if (args.length > 0) {
+                            System.out.print("  contains: ");
+                            try {
+                                for (Object o : args) System.out.print(o.toString() + "; ");
+                            } catch (Exception ignored) {
+                            }
+                            System.out.print("\n");
+                        }
+                    } catch (Exception ignored) {
+                    }
+                    ui.uimsg(id, type, args);
 
-	}
+                } else if (msg.type == Message.RMSG_DSTWDG) {
+                    int id = msg.uint16();
+                    if (ui.widgets.get(id) instanceof Window) {
+                        Window wnd = (Window) ui.widgets.get(id);
+                        CustomConfig.setWindowPosition(wnd.cap.text, wnd.c); //Save window on last position
+                    }
+                    CustomConfig.closeWidget(id);
+                    System.out.println("Deleting Widget id=" + id);
+                    ui.destroy(id);
+                }
+            }
+            //noinspection SynchronizeOnNonFinalField
+            synchronized (sess) {
+                sess.wait();
+            }
+
+        }
     }
 }
