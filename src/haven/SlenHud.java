@@ -278,6 +278,15 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
         return (-1);
     }
 
+    /* Text rendering is slow, so pre-cache the hotbar numbers. */
+    public static final Tex[] nums;
+
+    static {
+        nums = new Tex[10];
+        for (int i = 0; i < 10; i++)
+            nums[i] = Text.render(Integer.toString(i)).tex();
+    }
+
     public void draw(GOut g) {
         vc.tick();
         if (!ui.sess.alive()) {
@@ -296,7 +305,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
             Coord x = c.add(invsq.sz().add(-10, 0));
             g.image(invsq, c);
             g.chcolor(156, 180, 158, 255);
-            g.atext(Integer.toString((i + 1) % 10), c.add(invsq.sz()), 1, 1);
+            g.aimage(nums[(i + 1) % 10], c.add(invsq.sz()), 1, 1);
             g.chcolor();
             Resource res = null;
             if (belt[activeBelt][i] != null)
@@ -304,7 +313,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
             if (res != null && !res.loading)
                 g.image(res.layer(Resource.imgc).tex(), c.add(1, 1));
             g.chcolor(Color.BLACK);
-            g.atext(Integer.toString(activeBelt), x, 1, 1);
+            g.aimage(nums[activeBelt], x, 1, 1);
             g.chcolor();
         }
 
@@ -351,9 +360,9 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
             synchronized (belt) {
                 if (args.length < 2) {
                     //noinspection RedundantCast
-                    belt[activeBelt][(Integer)(args[0])] = null;
+                    belt[activeBelt][(Integer) (args[0])] = null;
                     //noinspection RedundantCast
-                    CustomConfig.activeCharacter.hudBelt[activeBelt][(Integer)(args[0])] = null;
+                    CustomConfig.activeCharacter.hudBelt[activeBelt][(Integer) (args[0])] = null;
                 } else {/*
 		    	belt[activeBelt][(Integer)args[0]] = ui.sess.getres((Integer)args[1]).get();
 				CustomConfig.activeCharacter.hudBelt[activeBelt][(Integer)args[0]] = belt[activeBelt][(Integer)args[0]].name;

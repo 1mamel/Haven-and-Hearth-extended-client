@@ -36,6 +36,9 @@ public class BuddyWnd extends Window {
     private final Map<Integer, Buddy> idmap = new HashMap<Integer, Buddy>();
     private final BuddyList bl;
     private final BuddyInfo bi;
+    private Button sbalpha;
+    private Button sbgroup;
+    private Button sbstatus;
     private final TextEntry charpass, opass;
     public static final Tex online = Resource.loadtex("gfx/hud/online");
     public static final Tex offline = Resource.loadtex("gfx/hud/offline");
@@ -54,7 +57,7 @@ public class BuddyWnd extends Window {
         private final Collator c = Collator.getInstance();
 
         public int compare(Buddy a, Buddy b) {
-            return (c.compare(a.name, b.name));
+            return (c.compare(a.name.text, b.name.text));
         }
     };
     private final Comparator<Buddy> groupcmp = new Comparator<Buddy>() {
@@ -80,7 +83,7 @@ public class BuddyWnd extends Window {
 
     private static class Buddy {
         int id;
-        String name;
+        Text name;
         int online;
         int group;
     }
@@ -127,7 +130,7 @@ public class BuddyWnd extends Window {
         private GroupSelector grp = null;
         private Text atime = null;
         private int id = -1;
-        private Button rmb, invb, chatb;
+        private Button rmb, invb, chatb, descb, exb;
 
         BuddyInfo(Coord c, Coord sz, Widget parent) {
             super(c, sz, parent);
@@ -223,10 +226,14 @@ public class BuddyWnd extends Window {
                     ui.destroy(invb);
                 if (chatb != null)
                     ui.destroy(chatb);
+                if (descb != null)
+                    ui.destroy(descb);
+                if (exb != null)
+                    ui.destroy(exb);
                 rmb = invb = chatb = null;
                 int fl = (Integer) args[0];
                 if ((fl & 1) != 0)
-                    rmb = new Button(new Coord(10, 190), sz.x - 20, this, "Forget") {
+                    rmb = new Button(new Coord(10, 188), sz.x - 20, this, "Forget") {
                         public void click() {
                             BuddyWnd.this.wdgmsg("rm", id);
                         }
@@ -238,21 +245,27 @@ public class BuddyWnd extends Window {
                         }
                     };
                 if ((fl & 4) != 0)
-                    rmb = new Button(new Coord(10, 190), sz.x - 20, this, "End kinship") {
+                    rmb = new Button(new Coord(10, 188), sz.x - 20, this, "End kinship") {
                         public void click() {
                             BuddyWnd.this.wdgmsg("rm", id);
                         }
                     };
                 if ((fl & 8) != 0)
-                    invb = new Button(new Coord(10, 215), sz.x - 20, this, "Invite to party") {
+                    invb = new Button(new Coord(10, 211), sz.x - 20, this, "Invite to party") {
                         public void click() {
                             BuddyWnd.this.wdgmsg("inv", id);
                         }
                     };
                 if ((fl & 16) != 0)
-                    invb = new Button(new Coord(10, 240), sz.x - 20, this, "Describe to...") {
+                    descb = new Button(new Coord(10, 234), sz.x - 20, this, "Describe to...") {
                         public void click() {
                             BuddyWnd.this.wdgmsg("desc", id);
+                        }
+                    };
+                if ((fl & 32) != 0)
+                    exb = new Button(new Coord(10, 257), sz.x - 20, this, "Exile") {
+                        public void click() {
+                            BuddyWnd.this.wdgmsg("exile", id);
                         }
                     };
             }
@@ -296,7 +309,7 @@ public class BuddyWnd extends Window {
                         else if (b.online == 0)
                             g.image(offline, new Coord(0, i * 20));
                         g.chcolor(gc[b.group]);
-                        g.atext(b.name, new Coord(25, i * 20 + 10), 0, 0.5);
+                        g.aimage(b.name.tex(), new Coord(25, i * 20 + 10), 0, 0.5);
                         g.chcolor();
                     }
                 }
@@ -352,17 +365,17 @@ public class BuddyWnd extends Window {
             }
         };
         bi = new BuddyInfo(new Coord(210, 5), new Coord(180, 280), this);
-        new Button(new Coord(5, 290), 120, this, "Sort by status") {
+        sbstatus = new Button(new Coord(5, 290), 120, this, "Sort by status") {
             public void click() {
                 setcmp(statuscmp);
             }
         };
-        new Button(new Coord(140, 290), 120, this, "Sort by group") {
+        sbgroup = new Button(new Coord(140, 290), 120, this, "Sort by group") {
             public void click() {
                 setcmp(groupcmp);
             }
         };
-        new Button(new Coord(275, 290), 120, this, "Sort alphabetically") {
+        sbalpha = new Button(new Coord(275, 290), 120, this, "Sort alphabetically") {
             public void click() {
                 setcmp(alphacmp);
             }
@@ -441,7 +454,7 @@ public class BuddyWnd extends Window {
         if (msg.equals("add")) {
             Buddy b = new Buddy();
             b.id = (Integer) args[0];
-            b.name = ((String) args[1]).intern();
+            b.name = Text.render(((String) args[1]));
             b.online = (Integer) args[2];
             b.group = (Integer) args[3];
             synchronized (buddies) {
@@ -472,7 +485,7 @@ public class BuddyWnd extends Window {
             int id = (Integer) args[0];
             String name = (String) args[1];
             synchronized (buddies) {
-                idmap.get(id).name = name;
+                idmap.get(id).name = Text.render(name);
             }
         } else if (msg.equals("chgrp")) {
             int id = (Integer) args[0];

@@ -475,7 +475,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
     private static Camera restorecam() {
         Class<? extends Camera> ct = camtypes.get(Utils.getpref("defcam", "border"));
         if (ct == null)
-            return (new FixedCam());
+            return (new BorderCam());
         String[] args = (String[]) Utils.deserialize(Utils.getprefb("camargs", null));
         if (args == null) args = new String[0];
         try {
@@ -968,15 +968,11 @@ public class MapView extends Widget implements DTarget, Console.Directory {
                         k.seen = now;
                     int tm = (int) (now - k.seen);
                     Color show = null;
-                    if (k.type == 0) {
-                        if (k.gob == onmouse) {
-                            show = Color.WHITE;
-                        } else if (tm < 7500) {
-                            show = Utils.clipcol(255, 255, 255, 255 - ((255 * tm) / 7500));
-                        }
-                    } else if (k.type == 1) {
-                        if (k.gob == onmouse)
-                            show = Color.WHITE;
+                    boolean auto = (k.type & 1) == 0;
+                    if (k.gob == onmouse) {
+                        show = Color.WHITE;
+                    } else if (auto && (tm < 7500)) {
+                        show = Utils.clipcol(255, 255, 255, 255 - ((255 * tm) / 7500));
                     }
                     if (show != null) {
                         g.chcolor(show);

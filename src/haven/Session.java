@@ -34,7 +34,7 @@ import java.util.*;
 
 @SuppressWarnings({"UnusedDeclaration"})
 public class Session {
-    public static final int PVER = 34;
+    public static final int PVER = 1;
 
     public static final int MSG_SESS = 0;
     public static final int MSG_REL = 1;
@@ -302,13 +302,9 @@ public class Session {
                             oc.health(id, frame, hp);
                         } else if (type == OD_BUDDY) {
                             String name = msg.string();
-                            if (name.length() > 0) {
-                                int group = msg.uint8();
-                                int btype = msg.uint8();
-                                oc.buddy(id, frame, name, group, btype);
-                            } else {
-                                oc.buddy(id, frame, null, 0, 0);
-                            }
+                            int group = msg.uint8();
+                            int btype = msg.uint8();
+                            oc.buddy(id, frame, name, group, btype);
                         } else if (type == OD_END) {
                             break;
                         } else {
@@ -328,9 +324,9 @@ public class Session {
                         objacks.put(id, new ObjAck(id, frame, System.currentTimeMillis()));
                     }
                 }
-                synchronized (sworker) {
-                    sworker.notifyAll();
-                }
+            }
+            synchronized (sworker) {
+                sworker.notifyAll();
             }
         }
 
@@ -412,8 +408,8 @@ public class Session {
             } else if (msg.type == Message.RMSG_SFX) {
                 if (!CustomConfig.isSoundOn) return;        //	Sound effects disabled
                 Indir<Resource> res = getres(msg.uint16());
-//                double vol = ((double) CustomConfig.sfxVol) / 100.0;
-                @SuppressWarnings({"UnusedDeclaration", "UnusedAssignment"}) double spd = ((double) msg.uint16()) / 256.0;
+                double vol = ((double) msg.uint16()) / 256.0;
+                double spd = ((double) msg.uint16()) / 256.0;
                 Audio.play(res);
             } else if (msg.type == Message.RMSG_CATTR) {
                 glob.cattr(msg);
@@ -568,6 +564,8 @@ public class Session {
                                 }
                             }
                             Message msg = new Message(MSG_SESS);
+                            msg.adduint16(1);
+                            msg.addstring("Haven");
                             msg.adduint16(PVER);
                             msg.addstring(username);
                             msg.addbytes(cookie);

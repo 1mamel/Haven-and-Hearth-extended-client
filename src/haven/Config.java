@@ -36,17 +36,15 @@ public class Config {
     public static String authuser;
     public static String authserv;
     public static String defserv;
-    public static URL resurl;
-    public static URL mapurl;
+    public static URL resurl, mapurl;
     public static boolean fullscreen;
     public static boolean dbtext;
-    public static final boolean bounddb;
-    public static final boolean profile;
-    public static final boolean nolocalres;
+    public static boolean bounddb;
+    public static boolean profile;
+    public static boolean nolocalres;
     public static String resdir;
-    public static final boolean nopreload;
-    public static final String loadwaited;
-    public static final String allused;
+    public static boolean nopreload;
+    public static String loadwaited, allused;
 
     static {
         try {
@@ -75,11 +73,11 @@ public class Config {
     }
 
     private static void usage(PrintStream out) {
-        out.println("usage: haven.jar [-hdf] [-u USER] [-C HEXCOOKIE] [-r RESDIR] [-U RESURL] [-A AUTHSERV] [SERVER]");
+        out.println("usage: haven.jar [-hdPf] [-u USER] [-C HEXCOOKIE] [-r RESDIR] [-U RESURL] [-A AUTHSERV] [SERVER]");
     }
 
     public static void cmdline(String[] args) {
-        PosixArgs opt = PosixArgs.getopt(args, "hdU:fr:A:u:C:");
+        PosixArgs opt = PosixArgs.getopt(args, "hdPU:fr:A:u:C:");
         if (opt == null) {
             usage(System.err);
             System.exit(1);
@@ -92,6 +90,9 @@ public class Config {
                     break;
                 case 'd':
                     dbtext = true;
+                    break;
+                case 'P':
+                    profile = true;
                     break;
                 case 'f':
                     fullscreen = true;
