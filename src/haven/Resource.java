@@ -220,11 +220,11 @@ public class Resource implements Comparable<Resource>, Prioritized, Serializable
             Thread.currentThread().interrupt();
     }
 
-    public static interface ResSource {
+    public interface ResSource {
         public InputStream get(String name) throws IOException;
     }
 
-    public static abstract class TeeSource implements ResSource, Serializable {
+    public abstract static class TeeSource implements ResSource, Serializable {
         public ResSource back;
 
         public TeeSource(ResSource back) {
@@ -577,7 +577,7 @@ public class Resource implements Comparable<Resource>, Prioritized, Serializable
         ltypes.put("tile", Tile.class);
     }
 
-    public static class Neg extends Layer {
+    public class Neg extends Layer {
         public Coord cc;
         public Coord bc, bs;
         public Coord sz;
@@ -826,7 +826,7 @@ public class Resource implements Comparable<Resource>, Prioritized, Serializable
         }
     }
 
-    public static class Code extends Layer {
+    public class Code extends Layer {
         public final String name;
         transient public final byte[] data;
 
@@ -1064,6 +1064,7 @@ public class Resource implements Comparable<Resource>, Prioritized, Serializable
             try {
                 cons = lc.getConstructor(Resource.class, byte[].class);
             } catch (NoSuchMethodException e) {
+                System.err.println("Failed to load "+ name + "\t| type is "+tbuf.toString());
                 throw (new LoadException(e, Resource.this));
             }
             Layer l;
