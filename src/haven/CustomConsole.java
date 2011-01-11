@@ -1,11 +1,15 @@
 package haven;
 
+import haven.scriptengine.ScriptsMachine;
+
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
-class CustomConsole extends Window {
+public class CustomConsole extends Window {
     public static Textlog out;
     public final TextEntry in;
     public static StringBuilder log = new StringBuilder("IRC-Extended Client Console - Type HELP for a list of commands");
@@ -77,8 +81,39 @@ class CustomConsole extends Window {
         log.append('\n').append(text);
     }
 
-    public void append(String text) {
+    public static void append(String text) {
         append(text, Color.BLACK);
+    }
+
+    public static class OutWriter extends Writer {
+
+        @Override
+        public void write(char[] cbuf, int off, int len) throws IOException {
+            StringBuilder b = new StringBuilder();
+            b.append(cbuf, off, len);
+            try {
+                CustomConsole.append(b.toString());
+            } catch (Exception ignored) {
+            }
+        }
+
+        @Override
+        public void flush() throws IOException {
+        }
+
+        @Override
+        public void close() throws IOException {
+        }
+
+        private static OutWriter ourInstance;
+
+        public static OutWriter getInstance() {
+            if (ourInstance == null) ourInstance = new OutWriter();
+            return ourInstance;
+        }
+
+        private OutWriter() {
+        }
     }
 
     public void wdgmsg(Widget sender, String msg, Object... args) {
@@ -102,15 +137,6 @@ class CustomConsole extends Window {
                     } else {
                         append("NIGHTVISION - " + (CustomConfig.hasNightVision ? "ON" : "OFF"));
                     }
-                } else if (cmd.equals("ROBOT1")) {
-                    if (arg0.trim().length() != 0) {
-                        if (arg0.equals("ON") || arg0.equals("TRUE"))
-                            CustomConfig.startRobot(this);
-                        if (arg0.equals("OFF") || arg0.equals("FALSE"))
-                            CustomConfig.stopRobot();
-                    } else {
-                        append("ROBOT1 - " + (CustomConfig.hasNightVision ? "ON" : "OFF"));
-                    }
                 } else if (cmd.equals("IRC")) {
                     if (arg0.trim().length() != 0) {
                         if (arg0.equals("ON") || arg0.equals("TRUE"))
@@ -120,8 +146,7 @@ class CustomConsole extends Window {
                     } else {
                         append("IRC - " + (CustomConfig.isIRCOn ? "ON" : "OFF"));
                     }
-                }
-                if (cmd.equals("SCREENSIZE") || cmd.equals("WINDOWSIZE")) {
+                } else if (cmd.equals("SCREENSIZE") || cmd.equals("WINDOWSIZE")) {
                     if (arg0.trim().length() != 0 && cmdArgs.length >= 2) {
                         try {
                             int x = Integer.parseInt(arg0);
@@ -237,7 +262,7 @@ class CustomConsole extends Window {
                             + "for the specified system.");
                     append("HELP - Shows this text.");
                 } else {
-                    append("Command not recognized.  Type /help to see a list of commands.");
+                    ScriptsMachine.executeScript((String) args[0]);
                 }
             }
         } else {

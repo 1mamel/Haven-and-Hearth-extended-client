@@ -26,6 +26,8 @@
 
 package haven;
 
+import haven.scriptengine.UserInfo;
+
 import java.awt.*;
 import java.util.LinkedList;
 import java.util.List;
@@ -44,7 +46,9 @@ public class IMeter extends Widget {
                 List<Meter> meters = new LinkedList<Meter>();
                 for (int i = 1; i < args.length; i += 2)
                     meters.add(new Meter((Color) args[i], (Integer) args[i + 1]));
-                return (new IMeter(c, parent, bg, meters));
+                IMeter res = new IMeter(c, parent, bg, meters);
+                UserInfo.iMeterGenerated(res, (String) args[0]);
+                return res;
             }
         });
     }
@@ -90,6 +94,7 @@ public class IMeter extends Widget {
             this.meters = meters;
         } else if (msg.equals("tt")) {
             tooltip = args[0];
+            UserInfo.meterUpdated(this, (String) args[0]);
         } else {
             super.uimsg(msg, args);
         }
