@@ -480,7 +480,7 @@ public class Resource implements Comparable<Resource>, Prioritized, Serializable
             id = Utils.int16d(buf, 5);
             o = cdec(buf, 7);
             try {
-                img = ImageIO.read(new ByteArrayInputStream(buf, 11, buf.length - 11));
+                img = ImageIO.read(new ByteArrayInputStream(buf, 11, buf.length));  // -11 are not needed. see constructor JavaDoc
             } catch (IOException e) {
                 throw (new LoadException(e, Resource.this));
             }
@@ -517,6 +517,7 @@ public class Resource implements Comparable<Resource>, Prioritized, Serializable
         }
 
         public void init() {
+            gayp();
         }
     }
 
@@ -577,7 +578,7 @@ public class Resource implements Comparable<Resource>, Prioritized, Serializable
         ltypes.put("tile", Tile.class);
     }
 
-    public class Neg extends Layer {
+    public static class Neg extends Layer {
         public Coord cc;
         public Coord bc, bs;
         public Coord sz;
@@ -826,7 +827,7 @@ public class Resource implements Comparable<Resource>, Prioritized, Serializable
         }
     }
 
-    public class Code extends Layer {
+    public static class Code extends Layer {
         public final String name;
         transient public final byte[] data;
 
@@ -1061,15 +1062,21 @@ public class Resource implements Comparable<Resource>, Prioritized, Serializable
             if (lc == null)
                 continue;
             Constructor<? extends Layer> cons;
+            boolean isStaticLayerClass = false;
             try {
                 cons = lc.getConstructor(Resource.class, byte[].class);
             } catch (NoSuchMethodException e) {
-                System.err.println("Failed to load "+ name + "\t| type is "+tbuf.toString());
-                throw (new LoadException(e, Resource.this));
+                try {
+                    cons = lc.getConstructor(byte[].class);
+                    isStaticLayerClass = true;
+                } catch (NoSuchMethodException e2) {
+                    System.err.println("Failed to load " + name + "\t| type is " + tbuf.toString());
+                    throw (new LoadException(e2, Resource.this));
+                }
             }
             Layer l;
             try {
-                l = cons.newInstance(this, buf);
+                l = (isStaticLayerClass) ? cons.newInstance(buf) : cons.newInstance(this, buf);
             } catch (InstantiationException e) {
                 throw (new LoadException(e, Resource.this));
             } catch (InvocationTargetException e) {
