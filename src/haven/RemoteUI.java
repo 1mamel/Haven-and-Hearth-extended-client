@@ -97,22 +97,7 @@ public class RemoteUI implements UI.Receiver {
                     }
                     if (type.equals("wnd")) {
                         c = CustomConfig.getWindowPosition((String) args[1], c); //Try to restore window on last position
-                    } else if (type.equals("im")) { // Saving Meters Ids
-                        String imagename = (String) args[0];
-                        if (imagename.equals("gfx/hud/meter/hp")) { //HP meter
-                            CustomConfig.hpMeterId = id;
-                        } else if (imagename.equals("gfx/hud/meter/nrj")) { // Energy Meter
-                            CustomConfig.energyMeterId = id;
-                        } else if (imagename.equals("gfx/hud/meter/hngr")) { // Hungry Meter
-                            CustomConfig.hungryMeterId = id;
-                        } else if (imagename.equals("gfx/hud/meter/happy")) { // Happyness Meter
-                            CustomConfig.happyMeterId = id;
-                        } else if (imagename.equals("gfx/hud/meter/auth")) { // Authority Meter
-                            CustomConfig.authorityMeterId = id;
-                        } else {
-                            System.err.println("Unexpected IMeter with imagename=" + imagename);
-                        }
-                    }     // TODO !!!
+                    }
                     System.out.println("Creating Widget id=" + id + " parentId=" + parent + " type='" + type + "' in coord " + c.toString());
                     if (args.length > 0) {
                         System.out.print("  with args: ");
@@ -128,11 +113,6 @@ public class RemoteUI implements UI.Receiver {
                     int id = msg.uint16();
                     String type = msg.string();
                     Object[] args = msg.list();
-                    if (type.equals("set")) {
-//                if(id == CustomConfig.energyMeterId) {
-//                    CustomConfig.energyMeterId
-//                }
-                    }
                     try {
                         System.out.println("Message (type='" + type + "') for widget (id=" + id + ')');
                         if (args.length > 0) {

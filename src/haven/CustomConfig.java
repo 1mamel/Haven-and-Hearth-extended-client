@@ -30,75 +30,8 @@ import java.util.Map;
 
 @SuppressWarnings({"UnusedDeclaration"})
 public class CustomConfig {
-    public static int hpMeterId;
-    public static int energyMeterId;
-    public static int happyMeterId;
-    public static int hungryMeterId;
-    public static int authorityMeterId;
     static UI ui;
     public static OpenedInv.InvItem atMouseItem = null;
-
-    public static int getEnergy() {
-        try {
-            Widget wdg = ui.getWidgetById(energyMeterId);
-            if (wdg != null)
-                return ((IMeter) wdg).meters.get(0).a;
-        } catch (Exception ignored) {
-        }
-        return -1;
-    }
-
-    public static int getAuthority() {
-        try {
-            Widget wdg = ui.getWidgetById(authorityMeterId);
-            if (wdg != null)
-                return ((IMeter) wdg).meters.get(0).a;
-        } catch (Exception ignored) {
-        }
-        return -1;
-    }
-
-    public static int getHHP() {
-        try {
-            Widget wdg = ui.getWidgetById(hpMeterId);
-            if (wdg != null)
-                return ((IMeter) wdg).meters.get(1).a;
-        } catch (Exception ignored) {
-        }
-        return -1;
-    }
-
-    public static int getSHP() {
-        try {
-            Widget wdg = ui.getWidgetById(hpMeterId);
-            if (wdg != null)
-                return ((IMeter) wdg).meters.get(0).a;
-        } catch (Exception ignored) {
-        }
-        return -1;
-    }
-
-    public static int getHappy() {
-        //TODO may be unhappy...
-        try {
-            Widget wdg = ui.getWidgetById(happyMeterId);
-            if (wdg != null)
-                return ((IMeter) wdg).meters.get(0).a;
-        } catch (Exception ignored) {
-        }
-        return -1;
-    }
-
-    public static int getHungry() {
-        //TODO !
-        try {
-            Widget wdg = ui.getWidgetById(hungryMeterId);
-            if (wdg != null)
-                return ((IMeter) wdg).meters.get(0).a;
-        } catch (Exception ignored) {
-        }
-        return -1;
-    }
 
     public static void openInventory(int id, String name, Coord size, Coord pos) {
         openedInventories.put(id, new OpenedInv(id, name, size, pos));
@@ -138,43 +71,6 @@ public class CustomConfig {
         } catch (Exception e) {
             e.printStackTrace(System.err);
         }
-    }
-
-    static Thread robotThread;
-
-    public static void startRobot(final CustomConsole cons) {
-        robotThread = new Thread(HackThread.tg(), "SomeRobot thread") {
-            CustomConsole console = cons;
-
-            public void run() {
-                try {
-                    Robot robot = new Robot();
-
-                    robot.delay(2000);
-                    console.append("Robot says: Hello, World!");
-                    console.append("Robot says: You have shp=" + CustomConfig.getSHP() + " and hhp=" + CustomConfig.getHHP() +
-                            " and emergy=" + CustomConfig.getEnergy());
-                    // Simulate a mouse click
-                    robot.mousePress(InputEvent.BUTTON1_MASK);
-                    robot.mouseRelease(InputEvent.BUTTON1_MASK);
-                    robot.delay(2000);
-
-                    // Simulate a key press
-                    robot.keyPress(KeyEvent.VK_A);
-                    robot.keyRelease(KeyEvent.VK_A);
-
-                    console.append("Robot shutting down..");
-                } catch (AWTException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        robotThread.start();
-
-    }
-
-    public static void stopRobot() {
-        robotThread.interrupt();
     }
 
     @SuppressWarnings({"UnusedDeclaration"})
@@ -329,7 +225,6 @@ public class CustomConfig {
         }
     }
 
-    //Vlad's Code Begin
     //windows last positions
     public static Map<String, Coord> windowsCoordinates = new HashMap<String, Coord>();
 
