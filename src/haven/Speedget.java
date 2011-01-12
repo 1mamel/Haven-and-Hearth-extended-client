@@ -26,6 +26,8 @@
 
 package haven;
 
+import haven.scriptengine.UserInfo;
+
 public class Speedget extends Widget {
     public static final Tex imgs[][];
     public static final Coord tsz;
@@ -56,6 +58,7 @@ public class Speedget extends Widget {
         super(c, tsz, parent);
         this.cur = cur;
         this.max = max;
+        updateUserInfo();
     }
 
     public void draw(GOut g) {
@@ -74,10 +77,23 @@ public class Speedget extends Widget {
     }
 
     public void uimsg(String msg, Object... args) {
-        if (msg.equals("cur"))
+        if (msg.equals("cur")) {
             cur = (Integer) args[0];
-        else if (msg.equals("max"))
+            updateUserInfo();
+        } else if (msg.equals("max")) {
             max = (Integer) args[0];
+            updateUserInfo();
+        }
+    }
+
+    private void updateUserInfo() {
+        UserInfo.updateSpeed(cur, max, this);
+    }
+
+    public boolean changeSpeed(int speed) {
+        if (speed < 0 || speed > max) return false;
+        wdgmsg("set", speed);
+        return true;
     }
 
     public boolean mousedown(Coord c, int button) {
@@ -96,5 +112,11 @@ public class Speedget extends Widget {
         if (max >= 0)
             wdgmsg("set", (cur + max + 1 + amount) % (max + 1));
         return (true);
+    }
+
+    @Override
+    public void destroy() {
+        UserInfo.updateSpeed(0, 0, null);
+        super.destroy();
     }
 }

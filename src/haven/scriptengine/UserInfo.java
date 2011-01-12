@@ -1,6 +1,7 @@
 package haven.scriptengine;
 
 import haven.IMeter;
+import haven.Speedget;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -47,6 +48,18 @@ public class UserInfo {
 
     public int getHungry() {
         return hungry;
+    }
+
+    public int getSpeed() {
+        return speedCurrent;
+    }
+
+    public int getMaxSpeed() {
+        return speedMax;
+    }
+
+    public boolean setSpeed(int speed) {
+        return speedGet != null && speedGet.changeSpeed(speed);
     }
 
     public static void iMeterGenerated(IMeter meter, String resName) {
@@ -144,7 +157,11 @@ public class UserInfo {
     private int happy = -1;
     private int happyTowards = -1;
 
-    private int progress; // [0-100] or -1 if not in progress
+    private int progress = -1; // [0-100] or -1 if not in progress
+
+    private Speedget speedGet;
+    private int speedCurrent = -1; // [0-3]
+    private int speedMax = -1; // [0-3]
 
     static Pattern intsOnly = Pattern.compile("[-]?\\d+");
 
@@ -164,5 +181,11 @@ public class UserInfo {
 
     public boolean isInProgress() {
         return progress > 0;
+    }
+
+    public static void updateSpeed(int cur, int max, Speedget sg) {
+        getInstance().speedCurrent=cur;
+        getInstance().speedMax=max;
+        getInstance().speedGet = sg;
     }
 }
