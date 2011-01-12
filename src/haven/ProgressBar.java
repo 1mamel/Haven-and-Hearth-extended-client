@@ -17,6 +17,7 @@ public class ProgressBar extends Widget {
     Img myImage;
     Label myLabel;
     int myProgress;
+    String myLastPrStr;
 
     static {
         Widget.addtype("progressbar", new WidgetFactory() {
@@ -59,6 +60,7 @@ public class ProgressBar extends Widget {
     static Pattern intsOnly = Pattern.compile("[-]?\\d+");
 
     private void setProgress(String progressStr) {
+        if (progressStr.equals(myLastPrStr)) return;
         Matcher makeMatch = intsOnly.matcher(progressStr);
         makeMatch.find();
         int progress = Integer.parseInt(makeMatch.group());
