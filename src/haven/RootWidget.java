@@ -66,11 +66,8 @@ public class RootWidget extends ConsoleHost {
                     CustomConfig.console = new CustomConsole(Coord.z, new Coord(CustomConfig.windowSize.x - 30, 220), this,
                             "Console");
                 } else {
-                    if (CustomConfig.console.visible)
-                        CustomConfig.console.toggle();
-                    else
-                        CustomConfig.console = new CustomConsole(Coord.z, new Coord(CustomConfig.windowSize.x - 30, 220), this,
-                                "Console");
+                    CustomConfig.console.toggle();
+                    CustomConfig.console.raise();
                 }
             } else if (key != 0) {
                 wdgmsg("gk", (int) key);
@@ -94,5 +91,11 @@ public class RootWidget extends ConsoleHost {
     }
 
     public void error(String msg) {
+    }
+
+    @Override
+    public void destroy() {
+        CustomConfig.console = null;
+        super.destroy();
     }
 }

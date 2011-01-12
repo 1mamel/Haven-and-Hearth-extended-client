@@ -249,7 +249,7 @@ public class CustomConfig {
     public static String ircDefNick = "";
     public static String ircAltNick = "";
     public static CharData activeCharacter;
-    public static int wdgtID = 1000;
+    public static int wdgtID = -100; // for Userspace widgets
     public static boolean isMusicOn = true;
     public static boolean isSoundOn = true;
     public static boolean isIRCOn = true;
