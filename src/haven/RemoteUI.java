@@ -88,12 +88,12 @@ public class RemoteUI implements UI.Receiver {
                         Coord pos = ui.widgets.get(parent).c; //on screen position
                         String name = ((Window) ui.widgets.get(parent)).cap.text;
                         Coord size = (Coord) args[0];
-                        CustomConfig.openInventory(id, name, size, pos);
+//                        CustomConfig.openInventory(id, name, size, pos);
                     }
                     if (type.equals("item")) {
                         int itype = (Integer) args[0];
                         int iquality = (Integer) args[1];
-                        CustomConfig.newItem(parent, id, itype, iquality, c);
+//                        CustomConfig.newItem(parent, id, itype, iquality, c);
                     }
                     if (type.equals("wnd")) {
                         c = CustomConfig.getWindowPosition((String) args[1], c); //Try to restore window on last position
@@ -137,7 +137,7 @@ public class RemoteUI implements UI.Receiver {
                         Window wnd = (Window) ui.widgets.get(id);
                         CustomConfig.setWindowPosition(wnd.cap.text, wnd.c); //Save window on last position
                     }
-                    CustomConfig.closeWidget(id);
+//                    CustomConfig.closeWidget(id);
                     if (CustomConfig.debugMsgs) System.out.println("Deleting Widget id=" + id);
                     ui.destroy(id);
                 }
