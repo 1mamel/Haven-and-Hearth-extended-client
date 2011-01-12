@@ -24,7 +24,7 @@ public class ConfigProvider {
             CustomConfig.hasNightVision = true;
         else if (arg0.equals("OFF") || arg0.equals("FALSE"))
             CustomConfig.hasNightVision = false;
-        else throw new RuntimeException("setNightvision(ON|OFF) "+arg0);
+        else throw new RuntimeException("setNightvision(ON|OFF) " + arg0);
     }
 
     private void setIrc(boolean irc) {
@@ -38,6 +38,15 @@ public class ConfigProvider {
         else if (arg0.equals("OFF") || arg0.equals("FALSE"))
             CustomConfig.isIRCOn = false;
         else throw new RuntimeException("setIrc(ON|OFF)");
+    }
+
+    public void setDebugMsgs(String arg0) {
+        arg0 = arg0.toUpperCase();
+        if (arg0.equals("ON") || arg0.equals("TRUE"))
+            CustomConfig.debugMsgs = true;
+        else if (arg0.equals("OFF") || arg0.equals("FALSE"))
+            CustomConfig.debugMsgs = false;
+        else throw new RuntimeException("setDebugMsgs(ON|OFF)");
     }
 
     public void setScreenSize(int width, int height) {
@@ -106,6 +115,7 @@ public class ConfigProvider {
     public int getScreenWidth() {
         return CustomConfig.windowSize.x;
     }
+
     public int getScreenHeight() {
         return CustomConfig.windowSize.y;
     }
@@ -124,6 +134,10 @@ public class ConfigProvider {
 
     public int getMusicVolume() {
         return CustomConfig.musicVol;
+    }
+
+    public boolean isDebugMsgs() {
+        return CustomConfig.debugMsgs;
     }
 
     private static ConfigProvider ourInstance = new ConfigProvider();

@@ -32,6 +32,7 @@ import java.util.Map;
 public class CustomConfig {
     static UI ui;
     public static OpenedInv.InvItem atMouseItem = null;
+    public static boolean debugMsgs = true;
 
     public static void openInventory(int id, String name, Coord size, Coord pos) {
         openedInventories.put(id, new OpenedInv(id, name, size, pos));

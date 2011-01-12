@@ -15,7 +15,7 @@ class ScriptingUtils {
         return ourInstance;
     }
 
-    public void delay (int millis) {
+    public void delay(int millis) {
         long reqStart = System.currentTimeMillis();
         long reqNow = 0;
         boolean isTimeout = false;

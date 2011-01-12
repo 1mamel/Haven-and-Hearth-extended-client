@@ -5,7 +5,7 @@ import haven.scriptengine.ScriptsMachine;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
-import java.io.Writer;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -85,34 +85,34 @@ public class CustomConsole extends Window {
         append(text, Color.BLACK);
     }
 
-    public static class OutWriter extends Writer {
+    public static class OutStream extends OutputStream {
 
         @Override
-        public void write(char[] cbuf, int off, int len) throws IOException {
-            StringBuilder b = new StringBuilder();
-            b.append(cbuf, off, len);
+        public void write(byte[] b, int off, int len) throws IOException {
+            System.err.println(b);
+            StringBuilder builder = new StringBuilder();
+            for (byte sb : b) {
+                builder.append(sb);
+            }
             try {
-                CustomConsole.append(b.toString());
+                CustomConsole.append(builder.toString());
             } catch (Exception ignored) {
             }
         }
 
-        @Override
-        public void flush() throws IOException {
-        }
+        private static OutStream ourInstance;
 
-        @Override
-        public void close() throws IOException {
-        }
-
-        private static OutWriter ourInstance;
-
-        public static OutWriter getInstance() {
-            if (ourInstance == null) ourInstance = new OutWriter();
+        public static OutStream getInstance() {
+            if (ourInstance == null) ourInstance = new OutStream();
             return ourInstance;
         }
 
-        private OutWriter() {
+        private OutStream() {
+        }
+
+        @Override
+        public void write(int b) throws IOException {
+            // ignore
         }
     }
 

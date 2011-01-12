@@ -104,6 +104,10 @@ public class UserInfo {
         makeMatch.find();
         happy = Integer.parseInt(makeMatch.group());
         happyTowards = (makeMatch.find()) ? Integer.parseInt(makeMatch.group()) : 0;
+        if (tooltip.startsWith("Neutral")) {
+            happyTowards = happy;
+            happy = 0;
+        }
         if (tooltip.startsWith("Un")) happy *= -1;
     }
 
@@ -140,11 +144,25 @@ public class UserInfo {
     private int happy = -1;
     private int happyTowards = -1;
 
+    private int progress; // [0-100] or -1 if not in progress
+
     static Pattern intsOnly = Pattern.compile("[-]?\\d+");
 
     private static final UserInfo ourInstance = new UserInfo();
 
     public static UserInfo getInstance() {
         return ourInstance;
+    }
+
+    public static void updateProgress(int p) {
+        getInstance().progress = p;
+    }
+
+    public int getProgress() {
+        return progress;
+    }
+
+    public boolean isInProgress() {
+        return progress > 0;
     }
 }

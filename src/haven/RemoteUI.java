@@ -60,10 +60,11 @@ public class RemoteUI implements UI.Receiver {
                         args[0] = CustomConfig.windowSize;
                     } else if (type.equals("img") && args.length >= 1 && (args[0] instanceof String)) {
                         String arg0 = (String) args[0];
-                        //
-                        if (arg0.contains("gfx/hud/prog/")) // Hourglass (progress bar) at center of screen
+                        if (arg0.startsWith("gfx/hud/prog/")) { // Hourglass (progress bar) at center of screen and change widget type
                             c = CustomConfig.windowCenter;
-                        //
+                            type = "progressbar";
+                            Progress.class.getClass();
+                        }
                         if (arg0.equals("gfx/ccscr"))
                             c = CustomConfig.windowCenter.add(-400, -300);
                         if (arg0.equals("gfx/logo2"))
@@ -78,10 +79,9 @@ public class RemoteUI implements UI.Receiver {
                         System.err.println("Strange window name=" + args[1].toString());
                         c = CustomConfig.windowCenter.add(0, -100);
                     } else if (type.equals("wnd") && args.length >= 2) {
-                        c = CustomConfig.invCoord.x > 0 && CustomConfig.invCoord.y > 0
+                        c = args[1].equals("Inventory") && CustomConfig.invCoord.x > 0 && CustomConfig.invCoord.y > 0
                                 && CustomConfig.invCoord.x < CustomConfig.windowSize.x - 100
                                 && CustomConfig.invCoord.y < CustomConfig.windowSize.y - 100
-                                && args[1].equals("Inventory")
                                 ? CustomConfig.invCoord : c;
                     }
                     if (type.equals("inv")) {
@@ -98,14 +98,16 @@ public class RemoteUI implements UI.Receiver {
                     if (type.equals("wnd")) {
                         c = CustomConfig.getWindowPosition((String) args[1], c); //Try to restore window on last position
                     }
-                    System.out.println("Creating Widget id=" + id + " parentId=" + parent + " type='" + type + "' in coord " + c.toString());
-                    if (args.length > 0) {
-                        System.out.print("  with args: ");
-                        try {
-                            for (Object o : args) System.out.print(o.toString() + "; ");
-                        } catch (Exception ignored) {
+                    if (CustomConfig.debugMsgs) {
+                        System.out.println("Creating Widget id=" + id + " parentId=" + parent + " type='" + type + "' in coord " + c.toString());
+                        if (args.length > 0) {
+                            System.out.print("  with args: ");
+                            try {
+                                for (Object o : args) System.out.print(o.toString() + "; ");
+                            } catch (Exception ignored) {
+                            }
+                            System.out.print("\n");
                         }
-                        System.out.print("\n");
                     }
                     ui.newwidget(id, type, c, parent, args);
 
@@ -113,17 +115,19 @@ public class RemoteUI implements UI.Receiver {
                     int id = msg.uint16();
                     String type = msg.string();
                     Object[] args = msg.list();
-                    try {
-                        System.out.println("Message (type='" + type + "') for widget (id=" + id + ')');
-                        if (args.length > 0) {
-                            System.out.print("  contains: ");
-                            try {
-                                for (Object o : args) System.out.print(o.toString() + "; ");
-                            } catch (Exception ignored) {
+                    if (CustomConfig.debugMsgs) {
+                        try {
+                            System.out.println("Message (type='" + type + "') for widget (id=" + id + ')');
+                            if (args.length > 0) {
+                                System.out.print("  contains: ");
+                                try {
+                                    for (Object o : args) System.out.print(o.toString() + "; ");
+                                } catch (Exception ignored) {
+                                }
+                                System.out.print("\n");
                             }
-                            System.out.print("\n");
+                        } catch (Exception ignored) {
                         }
-                    } catch (Exception ignored) {
                     }
                     ui.uimsg(id, type, args);
 
@@ -134,7 +138,7 @@ public class RemoteUI implements UI.Receiver {
                         CustomConfig.setWindowPosition(wnd.cap.text, wnd.c); //Save window on last position
                     }
                     CustomConfig.closeWidget(id);
-                    System.out.println("Deleting Widget id=" + id);
+                    if (CustomConfig.debugMsgs) System.out.println("Deleting Widget id=" + id);
                     ui.destroy(id);
                 }
             }

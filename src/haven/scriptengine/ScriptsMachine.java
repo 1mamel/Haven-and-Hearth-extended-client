@@ -9,7 +9,11 @@ package haven.scriptengine;
 
 import haven.CustomConsole;
 
-import javax.script.*;
+import javax.script.ScriptContext;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
+import java.io.PrintStream;
 
 public class ScriptsMachine {
     static ScriptEngine engine;
@@ -26,13 +30,22 @@ public class ScriptsMachine {
 
     private static void relinkEngineScope() {
 //        Bindings engineScope = defaultContext.getBindings(ScriptContext.ENGINE_SCOPE);
-        engine.put("utils", ScriptingUtils.getInstance());
+        engine.setContext(engine.getContext());
+        engine.put("util", ScriptingUtils.getInstance());
         engine.put("player", UserInfo.getInstance());
         engine.put("config", ConfigProvider.getInstance());
-        engine.getContext().setWriter(CustomConsole.OutWriter.getInstance());
-        engine.getContext().setErrorWriter(CustomConsole.OutWriter.getInstance());
-//        defaultContext.setWriter(new CustomConsole.OutWriter());
-//        defaultContext.setErrorWriter(new CustomConsole.OutWriter());
+        engine.put("system", SystemInterface.getInstance());
+        SystemInterface.getInstance().setOut(new PrintStream(CustomConsole.OutStream.getInstance()));
+        SystemInterface.getInstance().setErr(new PrintStream(CustomConsole.OutStream.getInstance()));
+//        engine.put("out", System.out);
+        try {
+            engine.eval("print = function (a) {system.print(a);}; println = function (a) {system.println(a);};");
+            engine.eval("var eprint = function (a) {system.eprint(a);}; var eprintln = function (a) {system.eprintln(a);};");
+        } catch (ScriptException e) {
+            e.printStackTrace();
+        }
+//        defaultContext.setWriter(new CustomConsole.OutStream());
+//        defaultContext.setErrorWriter(new CustomConsole.OutStream());
 //        engine.setBindings(engineScope, ScriptContext.ENGINE_SCOPE);
 //        engine.setContext(defaultContext);
     }

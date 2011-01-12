@@ -1,6 +1,7 @@
 package haven.scriptengine;
 
 import junit.framework.TestCase;
+import sun.font.Script;
 
 /**
  * Created by IntelliJ IDEA.
@@ -10,7 +11,7 @@ import junit.framework.TestCase;
  */
 public class ScriptsMachineTest extends TestCase {
     public void testOne() throws Exception {
-            //engine.put("player", UserInfo.getInstance());
+        //engine.put("player", UserInfo.getInstance());
 
 //         // JavaScript code in a String
 //        String script = "var obj = new Object(); obj.run = function() { println('run method called'); }";
@@ -31,7 +32,7 @@ public class ScriptsMachineTest extends TestCase {
 //        // runnable interface
 //        Thread th = new Thread(r);
 //        th.start();
-            // evaluate JavaScript code from String
+        // evaluate JavaScript code from String
 
     }
 
@@ -41,6 +42,8 @@ public class ScriptsMachineTest extends TestCase {
         ScriptsMachine.executeScript("println(config.getNightvision())");
         ScriptsMachine.executeScript("config.setIrc(true);");
         ScriptsMachine.executeScript("println(config.getIrc())");
+//        ScriptsMachine.executeScript("println(eprintln)");
+//        ScriptsMachine.executeScript("eprintln(println)");
         //ScriptsMachine.executeScript("config.setScreenSize(1024,768);");
 
     }

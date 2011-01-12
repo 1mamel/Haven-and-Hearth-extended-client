@@ -10,11 +10,20 @@ import java.io.FileReader;
  * Date: 11.01.11
  * Time: 1:59
  */
-public class ScriptLoader {
+public class SimpleScriptLoader implements Loader {
 
-    public boolean load(String filename) {
+    private static SimpleScriptLoader ourInstance = new SimpleScriptLoader();
+
+    public static SimpleScriptLoader getInstance() {
+        return ourInstance;
+    }
+
+    private SimpleScriptLoader() {
+    }
+
+    public boolean load(String fileName) {
         try {
-            FileReader inFile = new FileReader(filename);
+            FileReader inFile = new FileReader(fileName);
             try {
                 ScriptsMachine.engine.eval(inFile);
             } catch (ScriptException e) {
@@ -23,7 +32,7 @@ public class ScriptLoader {
             }
             return true;
         } catch (FileNotFoundException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
         return false;
     }
