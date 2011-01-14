@@ -56,7 +56,8 @@ public class RemoteUI implements UI.Receiver {
                     Coord c = msg.coord(); // New widget coordinates
                     int parent = msg.uint16(); //Parent Id for new widget
                     Object[] args = msg.list(); // Arguments for widget creator (WidgetFabrick)
-                    if (type.equals("cnt")) {
+                    // UI fixes START
+                    if (type.equals("cnt")) { // Central welcome widget
                         args[0] = CustomConfig.windowSize;
                     } else if (type.equals("img") && args.length >= 1 && (args[0] instanceof String)) {
                         String arg0 = (String) args[0];
@@ -109,6 +110,7 @@ public class RemoteUI implements UI.Receiver {
                             System.out.print("\n");
                         }
                     }
+                    // US fixes END
                     ui.newwidget(id, type, c, parent, args);
 
                 } else if (msg.type == Message.RMSG_WDGMSG) {

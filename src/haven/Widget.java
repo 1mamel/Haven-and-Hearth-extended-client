@@ -274,14 +274,18 @@ public class Widget {
     }
 
     public void draw(GOut g) {
-        Widget next;
+        try {
+            Widget next;
 
-        for (Widget wdg = child; wdg != null; wdg = next) {
-            next = wdg.next;
-            if (!wdg.visible)
-                continue;
-            Coord cc = xlate(wdg.c, true);
-            wdg.draw(g.reclip(cc, wdg.sz));
+            for (Widget wdg = child; wdg != null; wdg = next) {
+                next = wdg.next;
+                if (!wdg.visible)
+                    continue;
+                Coord cc = xlate(wdg.c, true);
+                wdg.draw(g.reclip(cc, wdg.sz));
+            }
+        } catch (IllegalAccessError e) {
+            e.printStackTrace();
         }
     }
 
