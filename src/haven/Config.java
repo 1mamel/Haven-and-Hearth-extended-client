@@ -26,8 +26,10 @@
 
 package haven;
 
-import java.io.PrintStream;
+import java.io.*;
 import java.net.URL;
+import java.util.HashSet;
+import java.util.Properties;
 
 import static haven.Utils.getprop;
 
@@ -45,6 +47,12 @@ public class Config {
     public static String resdir;
     public static boolean nopreload;
     public static String loadwaited, allused;
+    public static boolean xray;
+    public static boolean hide;
+    public static HashSet<String> hideObjectList;
+    public static boolean nightvision;
+    public static String currentCharName;
+    public static Properties options;
 
     static {
         try {
@@ -67,6 +75,13 @@ public class Config {
             nolocalres = getprop("haven.nolocalres", "").equals("yesimsure");
             resdir = getprop("haven.resdir", null);
             nopreload = getprop("haven.nopreload", "no").equals("yes");
+            xray = false;
+            hide = false;
+            nightvision = false;
+            currentCharName = "";
+            options = new Properties();
+            hideObjectList = new HashSet<String>();
+            loadOptions();
         } catch (java.net.MalformedURLException e) {
             throw (new RuntimeException(e));
         }
@@ -121,5 +136,39 @@ public class Config {
         }
         if (opt.rest.length > 0)
             defserv = opt.rest[0];
+    }
+
+    private static void loadOptions() {
+        File inputFile = new File("haven.conf");
+        if (!inputFile.exists()) {
+            return;
+        }
+        try {
+            options.load(new FileInputStream("haven.conf"));
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+        String hideObjects = options.getProperty("hideObjects", "");
+        hideObjectList.clear();
+        if (!hideObjects.isEmpty()) {
+            for (String objectName : hideObjects.split(",")) {
+                if (!objectName.isEmpty()) {
+                    hideObjectList.add(objectName);
+                }
+            }
+        }
+    }
+
+    public static void saveOptions() {
+        String hideObjects = "";
+        for (String objectName : hideObjectList) {
+            hideObjects += objectName + ",";
+        }
+        options.setProperty("hideObjects", hideObjects);
+        try {
+            options.store(new FileOutputStream("haven.conf"), "Custom config options");
+        } catch (IOException e) {
+            System.out.println(e);
+        }
     }
 }

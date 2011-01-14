@@ -415,6 +415,19 @@ public class Widget {
     }
 
     public boolean keyup(KeyEvent ev) {
+        if ((ev.getKeyCode() == KeyEvent.VK_X) && ((ev.getModifiers() & InputEvent.CTRL_MASK) != 0)) {
+            Config.xray = !Config.xray;
+            return (true);
+        }
+        if ((ev.getKeyCode() == KeyEvent.VK_N) && ((ev.getModifiers() & InputEvent.CTRL_MASK) != 0)) {
+            Config.nightvision = !Config.nightvision;
+            return (true);
+        }
+        if ((ev.getKeyCode() == KeyEvent.VK_H) && ((ev.getModifiers() & InputEvent.CTRL_MASK) != 0)) {
+            Config.hide = !Config.hide;
+            return (true);
+        }
+
         if (focusctl) {
             if (focused != null) {
                 if (focused.keyup(ev))

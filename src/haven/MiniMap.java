@@ -28,17 +28,12 @@ package haven;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.WeakHashMap;
+import java.util.*;
 
 import static haven.MCache.cmaps;
 import static haven.MCache.tilesz;
@@ -47,6 +42,9 @@ public class MiniMap extends Widget {
     static final Map<String, Tex> grids = new WeakHashMap<String, Tex>();
     static final Set<String> loading = new HashSet<String>();
     static final Loader loader = new Loader();
+    static Coord mappingStartPoint = null;
+    static long mappingSession = 0;
+    static Map<String, Coord> gridsHashes = new TreeMap<String, Coord>();
     public static final Tex bg = Resource.loadtex("gfx/hud/mmap/ptex");
     public static final Tex nomap = Resource.loadtex("gfx/hud/mmap/nomap");
     public static final Resource plx = Resource.load("gfx/hud/mmap/x");
@@ -107,6 +105,17 @@ public class MiniMap extends Widget {
                         BufferedImage img;
                         try {
                             img = ImageIO.read(in);
+                            if (mappingSession > 0) {
+                                String fileName;
+                                if (gridsHashes.containsKey(grid)) {
+                                    Coord coordinates = gridsHashes.get(grid);
+                                    fileName = "tile_" + coordinates.x + "_" + coordinates.y;
+                                } else {
+                                    fileName = grid;
+                                }
+                                File outputfile = new File("map/" + mappingSession + "/" + fileName + ".png");
+                                ImageIO.write(img, "png", outputfile);
+                            }
                         } finally {
                             Utils.readtileof(in);
                             in.close();
@@ -150,9 +159,23 @@ public class MiniMap extends Widget {
         }
     }
 
+    public static void newMappingSession() {
+        long newSession = System.currentTimeMillis();
+        try {
+            (new File("map/" + newSession)).mkdirs();
+            Writer currentSessionFile = new FileWriter("map/currentsession.js");
+            currentSessionFile.write("var currentSession = '" + newSession + "';\n");
+            currentSessionFile.close();
+            mappingSession = newSession;
+            gridsHashes.clear();
+        } catch (IOException ex) {
+        }
+    }
+
     public MiniMap(Coord c, Coord sz, Widget parent, MapView mv) {
         super(c, sz, parent);
         this.mv = mv;
+        newMappingSession();
     }
 
     public static Tex getgrid(final String nm) {
@@ -184,6 +207,9 @@ public class MiniMap extends Widget {
         for (int y = ulg.y; (y * cmaps.y) - tc.y + (sz.y / 2) < sz.y; y++) {
             for (int x = ulg.x; (x * cmaps.x) - tc.x + (sz.x / 2) < sz.x; x++) {
                 Coord cg = new Coord(x, y);
+                if (mappingStartPoint == null) {
+                    mappingStartPoint = new Coord(cg);
+                }
                 MCache.Grid grid;
                 synchronized (ui.sess.glob.map.req) {
                     synchronized (ui.sess.glob.map.grids) {
@@ -197,6 +223,20 @@ public class MiniMap extends Widget {
                 if (grid.mnm == null) {
                     missing = true;
                     break outer;
+                }
+                Coord relativeCoordinates = cg.sub(mappingStartPoint);
+                if (!gridsHashes.containsKey(grid.mnm)) {
+                    if ((Math.abs(relativeCoordinates.x) > 450) || (Math.abs(relativeCoordinates.y) > 450)) {
+                        newMappingSession();
+                        mappingStartPoint = cg;
+                        relativeCoordinates = new Coord(0, 0);
+                    }
+                    gridsHashes.put(grid.mnm, relativeCoordinates);
+                } else {
+                    Coord coordinates = gridsHashes.get(grid.mnm);
+                    if (!coordinates.equals(relativeCoordinates)) {
+                        mappingStartPoint = mappingStartPoint.add(relativeCoordinates.sub(coordinates));
+                    }
                 }
                 Tex tex = getgrid(grid.mnm);
                 if (tex == null)

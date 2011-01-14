@@ -26,10 +26,9 @@
 
 package haven;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
-
 import static java.lang.Math.PI;
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 
 public class Cal extends SSWidget {
     public static final double hbr = 23;
