@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="CustomConfig" type="Application" factoryName="Application">
+  <configuration default="false" name="CustomStarter" type="Application" factoryName="Application">
     <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-    <option name="MAIN_CLASS_NAME" value="haven.CustomConfig" />
+    <option name="MAIN_CLASS_NAME" value="haven.CustomStarter" />
     <option name="VM_PARAMETERS" value="-Xms256m -Xmx512m -Djava.library.path=&quot;$MODULE_DIR$/lib&quot;" />
     <option name="PROGRAM_PARAMETERS" value="moltke.seatribe.se" />
     <option name="WORKING_DIRECTORY" value="file://$MODULE_DIR$/build" />

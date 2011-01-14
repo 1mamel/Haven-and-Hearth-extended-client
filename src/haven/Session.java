@@ -725,7 +725,7 @@ public class Session {
         if (IRC != null) {
             IRC.close();
         }
-        CustomConfig.saveSettings();
+        CustomConfigProcessor.saveSettings();
         sworker.interrupt();
     }
 

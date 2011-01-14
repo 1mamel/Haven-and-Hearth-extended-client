@@ -184,8 +184,8 @@ public class UserInfo {
     }
 
     public static void updateSpeed(int cur, int max, Speedget sg) {
-        getInstance().speedCurrent=cur;
-        getInstance().speedMax=max;
+        getInstance().speedCurrent = cur;
+        getInstance().speedMax = max;
         getInstance().speedGet = sg;
     }
 }

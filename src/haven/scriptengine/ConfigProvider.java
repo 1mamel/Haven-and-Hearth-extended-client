@@ -1,6 +1,7 @@
 package haven.scriptengine;
 
 import haven.CustomConfig;
+import haven.CustomConfigProcessor;
 import haven.CustomConsole;
 
 import java.awt.*;
@@ -52,7 +53,7 @@ public class ConfigProvider {
     public void setScreenSize(int width, int height) {
         try {
             CustomConfig.setWindowSize(Math.max(width, 800), Math.max(height, 600));
-            CustomConfig.saveSettings();
+            CustomConfigProcessor.saveSettings();
             CustomConsole.append("Client must be restarted for new settings to take effect.", Color.RED.darker());
         } catch (NumberFormatException e) {
             throw new RuntimeException("setScreenSize(int width, int height);");
@@ -96,12 +97,12 @@ public class ConfigProvider {
     }
 
     public void save() {
-        CustomConfig.saveSettings();
+        CustomConfigProcessor.saveSettings();
     }
 
     public void forcesave() {
         CustomConfig.isSaveable = true;
-        CustomConfig.saveSettings();
+        CustomConfigProcessor.saveSettings();
     }
 
     public boolean getNightvision() {

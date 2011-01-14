@@ -218,7 +218,7 @@ public class MainFrame extends Frame implements Runnable, FSMan {
         //noinspection UnusedParameters
         f.addWindowListener(new WindowListener() {
             public void windowClosing(WindowEvent e) {
-                if (CustomConfig.isSaveable) CustomConfig.saveSettings();
+                if (CustomConfig.isSaveable) CustomConfigProcessor.saveSettings();
             }
 
             public void windowOpened(WindowEvent e) {

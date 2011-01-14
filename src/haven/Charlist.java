@@ -119,8 +119,9 @@ public class Charlist extends Widget {
                     if (sender == c.plb) {
                         wdgmsg("play", c.name);
                         CustomConfig.setActiveCharacter(c.name);
-                        if (parent.findchild(SlenHud.class) != null) {
-                            parent.findchild(SlenHud.class).initBelt();
+                        SlenHud hud = parent.findchild(SlenHud.class);
+                        if (hud != null) {
+                            hud.initBelt();
                         }
                     }
                 }

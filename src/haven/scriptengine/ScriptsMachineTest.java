@@ -1,7 +1,6 @@
 package haven.scriptengine;
 
 import junit.framework.TestCase;
-import sun.font.Script;
 
 /**
  * Created by IntelliJ IDEA.

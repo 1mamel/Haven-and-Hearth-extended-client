@@ -1070,7 +1070,7 @@ public class Resource implements Comparable<Resource>, Prioritized, Serializable
                     cons = lc.getConstructor(byte[].class);
                     isStaticLayerClass = true;
                 } catch (NoSuchMethodException e2) {
-                    System.err.println("Failed to load " + name + "\t| type is " + tbuf.toString());
+                    System.err.println("Failed to loadSettings " + name + "\t| type is " + tbuf.toString());
                     throw (new LoadException(e2, Resource.this));
                 }
             }

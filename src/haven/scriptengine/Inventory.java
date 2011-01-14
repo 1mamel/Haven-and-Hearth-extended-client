@@ -88,4 +88,47 @@ public class Inventory {
     public int getId() {
         return id;
     }
+
+    //    public static void openInventory(int id, String name, Coord size, Coord pos) {
+//        openedInventories.put(id, new OpenedInv(id, name, size, pos));
+//    }
+//
+//    public static void closeInventory(int id) {
+//        if (openedInventories.containsKey(id))
+//            openedInventories.remove(id);
+//    }
+
+//    public static void closeWidget(int id) {
+//        try {
+//            closeInventory(id);
+//            //TODO widget type maybe Item
+//            if ((atMouseItem != null) && (id == atMouseItem.getId())) atMouseItem = null;
+//            Widget wtd = ui.getWidgetById(id);
+//            int parent = ui.getIdByWidget(wtd.parent);
+//            if (openedInventories.containsKey(parent)) {
+//                openedInventories.get(parent).deleteItem(id);
+//            }
+//
+//        } catch (Exception e) {
+//            e.printStackTrace(System.err);
+//        }
+//    }
+
+//    public static void newItem(int parent, int id, int itype, int iquality, Coord position) {
+//        try {
+//            if (parent == 0) {
+//                atMouseItem = new OpenedInv.InvItem(itype, iquality, id);
+//            }
+//
+//            if (!openedInventories.containsKey(parent)) return;
+//            OpenedInv.InvItem item = new OpenedInv.InvItem(itype, iquality, id);
+//            OpenedInv inventory = openedInventories.get(parent);
+//            inventory.setItem(position.add(new Coord(-1, -1).div(new Coord(31, 31))), item);
+//        } catch (Exception e) {
+//            e.printStackTrace(System.err);
+//        }
+//    }
+    //    public static OpenedInv.InvItem atMouseItem = null;
+
+//    public static Map<Integer, haven.scriptengine.Inventory> openedInventories = new HashMap<Integer, Inventory>();
 }

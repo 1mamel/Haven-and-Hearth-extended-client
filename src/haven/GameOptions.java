@@ -1,5 +1,5 @@
 /**
- * @(#)Menu.java
+ * @(#)GameOptions.java
  *
  *
  * @author
@@ -7,8 +7,12 @@
  */
 package haven;
 
+import java.util.regex.Pattern;
+
 @SuppressWarnings({"StringContatenationInLoop"})
 public class GameOptions extends Window {
+
+    private static final Pattern whitespaceSplitter = Pattern.compile(" ");
 
     static {
         Widget.addtype("gopts", new WidgetFactory() {
@@ -37,7 +41,7 @@ public class GameOptions extends Window {
     final CheckBox musicToggle;
     final CheckBox soundToggle;
     final CheckBox ircToggle;
-    Listbox channelListbox;
+    //    Listbox channelListbox;
     Button okBtn;
     Button cancelBtn;
 
@@ -61,14 +65,19 @@ public class GameOptions extends Window {
 
         //	Channel list entry
         chnlLabel = new Label(new Coord(0, 80), this, "Channels:");
-        // TODO: rewrite with StringBuilder
-        String channels = "";
+        StringBuilder builder = new StringBuilder();
         for (Listbox.Option channel : CustomConfig.ircChannelList) {
-            channels += channel.name + ' ' + channel.disp;
-            channels = channels.trim() + ' ';
+            String name = channel.name.trim();
+            String disp = channel.disp.trim();
+            if (!name.isEmpty()) {
+                builder.append(name).append(' ');
+            }
+            if (!disp.isEmpty()) {
+                builder.append(disp).append(' ');
+            }
         }
         channelList = new TextEntry(Coord.z.add(sfxVol.sz.x + 5, 80), Coord.z.add(120, 15),
-                this, channels.trim());
+                this, builder.toString().trim());
 
         //	Nickname entries
         defIRCNickLabel = new Label(new Coord(0, 100), this, "IRC Nick:");
@@ -142,7 +151,7 @@ public class GameOptions extends Window {
         CustomConfig.ircDefNick = defNick.text;
         CustomConfig.ircAltNick = altNick.text;
         if (this.visible) {
-            String channelData[] = channelList.text.split(" ");
+            String channelData[] = whitespaceSplitter.split(channelList.text);
             CustomConfig.ircChannelList.clear();
             for (int i = 0; i < channelData.length; i++) {
                 channelData[i] = channelData[i].trim();
@@ -172,15 +181,20 @@ public class GameOptions extends Window {
                 channel = null;
             }
         } else {
-            // TODO: rewrite with StringBuilder
-            String channels = "";
+            StringBuilder builder = new StringBuilder();
             for (Listbox.Option chan : CustomConfig.ircChannelList) {
-                channels += chan.name + ' ' + chan.disp;
-                channels = channels.trim() + ' ';
+                String name = chan.name.trim();
+                String disp = chan.disp.trim();
+                if (!name.isEmpty()) {
+                    builder.append(name).append(' ');
+                }
+                if (!disp.isEmpty()) {
+                    builder.append(disp).append(' ');
+                }
             }
-            channelList.settext(channels.trim());
+            channelList.settext(builder.toString().trim());
         }
-        if (CustomConfig.isSaveable) CustomConfig.saveSettings();
+        if (CustomConfig.isSaveable) CustomConfigProcessor.saveSettings();
         return super.toggle();
     }
 }
