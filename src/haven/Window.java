@@ -58,15 +58,17 @@ public class Window extends Widget implements DTarget {
             public Widget create(Coord c, Widget parent, Object[] args) {
                 if (args.length < 2)
                     return (new Window(c, (Coord) args[0], parent, null));
-                else
+                else {
+                    c = WindowsLocations.getLocationByName((String) args[1], c);
                     return (new Window(c, (Coord) args[0], parent, (String) args[1]));
+                }
             }
         });
         wbox = new IBox("gfx/hud", "tl", "tr", "bl", "br", "extvl", "extvr", "extht", "exthb");
     }
 
     private void placecbtn() {
-        cbtn.c = new Coord(wsz.x - 3 - Utils.imgsz(cbtni[0]).x, 3).add(mrgn.inv().add(wbox.tloff().inv()));
+        cbtn.c = new Coord(wsz.x - 3 - Utils.imgsz(cbtni[0]).x, 3).sub(mrgn).sub(wbox.tloff());
     }
 
     public Window(Coord c, Coord sz, Widget parent, String cap, Coord tlo, Coord rbo, boolean closable) {
@@ -79,7 +81,7 @@ public class Window extends Widget implements DTarget {
         sz = sz.add(tlo).add(rbo).add(wbox.bisz()).add(mrgn.mul(2));
         this.sz = sz;
         atl = new Coord(wbox.bl.sz().x, wbox.bt.sz().y).add(tlo);
-        wsz = sz.add(tlo.inv()).add(rbo.inv());
+        wsz = sz.sub(tlo).sub(rbo);
         asz = new Coord(wsz.x - wbox.bl.sz().x - wbox.br.sz().x - mrgn.x, wsz.y - wbox.bt.sz().y - wbox.bb.sz().y - mrgn.y);
         if (closable) placecbtn();
         else cbtn.visible = false;
@@ -102,12 +104,14 @@ public class Window extends Widget implements DTarget {
     public void cdraw(GOut g) {
     }
 
+    private static final Coord coord3x3 = new Coord(3, 3);
+
     public void draw(GOut og) {
         GOut g = og.reclip(tlo, wsz);
         Coord bgc = new Coord();
         for (bgc.y = 3; bgc.y < wsz.y - 6; bgc.y += bg.sz().y) {
             for (bgc.x = 3; bgc.x < wsz.x - 6; bgc.x += bg.sz().x)
-                g.image(bg, bgc, new Coord(3, 3), wsz.add(new Coord(-6, -6)));
+                g.image(bg, bgc, coord3x3, wsz.add(-6, -6));
         }
         cdraw(og.reclip(xlate(Coord.z, true), sz));
         wbox.draw(g, Coord.z, wsz);
@@ -134,8 +138,8 @@ public class Window extends Widget implements DTarget {
                 max.y = br.y;
         }
         sz = max.add(wbox.bsz().add(mrgn.mul(2)).add(tlo).add(rbo)).add(-1, -1);
-        wsz = sz.add(tlo.inv()).add(rbo.inv());
-        asz = new Coord(wsz.x - wbox.bl.sz().x - wbox.br.sz().x, wsz.y - wbox.bt.sz().y - wbox.bb.sz().y).add(mrgn.mul(2).inv());
+        wsz = sz.sub(tlo).sub(rbo);
+        asz = new Coord(wsz.x - wbox.bl.sz().x - wbox.br.sz().x, wsz.y - wbox.bt.sz().y - wbox.bb.sz().y).sub(mrgn.mul(2));
         placecbtn();
     }
 
@@ -154,7 +158,7 @@ public class Window extends Widget implements DTarget {
         if (in)
             return (c.add(ctl).add(tlo).add(mrgn));
         else
-            return (c.add(ctl.inv()).add(tlo.inv()).add(mrgn.inv()));
+            return (c.sub(ctl).sub(tlo).sub(mrgn));
     }
 
     public boolean mousedown(Coord c, int button) {
@@ -162,7 +166,7 @@ public class Window extends Widget implements DTarget {
         raise();
         if (super.mousedown(c, button))
             return (true);
-        if (!c.isect(tlo, sz.add(tlo.inv()).add(rbo.inv())))
+        if (!c.isect(tlo, sz.sub(tlo).sub(rbo)))
             return (false);
         if (button == 1) {
             ui.grabmouse(this);
@@ -176,6 +180,7 @@ public class Window extends Widget implements DTarget {
         if (dm) {
             ui.grabmouse(null);
             dm = false;
+            WindowsLocations.coordChanged(this, this.c);
         } else {
             super.mouseup(c, button);
         }
@@ -184,7 +189,7 @@ public class Window extends Widget implements DTarget {
 
     public void mousemove(Coord c) {
         if (dm) {
-            this.c = this.c.add(c.add(doff.inv()));
+            this.c = this.c.add(c.sub(doff));
         } else {
             super.mousemove(c);
         }
