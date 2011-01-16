@@ -26,32 +26,35 @@
 
 package haven;
 
+import haven.scriptengine.InventoryExp;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
 
 public class Item extends Widget implements DTarget {
     static final Coord shoff = new Coord(1, 3);
     static final Resource missing = Resource.load("gfx/invobjs/missing");
     boolean dm = false;
-    int q;
-    boolean hq;
+    protected int q; // quality
+    boolean hq; // Hide big qualities values
     Coord doff;
-    String tooltip;
-    int num = -1;
+    protected String tooltip;
+    protected int num = -1;
     Indir<Resource> res;
     Tex sh;
     Color olcol = null;
     Tex mask = null;
-    int meter = 0;
+    protected int meter = 0;
 
     static {
         Widget.addtype("item", new WidgetFactory() {
             public Widget create(Coord c, Widget parent, Object[] args) {
-                int res = (Integer) args[0];
-                int q = (Integer) args[1];
-                int num = -1;
+                int res = (Integer) args[0]; // Resource id
+                int q = (Integer) args[1]; // Quality
+                int num = -1; // Quantity
                 String tooltip = null;
-                int ca = 3;
+                int ca = 3; // Arguments count
                 Coord drag = null;
                 if ((Integer) args[2] != 0)
                     drag = (Coord) args[ca++];
@@ -62,7 +65,18 @@ public class Item extends Widget implements DTarget {
                 if (args.length > ca)
                     //noinspection UnusedAssignment
                     num = (Integer) args[ca++];
-                Item item = new Item(c, res, q, parent, drag, num);
+                Item item;
+                if (parent instanceof InventoryExp) // Item in inventory
+                    item = ((InventoryExp) parent).new InvItem(c, res, q, parent, drag, num);
+                else if (parent instanceof RootWidget) // Item at cursor
+                    item = new Item(c, res, q, parent, drag, num);
+                else {
+                    System.err.println("Creation item not ( in inventory | at cursor)" +
+                            "\n\tparenttype=" + parent.getClass().getSimpleName() +
+                            "\n\tcoordinates=" + c.toString() +
+                            "\n\targs=" + Arrays.toString(args));
+                    item = new Item(c, res, q, parent, drag, num);
+                }
                 item.tooltip = tooltip;
                 return (item);
             }
@@ -193,9 +207,8 @@ public class Item extends Widget implements DTarget {
             this.q = q;
             hq = false;
         } else {
-            int fl = (q & 0xff000000) >> 24;
             this.q = (q & 0xffffff);
-            hq = ((fl & 1) != 0);
+            hq = (q & 0x01000000) != 0;  // Some optimization
         }
     }
 
@@ -211,7 +224,7 @@ public class Item extends Widget implements DTarget {
             dm = true;
             doff = drag;
             ui.grabmouse(this);
-            this.c = ui.mc.add(doff.inv());
+            this.c = ui.mc.sub(doff);
         }
     }
 
@@ -233,12 +246,12 @@ public class Item extends Widget implements DTarget {
                 continue;
             Coord cc = w.xlate(wdg.c, true);
             if (c.isect(cc, wdg.sz)) {
-                if (dropon(wdg, c.add(cc.inv())))
+                if (dropon(wdg, c.sub(cc)))
                     return (true);
             }
         }
         if (w instanceof DTarget) {
-            if (((DTarget) w).drop(c, c.add(doff.inv())))
+            if (((DTarget) w).drop(c, c.sub(doff)))
                 return (true);
         }
         return (false);
@@ -250,12 +263,12 @@ public class Item extends Widget implements DTarget {
                 continue;
             Coord cc = w.xlate(wdg.c, true);
             if (c.isect(cc, wdg.sz)) {
-                if (interact(wdg, c.add(cc.inv())))
+                if (interact(wdg, c.sub(cc)))
                     return (true);
             }
         }
         if (w instanceof DTarget) {
-            if (((DTarget) w).iteminteract(c, c.add(doff.inv())))
+            if (((DTarget) w).iteminteract(c, c.sub(doff)))
                 return (true);
         }
         return (false);
@@ -268,20 +281,20 @@ public class Item extends Widget implements DTarget {
     }
 
     public void uimsg(String name, Object... args) {
-        if (name.equals("num")) {
+        if (name.equals("num")) { // Change quantity
             num = (Integer) args[0];
-        } else if (name.equals("chres")) {
+        } else if (name.equals("chres")) { // Change resource (by id) and quality
             chres(ui.sess.getres((Integer) args[0]), (Integer) args[1]);
             resettt();
-        } else if (name.equals("color")) {
+        } else if (name.equals("color")) { // Change color (?)
             olcol = (Color) args[0];
-        } else if (name.equals("tt")) {
+        } else if (name.equals("tt")) { // Change tooltip
             if ((args.length > 0) && (((String) args[0]).length() > 0))
                 tooltip = (String) args[0];
             else
                 tooltip = null;
             resettt();
-        } else if (name.equals("meter")) {
+        } else if (name.equals("meter")) { // TODO: may be completion indicator on dying fur, etc.
             meter = (Integer) args[0];
         }
     }
@@ -313,7 +326,7 @@ public class Item extends Widget implements DTarget {
 
     public void mousemove(Coord c) {
         if (dm)
-            this.c = this.c.add(c.add(doff.inv()));
+            this.c = this.c.add(c.sub(doff));
     }
 
     public boolean drop(Coord cc, Coord ul) {
