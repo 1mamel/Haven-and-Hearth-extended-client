@@ -14,8 +14,8 @@ import java.util.regex.Pattern;
  */
 public class ProgressBar extends Widget {
     final Text.Foundry f = new Text.Foundry(new Font("SansSerif", Font.BOLD, 18));
-    Img myImage;
-    Label myLabel;
+    final Img myImage;
+    final Label myLabel;
     int myProgress;
     String myLastPrStr;
 
@@ -57,7 +57,7 @@ public class ProgressBar extends Widget {
         }
     }
 
-    static Pattern intsOnly = Pattern.compile("[-]?\\d+");
+    static final Pattern intsOnly = Pattern.compile("[-]?\\d+");
 
     private void setProgress(String progressStr) {
         if (progressStr.equals(myLastPrStr)) return;

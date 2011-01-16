@@ -9,6 +9,7 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class ExtTextlog extends Widget implements ClipboardOwner {
 
@@ -71,7 +72,7 @@ public class ExtTextlog extends Widget implements ClipboardOwner {
 
         //	Splits at obvious line breaks
         if (text.contains("\n")) {
-            String[] lines = text.trim().split("\n");
+            String[] lines = Utils.eoLinePattern.split(text.trim());
             for (String line : lines) {
                 append(line, col);
             }
@@ -79,7 +80,7 @@ public class ExtTextlog extends Widget implements ClipboardOwner {
         }
 
         GLLine tGLLine;
-        String[] words = text.trim().split(" ");
+        String[] words = Utils.whitespacePattern.split(text.trim());
 
         Graphics g = drawnCharacters.getGraphics();
 

@@ -40,7 +40,7 @@ public class Window extends Widget implements DTarget {
             Resource.loadimg("gfx/hud/cbtnh")};
     static final Color cc = Color.YELLOW;
     static final Text.Foundry cf = new Text.Foundry(new Font("Serif", Font.PLAIN, 12));
-    static IBox wbox;
+    static final IBox wbox;
     boolean dt = false;
     Text cap;
     boolean dm = false;

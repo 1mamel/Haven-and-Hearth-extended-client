@@ -43,7 +43,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
     public static final Coord fc = new Coord(96, -29);
     public static final Coord mc = new Coord(316, -55);
     public static final Coord dispc = new Coord(0, 4 - dispbg.sz().y);
-    public static final Coord bc1 = new Coord(147, -8);    //	Belt 1 location start
+    public static final Coord bc1 = new Coord(147, -8); //	Belt 1 location start
     public static final Coord bc2 = new Coord(485, -8); //	Belt 2 location start
     public static final Coord sz;
     public static int activeBelt = 1;

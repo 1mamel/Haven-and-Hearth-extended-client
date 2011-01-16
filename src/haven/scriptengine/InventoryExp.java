@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
  * Date: 12.01.11
  * Time: 13:53
  */
+@SuppressWarnings({"MethodMayBeStatic", "UnusedDeclaration"})
 public class InventoryExp extends Inventory {
 
     public class InvItem extends Item {
@@ -52,7 +53,7 @@ public class InventoryExp extends Inventory {
         private void tooltipProcess() {
             if (tooltip == null) return;
             try {
-                final Pattern water = Pattern.compile("(\\d+\\.{0,}\\d{0,})/(\\d+\\.{0,}\\d{0,}) l of quality (\\d+) water");
+                final Pattern water = Pattern.compile("(\\d+\\.?\\d*)/(\\d+\\.?\\d*) l of quality (\\d+) water");
                 Matcher nm = water.matcher(tooltip);
                 if (nm.find() && nm.groupCount() == 3) {
                     int nowCount = Integer.parseInt(nm.group(1));

@@ -36,5 +36,5 @@ public class WindowsLocations {
         // TODO: implement with json
     }
 
-    static Map<String, Coord> ourLocations = new HashMap<String, Coord>();
+    static final Map<String, Coord> ourLocations = new HashMap<String, Coord>();
 }

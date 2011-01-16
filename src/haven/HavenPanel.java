@@ -26,6 +26,8 @@
 
 package haven;
 
+import haven.error.ErrorHandler;
+
 import javax.media.opengl.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -73,6 +75,7 @@ public class HavenPanel extends GLCanvas implements Runnable {
     private void initgl() {
         final Thread caller = Thread.currentThread();
         addGLEventListener(new GLEventListener() {
+
             public void display(GLAutoDrawable d) {
                 GL gl = d.getGL();
                 if (inited && rdr)
@@ -82,12 +85,12 @@ public class HavenPanel extends GLCanvas implements Runnable {
 
             public void init(GLAutoDrawable d) {
                 GL gl = d.getGL();
-                if (caller.getThreadGroup() instanceof haven.error.ErrorHandler) {
-                    haven.error.ErrorHandler h = (haven.error.ErrorHandler) caller.getThreadGroup();
+                if (caller.getThreadGroup() instanceof ErrorHandler) {
+                    ErrorHandler h = (ErrorHandler) caller.getThreadGroup();
                     h.lsetprop("gl.vendor", gl.glGetString(GL.GL_VENDOR));
                     h.lsetprop("gl.version", gl.glGetString(GL.GL_VERSION));
                     h.lsetprop("gl.renderer", gl.glGetString(GL.GL_RENDERER));
-                    h.lsetprop("gl.exts", Arrays.asList(gl.glGetString(GL.GL_EXTENSIONS).split(" ")));
+                    h.lsetprop("gl.exts", Arrays.asList(Utils.whitespacePattern.split(gl.glGetString(GL.GL_EXTENSIONS))));
                     h.lsetprop("gl.caps", d.getChosenGLCapabilities().toString());
                 }
                 gl.glColor3f(1, 1, 1);

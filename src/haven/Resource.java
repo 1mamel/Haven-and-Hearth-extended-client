@@ -270,7 +270,7 @@ public class Resource implements Comparable<Resource>, Prioritized, Serializable
 
         public InputStream get(String name) {
             File cur = base;
-            String[] parts = name.split("/");
+            String[] parts = Utils.slashPattern.split(name);
             for (int i = 0; i < parts.length - 1; i++)
                 cur = new File(cur, parts[i]);
             cur = new File(cur, parts[parts.length - 1] + ".res");

@@ -112,9 +112,9 @@ public class Partyview extends Widget {
             wdgmsg("leave");
             return;
         }
-        for (Member m : avs.keySet()) {
-            if (sender == avs.get(m)) {
-                wdgmsg("click", m.gobid, args[0]);
+        for (Entry<Member, Avaview> memberAvaviewEntry : avs.entrySet()) {
+            if (sender == memberAvaviewEntry.getValue()) {
+                wdgmsg("click", memberAvaviewEntry.getKey().gobid, args[0]);
                 return;
             }
         }

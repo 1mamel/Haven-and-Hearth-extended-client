@@ -11,7 +11,7 @@ import java.awt.event.KeyEvent;
  */
 class FilteredTextField extends JTextField {
 
-    String defbadchars = "`~!@#$%^&*()_-+=\\|\"':;?/>.<, ";
+    static final String defbadchars = "`~!@#$%^&*()_-+=\\|\"':;?/>.<, ";
     String badchars = defbadchars;
     boolean noLetters = false;
     boolean noNumbers = false;

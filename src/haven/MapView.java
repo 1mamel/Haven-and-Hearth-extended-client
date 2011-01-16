@@ -447,6 +447,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
         camtypes.put("fixedcake", FixedCakeCam.class);
     }
 
+    @SuppressWarnings({"EmptyClass"})
     private static class Loading extends RuntimeException {
     }
 

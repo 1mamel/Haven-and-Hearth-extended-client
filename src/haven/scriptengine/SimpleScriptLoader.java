@@ -12,7 +12,7 @@ import java.io.FileReader;
  */
 public class SimpleScriptLoader implements Loader {
 
-    private static SimpleScriptLoader ourInstance = new SimpleScriptLoader();
+    private static final SimpleScriptLoader ourInstance = new SimpleScriptLoader();
 
     public static SimpleScriptLoader getInstance() {
         return ourInstance;

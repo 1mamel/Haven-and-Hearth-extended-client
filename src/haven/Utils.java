@@ -33,8 +33,15 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.prefs.Preferences;
+import java.util.regex.Pattern;
 
 public class Utils {
+    // Some precompiled patterns
+    public static final Pattern eoLinePattern = Pattern.compile("\n");
+    public static final Pattern whitespacePattern = Pattern.compile(" ");
+    public static final Pattern slashPattern = Pattern.compile("/");
+    public static final Pattern commaPattern = Pattern.compile(",");
+
     private static Preferences prefs = null;
     public static final java.awt.image.ColorModel rgbm = java.awt.image.ColorModel.getRGBdefault();
     private static Background bgworker = null;
