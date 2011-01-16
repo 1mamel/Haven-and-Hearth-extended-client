@@ -286,7 +286,7 @@ public class HavenPanel extends GLCanvas implements Runnable {
         }
         if (tt != null) {
             Coord sz = tt.sz();
-            Coord pos = mousepos.add(sz.inv());
+            Coord pos = mousepos.sub(sz);
             if (pos.x < 0)
                 pos.x = 0;
             if (pos.y < 0)
@@ -310,7 +310,7 @@ public class HavenPanel extends GLCanvas implements Runnable {
                     }
                 }
             } else if (cursmode.equals("tex")) {
-                Coord dc = mousepos.add(curs.layer(Resource.negc).cc.inv());
+                Coord dc = mousepos.sub(curs.layer(Resource.negc).cc);
                 g.image(curs.layer(Resource.imgc), dc);
             }
         }

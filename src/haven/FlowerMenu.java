@@ -70,7 +70,7 @@ public class FlowerMenu extends Widget {
         }
 
         public void move(Coord c) {
-            this.c = c.add(sz.div(2).inv());
+            this.c = c.sub(sz.div(2));
         }
 
         public void move(double a, double r) {
@@ -81,7 +81,7 @@ public class FlowerMenu extends Widget {
             g.chcolor(new Color(255, 255, 255, (int) (255 * a)));
             g.image(pbg, new Coord(3, 3), new Coord(3, 3), sz.add(new Coord(-6, -6)));
             pbox.draw(g, Coord.z, sz);
-            g.image(text.tex(), sz.div(2).add(text.sz().div(2).inv()));
+            g.image(text.tex(), sz.div(2).sub(text.sz().div(2)));
         }
 
         public boolean mousedown(Coord c, int button) {

@@ -156,11 +156,11 @@ public class MapView extends Widget implements DTarget, Console.Directory {
 
         public void move(MapView mv, Coord sc, Coord mc) {
             if (dragging) {
-                Coord off = sc.add(o.inv());
+                Coord off = sc.sub(o);
                 if ((mo == null) && (off.dist(Coord.z) > 5))
                     mo = mv.mc;
                 if (mo != null) {
-                    mv.mc = mo.add(s2m(off).inv());
+                    mv.mc = mo.sub(s2m(off));
                     moved(mv);
                 }
             }
@@ -225,7 +225,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
                     long now = System.currentTimeMillis();
                     double dt = (now - lmv) / 1000.0;
                     lmv = now;
-                    mv.mc = tgt.add(mv.mc.add(tgt.inv()).mul(Math.exp(v * dt)));
+                    mv.mc = tgt.add(mv.mc.sub(tgt).mul(Math.exp(v * dt)));
                 }
             }
             borderize(mv, player, sz, border);
@@ -252,7 +252,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
         public final Coord region = new Coord(200, 150);
 
         public void setpos(MapView mv, Gob player, Coord sz) {
-            Coord sc = m2s(player.getc().add(mv.mc.inv()));
+            Coord sc = m2s(player.getc().sub(mv.mc));
             if (sc.x < -region.x)
                 mv.mc = mv.mc.add(s2m(new Coord(-region.x * 2, 0)));
             if (sc.x > region.x)
@@ -292,8 +292,8 @@ public class MapView extends Widget implements DTarget, Console.Directory {
             double dt = ((double) (now - last)) / 1000.0;
             last = now;
 
-            Coord mc = mv.mc.add(s2m(sz.add(mv.sz.inv()).div(2)));
-            Coord sc = m2s(player.getc()).add(m2s(mc).inv());
+            Coord mc = mv.mc.add(s2m(sz.sub(mv.sz).div(2)));
+            Coord sc = m2s(player.getc()).sub(m2s(mc));
             if (reset) {
                 xa = (double) sc.x / (double) sz.x;
                 ya = (double) sc.y / (double) sz.y;
@@ -345,7 +345,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
             } else {
                 sincemove = 0;
             }
-            mv.mc = mc.add(s2m(mv.sz.add(sz.inv()).div(2)));
+            mv.mc = mc.add(s2m(mv.sz.sub(sz).div(2)));
         }
 
         public void moved(MapView mv) {
@@ -365,7 +365,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
         public void setpos(MapView mv, Gob player, Coord sz) {
             if (setoff) {
                 borderize(mv, player, sz, border);
-                off = mv.mc.add(player.getc().inv());
+                off = mv.mc.sub(player.getc());
                 setoff = false;
             }
             mv.mc = player.getc().add(off);
@@ -419,7 +419,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
         public void setpos(MapView mv, Gob player, Coord sz) {
             if (setoff) {
                 borderize(mv, player, sz, border);
-                off = mv.mc.add(player.getc().inv());
+                off = mv.mc.sub(player.getc());
                 setoff = false;
             }
             if (mv.pmousepos != null && (mv.pmousepos.x == 0 || mv.pmousepos.x == sz.x - 1 || mv.pmousepos.y == 0 || mv.pmousepos.y == sz.y - 1)) {
@@ -505,7 +505,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
     }
 
     static Coord viewoffset(Coord sz, Coord vc) {
-        return (m2s(vc).inv().add(sz.div(2)));
+        return ((sz.div(2)).sub(m2s(vc)));
     }
 
     public void grab(Grabber grab) {
@@ -522,14 +522,14 @@ public class MapView extends Widget implements DTarget, Console.Directory {
             Gob gob = (Gob) d.owner;
             if (gob == null)
                 continue;
-            if (d.checkhit(c.add(gob.sc.inv())))
+            if (d.checkhit(c.sub(gob.sc)))
                 return (gob);
         }
         for (Sprite.Part d : clickable) {
             Gob gob = (Gob) d.owner;
             if (gob == null)
                 continue;
-            if (d.checkhit(c.add(gob.sc.inv())))
+            if (d.checkhit(c.sub(gob.sc)))
                 return (gob);
         }
         return (null);
@@ -538,7 +538,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
     public boolean mousedown(Coord c, int button) {
         setfocus(this);
         Gob hit = gobatpos(c);
-        Coord mc = s2m(c.add(viewoffset(sz, this.mc).inv()));
+        Coord mc = s2m(c.sub(viewoffset(sz, this.mc)));
         if (grab != null) {
             grab.mmousedown(mc, button);
         } else if ((cam != null) && cam.click(this, c, mc, button)) {
@@ -559,7 +559,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
     }
 
     public boolean mouseup(Coord c, int button) {
-        Coord mc = s2m(c.add(viewoffset(sz, this.mc).inv()));
+        Coord mc = s2m(c.sub(viewoffset(sz, this.mc)));
         if (grab != null) {
             grab.mmouseup(mc, button);
             return (true);
@@ -572,7 +572,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
 
     public void mousemove(Coord c) {
         this.pmousepos = c;
-        Coord mc = s2m(c.add(viewoffset(sz, this.mc).inv()));
+        Coord mc = s2m(c.sub(viewoffset(sz, this.mc)));
         this.mousepos = mc;
         Collection<Gob> plob = this.plob;
         if (cam != null)
@@ -796,7 +796,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
             }
             if (follows(gob, obscgob))
                 continue;
-            if (adding && obscpart.checkhit(gob.sc.add(obscgob.sc.inv())))
+            if (adding && obscpart.checkhit(gob.sc.sub(obscgob.sc)))
                 obsc.add(p);
         }
         return (obsc);
@@ -880,7 +880,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
                 drawer.chcur(gob);
                 Coord dc = m2s(gob.getc()).add(oc);
                 gob.sc = dc;
-                gob.drawsetup(drawer, dc, sz);
+                    gob.drawsetup(drawer, dc, sz);
                 Speaking s = gob.getattr(Speaking.class);
                 if (s != null)
                     speaking.add(s);
@@ -1035,7 +1035,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
             if ((plfpos == null) || !plfpos.equals(plp)) {
                 lastmove = now;
                 plfpos = plp;
-                if ((obscpart != null) && !obscpart.checkhit(pl.sc.add(obscgob.sc.inv()))) {
+                if ((obscpart != null) && !obscpart.checkhit(pl.sc.sub(obscgob.sc))) {
                     obscpart = null;
                     obscgob = null;
                 }
@@ -1046,7 +1046,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
                         continue;
                     if (gob == pl)
                         break;
-                    if (p.checkhit(pl.sc.add(gob.sc.inv()))) {
+                    if (p.checkhit(pl.sc.sub(gob.sc))) {
                         obscpart = p;
                         obscgob = gob;
                         break;
@@ -1122,7 +1122,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
 
     public boolean iteminteract(Coord cc, Coord ul) {
         Gob hit = gobatpos(cc);
-        Coord mc = s2m(cc.add(viewoffset(sz, this.mc).inv()));
+        Coord mc = s2m(cc.sub(viewoffset(sz, this.mc)));
         if (hit == null)
             wdgmsg("itemact", cc, mc, ui.modflags());
         else

@@ -592,7 +592,7 @@ public class Resource implements Comparable<Resource>, Prioritized, Serializable
             bs = cdec(buf, 8);
             sz = cdec(buf, 12);
             bc = MapView.s2m(bc);
-            bs = MapView.s2m(bs).add(bc.inv());
+            bs = MapView.s2m(bs).sub(bc);
             ep = new Coord[8][0];
             int en = buf[16];
             off = 17;

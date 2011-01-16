@@ -57,7 +57,7 @@ public class Avaview extends Widget {
     }
 
     private Avaview(Coord c, Widget parent, Coord asz) {
-        super(c, asz.add(Window.wbox.bisz()).add(unborder.mul(2).inv()), parent);
+        super(c, asz.add(Window.wbox.bisz()).sub(unborder.mul(2)), parent);
         this.asz = asz;
     }
 
@@ -115,7 +115,7 @@ public class Avaview extends Widget {
             if (ava != null)
                 at = ava.rend;
         }
-        GOut g2 = g.reclip(Window.wbox.tloff().add(unborder.inv()), asz);
+        GOut g2 = g.reclip(Window.wbox.tloff().sub(unborder), asz);
         int yo;
         if (at == null) {
             at = missing;
@@ -127,7 +127,7 @@ public class Avaview extends Widget {
         Coord tsz = new Coord((at.sz().x * asz.x) / dasz.x, (at.sz().y * asz.y) / dasz.y);
         g2.image(at, new Coord(tsz.x / 2 - asz.x / 2, yo).inv(), tsz);
         g.chcolor(color);
-        Window.wbox.draw(g, Coord.z, asz.add(Window.wbox.bisz()).add(unborder.mul(2).inv()));
+        Window.wbox.draw(g, Coord.z, asz.add(Window.wbox.bisz()).sub(unborder.mul(2)));
     }
 
     public boolean mousedown(Coord c, int button) {

@@ -295,7 +295,7 @@ public class Widget {
                 continue;
             Coord cc = xlate(wdg.c, true);
             if (c.isect(cc, wdg.sz)) {
-                if (wdg.mousedown(c.add(cc.inv()), button)) {
+                if (wdg.mousedown(c.sub(cc), button)) {
                     return (true);
                 }
             }
@@ -309,7 +309,7 @@ public class Widget {
                 continue;
             Coord cc = xlate(wdg.c, true);
             if (c.isect(cc, wdg.sz)) {
-                if (wdg.mouseup(c.add(cc.inv()), button)) {
+                if (wdg.mouseup(c.sub(cc), button)) {
                     return (true);
                 }
             }
@@ -323,7 +323,7 @@ public class Widget {
                 continue;
             Coord cc = xlate(wdg.c, true);
             if (c.isect(cc, wdg.sz)) {
-                if (wdg.mousewheel(c.add(cc.inv()), amount)) {
+                if (wdg.mousewheel(c.sub(cc), amount)) {
                     return (true);
                 }
             }
@@ -336,7 +336,7 @@ public class Widget {
             if (!wdg.visible)
                 continue;
             Coord cc = xlate(wdg.c, true);
-            wdg.mousemove(c.add(cc.inv()));
+            wdg.mousemove(c.sub(cc));
         }
     }
 
@@ -459,7 +459,7 @@ public class Widget {
                 continue;
             Coord cc = xlate(wdg.c, true);
             if (c.isect(cc, wdg.sz)) {
-                if ((ret = wdg.getcurs(c.add(cc.inv()))) != null)
+                if ((ret = wdg.getcurs(c.sub(cc))) != null)
                     return (ret);
             }
         }
@@ -485,7 +485,7 @@ public class Widget {
                 continue;
             Coord cc = xlate(wdg.c, true);
             if (c.isect(cc, wdg.sz)) {
-                Object ret = wdg.tooltip(c.add(cc.inv()), again && (wdg == prevtt));
+                Object ret = wdg.tooltip(c.sub(cc), again && (wdg == prevtt));
                 if (ret != null) {
                     prevtt = wdg;
                     return (ret);

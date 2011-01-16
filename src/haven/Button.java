@@ -87,7 +87,7 @@ public class Button extends SSWidget {
             g.drawImage(br, sz.x - br.getWidth(), 0, null);
             g.drawImage(bt, 3, 0, sz.x - 6, bt.getHeight(), null);
             g.drawImage(bb, 3, sz.y - bb.getHeight(), sz.x - 6, bb.getHeight(), null);
-            Coord tc = sz.div(2).add(Utils.imgsz(cont).div(2).inv());
+            Coord tc = sz.div(2).sub(Utils.imgsz(cont).div(2));
             if (a)
                 tc = tc.add(1, 1);
             g.drawImage(cont, tc.x, tc.y, null);

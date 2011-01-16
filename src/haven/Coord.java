@@ -137,7 +137,7 @@ public class Coord implements Comparable<Coord>, java.io.Serializable {
     }
 
     public double angle(Coord o) {
-        Coord c = o.add(this.inv());
+        Coord c = o.sub(this);
         if (c.x == 0) {
             if (c.y < 0)
                 return (-PI / 2);

@@ -69,7 +69,7 @@ public class SimpleSprite {
     }
 
     public final Coord ul() {
-        return (cc.inv().add(img.o));
+        return (img.o.sub(cc));
     }
 
     public final Coord lr() {
@@ -77,7 +77,7 @@ public class SimpleSprite {
     }
 
     public boolean checkhit(Coord c) {
-        c = c.add(ul().inv());
+        c = c.sub(ul());
         if ((c.x < 0) || (c.y < 0) || (c.x >= img.sz.x) || (c.y >= img.sz.y))
             return (false);
         int cl = img.img.getRGB(c.x, c.y);
