@@ -34,15 +34,7 @@ public class Astronomy {
         if (!(o instanceof Astronomy))
             return (false);
         Astronomy a = (Astronomy) o;
-        if (a.dt != dt)
-            return (false);
-        if (a.mp != mp)
-            return (false);
-        if (a.yt != yt)
-            return (false);
-        if (a.night != night)
-            return (false);
-        return (true);
+        return a.dt == dt && a.mp == mp && a.yt == yt && a.night == night;
     }
 
     public Astronomy(double dt, double mp, double yt, boolean night) {
