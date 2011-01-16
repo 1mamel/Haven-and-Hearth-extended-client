@@ -43,7 +43,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
     public static final Coord fc = new Coord(96, -29);
     public static final Coord mc = new Coord(316, -55);
     public static final Coord dispc = new Coord(0, 4 - dispbg.sz().y);
-    public static final Coord bc1 = new Coord(147, -8);    //	Belt 1 location start
+    public static final Coord bc1 = new Coord(147, -8); //	Belt 1 location start
     public static final Coord bc2 = new Coord(485, -8); //	Belt 2 location start
     public static final Coord sz;
     public static int activeBelt = 1;
@@ -163,7 +163,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
     }
 
     public SlenHud(Coord c, Widget parent) {
-        super(new Coord(CustomConfig.windowSize.x - ((CustomConfig.windowSize.x - sz.x) / 2), CustomConfig.windowSize.y).add(sz.inv()), sz, parent);
+        super(new Coord(CustomConfig.windowSize.x - ((CustomConfig.windowSize.x - sz.x) / 2), CustomConfig.windowSize.y).sub(sz), sz, parent);
         new Img(fc, flarps, this);
         new Img(mc, mbg, this);
         new Img(dispc, dispbg, this);
@@ -240,11 +240,11 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
     }
 
     public Coord xlate(Coord c, boolean in) {
-        Coord bgc = sz.add(bg.sz().inv());
+        Coord bgc = sz.sub(bg.sz());
         if (in)
             return (c.add(bgc));
         else
-            return (c.add(bgc.inv()));
+            return (c.sub(bgc));
     }
 
     public void error(String err) {
@@ -295,7 +295,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
                 ircConsole.destroy();
             }
         }
-        Coord bgc = sz.add(bg.sz().inv());
+        Coord bgc = sz.sub(bg.sz());
         g.image(bg, bgc);
         super.draw(g);
 

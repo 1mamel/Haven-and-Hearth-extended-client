@@ -74,7 +74,7 @@ public class Bufflist extends Widget {
                     g.image(img, bc.add(imgoff));
                     if (b.nmeter >= 0) {
                         Tex ntext = b.nmeter();
-                        g.image(ntext, bc.add(imgoff).add(img.sz()).add(ntext.sz().inv()).add(-1, -1));
+                        g.image(ntext, bc.add(imgoff).add(img.sz()).sub(ntext.sz()).add(-1, -1));
                     }
                     if (b.cmeter >= 0) {
                         double m = b.cmeter / 100.0;

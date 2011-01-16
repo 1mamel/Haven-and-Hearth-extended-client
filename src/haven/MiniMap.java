@@ -241,7 +241,7 @@ public class MiniMap extends Widget {
                 Tex tex = getgrid(grid.mnm);
                 if (tex == null)
                     continue;
-                g.image(tex, cg.mul(cmaps).add(tc.inv()).add(sz.div(2)));
+                g.image(tex, cg.mul(cmaps).sub(tc).add(sz.div(2)));
             }
         }
         if (missing) {
@@ -254,9 +254,9 @@ public class MiniMap extends Widget {
                         Coord ptc = m.getc();
                         if (ptc == null)
                             continue;
-                        ptc = ptc.div(tilesz).add(tc.inv()).add(sz.div(2));
+                        ptc = ptc.div(tilesz).sub(tc).add(sz.div(2));
                         g.chcolor(m.col.getRed(), m.col.getGreen(), m.col.getBlue(), 128);
-                        g.image(plx.layer(Resource.imgc).tex(), ptc.add(plx.layer(Resource.negc).cc.inv()));
+                        g.image(plx.layer(Resource.imgc).tex(), ptc.sub(plx.layer(Resource.negc).cc));
                         g.chcolor();
                     }
                 }

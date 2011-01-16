@@ -68,9 +68,9 @@ public abstract class ImageSprite extends Sprite {
 
         public Coord sc() {
             if (img.nooff)
-                return (cc.add(ImageSprite.this.cc.inv()));
+                return (cc.sub(ImageSprite.this.cc));
             else
-                return (cc.add(ImageSprite.this.cc.inv()).add(off));
+                return (cc.sub(ImageSprite.this.cc).add(off));
         }
 
         public void setup(Coord cc, Coord off) {

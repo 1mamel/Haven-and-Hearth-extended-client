@@ -36,9 +36,9 @@ public class BuddyWnd extends Window {
     private final Map<Integer, Buddy> idmap = new HashMap<Integer, Buddy>();
     private final BuddyList bl;
     private final BuddyInfo bi;
-    private Button sbalpha;
-    private Button sbgroup;
-    private Button sbstatus;
+    private final Button sbalpha;
+    private final Button sbgroup;
+    private final Button sbstatus;
     private final TextEntry charpass, opass;
     public static final Tex online = Resource.loadtex("gfx/hud/online");
     public static final Tex offline = Resource.loadtex("gfx/hud/offline");

@@ -44,7 +44,7 @@ public class Homing extends Moving {
         Gob tgt = gob.glob.oc.getgob(this.tgt);
         if (tgt != null)
             tc = tgt.rc;
-        Coord d = tc.add(gob.rc.inv());
+        Coord d = tc.sub(gob.rc);
         double e = gob.rc.dist(tc);
         return (gob.rc.add((int) ((d.x / e) * dist), (int) ((d.y / e) * dist)));
     }

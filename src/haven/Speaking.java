@@ -52,7 +52,7 @@ public class Speaking extends GAttrib {
         Coord sz = text.sz();
         if (sz.x < 10)
             sz.x = 10;
-        Coord tl = c.add(new Coord(sx, sb.bsz().y + sz.y + svans.sz().y - 1).inv());
+        Coord tl = c.sub(new Coord(sx, sb.bsz().y + sz.y + svans.sz().y - 1));
         Coord ftl = tl.add(sb.tloff());
         g.chcolor(Color.WHITE);
         g.frect(ftl, sz);

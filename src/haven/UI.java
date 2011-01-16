@@ -264,7 +264,7 @@ public class UI {
     }
 
     private static Coord wdgxlate(Coord c, Widget wdg) {
-        return (c.add(wdg.c.inv()).add(wdg.parent.rootpos().inv()));
+        return (c.sub(wdg.c).sub(wdg.parent.rootpos()));
     }
 
     public static boolean dropthing(Widget w, Coord c, Object thing) {
@@ -275,7 +275,7 @@ public class UI {
         for (Widget wdg = w.lchild; wdg != null; wdg = wdg.prev) {
             Coord cc = w.xlate(wdg.c, true);
             if (c.isect(cc, wdg.sz)) {
-                if (dropthing(wdg, c.add(cc.inv()), thing))
+                if (dropthing(wdg, c.sub(cc), thing))
                     return (true);
             }
         }

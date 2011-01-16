@@ -172,7 +172,7 @@ public class MenuGrid extends Widget {
             final Tex dt = dragging.layer(Resource.imgc).tex();
             ui.drawafter(new UI.AfterDraw() {
                 public void draw(GOut g) {
-                    g.image(dt, ui.mc.add(dt.sz().div(2).inv()));
+                    g.image(dt, ui.mc.sub(dt.sz().div(2)));
                 }
             });
         }
@@ -248,7 +248,7 @@ public class MenuGrid extends Widget {
         Resource h = bhit(c);
         if (button == 1) {
             if (dragging != null) {
-                ui.dropthing(ui.root, ui.mc, dragging);
+                UI.dropthing(ui.root, ui.mc, dragging);
                 dragging = pressed = null;
             } else if (pressed != null) {
                 if (pressed == h)

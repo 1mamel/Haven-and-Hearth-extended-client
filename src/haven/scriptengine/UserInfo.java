@@ -163,7 +163,7 @@ public class UserInfo {
     private int speedCurrent = -1; // [0-3]
     private int speedMax = -1; // [0-3]
 
-    static Pattern intsOnly = Pattern.compile("[-]?\\d+");
+    static final Pattern intsOnly = Pattern.compile("[-]?\\d+");
 
     private static final UserInfo ourInstance = new UserInfo();
 

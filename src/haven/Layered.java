@@ -218,14 +218,14 @@ public class Layered extends Drawable {
             if (part.lr.y > lr.y)
                 lr.y = part.lr.y;
         }
-        BufferedImage buf = TexI.mkbuf(lr.add(ul.inv()).add(1, 1));
+        BufferedImage buf = TexI.mkbuf(lr.sub(ul).add(1, 1));
         Graphics g = buf.getGraphics();
         /*
       g.setColor(java.awt.Color.RED);
       g.fillRect(0, 0, buf.getWidth(), buf.getHeight());
       */
         for (Sprite.Part part : parts) {
-            part.cc = part.cc.add(ul.inv());
+            part.cc = part.cc.sub(ul);
             part.draw(buf, g);
         }
         g.dispose();
@@ -254,16 +254,16 @@ public class Layered extends Drawable {
                     }
 
                     public void draw(GOut g) {
-                        g.image(l.tex(), cc.add(l.cc.inv()).add(off));
+                        g.image(l.tex(), cc.sub(l.cc).add(off));
                     }
 
                     public void drawol(GOut g) {
-                        g.image(l.ol(), cc.add(l.cc.inv()).add(off).add(-1, -1));
+                        g.image(l.ol(), cc.sub(l.cc).add(off).add(-1, -1));
                     }
 
                     public void setup(Coord cc, Coord off) {
                         super.setup(cc, off);
-                        ul = cc.add(l.cc.inv());
+                        ul = cc.sub(l.cc);
                         lr = ul.add(l.tex().sz());
                     }
 

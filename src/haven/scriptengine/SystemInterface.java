@@ -42,7 +42,7 @@ public class SystemInterface implements Loader {
         err = stream;
     }
 
-    private static SystemInterface ourInstance = new SystemInterface();
+    private static final SystemInterface ourInstance = new SystemInterface();
 
     public static SystemInterface getInstance() {
         return ourInstance;

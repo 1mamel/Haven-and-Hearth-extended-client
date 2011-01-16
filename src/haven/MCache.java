@@ -306,7 +306,7 @@ public class MCache {
             return (-1);
         int ol = g.getol(tc.mod(cmaps));
         for (Overlay lol : ols) {
-            if (tc.isect(lol.c1, lol.c2.add(lol.c1.inv()).add(new Coord(1, 1))))
+            if (tc.isect(lol.c1, lol.c2.sub(lol.c1).add(1, 1)))
                 ol |= lol.mask;
         }
         return (ol);

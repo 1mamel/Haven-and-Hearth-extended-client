@@ -54,7 +54,7 @@ public class FileCache implements ResCache {
 
     private File forres(String nm) {
         File res = base;
-        String[] comp = nm.split("/");
+        String[] comp = Utils.slashPattern.split(nm);
         for (int i = 0; i < comp.length - 1; i++) {
             res = new File(res, comp[i]);
         }

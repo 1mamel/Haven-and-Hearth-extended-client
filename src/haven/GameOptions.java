@@ -23,7 +23,6 @@ public class GameOptions extends Window {
                     return (new Window(c, (Coord) args[0], parent, (String) args[1]));
             }
         });
-        wbox = new IBox("gfx/hud", "tl", "tr", "bl", "br", "extvl", "extvr", "extht", "exthb");
     }
 
     final Label sfxVol;

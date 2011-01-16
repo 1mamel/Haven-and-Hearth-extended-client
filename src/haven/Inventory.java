@@ -26,21 +26,32 @@
 
 package haven;
 
+import haven.scriptengine.InventoryExp;
+
 public class Inventory extends Widget implements DTarget {
-    public static final Tex invsq = Resource.loadtex("gfx/hud/invsq");
-    Coord isz;
+    public static final Tex invsq;  // InvisibleSquare = 1x1 cell
+    public static final Coord invsqSize; //size of invsq
+    public static final Coord invsqSizeSubOne; //size of invsq.sub(1,1)
+
+    static {
+        invsq = Resource.loadtex("gfx/hud/invsq"); // InvisibleSquare = 1x1 cell
+        invsqSize = invsq.sz();
+        invsqSizeSubOne = invsqSize.sub(1, 1);
+    }
+
+    Coord isz; // size of inventory in cells
 
     static {
         Widget.addtype("inv", new WidgetFactory() {
             public Widget create(Coord c, Widget parent, Object[] args) {
-                return (new Inventory(c, (Coord) args[0], parent));
+                return (new InventoryExp(c, (Coord) args[0], parent)); // Changed for processing inv features
             }
         });
     }
 
     public void draw(GOut g) {
         Coord c = new Coord();
-        Coord sz = invsq.sz().add(new Coord(-1, -1));
+        Coord sz = invsqSizeSubOne;
         for (c.y = 0; c.y < isz.y; c.y++) {
             for (c.x = 0; c.x < isz.x; c.x++) {
                 g.image(invsq, c.mul(sz));
@@ -50,7 +61,7 @@ public class Inventory extends Widget implements DTarget {
     }
 
     public Inventory(Coord c, Coord sz, Widget parent) {
-        super(c, invsq.sz().add(new Coord(-1, -1)).mul(sz).add(new Coord(1, 1)), parent);
+        super(c, invsqSizeSubOne.mul(sz).add(1, 1), parent);
         isz = sz;
     }
 
@@ -63,7 +74,7 @@ public class Inventory extends Widget implements DTarget {
     }
 
     public boolean drop(Coord cc, Coord ul) {
-        wdgmsg("drop", ul.add(new Coord(15, 15)).div(invsq.sz()));
+        wdgmsg("drop", ul.add(15, 15).div(invsqSize));
         return (true);
     }
 
@@ -74,7 +85,7 @@ public class Inventory extends Widget implements DTarget {
     public void uimsg(String msg, Object... args) {
         if (msg.equals("sz")) {
             isz = (Coord) args[0];
-            sz = invsq.sz().add(new Coord(-1, -1)).mul(isz).add(new Coord(1, 1));
+            sz = invsqSizeSubOne.mul(isz).add(1, 1);
         }
     }
 }

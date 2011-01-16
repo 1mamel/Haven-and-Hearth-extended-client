@@ -58,7 +58,7 @@ public class SlenConsole extends ChatHW implements IRCConnectionListener {
                 IRC.setIRCConnectionListener(this);
             }
         if (input.charAt(0) == '/') {
-            String[] cArgs = input.split(" ");
+            String[] cArgs = Utils.whitespacePattern.split(input);
             String cmd = cArgs.length >= 1 ? cArgs[0].toUpperCase() : "/INVALIDCOMMAND";
 
             //	JOIN -	Join the specified channels
@@ -446,7 +446,7 @@ public class SlenConsole extends ChatHW implements IRCConnectionListener {
         if (tSCWnd == null) return;
         //	Splits up the users string into an array of strings containing the user names
         //	then adds them to the temporary list
-        final String tNick[] = users.split(" ");
+        final String tNick[] = Utils.whitespacePattern.split(users);
         new Thread() {
             public void run() {
                 for (int i = 0; i < tNick.length; i++) {

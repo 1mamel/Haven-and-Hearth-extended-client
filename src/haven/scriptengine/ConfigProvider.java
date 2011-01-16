@@ -12,7 +12,7 @@ import java.awt.*;
  * Date: 10.01.11
  * Time: 23:33
  */
-@SuppressWarnings({"UnusedDeclaration"})
+@SuppressWarnings({"UnusedDeclaration", "MethodMayBeStatic"})
 public class ConfigProvider {
 
     private void setNightvision(boolean nightvision) {

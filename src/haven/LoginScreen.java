@@ -45,8 +45,8 @@ public class LoginScreen extends Widget {
         super(Coord.z, CustomConfig.windowSize, parent);
         setfocustab(true);
         parent.setfocus(this);
-        new Img(CustomConfig.windowCenter.add(bg.sz().div(2).inv()), bg, this);
-        new Img(CustomConfig.windowCenter.add(20, -85).add(logo.sz().div(2).inv()), logo, this);
+        new Img(CustomConfig.windowCenter.sub(bg.sz().div(2)), bg, this);
+        new Img(CustomConfig.windowCenter.add(20, -85).sub(logo.sz().div(2)), logo, this);
     }
 
     private static abstract class Login extends Widget {

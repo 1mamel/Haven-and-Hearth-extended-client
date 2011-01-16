@@ -19,7 +19,7 @@ public class GLLine {
     public GLLine(String line, Color col, int y) {
         this.y = y;
         GLCharacter tGLChar;
-        String[] words = line.trim().split(" ");
+        String[] words = Utils.whitespacePattern.split(line.trim());
         int nextCharLoc = 3;
         Coord strSize = fnd.strsize(line);
         fnd.defcol = col;

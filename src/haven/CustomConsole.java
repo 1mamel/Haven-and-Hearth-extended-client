@@ -64,7 +64,7 @@ public class CustomConsole extends Window {
         in.canactivate = true;
 
         if (log != null) {
-            final String[] lines = log.toString().trim().split("\n");
+            final String[] lines = Utils.eoLinePattern.split(log.toString().trim());
             Thread consoleThread = new Thread(HackThread.tg(), "Console starter thread") {
                 public void run() {
                     for (String line : lines) out.append(line);
@@ -125,7 +125,7 @@ public class CustomConsole extends Window {
                 String cmd = cmdText.contains(" ") ? cmdText.substring(0, cmdText.indexOf(' ')).trim() : cmdText;
                 cmdText = cmdText.contains(" ") ? cmdText.substring(cmdText.indexOf(' ')).trim() : "";
                 append("Command: " + cmd + "\nArguments: " + cmdText, Color.BLUE.darker());
-                String[] cmdArgs = cmdText.split(" ");
+                String[] cmdArgs = Utils.whitespacePattern.split(cmdText);
                 in.settext("");
                 String arg0 = cmdArgs[0];
                 if (cmd.equals("DEBUG")) {

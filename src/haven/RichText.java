@@ -37,6 +37,7 @@ import java.text.AttributedString;
 import java.text.CharacterIterator;
 import java.util.*;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import static java.text.AttributedCharacterIterator.Attribute;
 
@@ -378,7 +379,7 @@ public class RichText extends Text {
                         buf.append((char) s.in.read());
                     }
                 }
-                args = buf.toString().split(",");
+                args = Utils.commaPattern.split(buf.toString());
             } else {
                 args = new String[0];
             }

@@ -14,14 +14,15 @@ import java.util.regex.Pattern;
  */
 public class ProgressBar extends Widget {
     final Text.Foundry f = new Text.Foundry(new Font("SansSerif", Font.BOLD, 18));
-    Img myImage;
-    Label myLabel;
+    final Img myImage;
+    final Label myLabel;
     int myProgress;
     String myLastPrStr;
 
     static {
         Widget.addtype("progressbar", new WidgetFactory() {
             public Widget create(Coord c, Widget parent, Object[] args) {
+                // Parent id is always 0, then parent is always same ;)
                 Tex tex;
                 if (args.length > 1) {
                     Resource res = Resource.load((String) args[0], (Integer) args[1]);
@@ -30,11 +31,15 @@ public class ProgressBar extends Widget {
                 } else {
                     tex = Resource.loadtex((String) args[0]);
                 }
-                ProgressBar ret = new ProgressBar(c, tex, parent);
+                if (ourInstance == null) {
+                    ourInstance = new ProgressBar(c, tex, parent);
+                } else {
+                    ourInstance.link();
+                }
                 if (args.length > 2)
-                    ret.myImage.hit = (Integer) args[2] != 0;
-                ret.setProgress((String) args[0]);
-                return (ret);
+                    ourInstance.myImage.hit = (Integer) args[2] != 0;
+                ourInstance.setProgress((String) args[0]);
+                return (ourInstance);
             }
         });
     }
@@ -57,7 +62,7 @@ public class ProgressBar extends Widget {
         }
     }
 
-    static Pattern intsOnly = Pattern.compile("[-]?\\d+");
+    static final Pattern intsOnly = Pattern.compile("[-]?\\d+");
 
     private void setProgress(String progressStr) {
         if (progressStr.equals(myLastPrStr)) return;
@@ -74,4 +79,12 @@ public class ProgressBar extends Widget {
         UserInfo.updateProgress(-1);
         super.finalize();
     }
+
+    @Override
+    public void destroy() {
+        UserInfo.updateProgress(-1);
+        super.destroy();    //TODO: implement
+    }
+
+    private static ProgressBar ourInstance;
 }

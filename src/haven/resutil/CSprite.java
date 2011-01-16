@@ -106,7 +106,7 @@ public class CSprite extends Sprite {
         public boolean checkhit(Coord c) {
             if (!(this.tex instanceof TexI))
                 return (false);
-            c = c.add(moff.inv()).add(soff.inv());
+            c = c.sub(moff).sub(soff);
             TexI img = (TexI) this.tex;
             if ((c.x < 0) || (c.y < 0) || (c.x >= img.sz().x) || (c.y >= img.sz().y))
                 return (false);

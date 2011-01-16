@@ -66,7 +66,7 @@ public class HtmlReporter {
             return (a.compareTo(b));
         }
 
-        public int stcmp(StackTraceElement a, StackTraceElement b) {
+        public static int stcmp(StackTraceElement a, StackTraceElement b) {
             int sc = equals(a.getFileName(), b.getFileName());
             if (sc != 0)
                 return (sc);
@@ -288,8 +288,8 @@ public class HtmlReporter {
                 groups.put(id, new ArrayList<Map.Entry<File, Report>>());
             groups.get(id).add(rent);
         }
-        for (ErrorIdentity id : groups.keySet()) {
-            out.println("<h2>" + htmlq(findrootexc(id.t).getClass().getSimpleName()) + "</h2>");
+        for (Map.Entry<ErrorIdentity, List<Map.Entry<File, Report>>> errorIdentityListEntry : groups.entrySet()) {
+            out.println("<h2>" + htmlq(findrootexc(errorIdentityListEntry.getKey().t).getClass().getSimpleName()) + "</h2>");
             out.println("<table><tr>");
             out.println("    <th>File</th>");
             out.println("    <th>Time</th>");
@@ -297,7 +297,7 @@ public class HtmlReporter {
                 out.println("    <th>" + htmlq(pn) + "</th>");
             out.println("</tr>");
 
-            List<Map.Entry<File, Report>> reps = groups.get(id);
+            List<Map.Entry<File, Report>> reps = errorIdentityListEntry.getValue();
             Collections.sort(reps, new Comparator<Map.Entry<File, Report>>() {
                 public int compare(Map.Entry<File, Report> a, Map.Entry<File, Report> b) {
                     long at = a.getValue().time, bt = b.getValue().time;
@@ -376,10 +376,10 @@ public class HtmlReporter {
             out.close();
         }
 
-        for (File f : reports.keySet()) {
-            out = new FileOutputStream(new File(outdir, f.getName() + ".html"));
+        for (Map.Entry<File, Report> fileReportEntry : reports.entrySet()) {
+            out = new FileOutputStream(new File(outdir, fileReportEntry.getKey().getName() + ".html"));
             try {
-                makereport(out, reports.get(f));
+                makereport(out, fileReportEntry.getValue());
             } finally {
                 out.close();
             }
