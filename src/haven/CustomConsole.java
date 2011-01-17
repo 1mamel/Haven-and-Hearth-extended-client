@@ -42,7 +42,7 @@ public class CustomConsole extends Window {
 
     CustomConsole(Coord c, Coord sz, Widget parent, String title) {
         super(c, sz, parent, title, false);
-        ui.bind(this, CustomConfig.wdgtID--);
+        ui.bind(this, CustomConfig.wdgtID.decrementAndGet());
         out = new Textlog(Coord.z, sz.add(0, -20), this);
         in = new TextEntry(new Coord(0, 200), new Coord(sz.x, 20), this, "") {
             public boolean type(char c, KeyEvent ev) {

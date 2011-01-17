@@ -151,7 +151,7 @@ public class Config {
         String hideObjects = options.getProperty("hideObjects", "");
         hideObjectList.clear();
         if (!hideObjects.isEmpty()) {
-            for (String objectName : hideObjects.split(",")) {
+            for (String objectName : Utils.commaPattern.split(hideObjects)) {
                 if (!objectName.isEmpty()) {
                     hideObjectList.add(objectName);
                 }
@@ -160,11 +160,11 @@ public class Config {
     }
 
     public static void saveOptions() {
-        String hideObjects = "";
+        StringBuilder hideObjects = new StringBuilder();
         for (String objectName : hideObjectList) {
-            hideObjects += objectName + ",";
+            hideObjects.append(objectName).append(',');
         }
-        options.setProperty("hideObjects", hideObjects);
+        options.setProperty("hideObjects", hideObjects.toString());
         try {
             options.store(new FileOutputStream("haven.conf"), "Custom config options");
         } catch (IOException e) {

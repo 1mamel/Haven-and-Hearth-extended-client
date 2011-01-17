@@ -166,7 +166,10 @@ public class Gob implements Sprite.Owner {
         Coord dro = drawoff();
         for (Overlay ol : ols) {
             if (ol.spr != null) {
-                ol.spr.setup(drawer, dc, dro);
+                try {
+                    ol.spr.setup(drawer, dc, dro);
+                } catch (IllegalAccessError ignored) {
+                }
             }
         }
         if (Config.hide) {

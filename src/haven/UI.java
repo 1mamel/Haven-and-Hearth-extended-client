@@ -211,6 +211,7 @@ public class UI {
                 throw (new UIException("Wdgmsg sender (" + sender.getClass().getName() + ") is not in rwidgets", msg, args));
             id = rwidgets.get(sender);
         }
+        if (id < 0) return;
         if (rcvr != null)
             rcvr.rcvmsg(id, msg, args);
     }

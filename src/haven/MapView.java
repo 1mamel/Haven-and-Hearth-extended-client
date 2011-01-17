@@ -881,7 +881,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
                 drawer.chcur(gob);
                 Coord dc = m2s(gob.getc()).add(oc);
                 gob.sc = dc;
-                    gob.drawsetup(drawer, dc, sz);
+                gob.drawsetup(drawer, dc, sz);
                 Speaking s = gob.getattr(Speaking.class);
                 if (s != null)
                     speaking.add(s);
