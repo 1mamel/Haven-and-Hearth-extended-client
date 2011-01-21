@@ -376,22 +376,22 @@ public class OptWnd extends Window {
             y = 0;
             new CheckBox(new Coord(150, y += 30), tab, "Hiding enabled") {
                 public void changed(boolean val) {
-                    Config.hide = val;
+                    CustomConfig.hide = val;
                     Config.saveOptions();
                 }
 
                 {
-                    a = Config.hide;
+                    a = CustomConfig.hide;
                 }
             };
             new CheckBox(new Coord(150, y += 30), tab, "XRay enabled") {
                 public void changed(boolean val) {
-                    Config.xray = val;
+                    CustomConfig.xray = val;
                     Config.saveOptions();
                 }
 
                 {
-                    a = Config.xray;
+                    a = CustomConfig.xray;
                 }
             };
             new CheckBox(new Coord(150, y += 30), tab, "NightVision enabled") {

@@ -53,7 +53,7 @@ public abstract class ImageSprite extends Sprite {
         }
 
         public void draw(GOut g) {
-            if (Config.xray) {
+            if (CustomConfig.xray) {
                 drawol(g);
             } else {
                 g.image(img.tex(), sc().add(img.o));

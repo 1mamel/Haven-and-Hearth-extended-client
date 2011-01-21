@@ -31,6 +31,9 @@ public class CustomConfigProcessor {
         CustomConfig.isMusicOn = true;
         CustomConfig.isSoundOn = true;
         CustomConfig.hasNightVision = false;
+        CustomConfig.debugMsgs = false;
+        CustomConfig.xray = false;
+        CustomConfig.hide = false;
     }
 
     public static boolean loadSettings() {

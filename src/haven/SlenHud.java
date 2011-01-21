@@ -653,6 +653,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
     public void destroy() {
         if (ircConsole != null)
             if (ircConsole.IRC != null) ircConsole.IRC.close();
+        ProgressBar.delete();
         super.destroy();
     }
 

@@ -33,7 +33,6 @@ import java.awt.image.BufferedImage;
 import java.util.Arrays;
 
 public class Item extends Widget implements DTarget {
-    static final Coord shoff = new Coord(1, 3);
     static final Resource missing = Resource.load("gfx/invobjs/missing");
     boolean dm = false;
     protected int q; // quality
@@ -87,7 +86,7 @@ public class Item extends Widget implements DTarget {
     private void fixsize() {
         if (res.get() != null) {
             Tex tex = res.get().layer(Resource.imgc).tex();
-            sz = tex.sz().add(shoff);
+            sz = tex.sz().add(1, 3);
         } else {
             sz = new Coord(30, 30);
         }
@@ -103,7 +102,7 @@ public class Item extends Widget implements DTarget {
         } else {
             Tex tex = res.get().layer(Resource.imgc).tex();
             fixsize();
-            if (dm) {
+            if (dm) { // Semitransparent while moving at cursor
                 g.chcolor(255, 255, 255, 128);
                 g.image(tex, Coord.z);
                 g.chcolor();
@@ -294,7 +293,7 @@ public class Item extends Widget implements DTarget {
             else
                 tooltip = null;
             resettt();
-        } else if (name.equals("meter")) { // TODO: may be completion indicator on dying fur, etc.
+        } else if (name.equals("meter")) { // may be completion indicator on dying fur, etc.
             meter = (Integer) args[0];
         }
     }

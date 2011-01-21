@@ -18,6 +18,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class CustomConfig {
     static UI ui;
     public static boolean debugMsgs = true;
+    public static boolean xray = false;
+    public static boolean hide = false;
 
     static class CharData {
         String name;

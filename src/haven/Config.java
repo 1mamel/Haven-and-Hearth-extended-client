@@ -47,10 +47,7 @@ public class Config {
     public static String resdir;
     public static boolean nopreload;
     public static String loadwaited, allused;
-    public static boolean xray;
-    public static boolean hide;
     public static HashSet<String> hideObjectList;
-    public static boolean nightvision;
     public static String currentCharName;
     public static Properties options;
 
@@ -75,9 +72,6 @@ public class Config {
             nolocalres = getprop("haven.nolocalres", "").equals("yesimsure");
             resdir = getprop("haven.resdir", null);
             nopreload = getprop("haven.nopreload", "no").equals("yes");
-            xray = false;
-            hide = false;
-            nightvision = false;
             currentCharName = "";
             options = new Properties();
             hideObjectList = new HashSet<String>();
