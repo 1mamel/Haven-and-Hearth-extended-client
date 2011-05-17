@@ -291,7 +291,7 @@ public class MainFrame extends Frame implements Runnable, FSMan {
             try {
                 Collection<Resource> used = new LinkedList<Resource>();
                 for (Resource res : Resource.cached()) {
-                    if (res.getPrio() >= 0)
+                    if (res.getPriority() >= 0)
                         used.add(res);
                 }
                 Writer w = new OutputStreamWriter(ResCache.global.store("tmp/allused"), "UTF-8");

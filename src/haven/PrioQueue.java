@@ -26,11 +26,21 @@
 
 package haven;
 
+import java.util.Comparator;
 import java.util.PriorityQueue;
 
 public class PrioQueue<E extends Prioritized> extends PriorityQueue<E> {
+    public PrioQueue() {
+        super(11, new Comparator<Prioritized>() {
+            public int compare(Prioritized o1, Prioritized o2) {
+                int thisVal = o1.getPriority();
+                int anotherVal = o2.getPriority();
+                return (thisVal < anotherVal ? 1 : (thisVal == anotherVal ? 0 : -1));
+            }
+        });
+    }
 
-//    public E peek() {
+    //    public E peek() {
 //        if (this.isEmpty()) return null;
 //
 //        Collections.sort(this, new Comparator<Prioritized>() {

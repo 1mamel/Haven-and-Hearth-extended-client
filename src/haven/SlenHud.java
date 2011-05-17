@@ -217,7 +217,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
                 }
             };
         }
-        vc = new VC(this, fb = new FoldButton(new Coord(CustomConfig.getWindowCenter.x - 20, CustomConfig.getWindowSize().y), parent) {
+        vc = new VC(this, fb = new FoldButton(new Coord(CustomConfig.getWindowCenter().x - 20, CustomConfig.getWindowSize().y), parent) {
             public void click() {
                 vc.show();
             }

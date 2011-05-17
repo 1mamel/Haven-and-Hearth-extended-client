@@ -35,8 +35,8 @@ public class Prioritized {
     }
 
     public void setPriority(int p) {
-        if (myQueue != null) myQueue.update(this);
         myPriority = p;
+        if (myQueue != null) myQueue.update(this);
     }
 
     public void setQueue(PrioQueue queue) {
