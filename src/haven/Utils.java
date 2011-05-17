@@ -237,13 +237,12 @@ public class Utils {
 
     static String strd(byte[] buf, int[] off) {
         int i;
-        //noinspection StatementWithEmptyBody
         for (i = off[0]; buf[i] != 0; i++) ;
         String ret;
         try {
             ret = new String(buf, off[0], i - off[0], "utf-8");
         } catch (UnsupportedEncodingException e) {
-            throw (new RuntimeException(e));
+            throw (new IllegalArgumentException(e));
         }
         off[0] = i + 1;
         return (ret);
@@ -264,7 +263,7 @@ public class Utils {
         else if ((hex >= 'A') && (hex <= 'F'))
             return (hex - 'A' + 10);
         else
-            throw (new RuntimeException());
+            throw (new IllegalArgumentException());
     }
 
     static String byte2hex(byte[] in) {
@@ -278,7 +277,7 @@ public class Utils {
 
     static byte[] hex2byte(String hex) {
         if (hex.length() % 2 != 0)
-            throw (new RuntimeException("Invalid hex-encoded string"));
+            throw (new IllegalArgumentException("Invalid hex-encoded string"));
         byte[] ret = new byte[hex.length() / 2];
         for (int i = 0, o = 0; i < hex.length(); i += 2, o++)
             ret[o] = (byte) ((hex2num(hex.charAt(i)) << 4) | hex2num(hex.charAt(i + 1)));
@@ -487,6 +486,31 @@ public class Utils {
         g.drawImage(img, 1, 1, null);
         g.dispose();
         return (ol);
+    }
+
+    public static int floordiv(int a, int b) {
+        if (a < 0)
+            return (((a + 1) / b) - 1);
+        else
+            return (a / b);
+    }
+
+    public static int floormod(int a, int b) {
+        int r = a % b;
+        if (r < 0)
+            r += b;
+        return (r);
+    }
+
+    public static int floordiv(float a, float b) {
+        return ((int) Math.floor(a / b));
+    }
+
+    public static float floormod(float a, float b) {
+        float r = a % b;
+        if (r < 0)
+            r += b;
+        return (r);
     }
 
     public static double clip(double d, double min, double max) {

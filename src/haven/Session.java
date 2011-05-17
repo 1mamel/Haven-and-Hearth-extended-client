@@ -34,7 +34,7 @@ import java.util.*;
 
 @SuppressWarnings({"UnusedDeclaration"})
 public class Session {
-    public static final int PVER = 1;
+    public static final int PVER = 2;
 
     public static final int MSG_SESS = 0;
     public static final int MSG_REL = 1;

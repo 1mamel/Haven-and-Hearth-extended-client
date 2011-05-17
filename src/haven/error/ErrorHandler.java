@@ -29,13 +29,12 @@ package haven.error;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectOutputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.*;
 
 public class ErrorHandler extends ThreadGroup {
-    private static final URL errordest;
+    private final URL errordest;
     private static final String[] sysprops = {
             "java.version",
             "java.vendor",
@@ -46,14 +45,6 @@ public class ErrorHandler extends ThreadGroup {
     private final ThreadGroup initial;
     private final Map<String, Object> props = new HashMap<String, Object>();
     private final Reporter reporter;
-
-    static {
-        try {
-            errordest = new URL("http://github.com/Pacho/IRC-Extended/issues");
-        } catch (MalformedURLException e) {
-            throw (new Error(e));
-        }
-    }
 
     public static void setprop(String key, Object val) {
         ThreadGroup tg = Thread.currentThread().getThreadGroup();
@@ -152,16 +143,17 @@ public class ErrorHandler extends ThreadGroup {
         }
     }
 
-    public ErrorHandler(ErrorStatus ui) {
+    public ErrorHandler(ErrorStatus ui, URL errordest) {
         super("Haven client");
+        this.errordest = errordest;
         initial = Thread.currentThread().getThreadGroup();
         reporter = new Reporter(ui);
         reporter.start();
         defprops();
     }
 
-    public ErrorHandler() {
-        this(new ErrorStatus.Simple());
+    public ErrorHandler(URL errordest) {
+        this(new ErrorStatus.Simple(), errordest);
     }
 
     public void sethandler(ErrorStatus handler) {
