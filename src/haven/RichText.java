@@ -37,7 +37,6 @@ import java.text.AttributedString;
 import java.text.CharacterIterator;
 import java.util.*;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import static java.text.AttributedCharacterIterator.Attribute;
 

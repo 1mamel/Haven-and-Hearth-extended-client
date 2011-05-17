@@ -9,7 +9,6 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 public class ExtTextlog extends Widget implements ClipboardOwner {
 

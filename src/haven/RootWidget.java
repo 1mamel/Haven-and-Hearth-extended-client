@@ -33,7 +33,6 @@ public class RootWidget extends ConsoleHost {
     @SuppressWarnings({"UnusedDeclaration"})
     Logout logout = null;
     Profile gprof;
-    GameOptions opts;
     @SuppressWarnings({"UnusedDeclaration"})
     boolean afk = false;
 
@@ -53,14 +52,6 @@ public class RootWidget extends ConsoleHost {
                 new Profwnd(findchild(SlenHud.class), findchild(MapView.class).mask.prof, "ILM prof");
             } else if (key == ':') {
                 entercmd();
-            } else if (key + 96 == 'o' && ev.isControlDown()) {
-                if (opts == null) {
-                    opts = new GameOptions(this);
-                    ui.bind(opts, CustomConfig.wdgtID++);
-                } else {
-                    opts.toggle();
-                    opts.raise();
-                }
             } else if (key == '`') {
                 if (CustomConfig.console == null) {
                     CustomConfig.console = new CustomConsole(Coord.z, new Coord(CustomConfig.getWindowSize().x - 30, 220), this,

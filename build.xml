@@ -7,6 +7,7 @@
   <target name="build-env">
     <mkdir dir="build" />
     <mkdir dir="build/classes" />
+    <mkdir dir="build/map" />
     <available property="has-res-jar" file="build/haven-res.jar" />
     <available property="has-sign-key" file="etc\IRCEKEYS"/>
     <available property="has-buildinfo" file="build/classes/buildinfo" />
@@ -54,6 +55,10 @@
   <target name="appletview" depends="build-env">
     <copy file="etc/applet.html" todir="build" />
   </target>
+  
+  <target name="map" depends="build-env">
+    <copy file="src/gilbertus/map.html" todir="build/map" />
+  </target>
 
   <target name="lib-classes" depends="build-env" unless="unpacked-lib">
     <mkdir dir="build/classes-lib" />
@@ -92,7 +97,7 @@
     </copy>
   </target>
   
-  <target name="deftgt" depends="jars, appletview" />
+  <target name="deftgt" depends="jars, appletview, map" />
 
   <target name="run" depends="jars">
     <java jar="build/haven.jar" fork="true"/>

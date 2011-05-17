@@ -12,11 +12,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @SuppressWarnings({"UnusedDeclaration"})
 public class CustomConfig {
     static UI ui;
     public static boolean debugMsgs = true;
+    public static boolean xray = false;
+    public static boolean hide = false;
 
     public static Coord getWindowSize() {
         return windowSize;
@@ -59,7 +62,7 @@ public class CustomConfig {
     public static String ircDefNick = "";
     public static String ircAltNick = "";
     public static CharData activeCharacter;
-    public static int wdgtID = -100; // for Userspace widgets
+    public static AtomicInteger wdgtID = new AtomicInteger(-10); // for Userspace widgets
     public static boolean isMusicOn = true;
     public static boolean isSoundOn = true;
     public static boolean isIRCOn = true;

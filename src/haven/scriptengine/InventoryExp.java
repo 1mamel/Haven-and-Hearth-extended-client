@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static java.lang.Math.min;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Vlad.Rassokhin@gmail.com
@@ -23,7 +25,7 @@ public class InventoryExp extends Inventory {
         public InvItem(Coord c, Indir<Resource> res, int q, Widget parent, Coord drag, int num) {
             super(c, res, q, parent, drag, num);
             Coord locInInv = c.add(new Coord(-1, -1)).div(3);
-            InventoryExp.this.addItem(this, locInInv);
+            InventoryExp.this.addItem(this, locInInv, getSize());
         }
 
         public InvItem(Coord c, int res, int q, Widget parent, Coord drag, int num) {
@@ -48,6 +50,14 @@ public class InventoryExp extends Inventory {
                 tooltipProcess();
             } else if (name.equals("meter")) {
             }
+        }
+
+        public boolean isCompleted() {
+            return meter == 0;
+        }
+
+        public Coord getSizeInCells() {
+            return sz.div(30);
         }
 
         private void tooltipProcess() {
@@ -167,7 +177,7 @@ public class InventoryExp extends Inventory {
     private void changeSize(Coord newSize) {
     }
 
-    private void addItem(InvItem invItem, Coord loc) {
+    private void addItem(InvItem invItem, Coord loc, Coord itemSize) {
         items.put(loc, invItem);
     }
 
@@ -180,5 +190,31 @@ public class InventoryExp extends Inventory {
     }
 
     static List<InventoryExp> openedInventories = new ArrayList<InventoryExp>();
+
+
+    private static class CellGrid {
+        Map<Integer, InvItem> myItemsMap = new HashMap<Integer, InvItem>();
+        int[][] myCells;
+
+        void setSize(int w, int h) {
+            int[][] newCells = new int[h][w];
+            int i = 0;
+            for (int[] myCell : myCells) {
+                System.arraycopy(myCell, 0, newCells[i], 0, min(myCell.length, w));
+                i++;
+            }
+            myCells = newCells;
+            updateIndexes();
+        }
+
+        private CellGrid(int w, int h) {
+            myCells = new int[h][w];
+        }
+
+        private void updateIndexes() {
+            //To change body of created methods use File | Settings | File Templates.
+        }
+
+    }
 
 }

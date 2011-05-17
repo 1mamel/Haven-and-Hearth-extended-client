@@ -42,8 +42,7 @@ public class Fightview extends Widget {
     public int off, def;
     private final GiveButton curgive;
     private final Avaview curava;
-    private final Widget comwdg;
-    private final Widget comwin;
+    private final Widget comwdg, comwin;
 
     public class Relation {
         final int gobid;

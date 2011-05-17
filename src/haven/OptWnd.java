@@ -57,6 +57,19 @@ public class OptWnd extends Window {
         }
     }
 
+    //// IRC
+    final Label serverLabel;
+    final Label chnlLabel;
+    final Label defIRCNickLabel;
+    final Label altIRCNickLabel;
+    final TextEntry serverAddress;
+    final TextEntry channelList;
+    final TextEntry defNick;
+    final TextEntry altNick;
+    final CheckBox ircToggle;
+    Button okBtn;
+    Button cancelBtn;
+
     @SuppressWarnings({"UnusedAssignment"})
     public OptWnd(Coord c, Widget parent) {
         super(c, new Coord(400, 340), parent, "Options");
@@ -247,15 +260,149 @@ public class OptWnd extends Window {
                     return true;
                 }
             };
-            new CheckBox(new Coord(10, 280), tab, "Music enabled") {
+            new CheckBox(new Coord(120, 40), tab, "Sound enabled") {
                 public void changed(boolean val) {
-                    Music.enable(val);
+                    CustomConfig.isSoundOn = val;
+                }
+
+                {
+                    a = CustomConfig.isSoundOn;
+                }
+            };
+            new CheckBox(new Coord(120, 70), tab, "Music enabled") {
+                public void changed(boolean val) {
+                    CustomConfig.isMusicOn = val;
+                }
+
+                {
+                    a = CustomConfig.isMusicOn;
                 }
             };
         }
+
         { /*IRC TAB */
             tab = body.new Tab(new Coord(210, 0), 60, "IRC");
 
+            // Labels (1st column)
+            int firstCellXOffset = 10;
+            serverLabel = new Label(new Coord(firstCellXOffset, 40), tab, "Server:");
+            chnlLabel = new Label(new Coord(firstCellXOffset, 60), tab, "Channels:");
+            defIRCNickLabel = new Label(new Coord(firstCellXOffset, 80), tab, "IRC Nick:");
+            altIRCNickLabel = new Label(new Coord(firstCellXOffset, 100), tab, "Alt Nick:");
+
+            // TetEntries (2nd column)
+            int secondCellXOffset = 15 + Math.max(serverLabel.sz.x, Math.max(chnlLabel.sz.x, Math.max(defIRCNickLabel.sz.x, altIRCNickLabel.sz.x)));
+            final Coord textFieldSize = new Coord(180, 15);
+
+            //	Server entry
+            serverAddress = new TextEntry(new Coord(secondCellXOffset, 40), textFieldSize,
+                    tab, CustomConfig.ircServerAddress);
+            serverAddress.badchars = " ";
+
+            //	Channel list entry
+            StringBuilder builder = new StringBuilder();
+            for (Listbox.Option channel : CustomConfig.ircChannelList) {
+                String name = channel.name.trim();
+                String disp = channel.disp.trim();
+                if (!name.isEmpty()) {
+                    builder.append(name).append(' ');
+                }
+                if (!disp.isEmpty()) {
+                    builder.append(disp).append(' ');
+                }
+            }
+            channelList = new TextEntry(new Coord(secondCellXOffset, 60), textFieldSize,
+                    tab, builder.toString().trim());
+
+            final String someBadChars = "~@#$%^& ";
+
+            //	Nickname entries
+            defNick = new TextEntry(new Coord(secondCellXOffset, 80), textFieldSize,
+                    tab, CustomConfig.ircDefNick) {
+                {
+                    badchars = someBadChars;
+                }
+            };
+
+            altNick = new TextEntry(new Coord(secondCellXOffset, 100), textFieldSize,
+                    tab, CustomConfig.ircAltNick) {
+                {
+                    badchars = someBadChars;
+                }
+            };
+
+            //	IRC toggle
+            ircToggle = new CheckBox(new Coord((firstCellXOffset + secondCellXOffset) / 2, 130), tab, "IRC On/Off") {
+                public void changed(boolean val) {
+                    CustomConfig.isIRCOn = val;
+                }
+
+                {
+                    a = CustomConfig.isIRCOn;
+                }
+            };
+
+        }
+
+        { /* HIDE OBJECTS TAB */
+            tab = body.new Tab(new Coord(280, 0), 80, "Hide Objects");
+
+            String[][] checkboxesList = {
+                    {"Walls", "gfx/arch/walls"},
+                    {"Gates", "gfx/arch/gates"},
+                    {"Stone Mansions", "gfx/arch/inn"},
+                    {"Plants", "gfx/terobjs/plants"},
+                    {"Trees", "gfx/terobjs/trees"},
+                    {"Bushes", "gfx/tiles/wald"}
+            };
+            int y = 0;
+            for (final String[] checkbox : checkboxesList) {
+                CheckBox chkbox = new CheckBox(new Coord(10, y += 30), tab, checkbox[0]) {
+
+                    public void changed(boolean val) {
+                        if (val) {
+                            Config.hideObjectList.add(checkbox[1]);
+                        } else {
+                            Config.hideObjectList.remove(checkbox[1]);
+                        }
+                        Config.saveOptions();
+                    }
+
+                    {
+                        a = Config.hideObjectList.contains(checkbox[1]);
+                    }
+                };
+            }
+            y = 0;
+            new CheckBox(new Coord(150, y += 30), tab, "Hiding enabled") {
+                public void changed(boolean val) {
+                    CustomConfig.hide = val;
+                    Config.saveOptions();
+                }
+
+                {
+                    a = CustomConfig.hide;
+                }
+            };
+            new CheckBox(new Coord(150, y += 30), tab, "XRay enabled") {
+                public void changed(boolean val) {
+                    CustomConfig.xray = val;
+                    Config.saveOptions();
+                }
+
+                {
+                    a = CustomConfig.xray;
+                }
+            };
+            new CheckBox(new Coord(150, y += 30), tab, "NightVision enabled") {
+                public void changed(boolean val) {
+                    CustomConfig.hasNightVision = val;
+                }
+
+                {
+                    a = CustomConfig.hasNightVision;
+                }
+            };
         }
 
         new Frame(new Coord(-10, 20), new Coord(420, 330), this);
@@ -264,6 +411,43 @@ public class OptWnd extends Window {
             if (t.btn.getText().equals(last))
                 body.showtab(t);
         }
+    }
+
+    void saveSome() {
+        Listbox.Option channel = null;
+        CustomConfig.ircServerAddress = serverAddress.text;
+        CustomConfig.ircDefNick = defNick.text;
+        CustomConfig.ircAltNick = altNick.text;
+        String channelData[] = Utils.whitespacePattern.split(channelList.text);
+        CustomConfig.ircChannelList.clear();
+        for (int i = 0; i < channelData.length; i++) {
+            channelData[i] = channelData[i].trim();
+            if (channelData[i].length() > 0) {
+                if (channelData[i].startsWith("#")) {
+                    if (channel != null) {
+                        CustomConfig.ircChannelList.add(channel);
+                        //noinspection UnusedAssignment
+                        channel = null;
+                    }
+                    channel = new Listbox.Option(channelData[i], "");
+                    continue;
+
+                } else {
+                    if (channel != null)
+                        channel.disp = (channel.disp + ' ' + channelData[i]).trim();
+                }
+                if (channel != null) {
+                    CustomConfig.ircChannelList.add(channel);
+                    channel = null;
+                }
+            }
+        }
+        if (channel != null) {
+            CustomConfig.ircChannelList.add(channel);
+            //noinspection UnusedAssignment
+            channel = null;
+        }
+        if (CustomConfig.isSaveable) CustomConfigProcessor.saveSettings();
     }
 
     private void setcamera(String camtype) {

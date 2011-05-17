@@ -217,7 +217,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
                 }
             };
         }
-        vc = new VC(this, fb = new FoldButton(new Coord(492, CustomConfig.getWindowSize().y), parent) {
+        vc = new VC(this, fb = new FoldButton(new Coord(CustomConfig.getWindowCenter.x - 20, CustomConfig.getWindowSize().y), parent) {
             public void click() {
                 vc.show();
             }
@@ -557,6 +557,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
             optwnd = new OptWnd(new Coord(100, 100), parent) {
                 public void wdgmsg(Widget sender, String msg, Object... args) {
                     if (msg.equals("close")) {
+                        this.saveSome();
                         ui.destroy(this);
                         optwnd = null;
                     } else {
@@ -568,31 +569,24 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
     }
 
     public boolean globtype(char ch, KeyEvent ev) {
-        if (ch == ' ') {
+        if (ch == ' ') { // Hide Hud
             vc.toggle();
             return (true);
-        } else if (ch == ':') {
+        } else if (ch == ':') { // Start entering into text field
             entercmd();
             return (true);
-        } else if ((((ch >= '1') && (ch <= '9')) || (ch == '0')) && ev.isAltDown()) {
-            activeBelt = ch - 48;
+        } else if (ch >= '0' && ch <= '9' && ev.isAltDown()) { // Change belt
+            activeBelt = ch - '0';
             CustomConfig.activeCharacter.hudActiveBelt = activeBelt;
-            for (int i = 0; i < belt[activeBelt].length; i++) {
-                if (belt[activeBelt][i] == null) {
-                    wdgmsg("setbelt", i, 0);
-                    continue;
-                }
-
-                wdgmsg("setbelt", i, belt[activeBelt][i].name);
+            Resource[] ab = belt[activeBelt];
+            for (int i = 0; i < ab.length; i++) {
+                wdgmsg("setbelt", i, (ab[i] == null) ? 0 : (ab[i].name));
             }
             return true;
-        } else if (ch == '0') {
-            if (belt[activeBelt][9] != null)
-                wdgmsg("belt", 9, 1, 0);
-            return (true);
-        } else if ((ch >= '1') && (ch <= '9')) {
-            if (belt[activeBelt][ch - '1'] != null)
-                wdgmsg("belt", ch - '1', 1, 0);
+        } else if ((ch >= '0') && (ch <= '9')) {
+            int nb = (9 + (ch - '0')) % 10;
+            if (belt[activeBelt][nb] != null)
+                wdgmsg("belt", nb, 1, 0);
             return (true);
         } else if (ch == 15) {
             toggleopts();
@@ -659,6 +653,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
     public void destroy() {
         if (ircConsole != null)
             if (ircConsole.IRC != null) ircConsole.IRC.close();
+        ProgressBar.delete();
         super.destroy();
     }
 

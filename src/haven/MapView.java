@@ -881,7 +881,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
                 drawer.chcur(gob);
                 Coord dc = m2s(gob.getc()).add(oc);
                 gob.sc = dc;
-                    gob.drawsetup(drawer, dc, sz);
+                gob.drawsetup(drawer, dc, sz);
                 Speaking s = gob.getattr(Speaking.class);
                 if (s != null)
                     speaking.add(s);
@@ -969,11 +969,15 @@ public class MapView extends Widget implements DTarget, Console.Directory {
                         k.seen = now;
                     int tm = (int) (now - k.seen);
                     Color show = null;
-                    boolean auto = (k.type & 1) == 0;
-                    if (k.gob == onmouse) {
-                        show = Color.WHITE;
-                    } else if (auto && (tm < 7500)) {
-                        show = Utils.clipcol(255, 255, 255, 255 - ((255 * tm) / 7500));
+                    if (k.type == 0) {
+                        if (k.gob == onmouse) {
+                            show = Color.WHITE;
+                        } else if (tm < 7500) {
+                            show = Utils.clipcol(255, 255, 255, 255 - ((255 * tm) / 7500));
+                        }
+                    } else if (k.type == 1) {
+                        if (k.gob == onmouse)
+                            show = Color.WHITE;
                     }
                     if (show != null) {
                         g.chcolor(show);

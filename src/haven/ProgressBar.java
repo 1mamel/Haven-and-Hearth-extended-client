@@ -87,4 +87,8 @@ public class ProgressBar extends Widget {
     }
 
     private static ProgressBar ourInstance;
+
+    public static void delete() {
+        ourInstance = null;
+    }
 }

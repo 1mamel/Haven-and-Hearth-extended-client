@@ -133,7 +133,7 @@ public class Window extends Widget implements DTarget {
             cg.image(cl, new Coord((sz.x / 2) - (w / 2) - cl.sz().x, 0));
             cg.image(cm, new Coord((sz.x / 2) - (w / 2), 0), new Coord(w, cm.sz().y));
             cg.image(cr, new Coord((sz.x / 2) + (w / 2), 0));
-            cg.image(cap.tex(), new Coord((sz.x / 2) - (w / 2), 0));
+            cg.image(cap.tex(), new Coord((sz.x / 2) - (w / 2), 2)); // fix centying window name
         }
         super.draw(og);
     }

@@ -2,3 +2,7 @@
 /.project
 /build
 /.idea/workspace.xml
+lib/gluegen-rt.jar
+lib/jogg.jar
+lib/jogl.jar
+lib/jorbis.jar

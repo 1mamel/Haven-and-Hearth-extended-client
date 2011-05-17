@@ -16,7 +16,7 @@ import java.awt.*;
 public class ConfigProvider {
 
     private void setNightvision(boolean nightvision) {
-        setNightvision(String.valueOf(nightvision));
+        CustomConfig.hasNightVision = nightvision;
     }
 
     public void setNightvision(String arg0) {
