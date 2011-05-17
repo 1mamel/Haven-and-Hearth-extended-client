@@ -25,28 +25,27 @@ public class GameOptions extends Window {
         });
     }
 
-    final Label sfxVol;
-    final Label musicVol;
-    final Label serverLabel;
-    final Label chnlLabel;
-    final Label defIRCNickLabel;
-    final Label altIRCNickLabel;
-    final TextEntry serverAddress;
-    final TextEntry channelList;
-    final TextEntry defNick;
-    final TextEntry altNick;
-    final FillBox sfxVolBar;
-    final FillBox musicVolBar;
-    final CheckBox musicToggle;
-    final CheckBox soundToggle;
-    final CheckBox ircToggle;
+    private final Label sfxVol;
+    private final Label musicVol;
+    private final Label serverLabel;
+    private final Label chnlLabel;
+    private final Label defIRCNickLabel;
+    private final Label altIRCNickLabel;
+    private final TextEntry serverAddress;
+    private final TextEntry channelList;
+    private final TextEntry defNick;
+    private final TextEntry altNick;
+    private final FillBox sfxVolBar;
+    private final FillBox musicVolBar;
+    private final CheckBox musicToggle;
+    private final CheckBox soundToggle;
+    private final CheckBox ircToggle;
     //    Listbox channelListbox;
-    Button okBtn;
-    Button cancelBtn;
+    private Button okBtn;
+    private Button cancelBtn;
 
-    @SuppressWarnings({"NonConstantStringShouldBeStringBuffer"})
     public GameOptions(Widget parent) {
-        super(CustomConfig.windowSize.div(2).add(-200, -200), Coord.z.add(200, 200), parent, "Game Options", true);
+        super(CustomConfig.getWindowCenter().add(-200, -200), new Coord(200, 200), parent, "Game Options", true);
 
         //	SFX volume
         sfxVol = new Label(new Coord(0, 0), this, "SFX Vol:");
@@ -117,7 +116,7 @@ public class GameOptions extends Window {
     }
 
     public void wdgmsg(Widget sender, String msg, Object... args) {
-        if (sender == cbtn) {
+        if (checkIsCloseButton(sender)) {
             toggle();
             return;
         } else if (sender == sfxVolBar && msg.equals("change")) {

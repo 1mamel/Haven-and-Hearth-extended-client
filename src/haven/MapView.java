@@ -77,7 +77,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
     static {
         Widget.addtype("mapview", new WidgetFactory() {
             public Widget create(Coord c, Widget parent, Object[] args) {
-                Coord sz = new Coord(CustomConfig.windowSize.x, CustomConfig.windowSize.y);//(Coord)args[0];
+                Coord sz = CustomConfig.getWindowSize().clone(); //(Coord)args[0];
                 Coord mc = (Coord) args[1];
                 int pgob = -1;
                 if (args.length > 2)

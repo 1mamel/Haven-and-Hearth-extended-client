@@ -58,31 +58,31 @@ public class RemoteUI implements UI.Receiver {
                     Object[] args = msg.list(); // Arguments for widget creator (WidgetFabrick)
                     // UI fixes START
                     if (type.equals("cnt")) { // Central welcome widget
-                        args[0] = CustomConfig.windowSize;
+                        args[0] = CustomConfig.getWindowSize();
                     } else if (type.equals("img") && args.length >= 1 && (args[0] instanceof String)) {
                         String arg0 = (String) args[0];
                         if (arg0.startsWith("gfx/hud/prog/")) { // Hourglass (progress bar) at center of screen and change widget type
-                            c = CustomConfig.windowCenter;
+                            c = CustomConfig.getWindowCenter();
                             type = "progressbar";
                             Progress.class.getClass();
                         }
                         if (arg0.equals("gfx/ccscr"))
-                            c = CustomConfig.windowCenter.add(-400, -300);
+                            c = CustomConfig.getWindowCenter().add(-400, -300);
                         if (arg0.equals("gfx/logo2"))
-                            c = CustomConfig.windowCenter.add(-415, -300);
+                            c = CustomConfig.getWindowCenter().add(-415, -300);
                     } else if (type.equals("charlist") && args.length >= 1) {
-                        c = CustomConfig.windowCenter.add(-380, -50);
+                        c = CustomConfig.getWindowCenter().add(-380, -50);
                     } else if (type.equals("ibtn") && args.length >= 2) { // New User Button
                         if (args[0].equals("gfx/hud/buttons/ncu") && args[1].equals("gfx/hud/buttons/ncd")) {
-                            c = CustomConfig.windowCenter.add(86, 214);
+                            c = CustomConfig.getWindowCenter().add(86, 214);
                         }
                     } else if (type.equals("wnd") && c.x == 400 && c.y == 200) {
                         System.err.println("Strange window name=" + args[1].toString());
-                        c = CustomConfig.windowCenter.add(0, -100);
+                        c = CustomConfig.getWindowCenter().add(0, -100);
                     } else if (type.equals("wnd") && args.length >= 2) {
                         c = args[1].equals("Inventory") && CustomConfig.invCoord.x > 0 && CustomConfig.invCoord.y > 0
-                                && CustomConfig.invCoord.x < CustomConfig.windowSize.x - 100
-                                && CustomConfig.invCoord.y < CustomConfig.windowSize.y - 100
+                                && CustomConfig.invCoord.x < CustomConfig.getWindowSize().x - 100
+                                && CustomConfig.invCoord.y < CustomConfig.getWindowSize().y - 100
                                 ? CustomConfig.invCoord : c;
                     }
                     if (type.equals("inv")) {

@@ -50,6 +50,18 @@ public class IButton extends SSWidget {
         render();
     }
 
+    public IButton(Coord c, Widget parent, BufferedImage[] images) {
+        super(c, Utils.imgsz(images[0]), parent);
+        this.up = images[0];
+        this.down = images[1];
+        if (images.length > 2) {
+            this.hover = images[2];
+        } else {
+            this.hover = up;
+        }
+        render();
+    }
+
     public IButton(Coord c, Widget parent, BufferedImage up, BufferedImage down) {
         this(c, parent, up, down, up);
     }

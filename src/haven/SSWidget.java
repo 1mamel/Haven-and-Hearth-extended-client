@@ -29,7 +29,7 @@ package haven;
 import java.awt.*;
 
 /*
- * This is old and should be deprecated.
+ * @deprecated This class is old and should be deprecated.
  */
 public class SSWidget extends Widget {
     private final TexIM surf;

@@ -50,11 +50,12 @@ public class Music {
         private boolean done;
         private boolean loop = false;
 
-        private Player(Resource res, Thread waitfor) {
+        private Player(Resource res, Thread waitfor, boolean loop) {
             super("Music player");
             setDaemon(true);
             this.res = res;
             this.waitfor = waitfor;
+            this.loop = loop;
         }
 
         public void run() {
@@ -144,19 +145,21 @@ public class Music {
         }
     }
 
-    public static void play(Resource res, boolean loop) {
-        synchronized (Music.class) {
-            if (player != null)
-                player.interrupt();
-            if (res != null) {
-                player = new Player(res, player);
-                player.loop = loop;
-                player.start();
-            }
-        }
+    public static synchronized void play(Resource res, boolean loop) {
+        stop();
+        if (res == null) return;
+        player = new Player(res, player, loop);
+        player.start();
+    }
+
+    public static synchronized void stop() {
+        if (player != null)
+            player.interrupt();
+        player = null;
     }
 
     public static void main(String[] args) throws Exception {
+        if (args.length < 1) return;
         Resource.addurl(new java.net.URL("https://www.havenandhearth.com/res/"));
         debug = true;
         play(Resource.load(args[0]), (args.length > 1) && args[1].equals("y"));
@@ -165,7 +168,7 @@ public class Music {
 
     public static void enable(boolean enabled) {
         if (!enabled)
-            play(null, false);
+            stop();
         Music.enabled = enabled;
         Utils.setpref("bgmen", Boolean.toString(enabled));
     }
@@ -176,7 +179,7 @@ public class Music {
                 int i = 1;
                 String opt;
                 boolean loop = false;
-                if (i < args.length) {
+                if (args.length > 1) {
                     while ((opt = args[i]).charAt(0) == '-') {
                         i++;
                         if (opt.equals("-l"))
@@ -184,12 +187,12 @@ public class Music {
                     }
                     String resnm = args[i++];
                     int ver = -1;
-                    if (i < args.length)
-                        //noinspection UnusedAssignment
-                        ver = Integer.parseInt(args[i++]);
+                    if (i < args.length) {
+                        ver = Integer.parseInt(args[i]);
+                    }
                     Music.play(Resource.load(resnm, ver), loop);
                 } else {
-                    Music.play(null, false);
+                    Music.stop();
                 }
             }
         });

@@ -26,40 +26,61 @@
 
 package haven;
 
-import java.util.LinkedList;
-import java.util.NoSuchElementException;
+import java.util.PriorityQueue;
 
-public class PrioQueue<E extends Prioritized> extends LinkedList<E> {
-    public E peek() {
-        E rv = null;
-        int mp = 0;
-        for (E e : this) {
-            int ep = e.priority();
-            if ((rv == null) || (ep > mp)) {
-                mp = ep;
-                rv = e;
-            }
-        }
-        return (rv);
+public class PrioQueue<E extends Prioritized> extends PriorityQueue<E> {
+
+//    public E peek() {
+//        if (this.isEmpty()) return null;
+//
+//        Collections.sort(this, new Comparator<Prioritized>() {
+//            public int compare(Prioritized o1, Prioritized o2) {
+//                int thisVal = o1.getPriority();
+//                int anotherVal = o2.getPriority();
+//                return (thisVal < anotherVal ? -1 : (thisVal == anotherVal ? 0 : 1));
+//            }
+//        });
+//        E rv = getLast();
+////        E rv = null;
+////        int mp = 0;
+////        for (E e : this) {
+////            int ep = e.priority();
+////            if ((rv == null) || (ep > mp)) {
+////                mp = ep;
+////                rv = e;
+////            }
+////        }
+//        return (rv);
+//    }
+
+//    public E element() {
+//        E rv;
+//        if ((rv = peek()) == null)
+//            throw (new NoSuchElementException());
+//        return (rv);
+//    }
+
+//    public E poll() {
+//        E rv = peek();
+//        remove(rv);
+//        return (rv);
+//    }
+//
+//    public E remove() {
+//        E rv;
+//        if ((rv = poll()) == null)
+//            throw (new NoSuchElementException());
+//        return (rv);
+//    }
+
+    @Override
+    public boolean add(E e) {
+        e.setQueue(this);
+        return super.add(e);
     }
 
-    public E element() {
-        E rv;
-        if ((rv = peek()) == null)
-            throw (new NoSuchElementException());
-        return (rv);
-    }
-
-    public E poll() {
-        E rv = peek();
-        remove(rv);
-        return (rv);
-    }
-
-    public E remove() {
-        E rv;
-        if ((rv = poll()) == null)
-            throw (new NoSuchElementException());
-        return (rv);
+    public void update(E e) {
+        this.remove(e);
+        this.add(e);
     }
 }

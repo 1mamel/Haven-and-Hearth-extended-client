@@ -114,11 +114,19 @@ public class ConfigProvider {
     }
 
     public int getScreenWidth() {
-        return CustomConfig.windowSize.x;
+        return CustomConfig.getWindowSize().x;
     }
 
     public int getScreenHeight() {
-        return CustomConfig.windowSize.y;
+        return CustomConfig.getWindowSize().y;
+    }
+
+    public int getScreenCenterX() {
+        return CustomConfig.getWindowCenter().x;
+    }
+
+    public int getScreenXenterY() {
+        return CustomConfig.getWindowCenter().y;
     }
 
     public boolean isSoundOn() {

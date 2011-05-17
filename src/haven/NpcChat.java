@@ -32,7 +32,7 @@ import java.util.List;
 
 public class NpcChat extends Window {
     final Textlog out;
-    List<Button> btns = null;
+    final List<Button> btns = new LinkedList<Button>();
 
     static {
         Widget.addtype("npc", new WidgetFactory() {
@@ -54,14 +54,13 @@ public class NpcChat extends Window {
                 col = (Color) args[1];
             out.append((String) args[0], col);
         } else if (msg.equals("btns")) {
-            if (btns != null) {
+            if (!btns.isEmpty()) {
                 for (Button b : btns)
                     ui.destroy(b);
-                btns = null;
             }
+            btns.clear();
             if (args.length > 0) {
                 int y = out.sz.y + 3;
-                btns = new LinkedList<Button>();
                 for (Object text : args) {
                     Button b = Button.wrapped(new Coord(0, y), out.sz.x, this, (String) text);
                     btns.add(b);
@@ -75,9 +74,13 @@ public class NpcChat extends Window {
     }
 
     public void wdgmsg(Widget sender, String msg, Object... args) {
-        if ((btns != null) && (btns.contains(sender))) {
-            wdgmsg("btn", btns.indexOf(sender));
-            return;
+        if (sender instanceof Button) {
+            Button b = (Button) sender;
+            int i = btns.indexOf(b);
+            if (i != -1) {
+                wdgmsg("btn", i);
+                return;
+            }
         }
         super.wdgmsg(sender, msg, args);
     }

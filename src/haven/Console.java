@@ -30,10 +30,11 @@ import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Console {
-    static private final Map<String, Command> scommands = new TreeMap<String, Command>();
-    private final Map<String, Command> commands = new TreeMap<String, Command>();
+    static private final Map<String, Command> scommands = new ConcurrentHashMap<String, Command>();
+    private final Map<String, Command> commands = new ConcurrentHashMap<String, Command>();
     public PrintWriter out;
 
     {
@@ -49,30 +50,24 @@ public class Console {
     }
 
     public static void setscmd(String name, Command cmd) {
-        synchronized (scommands) {
-            scommands.put(name, cmd);
-        }
+        scommands.put(name, cmd);
     }
 
     public void setcmd(String name, Command cmd) {
-        synchronized (commands) {
-            commands.put(name, cmd);
-        }
+        commands.put(name, cmd);
     }
 
     public Map<String, Command> findcmds() {
         Map<String, Command> ret = new TreeMap<String, Command>();
-        synchronized (scommands) {
-            ret.putAll(scommands);
-        }
-        synchronized (commands) {
-            ret.putAll(commands);
-        }
-        return (ret);
+        ret.putAll(scommands);
+        ret.putAll(commands);
+        return ret;
     }
 
     public Command findcmd(String name) {
-        return (findcmds().get(name));
+        Command ret = commands.get(name);
+        if (ret == null) ret = scommands.get(name);
+        return ret;
     }
 
     public void run(String[] args) throws Exception {

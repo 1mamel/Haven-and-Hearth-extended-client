@@ -26,6 +26,20 @@
 
 package haven;
 
-public interface Prioritized {
-    public int priority();
+public class Prioritized {
+    private PrioQueue myQueue = null;
+    private int myPriority = 0;
+
+    public int getPriority() {
+        return myPriority;
+    }
+
+    public void setPriority(int p) {
+        if (myQueue != null) myQueue.update(this);
+        myPriority = p;
+    }
+
+    public void setQueue(PrioQueue queue) {
+        myQueue = queue;
+    }
 }

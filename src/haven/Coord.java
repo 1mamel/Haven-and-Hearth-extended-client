@@ -28,7 +28,7 @@ package haven;
 
 import static java.lang.Math.PI;
 
-public class Coord implements Comparable<Coord>, java.io.Serializable {
+public class Coord implements Comparable<Coord>, java.io.Serializable, Cloneable {
     public int x, y;
     public static final Coord z = new Coord(0, 0);
 
@@ -49,6 +49,13 @@ public class Coord implements Comparable<Coord>, java.io.Serializable {
         this(d.width, d.height);
     }
 
+    /**
+     * Creates new decart coodinates from polar
+     *
+     * @param a angle in radians
+     * @param r radius
+     * @return decart coordinates
+     */
     public static Coord sc(double a, double r) {
         return (new Coord((int) (Math.cos(a) * r), -(int) (Math.sin(a) * r)));
     }
@@ -159,5 +166,14 @@ public class Coord implements Comparable<Coord>, java.io.Serializable {
         long dx = o.x - x;
         long dy = o.y - y;
         return (Math.sqrt((dx * dx) + (dy * dy)));
+    }
+
+    @Override
+    protected Coord clone() {
+        try {
+            return (Coord) super.clone();
+        } catch (CloneNotSupportedException e) {
+            return new Coord(x, y);
+        }
     }
 }

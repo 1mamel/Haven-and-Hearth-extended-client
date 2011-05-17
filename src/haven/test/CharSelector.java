@@ -70,7 +70,7 @@ public class CharSelector extends Robot {
         if (w instanceof Listbox) {
             chrlist = (Listbox) w;
         } else if (w instanceof Button) {
-            if (((Button) w).text.text.equals("I choose you!"))
+            if (((Button) w).getText().equals("I choose you!"))
                 selbtn = (Button) w;
         }
         check();

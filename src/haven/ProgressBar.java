@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
  * Time: 15:55
  */
 public class ProgressBar extends Widget {
-    final Text.Foundry f = new Text.Foundry(new Font("SansSerif", Font.BOLD, 18));
+    final Text.Foundry textFoundry = new Text.Foundry(new Font("SansSerif", Font.BOLD, 18));
     final Img myImage;
     final Label myLabel;
     int myProgress;
@@ -52,7 +52,7 @@ public class ProgressBar extends Widget {
     public ProgressBar(Coord c, Tex img, Widget parent) {
         super(c, img.sz(), parent);
         myImage = new Img(c, img, this);
-        myLabel = new Label(Coord.z, this, "", f);
+        myLabel = new Label(Coord.z, this, "", textFoundry);
         myLabel.setcolor(Color.ORANGE);
     }
 
@@ -66,9 +66,9 @@ public class ProgressBar extends Widget {
 
     private void setProgress(String progressStr) {
         if (progressStr.equals(myLastPrStr)) return;
-        Matcher makeMatch = intsOnly.matcher(progressStr);
-        makeMatch.find();
-        int progress = Integer.parseInt(makeMatch.group());
+        Matcher m = intsOnly.matcher(progressStr);
+        m.find();
+        int progress = Integer.parseInt(m.group());
         myProgress = progress * 5;
         myLabel.settext(String.valueOf(myProgress) + '%');
         UserInfo.updateProgress(myProgress);

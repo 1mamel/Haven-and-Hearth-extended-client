@@ -224,11 +224,9 @@ public class CustomStarter {
             });
             startBtn.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    CustomConfig.windowSize.x = stdRes.isEnabled() ? ((Coord) stdRes.getSelectedItem()).x
-                            : Integer.parseInt(xField.getText());
-                    CustomConfig.windowSize.y = stdRes.isEnabled() ? ((Coord) stdRes.getSelectedItem()).y
-                            : Integer.parseInt(yField.getText());
-                    CustomConfig.setWindowSize(CustomConfig.windowSize);
+                    int x = stdRes.isEnabled() ? ((Coord) stdRes.getSelectedItem()).x : Integer.parseInt(xField.getText());
+                    int y = stdRes.isEnabled() ? ((Coord) stdRes.getSelectedItem()).y : Integer.parseInt(yField.getText());
+                    CustomConfig.setWindowSize(x, y);
                     CustomConfigProcessor.saveSettings();
                     Thread mainThread = new Thread() {
                         public void run() {

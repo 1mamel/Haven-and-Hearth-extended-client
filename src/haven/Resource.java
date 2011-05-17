@@ -42,10 +42,9 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.*;
 import java.util.List;
-import java.util.Queue;
 
 @SuppressWarnings({"UnusedDeclaration"})
-public class Resource implements Comparable<Resource>, Prioritized, Serializable {
+public class Resource extends Prioritized implements Comparable<Resource>, Serializable {
     private static final Map<String, Resource> cache = new TreeMap<String, Resource>();
     private static Loader loader;
     private static CacheSource prscache;
@@ -85,7 +84,6 @@ public class Resource implements Comparable<Resource>, Prioritized, Serializable
     public boolean loading;
     public ResSource source;
     private transient Indir<Resource> indir = null;
-    int prio = 0;
 
     private Resource(String name, int ver) {
         this.name = name;
@@ -150,7 +148,7 @@ public class Resource implements Comparable<Resource>, Prioritized, Serializable
                 return (res);
             }
             res = new Resource(name, ver);
-            res.prio = prio;
+            res.setPriority(prio);
             cache.put(name, res);
         }
         loader.load(res);
@@ -181,8 +179,8 @@ public class Resource implements Comparable<Resource>, Prioritized, Serializable
     }
 
     public void boostprio(int newprio) {
-        if (prio < newprio)
-            prio = newprio;
+        if (getPriority() < newprio)
+            setPriority(newprio);
     }
 
     public void loadwaitint() throws InterruptedException {
@@ -346,8 +344,12 @@ public class Resource implements Comparable<Resource>, Prioritized, Serializable
     private static class Loader implements Runnable {
         private ResSource src;
         private Loader next = null;
-        private final Queue<Resource> queue = new PrioQueue<Resource>();
+        private final PrioQueue<Resource> queue = new PrioQueue<Resource>();
         private transient Thread th = null;
+
+        private Resource genResource(String name, int ver) {
+            return new Resource(name, ver);
+        }
 
         Loader(ResSource src) {
             this.src = src;
@@ -1121,10 +1123,6 @@ public class Resource implements Comparable<Resource>, Prioritized, Serializable
     private void checkerr() {
         if (error != null)
             throw (new RuntimeException("Delayed error in resource " + name + " (v" + ver + "), from " + source, error));
-    }
-
-    public int priority() {
-        return (prio);
     }
 
     public static BufferedImage loadimg(String name) {

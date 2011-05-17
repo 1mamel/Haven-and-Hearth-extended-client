@@ -139,19 +139,19 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
             }
             if (!w && c) {
                 if (ca < 0.6) {
-                    m.c.y = CustomConfig.windowSize.y - (int) (sz.y * (1 - (ca / 0.6)));
+                    m.c.y = CustomConfig.getWindowSize().y - (int) (sz.y * (1 - (ca / 0.6)));
                 } else {
-                    m.c.y = CustomConfig.windowSize.y;
-                    sb.c.y = CustomConfig.windowSize.y - (int) (sb.sz.y * ((ca - 0.6) / 0.4));
+                    m.c.y = CustomConfig.getWindowSize().y;
+                    sb.c.y = CustomConfig.getWindowSize().y - (int) (sb.sz.y * ((ca - 0.6) / 0.4));
                 }
             }
             if (w && !c) {
                 if (ca < 0.6) {
-                    m.c.y = CustomConfig.windowSize.y - (int) (sz.y * (ca / 0.6));
-                    sb.c.y = CustomConfig.windowSize.y - (int) (sb.sz.y * (1 - (ca / 0.6)));
+                    m.c.y = CustomConfig.getWindowSize().y - (int) (sz.y * (ca / 0.6));
+                    sb.c.y = CustomConfig.getWindowSize().y - (int) (sb.sz.y * (1 - (ca / 0.6)));
                 } else {
-                    m.c.y = CustomConfig.windowSize.y - sz.y;
-                    sb.c.y = CustomConfig.windowSize.y;
+                    m.c.y = CustomConfig.getWindowSize().y - sz.y;
+                    sb.c.y = CustomConfig.getWindowSize().y;
                 }
             }
             if (ct >= ms) {
@@ -163,7 +163,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
     }
 
     public SlenHud(Coord c, Widget parent) {
-        super(new Coord(CustomConfig.windowSize.x - ((CustomConfig.windowSize.x - sz.x) / 2), CustomConfig.windowSize.y).sub(sz), sz, parent);
+        super(new Coord(CustomConfig.getWindowCenter().x - sz.x / 2, CustomConfig.getWindowSize().y - sz.y), sz, parent);
         new Img(fc, flarps, this);
         new Img(mc, mbg, this);
         new Img(dispc, dispbg, this);
@@ -217,7 +217,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
                 }
             };
         }
-        vc = new VC(this, fb = new FoldButton(new Coord(492, CustomConfig.windowSize.y), parent) {
+        vc = new VC(this, fb = new FoldButton(new Coord(492, CustomConfig.getWindowSize().y), parent) {
             public void click() {
                 vc.show();
             }
@@ -601,7 +601,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
     }
 
     public int foldheight() {
-        return (CustomConfig.windowSize.y - c.y);
+        return (CustomConfig.getWindowSize().y - c.y);
     }
 
     public boolean drop(Coord cc, Coord ul) {

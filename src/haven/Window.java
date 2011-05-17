@@ -30,28 +30,33 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Window extends Widget implements DTarget {
-    static final Tex bg = Resource.loadtex("gfx/hud/bgtex");
-    static final Tex cl = Resource.loadtex("gfx/hud/cleft");
-    static final Tex cm = Resource.loadtex("gfx/hud/cmain");
-    static final Tex cr = Resource.loadtex("gfx/hud/cright");
-    static final BufferedImage[] cbtni = new BufferedImage[]{
+    // Resources
+    private static final Tex bg = Resource.loadtex("gfx/hud/bgtex");
+    private static final Tex cl = Resource.loadtex("gfx/hud/cleft");
+    private static final Tex cm = Resource.loadtex("gfx/hud/cmain");
+    private static final Tex cr = Resource.loadtex("gfx/hud/cright");
+    private static final BufferedImage[] closeButtonImages = new BufferedImage[]{
             Resource.loadimg("gfx/hud/cbtn"),
             Resource.loadimg("gfx/hud/cbtnd"),
             Resource.loadimg("gfx/hud/cbtnh")};
-    static final Color cc = Color.YELLOW;
-    static final Text.Foundry cf = new Text.Foundry(new Font("Serif", Font.PLAIN, 12));
-    static final IBox wbox;
-    boolean dt = false;
-    Text cap;
+    private static final Color cc = Color.YELLOW;
+    // EO Resources
+    private static final Text.Foundry cf = new Text.Foundry(new Font("Serif", Font.PLAIN, 12));
+    static final IBox wbox = new IBox("gfx/hud", "tl", "tr", "bl", "br", "extvl", "extvr", "extht", "exthb");
+
+    private final Coord tlo;
+    private final Coord rbo;
+    private final Coord mrgn = new Coord(13, 13);
+    private final IButton closeButton;
+
+    final Text cap;
+
     boolean dm = false;
-    public final Coord atl;
+    //    private final Coord atl;
     public Coord asz;
-    public Coord wsz;
-    public final Coord tlo;
-    public final Coord rbo;
-    public final Coord mrgn = new Coord(13, 13);
-    public Coord doff;
-    public final IButton cbtn;
+    private Coord wsz;
+    private Coord doff;
+    private boolean dt = false;
 
     static {
         Widget.addtype("wnd", new WidgetFactory() {
@@ -64,31 +69,38 @@ public class Window extends Widget implements DTarget {
                 }
             }
         });
-        wbox = new IBox("gfx/hud", "tl", "tr", "bl", "br", "extvl", "extvr", "extht", "exthb");
     }
 
     private void placecbtn() {
-        cbtn.c = new Coord(wsz.x - 3 - Utils.imgsz(cbtni[0]).x, 3).sub(mrgn).sub(wbox.tloff());
+        closeButton.c = new Coord(wsz.x - 3 - closeButtonImages[0].getWidth(), 3).sub(mrgn).sub(wbox.tloff());
     }
 
+    @SuppressWarnings({"WeakerAccess", "WeakerAccess"})
     public Window(Coord c, Coord sz, Widget parent, String cap, Coord tlo, Coord rbo, boolean closable) {
         super(c, new Coord(0, 0), parent);
         this.tlo = tlo;
         this.rbo = rbo;
-        cbtn = new IButton(Coord.z, this, cbtni[0], cbtni[1], cbtni[2]);
-        if (cap != null)
+        if (cap != null) {
             this.cap = cf.render(cap, cc);
+        } else {
+            this.cap = null;
+        }
         sz = sz.add(tlo).add(rbo).add(wbox.bisz()).add(mrgn.mul(2));
         this.sz = sz;
-        atl = new Coord(wbox.bl.sz().x, wbox.bt.sz().y).add(tlo);
+//        atl = new Coord(wbox.bl.sz().x, wbox.bt.sz().y).add(tlo);
         wsz = sz.sub(tlo).sub(rbo);
         asz = new Coord(wsz.x - wbox.bl.sz().x - wbox.br.sz().x - mrgn.x, wsz.y - wbox.bt.sz().y - wbox.bb.sz().y - mrgn.y);
-        if (closable) placecbtn();
-        else cbtn.visible = false;
+        if (closable) {
+            closeButton = new IButton(Coord.z, this, closeButtonImages);
+            placecbtn();
+        } else {
+            closeButton = null;
+        }
         setfocustab(true);
         parent.setfocus(this);
     }
 
+    @SuppressWarnings({"WeakerAccess"})
     public Window(Coord c, Coord sz, Widget parent, String cap, Coord tlo, Coord rbo) {
         this(c, sz, parent, cap, tlo, rbo, true);
     }
@@ -127,9 +139,9 @@ public class Window extends Widget implements DTarget {
     }
 
     public void pack() {
-        Coord max = new Coord(0, 0);
+        Coord max = Coord.z.clone();
         for (Widget wdg = child; wdg != null; wdg = wdg.next) {
-            if (wdg == cbtn)
+            if (checkIsCloseButton(wdg))
                 continue;
             Coord br = wdg.c.add(wdg.sz);
             if (br.x > max.x)
@@ -196,7 +208,7 @@ public class Window extends Widget implements DTarget {
     }
 
     public void wdgmsg(Widget sender, String msg, Object... args) {
-        if (sender == cbtn) {
+        if (checkIsCloseButton(sender)) {
             wdgmsg("close");
         } else {
             super.wdgmsg(sender, msg, args);
@@ -229,5 +241,9 @@ public class Window extends Widget implements DTarget {
             return (ret);
         else
             return ("");
+    }
+
+    protected boolean checkIsCloseButton(Widget w) {
+        return closeButton != null && w == closeButton;
     }
 }

@@ -32,6 +32,7 @@ import java.util.List;
 
 public class Avaview extends Widget {
     public static final Coord dasz = new Coord(74, 74);
+    public static final Coord smallSize = new Coord(27, 27);
     private final Coord asz;
     int avagob;
     boolean none = false;

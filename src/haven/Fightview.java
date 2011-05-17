@@ -32,10 +32,9 @@ public class Fightview extends Widget {
     static final Tex bg = Resource.loadtex("gfx/hud/bosq");
     static final int height = 5;
     static final int ymarg = 5;
-    static final Coord avasz = new Coord(27, 27);
-    static final Coord cavac = new Coord(CustomConfig.windowSize.x - 100, 10);
-    static final Coord cgivec = new Coord(CustomConfig.windowSize.x - 135, 10);
-    static final Coord meterc = new Coord((CustomConfig.windowSize.x - 170) / 2, 10);
+    static final Coord cavac = new Coord(CustomConfig.getWindowSize().x - 100, 10);
+    static final Coord cgivec = new Coord(CustomConfig.getWindowSize().x - 135, 10);
+    static final Coord meterc = new Coord(CustomConfig.getWindowCenter().x - 85, 10);
     final LinkedList<Relation> lsrel = new LinkedList<Relation>();
     public Relation current = null;
     public Indir<Resource> blk, batk, iatk;
@@ -56,7 +55,7 @@ public class Fightview extends Widget {
 
         public Relation(int gobid) {
             this.gobid = gobid;
-            this.ava = new Avaview(Coord.z, Fightview.this, gobid, avasz);
+            this.ava = new Avaview(Coord.z, Fightview.this, gobid, Avaview.smallSize);
             this.give = new GiveButton(Coord.z, Fightview.this, 0, new Coord(15, 15));
         }
 
@@ -80,7 +79,7 @@ public class Fightview extends Widget {
     static {
         Widget.addtype("frv", new WidgetFactory() {
             public Widget create(Coord c, Widget parent, Object[] args) {
-                return (new Fightview(new Coord(CustomConfig.windowSize.x - 10, c.y), parent));
+                return (new Fightview(new Coord(CustomConfig.getWindowSize().x - 10, c.y), parent));
             }
         });
     }

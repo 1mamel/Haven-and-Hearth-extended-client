@@ -63,7 +63,7 @@ public class RootWidget extends ConsoleHost {
                 }
             } else if (key == '`') {
                 if (CustomConfig.console == null) {
-                    CustomConfig.console = new CustomConsole(Coord.z, new Coord(CustomConfig.windowSize.x - 30, 220), this,
+                    CustomConfig.console = new CustomConsole(Coord.z, new Coord(CustomConfig.getWindowSize().x - 30, 220), this,
                             "Console");
                 } else {
                     CustomConfig.console.toggle();

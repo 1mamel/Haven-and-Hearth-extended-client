@@ -214,7 +214,7 @@ public class MainFrame extends Frame implements Runnable, FSMan {
         Config.cmdline(args);
         ThreadGroup g = HackThread.tg();
         setupres();
-        MainFrame f = new MainFrame(CustomConfig.windowSize.x, CustomConfig.windowSize.y);
+        MainFrame f = new MainFrame(CustomConfig.getWindowSize().x, CustomConfig.getWindowSize().y);
         //noinspection UnusedParameters
         f.addWindowListener(new WindowListener() {
             public void windowClosing(WindowEvent e) {
@@ -267,7 +267,7 @@ public class MainFrame extends Frame implements Runnable, FSMan {
             try {
                 Collection<Resource> used = new LinkedList<Resource>();
                 for (Resource res : Resource.cached()) {
-                    if (res.prio >= 0)
+                    if (res.getPrio() >= 0)
                         used.add(res);
                 }
                 Writer w = new OutputStreamWriter(ResCache.global.store("tmp/allused"), "UTF-8");

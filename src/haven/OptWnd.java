@@ -63,7 +63,7 @@ public class OptWnd extends Window {
 
         body = new Tabs(Coord.z, new Coord(400, 300), this) {
             public void changed(Tab from, Tab to) {
-                Utils.setpref("optwndtab", to.btn.text.text);
+                Utils.setpref("optwndtab", to.btn.getText());
                 from.btn.c.y = 0;
                 to.btn.c.y = -2;
             }
@@ -261,7 +261,7 @@ public class OptWnd extends Window {
         new Frame(new Coord(-10, 20), new Coord(420, 330), this);
         String last = Utils.getpref("optwndtab", "");
         for (Tabs.Tab t : body.tabs) {
-            if (t.btn.text.text.equals(last))
+            if (t.btn.getText().equals(last))
                 body.showtab(t);
         }
     }
@@ -302,7 +302,7 @@ public class OptWnd extends Window {
     }
 
     public void wdgmsg(Widget sender, String msg, Object... args) {
-        if (sender == cbtn)
+        if (checkIsCloseButton(sender))
             super.wdgmsg(sender, msg, args);
     }
 

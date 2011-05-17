@@ -18,6 +18,10 @@ public class CustomConfig {
     static UI ui;
     public static boolean debugMsgs = true;
 
+    public static Coord getWindowSize() {
+        return windowSize;
+    }
+
     static class CharData {
         String name;
         int hudActiveBelt = 1;
@@ -44,8 +48,8 @@ public class CustomConfig {
         return windowsCoordinates.get(windowName);
     }
 
-    public static Coord windowSize = new Coord(800, 600);
-    public static Coord windowCenter = windowSize.div(2);
+    private static Coord windowSize = new Coord(800, 600);
+    private static Coord windowCenter = windowSize.div(2);
     public static Coord invCoord = Coord.z;
     public static int sfxVol = 100;
     public static int musicVol = 100;
@@ -95,5 +99,9 @@ public class CustomConfig {
 
     public static double getSFXVolume() {
         return (double) sfxVol / 100;
+    }
+
+    public static Coord getWindowCenter() {
+        return windowCenter;
     }
 }

@@ -35,7 +35,6 @@ public class Partyview extends Widget {
     final int ign;
     final Party party = ui.sess.glob.party;
     Map<Integer, Member> om = null;
-    Member ol = null;
     final Map<Member, Avaview> avs = new HashMap<Member, Avaview>();
     Button leave = null;
 
@@ -61,7 +60,7 @@ public class Partyview extends Widget {
                     continue;
                 Avaview w = avs.get(m);
                 if (w == null) {
-                    w = new Avaview(Coord.z, this, m.gobid, new Coord(27, 27)) {
+                    w = new Avaview(Coord.z, this, m.gobid, Avaview.smallSize) {
                         private Tex tooltip = null;
 
                         public Object tooltip(Coord c, boolean again) {

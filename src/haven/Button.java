@@ -30,16 +30,20 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Button extends SSWidget {
+    // Drawing resources start
     static final BufferedImage bl = Resource.loadimg("gfx/hud/buttons/tbtn/left");
     static final BufferedImage br = Resource.loadimg("gfx/hud/buttons/tbtn/right");
     static final BufferedImage bt = Resource.loadimg("gfx/hud/buttons/tbtn/top");
     static final BufferedImage bb = Resource.loadimg("gfx/hud/buttons/tbtn/bottom");
     static final BufferedImage dt = Resource.loadimg("gfx/hud/buttons/tbtn/dtex");
     static final BufferedImage ut = Resource.loadimg("gfx/hud/buttons/tbtn/utex");
-    public Text text;
-    public BufferedImage cont;
+    // EO resources
+
     static final Text.Foundry tf = new Text.Foundry(new Font("Serif", Font.PLAIN, 12), Color.YELLOW);
-    boolean a = false;
+
+    private Text text;
+    private BufferedImage cont;
+    private boolean isMouseDown = false;
 
     static {
         Widget.addtype("btn", new WidgetFactory() {
@@ -82,13 +86,13 @@ public class Button extends SSWidget {
     public void render() {
         synchronized (this) {
             Graphics g = graphics();
-            g.drawImage(a ? dt : ut, 3, 3, sz.x - 6, 13, null);
+            g.drawImage(isMouseDown ? dt : ut, 3, 3, sz.x - 6, 13, null);
             g.drawImage(bl, 0, 0, null);
             g.drawImage(br, sz.x - br.getWidth(), 0, null);
             g.drawImage(bt, 3, 0, sz.x - 6, bt.getHeight(), null);
             g.drawImage(bb, 3, sz.y - bb.getHeight(), sz.x - 6, bb.getHeight(), null);
             Coord tc = sz.div(2).sub(Utils.imgsz(cont).div(2));
-            if (a)
+            if (isMouseDown)
                 tc = tc.add(1, 1);
             g.drawImage(cont, tc.x, tc.y, null);
             update();
@@ -121,15 +125,15 @@ public class Button extends SSWidget {
     public boolean mousedown(Coord c, int button) {
         if (button != 1)
             return (false);
-        a = true;
+        isMouseDown = true;
         render();
         ui.grabmouse(this);
         return (true);
     }
 
     public boolean mouseup(Coord c, int button) {
-        if (a && button == 1) {
-            a = false;
+        if (isMouseDown && button == 1) {
+            isMouseDown = false;
             render();
             ui.grabmouse(null);
             if (c.isect(new Coord(0, 0), sz))
@@ -137,5 +141,9 @@ public class Button extends SSWidget {
             return (true);
         }
         return (false);
+    }
+
+    public String getText() {
+        return text.text;
     }
 }

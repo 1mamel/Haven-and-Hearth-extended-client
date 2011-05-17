@@ -42,11 +42,11 @@ public class LoginScreen extends Widget {
     }
 
     public LoginScreen(Widget parent) {
-        super(Coord.z, CustomConfig.windowSize, parent);
+        super(Coord.z, CustomConfig.getWindowSize(), parent);
         setfocustab(true);
         parent.setfocus(this);
-        new Img(CustomConfig.windowCenter.sub(bg.sz().div(2)), bg, this);
-        new Img(CustomConfig.windowCenter.add(20, -85).sub(logo.sz().div(2)), logo, this);
+        new Img(CustomConfig.getWindowCenter().sub(bg.sz().div(2)), bg, this);
+        new Img(CustomConfig.getWindowCenter().add(20, -85).sub(logo.sz().div(2)), logo, this);
     }
 
     private static abstract class Login extends Widget {
@@ -65,7 +65,7 @@ public class LoginScreen extends Widget {
         final CheckBox savepass;
 
         private Pwbox(String username, boolean save) {
-            super(CustomConfig.windowCenter.add(-55, 10), new Coord(150, 150), LoginScreen.this);
+            super(CustomConfig.getWindowCenter().add(-55, 10), new Coord(150, 150), LoginScreen.this);
             setfocustab(true);
             new Label(new Coord(0, 0), this, "User name", textf);
             user = new TextEntry(new Coord(0, 20), new Coord(150, 20), this, username);
@@ -105,7 +105,7 @@ public class LoginScreen extends Widget {
         final Button btn;
 
         private Tokenbox(String username) {
-            super(CustomConfig.windowCenter.add(-105, 10), new Coord(250, 100), LoginScreen.this);
+            super(CustomConfig.getWindowCenter().add(-105, 10), new Coord(250, 100), LoginScreen.this);
             label = textfs.render("Identity is saved for " + username, java.awt.Color.WHITE);
             btn = new Button(new Coord(75, 30), 100, this, "Forget me");
         }
@@ -134,7 +134,7 @@ public class LoginScreen extends Widget {
 
     private void mklogin() {
         synchronized (ui) {
-            btn = new IButton(CustomConfig.windowCenter.add(-27, 160), this, Resource.loadimg("gfx/hud/buttons/loginu"), Resource.loadimg("gfx/hud/buttons/logind"));
+            btn = new IButton(CustomConfig.getWindowCenter().add(-27, 160), this, Resource.loadimg("gfx/hud/buttons/loginu"), Resource.loadimg("gfx/hud/buttons/logind"));
             progress(null);
         }
     }
@@ -199,9 +199,9 @@ public class LoginScreen extends Widget {
     public void draw(GOut g) {
         super.draw(g);
         if (error != null)
-            g.image(error.tex(), new Coord(CustomConfig.windowCenter.x - (error.sz().x / 2), CustomConfig.windowCenter.y + 200));
+            g.image(error.tex(), new Coord(CustomConfig.getWindowCenter().x - (error.sz().x / 2), CustomConfig.getWindowCenter().y + 200));
         if (progress != null)
-            g.image(progress.tex(), new Coord(CustomConfig.windowCenter.x + 20 - (progress.sz().x / 2), CustomConfig.windowCenter.y + 50));
+            g.image(progress.tex(), new Coord(CustomConfig.getWindowCenter().x + 20 - (progress.sz().x / 2), CustomConfig.getWindowCenter().y + 50));
     }
 
     public boolean type(char k, java.awt.event.KeyEvent ev) {

@@ -68,11 +68,11 @@ public class CustomConfigProcessor {
 
                     if (key.equals("SCREENSIZE")) {
                         value = atts.getValue("width") == null ? "1024" : atts.getValue("width");
-                        CustomConfig.windowSize.x = Integer.parseInt(value);
+                        int x = Integer.parseInt(value);
 
                         value = atts.getValue("height") == null ? "1024" : atts.getValue("height");
-                        CustomConfig.windowSize.y = Integer.parseInt(value);
-                        CustomConfig.setWindowSize(CustomConfig.windowSize);
+                        int y = Integer.parseInt(value);
+                        CustomConfig.setWindowSize(new Coord(x, y));
                     } else if (key.equals("SOUND")) {
                         value = atts.getValue("enabled") == null ? "true" : atts.getValue("enabled");
                         CustomConfig.isSoundOn = Boolean.parseBoolean(value);
@@ -140,7 +140,7 @@ public class CustomConfigProcessor {
             } else {
                 xmlReader.parse("config.xml");
             }
-            if (CustomConfig.windowSize.x < 800 || CustomConfig.windowSize.y < 600) {
+            if (CustomConfig.getWindowSize().x < 800 || CustomConfig.getWindowSize().y < 600) {
                 System.out.println("Window size must be at least 800x600");
                 CustomConfig.setWindowSize(800, 600);
             }
@@ -177,7 +177,7 @@ public class CustomConfigProcessor {
             }
             writer.write("<?xml version=\"1.0\" ?>\n");
             writer.write("<CONFIG>\n");
-            writer.write("\t<SCREENSIZE width=\"" + CustomConfig.windowSize.x + "\" height=\"" + CustomConfig.windowSize.y + "\"/>\n");
+            writer.write("\t<SCREENSIZE width=\"" + CustomConfig.getWindowSize().x + "\" height=\"" + CustomConfig.getWindowSize().y + "\"/>\n");
             writer.write("\t<SOUND enabled=\"" + Boolean.toString(CustomConfig.isSoundOn)
                     + "\" volume=\"" + Integer.toString(CustomConfig.sfxVol) + "\"/>\n");
             writer.write("\t<MUSIC enabled=\"" + Boolean.toString(CustomConfig.isMusicOn)

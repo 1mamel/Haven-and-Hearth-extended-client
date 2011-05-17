@@ -422,7 +422,7 @@ public class Session {
                 boolean loop = !msg.eom() && (msg.uint8() != 0);
                 if (Music.enabled) {
                     if (resnm.length() == 0)
-                        Music.play(null, false);
+                        Music.stop();
                     else
                         Music.play(Resource.load(resnm, resver), loop);
                 }
