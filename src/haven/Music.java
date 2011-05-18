@@ -26,6 +26,9 @@
 
 package haven;
 
+import haven.resources.Resource;
+import haven.resources.layers.MusicL;
+
 import javax.sound.midi.*;
 
 public class Music {
@@ -85,7 +88,7 @@ public class Music {
                     synth = MidiSystem.getSynthesizer();
 
                     seq.open();
-                    seq.setSequence(res.layer(Resource.Music.class).seq);
+                    seq.setSequence(res.layer(MusicL.class).seq);
                     synth.open();
                     seq.getTransmitter().setReceiver(synth.getReceiver());
                     setVolume(Config.getMusicVolume());

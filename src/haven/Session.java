@@ -26,6 +26,7 @@
 
 package haven;
 
+import haven.resources.Resource;
 import org.relayirc.core.IRCConnection;
 
 import java.io.IOException;

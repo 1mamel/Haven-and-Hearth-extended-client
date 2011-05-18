@@ -26,6 +26,7 @@
 
 package haven;
 
+import haven.resources.Resource;
 import haven.scriptengine.UserInfo;
 
 public class Speedget extends Widget {

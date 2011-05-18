@@ -3,6 +3,7 @@ package haven;
 import ender.timer.Callback;
 import ender.timer.Timer;
 import ender.timer.TimerController;
+import haven.resources.Resource;
 
 public class TimerWdg extends Widget {
 

@@ -26,6 +26,9 @@
 
 package haven;
 
+import haven.resources.Resource;
+import haven.resources.layers.Neg;
+
 import java.util.*;
 
 public class Gob implements Sprite.Owner {
@@ -212,7 +215,7 @@ public class Gob implements Sprite.Owner {
             return (new Random(id));
     }
 
-    public Resource.Neg getneg() {
+    public Neg getneg() {
         Drawable d = getattr(Drawable.class);
         if (d instanceof ResDrawable) {
             ResDrawable rd = (ResDrawable) d;

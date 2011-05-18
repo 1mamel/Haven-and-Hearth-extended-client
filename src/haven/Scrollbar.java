@@ -26,6 +26,8 @@
 
 package haven;
 
+import haven.resources.Resource;
+
 public class Scrollbar extends Widget {
     static Tex texpap = Resource.loadtex("gfx/hud/texpap");
     static final Tex schain = Resource.loadtex("gfx/hud/schain");

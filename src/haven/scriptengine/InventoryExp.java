@@ -1,6 +1,7 @@
 package haven.scriptengine;
 
 import haven.*;
+import haven.resources.Resource;
 
 import java.util.ArrayList;
 import java.util.HashMap;

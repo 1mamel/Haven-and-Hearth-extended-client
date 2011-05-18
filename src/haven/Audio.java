@@ -26,6 +26,9 @@
 
 package haven;
 
+import haven.resources.Resource;
+import haven.resources.layers.AudioL;
+
 import javax.sound.sampled.*;
 import java.io.InputStream;
 import java.util.Collection;
@@ -237,10 +240,10 @@ public class Audio {
     }
 
     private static void playres(Resource res) {
-        Collection<Resource.Audio> clips = res.layers(Resource.audio);
+        Collection<AudioL> clips = res.layers(Resource.audio);
         int s = (int) (Math.random() * clips.size());
-        Resource.Audio clip = null;
-        for (Resource.Audio cp : clips) {
+        AudioL clip = null;
+        for (AudioL cp : clips) {
             clip = cp;
             if (--s < 0)
                 break;

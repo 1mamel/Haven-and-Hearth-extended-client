@@ -26,6 +26,8 @@
 
 package haven;
 
+import haven.resources.Resource;
+
 import java.awt.*;
 import java.awt.font.TextAttribute;
 import java.util.LinkedList;

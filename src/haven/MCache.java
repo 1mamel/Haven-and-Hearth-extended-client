@@ -26,8 +26,9 @@
 
 package haven;
 
-import haven.Resource.Tile;
-import haven.Resource.Tileset;
+import haven.resources.Resource;
+import haven.resources.layers.Tile;
+import haven.resources.layers.Tileset;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

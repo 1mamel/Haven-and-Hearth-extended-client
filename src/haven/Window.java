@@ -27,6 +27,7 @@
 package haven;
 
 import ender.GoogleTranslator;
+import haven.resources.Resource;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

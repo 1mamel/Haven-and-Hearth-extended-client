@@ -26,6 +26,9 @@
 
 package haven;
 
+import haven.resources.Resource;
+import haven.resources.layers.Image;
+
 import java.util.Collection;
 import java.util.LinkedList;
 
@@ -44,7 +47,7 @@ public class StaticSprite extends ImageSprite {
         super(owner, res, sdt);
         Collection<Part> f = new LinkedList<Part>();
         boolean[] flags = decflags(sdt);
-        for (Resource.Image img : res.layers(Resource.imgc)) {
+        for (Image img : res.layers(Resource.imgc)) {
             if ((img.id < 0) || ((flags.length > img.id) && flags[img.id]))
                 f.add(new ImagePart(img));
         }

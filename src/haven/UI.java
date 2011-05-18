@@ -26,6 +26,9 @@
 
 package haven;
 
+import haven.resources.Resource;
+import haven.resources.layers.CodeEntry;
+
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -159,7 +162,7 @@ public class UI {
             }
             Resource res = Resource.load(type, ver);
             res.loadwaitint();
-            f = res.layer(Resource.CodeEntry.class).get(WidgetFactory.class);
+            f = res.layer(CodeEntry.class).get(WidgetFactory.class);
         } else {
             f = Widget.gettype(type);
         }

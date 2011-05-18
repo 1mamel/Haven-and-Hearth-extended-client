@@ -26,6 +26,10 @@
 
 package haven;
 
+import haven.resources.Resource;
+import haven.resources.layers.AButton;
+import haven.resources.layers.Tooltip;
+
 import java.awt.*;
 
 @SuppressWarnings({"SynchronizeOnNonFinalField"})
@@ -126,8 +130,8 @@ public class Bufflist extends Widget {
                     if (b.tt != null)
                         return (b.tt + p);
                     else if ((res = b.res.get()) != null) {
-                        Resource.Tooltip tt;
-                        Resource.AButton act;
+                        Tooltip tt;
+                        AButton act;
                         if ((tt = res.layer(Resource.tooltip)) != null) {
                             return tt.t + p;
                         } else if ((act = res.layer(Resource.action)) != null) {

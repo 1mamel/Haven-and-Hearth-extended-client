@@ -26,6 +26,8 @@
 
 package haven;
 
+import haven.resources.Resource;
+
 public class ResDrawable extends Drawable {
     final Indir<Resource> res;
     final Message sdt;

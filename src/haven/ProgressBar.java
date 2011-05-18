@@ -1,5 +1,6 @@
 package haven;
 
+import haven.resources.Resource;
 import haven.scriptengine.UserInfo;
 
 import java.awt.*;

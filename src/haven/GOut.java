@@ -102,7 +102,7 @@ public class GOut {
         tex.dispose();
     }
 
-    public void image(Resource.Image img, Coord c) {
+    public void image(haven.resources.layers.Image img, Coord c) {
         if (img == null)
             return;
         image(img.tex(), c.add(img.o));

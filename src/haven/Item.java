@@ -26,6 +26,8 @@
 
 package haven;
 
+import haven.resources.Resource;
+import haven.resources.layers.Pagina;
 import haven.scriptengine.InventoryExp;
 
 import java.awt.*;
@@ -194,7 +196,7 @@ public class Item extends Widget implements DTarget {
         } else {
             Resource res = this.res.get();
             if ((longtip == null) && (res != null)) {
-                Resource.Pagina pg = res.layer(Resource.pagina);
+                Pagina pg = res.layer(Resource.pagina);
                 String tip = shorttip();
                 if (tip == null)
                     return (null);

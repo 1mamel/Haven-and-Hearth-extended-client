@@ -27,6 +27,8 @@
 package haven.resutil;
 
 import haven.*;
+import haven.resources.Resource;
+import haven.resources.layers.Image;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -136,7 +138,7 @@ public class CSprite extends Sprite {
     }
 
     public void addnegative() {
-        for (Resource.Image img : res.layers(Resource.imgc)) {
+        for (Image img : res.layers(Resource.imgc)) {
             if (img.id < 0)
                 add(img);
         }
@@ -146,7 +148,7 @@ public class CSprite extends Sprite {
         frame.add(new SSPart(ss));
     }
 
-    public void add(Resource.Image img) {
+    public void add(haven.resources.layers.Image img) {
         add(new SimpleSprite(img, res.layer(Resource.negc).cc));
     }
 

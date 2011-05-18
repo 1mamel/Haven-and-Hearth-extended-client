@@ -26,6 +26,8 @@
 
 package haven;
 
+import haven.resources.Resource;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;

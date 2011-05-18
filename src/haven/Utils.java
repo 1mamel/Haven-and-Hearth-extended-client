@@ -26,6 +26,9 @@
 
 package haven;
 
+import haven.resources.ResClassLoader;
+import haven.resources.Resource;
+
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -51,7 +54,7 @@ public class Utils {
     public static final java.awt.image.ColorModel rgbm = java.awt.image.ColorModel.getRGBdefault();
     private static Background bgworker = null;
 
-    static Coord imgsz(BufferedImage img) {
+    public static Coord imgsz(BufferedImage img) {
         return (new Coord(img.getWidth(), img.getHeight()));
     }
 
@@ -204,7 +207,7 @@ public class Utils {
         }
     }
 
-    static int ub(byte b) {
+    public static int ub(byte b) {
         if (b < 0)
             return (256 + b);
         else
@@ -218,11 +221,11 @@ public class Utils {
             return ((byte) b);
     }
 
-    static int uint16d(byte[] buf, int off) {
+    public static int uint16d(byte[] buf, int off) {
         return (ub(buf[off]) + (ub(buf[off + 1]) * 256));
     }
 
-    static int int16d(byte[] buf, int off) {
+    public static int int16d(byte[] buf, int off) {
         int u = uint16d(buf, off);
         if (u > 32767)
             return (-65536 + u);
@@ -241,7 +244,7 @@ public class Utils {
         buf[off + 3] = sb((int) ((num & 0xff000000) >> 24));
     }
 
-    static int int32d(byte[] buf, int off) {
+    public static int int32d(byte[] buf, int off) {
         long u = uint32d(buf, off);
         if (u > Integer.MAX_VALUE)
             return ((int) ((((long) Integer.MIN_VALUE) * 2) - u));
@@ -261,7 +264,7 @@ public class Utils {
         buf[off + 1] = sb((num & 0xff00) >> 8);
     }
 
-    static String strd(byte[] buf, int[] off) {
+    public static String strd(byte[] buf, int[] off) {
         int i;
         for (i = off[0]; buf[i] != 0; i++) ;
         String ret;
@@ -396,7 +399,7 @@ public class Utils {
         }
     }
 
-    static byte[] readall(InputStream in) throws IOException {
+    public static byte[] readall(InputStream in) throws IOException {
         byte[] buf = new byte[4096];
         int off = 0;
         while (true) {
@@ -447,8 +450,8 @@ public class Utils {
 
     public static Resource myres(Class<?> c) {
         ClassLoader cl = c.getClassLoader();
-        if (cl instanceof Resource.ResClassLoader) {
-            return (((Resource.ResClassLoader) cl).getres());
+        if (cl instanceof ResClassLoader) {
+            return (((ResClassLoader) cl).getres());
         } else {
             return (null);
         }

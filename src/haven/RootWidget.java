@@ -27,6 +27,7 @@
 package haven;
 
 import com.sun.opengl.util.Screenshot;
+import haven.resources.Resource;
 
 import javax.media.opengl.GLException;
 import java.awt.event.KeyEvent;

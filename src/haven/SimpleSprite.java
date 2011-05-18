@@ -26,13 +26,16 @@
 
 package haven;
 
+import haven.resources.Resource;
+import haven.resources.layers.Image;
+
 import java.awt.*;
 
 public class SimpleSprite {
-    public final Resource.Image img;
+    public final Image img;
     public final Coord cc;
 
-    public SimpleSprite(Resource.Image img, Coord cc) {
+    public SimpleSprite(Image img, Coord cc) {
         this.img = img;
         this.cc = cc;
     }
@@ -40,7 +43,7 @@ public class SimpleSprite {
     public SimpleSprite(Resource res, int id, Coord cc) {
         find:
         {
-            for (Resource.Image img : res.layers(Resource.imgc)) {
+            for (haven.resources.layers.Image img : res.layers(Resource.imgc)) {
                 if (img.id == id) {
                     this.img = img;
                     break find;

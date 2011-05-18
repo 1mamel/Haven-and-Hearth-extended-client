@@ -27,6 +27,9 @@
 package haven.resutil;
 
 import haven.*;
+import haven.resources.Resource;
+import haven.resources.layers.Image;
+import haven.resources.layers.Neg;
 
 import java.util.Random;
 
@@ -34,7 +37,7 @@ public class GrowingPlant extends CSprite {
     public static class Factory implements Sprite.Factory {
         public final Tex[][] strands;
         public final int num;
-        public final Resource.Neg neg;
+        public final Neg neg;
 
         public Factory(int stages, int variants, int num, boolean rev) {
             Resource res = Utils.myres(this.getClass());
@@ -42,12 +45,12 @@ public class GrowingPlant extends CSprite {
             this.num = num;
             strands = new Tex[stages][variants];
             if (rev) {
-                for (Resource.Image img : res.layers(Resource.imgc)) {
+                for (Image img : res.layers(Resource.imgc)) {
                     if (img.id != -1)
                         strands[img.id / variants][img.id % variants] = img.tex();
                 }
             } else {
-                for (Resource.Image img : res.layers(Resource.imgc)) {
+                for (Image img : res.layers(Resource.imgc)) {
                     if (img.id != -1)
                         strands[img.id % stages][img.id / stages] = img.tex();
                 }

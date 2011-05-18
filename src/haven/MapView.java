@@ -28,7 +28,9 @@ package haven;
 
 import haven.MCache.Grid;
 import haven.MCache.Overlay;
-import haven.Resource.Tile;
+import haven.resources.Resource;
+import haven.resources.layers.Tile;
+import haven.resources.layers.Neg;
 
 import java.awt.*;
 import java.lang.reflect.Constructor;
@@ -1144,7 +1146,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
             synchronized (glob.oc) {
                 for (Gob gob : glob.oc) {
                     Drawable d = gob.getattr(Drawable.class);
-                    Resource.Neg neg;
+                    Neg neg;
                     String name = gob.resname();
                     if (!gob.hide || (name.indexOf("wald") > -1) || (name.indexOf("flavobjs") > -1))
                         continue;
@@ -1238,7 +1240,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
                 synchronized (glob.oc) {
                     for (Gob gob : glob.oc) {
                         Drawable d = gob.getattr(Drawable.class);
-                        Resource.Neg neg;
+                        Neg neg;
                         if (d instanceof ResDrawable) {
                             ResDrawable rd = (ResDrawable) d;
                             if (rd.spr == null)

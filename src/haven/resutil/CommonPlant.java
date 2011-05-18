@@ -27,6 +27,9 @@
 package haven.resutil;
 
 import haven.*;
+import haven.resources.Resource;
+import haven.resources.layers.Image;
+import haven.resources.layers.Neg;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -36,14 +39,14 @@ public class CommonPlant extends CSprite {
         private static final Tex[] typebarda = new Tex[0];
         public final Tex[] strands;
         public final int num;
-        public final Resource.Neg neg;
+        public final Neg neg;
 
         public Factory(int num) {
             Resource res = Utils.myres(this.getClass());
             this.neg = res.layer(Resource.negc);
             this.num = num;
             ArrayList<Tex> strands = new ArrayList<Tex>();
-            for (Resource.Image img : res.layers(Resource.imgc)) {
+            for (Image img : res.layers(Resource.imgc)) {
                 if (img.id != -1)
                     strands.add(img.tex());
             }

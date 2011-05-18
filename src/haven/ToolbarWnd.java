@@ -1,5 +1,9 @@
 package haven;
 
+import haven.resources.Resource;
+import haven.resources.layers.AButton;
+import haven.resources.layers.Pagina;
+
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.font.TextAttribute;
@@ -412,8 +416,8 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
     }
 
     private static Text rendertt(Resource res, boolean withpg) {
-        Resource.AButton ad = res.layer(Resource.action);
-        Resource.Pagina pg = res.layer(Resource.pagina);
+        AButton ad = res.layer(Resource.action);
+        Pagina pg = res.layer(Resource.pagina);
         String tt = ad.name;
         if (withpg && (pg != null)) {
             tt += "\n\n" + pg.text;

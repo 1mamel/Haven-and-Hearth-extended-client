@@ -26,16 +26,19 @@
 
 package haven;
 
+import haven.resources.Resource;
+import haven.resources.layers.Image;
+
 import javax.media.opengl.GL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static haven.Resource.imgc;
+import static haven.resources.Resource.imgc;
 
 public class AvaRender extends TexRT {
     List<Indir<Resource>> layers;
-    List<Resource.Image> images;
+    List<Image> images;
     boolean loading;
     public static final Coord sz = new Coord(212, 249);
 
@@ -54,7 +57,7 @@ public class AvaRender extends TexRT {
         if (!loading)
             return (false);
 
-        List<Resource.Image> images = new ArrayList<Resource.Image>();
+        List<Image> images = new ArrayList<Image>();
         loading = false;
         for (Indir<Resource> r : layers) {
             if (r.get() == null)
@@ -69,7 +72,7 @@ public class AvaRender extends TexRT {
 
         g.gl.glClearColor(255, 255, 255, 0);
         g.gl.glClear(GL.GL_COLOR_BUFFER_BIT);
-        for (Resource.Image i : images)
+        for (Image i : images)
             g.image(i.tex(), i.o);
         return (true);
     }

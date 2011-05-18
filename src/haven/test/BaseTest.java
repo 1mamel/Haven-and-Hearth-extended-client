@@ -27,7 +27,7 @@
 package haven.test;
 
 import haven.Audio;
-import haven.Resource;
+import haven.resources.Resource;
 
 public abstract class BaseTest implements Runnable {
     public final ThreadGroup tg;

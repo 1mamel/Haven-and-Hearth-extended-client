@@ -26,6 +26,10 @@
 
 package haven;
 
+import haven.resources.Resource;
+import haven.resources.layers.Anim;
+import haven.resources.layers.Image;
+
 import java.util.Collection;
 import java.util.LinkedList;
 
@@ -50,12 +54,12 @@ public class AnimSprite extends ImageSprite {
         super(owner, res, sdt);
         boolean[] flags = decflags(sdt);
         Collection<Part> stp = new LinkedList<Part>();
-        for (Resource.Image img : res.layers(Resource.imgc)) {
+        for (Image img : res.layers(Resource.imgc)) {
             if ((img.id < 0) || ((img.id < flags.length) && flags[img.id]))
                 stp.add(new ImagePart(img));
         }
         frames = null;
-        for (Resource.Anim anim : res.layers(Resource.animc)) {
+        for (Anim anim : res.layers(Resource.animc)) {
             if ((anim.id < 0) || ((anim.id < flags.length) && flags[anim.id])) {
                 if (frames == null) {
                     frames = new Frame[anim.f.length];

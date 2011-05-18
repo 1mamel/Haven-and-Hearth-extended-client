@@ -26,7 +26,9 @@
 
 package haven;
 
-import haven.Resource.AButton;
+import haven.resources.Resource;
+import haven.resources.layers.AButton;
+import haven.resources.layers.Pagina;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -123,7 +125,7 @@ public class MenuGrid extends Widget {
 //	int i = curoff;
         hotmap.clear();
         for (i = 0; i < cur.length; i++) {
-            Resource.AButton ad = cur[i].layer(Resource.action);
+            AButton ad = cur[i].layer(Resource.action);
             if (ad.hk != 0)
                 hotmap.put(Character.toUpperCase(ad.hk), cur[i]);
         }
@@ -147,8 +149,8 @@ public class MenuGrid extends Widget {
     }
 
     private static Text rendertt(Resource res, boolean withpg) {
-        Resource.AButton ad = res.layer(Resource.action);
-        Resource.Pagina pg = res.layer(Resource.pagina);
+        AButton ad = res.layer(Resource.action);
+        Pagina pg = res.layer(Resource.pagina);
         String tt = ad.name;
         int pos = tt.toUpperCase().indexOf(Character.toUpperCase(ad.hk));
         if (pos >= 0)

@@ -26,6 +26,10 @@
 
 package haven;
 
+import haven.resources.Resource;
+import haven.resources.layers.CodeEntry;
+import haven.resources.layers.Neg;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.Constructor;
@@ -89,7 +93,7 @@ public abstract class Sprite {
     public interface Owner {
         public Random mkrandoom();
 
-        public Resource.Neg getneg();
+        public Neg getneg();
     }
 
     public static class FactMaker implements Resource.PublishedCode.Instancer {
@@ -206,7 +210,7 @@ public abstract class Sprite {
     public static Sprite create(Owner owner, Resource res, Message sdt) {
         if (res.loading)
             throw (new RuntimeException("Attempted to create sprite on still loading resource"));
-        Resource.CodeEntry e = res.layer(Resource.CodeEntry.class);
+        CodeEntry e = res.layer(CodeEntry.class);
         if (e != null) {
             try {
                 return (e.get(Factory.class).create(owner, res, sdt));

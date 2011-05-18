@@ -26,6 +26,10 @@
 
 package haven;
 
+import haven.resources.Resource;
+import haven.resources.layers.Image;
+import haven.resources.layers.Neg;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Collection;
@@ -35,11 +39,11 @@ public abstract class ImageSprite extends Sprite {
     public Collection<Part> curf = null;
 
     public class ImagePart extends Part {
-        final Resource.Image img;
+        final Image img;
         Tex ol = null;
         Color olcol = null;
 
-        public ImagePart(Resource.Image img) {
+        public ImagePart(haven.resources.layers.Image img) {
             super(img.z, img.subz);
             this.img = img;
         }
@@ -152,7 +156,7 @@ public abstract class ImageSprite extends Sprite {
 
     protected ImageSprite(Owner owner, Resource res, Message sdt) {
         super(owner, res);
-        Resource.Neg neg = res.layer(Resource.negc);
+        Neg neg = res.layer(Resource.negc);
         if (neg == null)
             throw (new ResourceException("No negative found", res));
         this.cc = neg.cc;

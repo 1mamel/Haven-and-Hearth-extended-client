@@ -1,5 +1,7 @@
-package haven;
+package haven.util;
 
+import haven.util.PrioQueue;
+import haven.util.Prioritized;
 import junit.framework.TestCase;
 
 import java.util.ArrayList;

@@ -26,6 +26,9 @@
 
 package haven;
 
+import haven.resources.Resource;
+import haven.resources.layers.AButton;
+
 import java.awt.*;
 
 public class ComWin extends HWindow {
@@ -68,7 +71,7 @@ public class ComWin extends HWindow {
         if ((fv.blk != null) && ((res = fv.blk.get()) != null)) {
             g.image(res.layer(Resource.imgc).tex(), new Coord(15, 70));
             g.chcolor(0, 0, 0, 255);
-            Resource.AButton act = res.layer(Resource.action);
+            AButton act = res.layer(Resource.action);
             String name = "";
             if (act != null) {
                 name = act.name;

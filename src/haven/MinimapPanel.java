@@ -1,5 +1,7 @@
 package haven;
 
+import haven.resources.Resource;
+
 import java.awt.image.BufferedImage;
 
 public class MinimapPanel extends Window {

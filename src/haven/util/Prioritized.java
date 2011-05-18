@@ -24,7 +24,7 @@
  *  Boston, MA 02111-1307 USA
  */
 
-package haven;
+package haven.util;
 
 public class Prioritized {
     private PrioQueue myQueue = null;

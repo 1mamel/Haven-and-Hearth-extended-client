@@ -26,6 +26,8 @@
 
 package haven;
 
+import haven.resources.Resource;
+
 import java.awt.*;
 
 public class Speaking extends GAttrib {

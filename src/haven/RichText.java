@@ -26,6 +26,9 @@
 
 package haven;
 
+import haven.resources.Resource;
+import haven.resources.layers.Pagina;
+
 import java.awt.*;
 import java.awt.font.*;
 import java.awt.image.BufferedImage;
@@ -147,7 +150,7 @@ public class RichText extends Text {
 
         public Image(Resource res, int id) {
             res.loadwait();
-            for (Resource.Image img : res.layers(Resource.imgc)) {
+            for (haven.resources.layers.Image img : res.layers(Resource.imgc)) {
                 if (img.id == id) {
                     this.img = img.img;
                     break;
@@ -711,7 +714,7 @@ public class RichText extends Text {
             fnd.aa = aa;
             Resource res = Resource.load(opt.rest[0]);
             res.loadwaitint();
-            Resource.Pagina p = res.layer(Resource.pagina);
+            Pagina p = res.layer(Resource.pagina);
             if (p == null)
                 throw (new Exception("No pagina in " + res + ", loaded from " + res.source));
             RichText t = fnd.render(p.text, width);

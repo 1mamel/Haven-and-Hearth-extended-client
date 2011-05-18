@@ -26,6 +26,8 @@
 
 package haven;
 
+import haven.resources.Resource;
+
 import java.util.ArrayList;
 import java.util.List;
 

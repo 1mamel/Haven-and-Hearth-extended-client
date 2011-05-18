@@ -1,7 +1,8 @@
 package haven;
 
-import haven.Resource.AButton;
-import haven.Resource.Tooltip;
+import haven.resources.Resource;
+import haven.resources.layers.AButton;
+import haven.resources.layers.Tooltip;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
