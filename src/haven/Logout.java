@@ -46,7 +46,7 @@ public class Logout extends Window {
         } else if (sender == this) {
             if (msg.equals("close")) {
                 ui.destroy(this);
-                ui.destroy(parent.findchild(SlenConsole.class));
+                ui.destroy(ui.slenConsole);
             }
             if (msg.equals("activate"))
                 ui.sess.close();

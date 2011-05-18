@@ -26,9 +26,7 @@
 
 package haven;
 
-public class Chatwindow extends Window {
-    final TextEntry in;
-    final Textlog out;
+public class Chatwindow extends ChatHW {
 
     static {
         Widget.addtype("chat", new WidgetFactory() {
@@ -39,18 +37,14 @@ public class Chatwindow extends Window {
     }
 
     public Chatwindow(Coord c, Coord sz, Widget parent) {
-        super(c, sz, parent, "Chat");
-        in = new TextEntry(new Coord(0, sz.y - 20), new Coord(sz.x, 20), this, "");
-        in.canactivate = true;
-        out = new Textlog(Coord.z, new Coord(sz.x, sz.y - 20), this);
+        super(parent, "Global", true);
     }
 
     public void uimsg(String msg, Object... args) {
         if (msg.equals("log")) {
-            out.append((String) args[0]);
-        } else {
-            super.uimsg(msg, args);
+            makeurgent(1);
         }
+        super.uimsg(msg, args);
     }
 
     public void wdgmsg(Widget sender, String msg, Object... args) {

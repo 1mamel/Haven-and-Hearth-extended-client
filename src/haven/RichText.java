@@ -33,16 +33,16 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.text.AttributedCharacterIterator;
+import java.text.AttributedCharacterIterator.Attribute;
 import java.text.AttributedString;
 import java.text.CharacterIterator;
 import java.util.*;
 import java.util.List;
 
-import static java.text.AttributedCharacterIterator.Attribute;
-
 public class RichText extends Text {
     public static final Parser std;
     public static final Foundry stdf;
+    public List<Part> parts;
 
     static {
         Map<Attribute, Object> a = new HashMap<Attribute, Object>();
@@ -52,8 +52,30 @@ public class RichText extends Text {
         stdf = new Foundry(std);
     }
 
+    public static class ActionAttribute extends Attribute {
+        public static final ActionAttribute ACTION = new ActionAttribute();
+
+        public ActionAttribute() {
+            super("action attribute");
+        }
+    }
+
     private RichText(String text) {
         super(text);
+    }
+
+    public String actionat(Coord c) {
+        for (Part part : parts) {
+            if (c.isect(new Coord(part.x, part.y), new Coord(part.width(), part.height()))) {
+                String action = null;
+                if (part instanceof TextPart) {
+                    TextPart tp = (TextPart) part;
+                    action = tp.getAction(tp.charAt(c.x - part.x));
+                }
+                return action;
+            }
+        }
+        return null;
     }
 
     private static class RState {
@@ -112,7 +134,7 @@ public class RichText extends Text {
         }
 
         public Part split(int w) {
-            return (this);
+            return (null);
         }
     }
 
@@ -201,6 +223,16 @@ public class RichText extends Text {
             this(new AttributedString(str), 0, str.length());
         }
 
+        public String getAction() {
+            return getAction(0);
+        }
+
+        public String getAction(int index) {
+            AttributedCharacterIterator aci = str.getIterator();
+            aci.setIndex(start + index);
+            return (String) aci.getAttributes().get(ActionAttribute.ACTION);
+        }
+
         private AttributedCharacterIterator ti() {
             return (str.getIterator(null, start, end));
         }
@@ -238,6 +270,14 @@ public class RichText extends Text {
             return ((int) tm().getAdvanceBetween(start, end));
         }
 
+        public int charAt(int x) {
+            for (int i = start + 1; i < end; i++) {
+                if (x < tm().getAdvanceBetween(start, i))
+                    return i - start - 1;
+            }
+            return -1;
+        }
+
         public int height() {
             if (start == end) return (0);
             return ((int) (tl().getAscent() + tl().getDescent() + tl().getLeading()));
@@ -258,6 +298,9 @@ public class RichText extends Text {
         }
 
         public Part split(int w) {
+            if ((end - start) <= 1) {
+                return null;
+            }
             int l = start, r = end;
             while (true) {
                 int t = l + ((r - l) / 2);
@@ -279,6 +322,9 @@ public class RichText extends Text {
                 if (Character.isWhitespace(it.setIndex(i))) {
                     return (split2(i, i + 1));
                 }
+            }
+            if (l == start) {
+                l += 1;
             }
             return (split2(l, l));
         }
@@ -406,6 +452,8 @@ public class RichText extends Text {
                     na.put(TextAttribute.FOREGROUND, a2col(args));
                 } else if (tn.equals("bg")) {
                     na.put(TextAttribute.BACKGROUND, a2col(args));
+                } else if (tn.equals("a")) {
+                    na.put(ActionAttribute.ACTION, args[0]);
                 }
                 if (s.in.peek(true) != '{')
                     throw (new FormatException("Expected `{', got `" + (char) s.in.peek() + '\''));
@@ -552,9 +600,14 @@ public class RichText extends Text {
                     ph = p.height();
                     if (w > 0) {
                         if (p.x + pw > w) {
-                            p = p.split(w - x);
                             lb = true;
-                            continue;
+                            Part tmp = p.split(w - x);
+                            if (tmp != null) {
+                                p = tmp;
+                                continue;
+                            } else {
+                                break;
+                            }
                         }
                     }
                     break;
@@ -588,23 +641,24 @@ public class RichText extends Text {
         }
 
         public RichText render(String text, int width, Object... extra) {
+            RichText rt = new RichText(text);
             Map<? extends Attribute, ?> extram = null;
             if (extra.length > 0) {
                 extram = fillattrs(extra);
             }
             Part fp = parser.parse(text, extram);
             fp.prepare(rs);
-            List<Part> parts = layout(fp, width);
-            Coord sz = bounds(parts);
+            rt.parts = layout(fp, width);
+            Coord sz = bounds(rt.parts);
+            if ((width > 0) && (sz.x > width)) sz.x = width;
             if (sz.x < 1) sz = sz.add(1, 0);
             if (sz.y < 1) sz = sz.add(0, 1);
             BufferedImage img = TexI.mkbuf(sz);
             Graphics2D g = img.createGraphics();
             if (aa)
                 Utils.AA(g);
-            RichText rt = new RichText(text);
             rt.img = img;
-            for (Part p : parts)
+            for (Part p : rt.parts)
                 p.render(g);
             return (rt);
         }

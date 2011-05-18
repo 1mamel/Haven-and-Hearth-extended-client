@@ -26,6 +26,8 @@
 
 package haven;
 
+import ender.timer.Timer;
+
 import java.util.*;
 
 public class Glob {
@@ -48,6 +50,26 @@ public class Glob {
         this.sess = sess;
         map = new MCache(sess);
         party = new Party(this);
+        //adding extended commands
+        paginae.add(Resource.load("paginae/act/add"));
+        paginae.add(Resource.load("paginae/add/rad"));
+        paginae.add(Resource.load("paginae/add/shhd"));
+        paginae.add(Resource.load("paginae/add/wiki"));
+        paginae.add(Resource.load("paginae/add/animal"));
+        paginae.add(Resource.load("paginae/add/plants"));
+        paginae.add(Resource.load("paginae/add/global"));
+        paginae.add(Resource.load("paginae/add/timer"));
+        paginae.add(Resource.load("paginae/add/hide"));
+        paginae.add(Resource.load("paginae/add/hide/tree"));
+        paginae.add(Resource.load("paginae/add/hide/flav"));
+        paginae.add(Resource.load("paginae/add/hide/wall"));
+        paginae.add(Resource.load("paginae/add/hide/gate"));
+        paginae.add(Resource.load("paginae/add/hide/bush"));
+        paginae.add(Resource.load("paginae/add/hide/thik"));
+        paginae.add(Resource.load("paginae/add/hide/cabi"));
+        paginae.add(Resource.load("paginae/add/hide/mans"));
+        paginae.add(Resource.load("paginae/add/hide/plan"));
+        paginae.add(Resource.load("paginae/add/hide/ston"));
     }
 
     public static class CAttr extends Observable {
@@ -78,7 +100,9 @@ public class Glob {
         while (!msg.eom()) {
             switch (msg.uint8()) {
                 case GMSG_TIME:
-                    time = msg.int32();
+                    Timer.server = msg.int32();
+                    ;
+                    Timer.local = System.currentTimeMillis() / 1000;
                     break;
                 case GMSG_ASTRO:
                     double dt = defix(msg.int32());

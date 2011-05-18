@@ -180,7 +180,7 @@ public class Session {
     private class RWorker extends HackThread {
         boolean alive;
 
-        private RWorker() {
+        public RWorker() {
             super("Session reader");
             setDaemon(true);
         }

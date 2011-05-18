@@ -37,6 +37,7 @@ public class Gob implements Sprite.Owner {
     public final Glob glob;
     final Map<Class<? extends GAttrib>, GAttrib> attr = new HashMap<Class<? extends GAttrib>, GAttrib>();
     public final Collection<Overlay> ols = new LinkedList<Overlay>();
+    public boolean hide;
 
     public static class Overlay {
         public final Indir<Resource> res;
@@ -160,9 +161,8 @@ public class Gob implements Sprite.Owner {
 
     public void drawsetup(Sprite.Drawer drawer, Coord dc, Coord sz) {
         Drawable d = getattr(Drawable.class);
-        ResDrawable dw = getattr(ResDrawable.class);
-        String resourceName = (dw != null && dw.res.get() != null ? dw.res.get().name : "");
-        boolean hide = false;
+        String resourceName = resname();
+        hide = false;
         Coord dro = drawoff();
         for (Overlay ol : ols) {
             if (ol.spr != null) {
@@ -174,7 +174,7 @@ public class Gob implements Sprite.Owner {
         }
         if (CustomConfig.hide) {
             for (String objectName : Config.hideObjectList) {
-                if (resourceName.indexOf(objectName) != -1) {
+                if (resourceName.contains(objectName) && (!resourceName.contains("door"))) {
                     hide = true;
                 }
             }
@@ -182,6 +182,27 @@ public class Gob implements Sprite.Owner {
         if (d != null && !hide) {
             d.setup(drawer, dc, dro);
         }
+    }
+
+    public String resname() {
+        Resource res;
+        ResDrawable dw = getattr(ResDrawable.class);
+        String name = "";
+        if (dw != null) {
+            res = dw.res.get();
+            if (res != null) {
+                name = res.name;
+            }
+        } else {
+            Layered ld = getattr(Layered.class);
+            if ((ld != null) && (ld.layers.size() > 0)) {
+                res = ld.layers.get(0).get();
+                if (res != null)
+                    name = res.name;
+            }
+        }
+        //return (dw != null && dw.res.get() != null ? dw.res.get().name : "");
+        return name;
     }
 
     public Random mkrandoom() {

@@ -26,6 +26,7 @@
 
 package haven;
 
+
 public class LoginScreen extends Widget {
     Login cur;
     Text error;

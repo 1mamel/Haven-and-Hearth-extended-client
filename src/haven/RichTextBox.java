@@ -33,6 +33,7 @@ public class RichTextBox extends Widget {
     private final RichText.Foundry fnd;
     private RichText text;
     private final Scrollbar sb;
+    public boolean registerclicks = false;
 
     public RichTextBox(Coord c, Coord sz, Widget parent, String text, RichText.Foundry fnd) {
         super(c, sz, parent);
@@ -61,8 +62,25 @@ public class RichTextBox extends Widget {
         sb.val = 0;
     }
 
+    public void setsz(Coord s) {
+        sz = s;
+        sb.c = new Coord(sz.x - 10, 0);
+        sb.sz = new Coord(10, sz.y);
+        settext(text.text);
+    }
+
     public boolean mousewheel(Coord c, int amount) {
         sb.ch(amount * 20);
         return (true);
+    }
+
+    public boolean mousedown(Coord c, int button) {
+        if (registerclicks) {
+            String action = text.actionat(c.sub(10, 10 - sb.val));
+            if (action != null) {
+                wdgmsg("click", action, button);
+            }
+        }
+        return super.mousedown(c, button);
     }
 }

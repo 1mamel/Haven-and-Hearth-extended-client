@@ -32,14 +32,15 @@ import java.util.*;
 import java.util.List;
 
 public class BuddyWnd extends Window {
-    private final List<Buddy> buddies = new ArrayList<Buddy>();
-    private final Map<Integer, Buddy> idmap = new HashMap<Integer, Buddy>();
-    private final BuddyList bl;
-    private final BuddyInfo bi;
-    private final Button sbalpha;
-    private final Button sbgroup;
-    private final Button sbstatus;
-    private final TextEntry charpass, opass;
+    public static BuddyWnd instance;
+    private List<Buddy> buddies = new ArrayList<Buddy>();
+    private Map<Integer, Buddy> idmap = new HashMap<Integer, Buddy>();
+    private BuddyList bl;
+    private BuddyInfo bi;
+    private Button sbalpha;
+    private Button sbgroup;
+    private Button sbstatus;
+    private TextEntry charpass, opass;
     public static final Tex online = Resource.loadtex("gfx/hud/online");
     public static final Tex offline = Resource.loadtex("gfx/hud/offline");
     public static final Color[] gc = new Color[]{
@@ -423,6 +424,7 @@ public class BuddyWnd extends Window {
             }
         };
         bl.repop();
+        visible = false;
     }
 
     private static String randpwd() {
@@ -448,6 +450,13 @@ public class BuddyWnd extends Window {
         synchronized (buddies) {
             Collections.sort(buddies, bcmp);
         }
+    }
+
+    public void wdgmsg(Widget sender, String msg, Object... args) {
+        if (checkIsCloseButton(sender))
+            hide();
+        else
+            super.wdgmsg(sender, msg, args);
     }
 
     public void uimsg(String msg, Object... args) {
@@ -479,7 +488,11 @@ public class BuddyWnd extends Window {
             int id = (Integer) args[0];
             int online = (Integer) args[1];
             synchronized (buddies) {
-                idmap.get(id).online = online;
+                Buddy b = idmap.get(id);
+                b.online = online;
+                String str = b.name.text + " is " + ((online > 0) ? "online" : "offline") + " now";
+                ui.cons.out.println(str);
+                ui.slen.error(str);
             }
         } else if (msg.equals("chnm")) {
             int id = (Integer) args[0];

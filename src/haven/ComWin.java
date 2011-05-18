@@ -68,14 +68,19 @@ public class ComWin extends HWindow {
         if ((fv.blk != null) && ((res = fv.blk.get()) != null)) {
             g.image(res.layer(Resource.imgc).tex(), new Coord(15, 70));
             g.chcolor(0, 0, 0, 255);
-            g.atext(res.layer(Resource.action).name, new Coord(50, 85), 0, 0.5);
+            Resource.AButton act = res.layer(Resource.action);
+            String name = "";
+            if (act != null) {
+                name = act.name;
+            }
+            g.atext(name, new Coord(50, 85), 0, 0.5);
             g.chcolor();
         }
         g.image(iptex, new Coord(200, 32));
         Fightview.Relation rel = fv.current;
         if (rel != null) {
             g.chcolor(0, 0, 0, 255);
-            g.text(Integer.toString(rel.ip), new Coord(205 + iptex.sz().x, 30));
+            g.text(rel.ip + "/" + rel.oip, new Coord(205 + iptex.sz().x, 30));
             g.chcolor();
         }
         long now = System.currentTimeMillis();

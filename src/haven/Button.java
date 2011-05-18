@@ -29,7 +29,7 @@ package haven;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class Button extends SSWidget {
+public class Button extends Widget {
     // Drawing resources start
     static final BufferedImage bl = Resource.loadimg("gfx/hud/buttons/tbtn/left");
     static final BufferedImage br = Resource.loadimg("gfx/hud/buttons/tbtn/right");
@@ -67,42 +67,44 @@ public class Button extends SSWidget {
         super(c, new Coord(w, 19), parent);
         this.text = tf.render(text);
         this.cont = this.text.img;
-        render();
     }
 
     public Button(Coord c, Integer w, Widget parent, Text text) {
         super(c, new Coord(w, 19), parent);
         this.text = text;
         this.cont = text.img;
-        render();
     }
 
     public Button(Coord c, Integer w, Widget parent, BufferedImage cont) {
         super(c, new Coord(w, 19), parent);
         this.cont = cont;
-        render();
     }
 
-    public void render() {
-        synchronized (this) {
-            Graphics g = graphics();
-            g.drawImage(isMouseDown ? dt : ut, 3, 3, sz.x - 6, 13, null);
-            g.drawImage(bl, 0, 0, null);
-            g.drawImage(br, sz.x - br.getWidth(), 0, null);
-            g.drawImage(bt, 3, 0, sz.x - 6, bt.getHeight(), null);
-            g.drawImage(bb, 3, sz.y - bb.getHeight(), sz.x - 6, bb.getHeight(), null);
-            Coord tc = sz.div(2).sub(Utils.imgsz(cont).div(2));
-            if (isMouseDown)
-                tc = tc.add(1, 1);
-            g.drawImage(cont, tc.x, tc.y, null);
-            update();
-        }
+    public synchronized void draw(GOut g) {
+        //Graphics g = graphics();
+//        g.image(isMouseDown ? dt : ut, new Coord(3, 3), new Coord(sz.x - 6, 13));
+        g.image(isMouseDown ? dt : ut, new Coord(3, 3));
+        g.image(bl, new Coord());
+        g.image(br, new Coord(sz.x - br.getWidth(), 0));
+
+//        g.image(bt, new Coord(3, 0), new Coord(sz.x - 6, bt.getHeight()));
+        g.image(bt, new Coord(3, 0));
+
+//        g.image(bb, new Coord(3, sz.y - bb.getHeight()), new Coord(sz.x - 6, bb.getHeight()));
+        g.image(bb, new Coord(3, sz.y - bb.getHeight()));
+
+        Coord tc = sz.div(2).add(Utils.imgsz(cont).div(2).inv());
+        if (isMouseDown)
+            tc = tc.add(1, 1);
+        g.image(cont, new Coord(tc.x, tc.y));
     }
 
     public void change(String text, Color col) {
+        if (col == null)
+            col = Color.YELLOW;
         this.text = tf.render(text, col);
         this.cont = this.text.img;
-        render();
+//        render();
     }
 
     public void change(String text) {
@@ -126,7 +128,7 @@ public class Button extends SSWidget {
         if (button != 1)
             return (false);
         isMouseDown = true;
-        render();
+        //render();
         ui.grabmouse(this);
         return (true);
     }
@@ -134,7 +136,7 @@ public class Button extends SSWidget {
     public boolean mouseup(Coord c, int button) {
         if (isMouseDown && button == 1) {
             isMouseDown = false;
-            render();
+            //render();
             ui.grabmouse(null);
             if (c.isect(new Coord(0, 0), sz))
                 click();

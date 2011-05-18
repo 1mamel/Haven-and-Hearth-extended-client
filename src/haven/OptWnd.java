@@ -26,10 +26,11 @@
 
 package haven;
 
+import ender.GoogleTranslator;
+
 import java.awt.font.TextAttribute;
 import java.util.*;
 
-@SuppressWarnings({"FieldCanBeLocal"})
 public class OptWnd extends Window {
     public static final RichText.Foundry foundry = new RichText.Foundry(TextAttribute.FAMILY, "SansSerif", TextAttribute.SIZE, 10);
     private final Tabs body;
@@ -104,6 +105,84 @@ public class OptWnd extends Window {
                     }
                 }
             };
+
+            new CheckBox(new Coord(10, 130), tab, "Use new minimap (restart required)") {
+                public void changed(boolean val) {
+                    Config.new_minimap = val;
+                    Config.saveOptions();
+                }
+
+                {
+                    a = Config.new_minimap;
+                }
+            };
+
+            new CheckBox(new Coord(10, 165), tab, "Use new chat (restart required)") {
+                public void changed(boolean val) {
+                    Config.new_chat = val;
+                    Config.saveOptions();
+                }
+
+                {
+                    a = Config.new_chat;
+                }
+            };
+
+            (new CheckBox(new Coord(10, 200), tab, "Add timestamp in chat") {
+                public void changed(boolean val) {
+                    Config.timestamp = val;
+                    Config.saveOptions();
+                }
+            }).a = Config.timestamp;
+
+            (new CheckBox(new Coord(10, 235), tab, "Show dowsing direcion") {
+                public void changed(boolean val) {
+                    Config.showDirection = val;
+                    Config.saveOptions();
+                }
+            }).a = Config.showDirection;
+
+            (new CheckBox(new Coord(10, 270), tab, "Always show kin names") {
+                public void changed(boolean val) {
+                    Config.showNames = val;
+                    Config.saveOptions();
+                }
+            }).a = Config.showNames;
+
+            (new CheckBox(new Coord(10, 305), tab, "Show smileys in chat") {
+                public void changed(boolean val) {
+                    Config.use_smileys = val;
+                    Config.saveOptions();
+                }
+            }).a = Config.use_smileys;
+
+            (new CheckBox(new Coord(220, 130), tab, "Fast menu") {
+                public void changed(boolean val) {
+                    Config.fastFlowerAnim = val;
+                    Config.saveOptions();
+                }
+            }).a = Config.fastFlowerAnim;
+
+            (new CheckBox(new Coord(220, 165), tab, "Compress screenshots") {
+                public void changed(boolean val) {
+                    Config.sshot_compress = val;
+                    Config.saveOptions();
+                }
+            }).a = Config.sshot_compress;
+
+            (new CheckBox(new Coord(220, 200), tab, "Exclude UI from screenshot") {
+                public void changed(boolean val) {
+                    Config.sshot_noui = val;
+                    Config.saveOptions();
+                }
+            }).a = Config.sshot_noui;
+
+            (new CheckBox(new Coord(220, 235), tab, "Use optimized claim higlighting") {
+                public void changed(boolean val) {
+                    Config.newclaim = val;
+                    Config.saveOptions();
+                }
+            }).a = Config.newclaim;
 
             Widget editbox = new Frame(new Coord(310, 30), new Coord(90, 100), tab);
             new Label(new Coord(20, 10), editbox, "Edit mode:");
@@ -214,8 +293,19 @@ public class OptWnd extends Window {
             for (String camname : clist)
                 cameras.add(camname, new Coord(10, y += 25));
             cameras.check(caminfomap.containsKey(curcam) ? caminfomap.get(curcam).name : curcam);
+            (new CheckBox(new Coord(50, 270), tab, "Allow zooming with mouse wheel") {
+                public void changed(boolean val) {
+                    Config.zoom = val;
+                    Config.saveOptions();
+                }
+            }).a = Config.zoom;
+            (new CheckBox(new Coord(50, 300), tab, "Disable camera borders") {
+                public void changed(boolean val) {
+                    Config.noborders = val;
+                    Config.saveOptions();
+                }
+            }).a = Config.noborders;
         }
-
         { /* AUDIO TAB */
             tab = body.new Tab(new Coord(140, 0), 60, "Audio");
 
@@ -294,12 +384,12 @@ public class OptWnd extends Window {
             int secondCellXOffset = 15 + Math.max(serverLabel.sz.x, Math.max(chnlLabel.sz.x, Math.max(defIRCNickLabel.sz.x, altIRCNickLabel.sz.x)));
             final Coord textFieldSize = new Coord(180, 15);
 
-            //	Server entry
+            // Server entry
             serverAddress = new TextEntry(new Coord(secondCellXOffset, 40), textFieldSize,
                     tab, CustomConfig.ircServerAddress);
             serverAddress.badchars = " ";
 
-            //	Channel list entry
+            // Channel list entry
             StringBuilder builder = new StringBuilder();
             for (Listbox.Option channel : CustomConfig.ircChannelList) {
                 String name = channel.name.trim();
@@ -316,7 +406,7 @@ public class OptWnd extends Window {
 
             final String someBadChars = "~@#$%^& ";
 
-            //	Nickname entries
+            // Nickname entries
             defNick = new TextEntry(new Coord(secondCellXOffset, 80), textFieldSize,
                     tab, CustomConfig.ircDefNick) {
                 {
@@ -331,7 +421,7 @@ public class OptWnd extends Window {
                 }
             };
 
-            //	IRC toggle
+            // IRC toggle
             ircToggle = new CheckBox(new Coord((firstCellXOffset + secondCellXOffset) / 2, 130), tab, "IRC On/Off") {
                 public void changed(boolean val) {
                     CustomConfig.isIRCOn = val;
@@ -347,17 +437,20 @@ public class OptWnd extends Window {
         { /* HIDE OBJECTS TAB */
             tab = body.new Tab(new Coord(280, 0), 80, "Hide Objects");
 
-            String[][] checkboxesList = {
-                    {"Walls", "gfx/arch/walls"},
+            String[][] checkboxesList = {{"Walls", "gfx/arch/walls"},
                     {"Gates", "gfx/arch/gates"},
+                    {"Wooden Houses", "gfx/arch/cabin"},
                     {"Stone Mansions", "gfx/arch/inn"},
                     {"Plants", "gfx/terobjs/plants"},
                     {"Trees", "gfx/terobjs/trees"},
-                    {"Bushes", "gfx/tiles/wald"}
-            };
+                    {"Stones", "gfx/terobjs/bumlings"},
+                    {"Flavor objects", "flavobjs"},
+                    {"Bushes", "gfx/tiles/wald"},
+                    {"Thicket", "gfx/tiles/dwald"}};
             int y = 0;
             for (final String[] checkbox : checkboxesList) {
-                CheckBox chkbox = new CheckBox(new Coord(10, y += 30), tab, checkbox[0]) {
+                CheckBox chkbox = new CheckBox(new Coord(10, y += 30), tab,
+                        checkbox[0]) {
 
                     public void changed(boolean val) {
                         if (val) {
@@ -405,6 +498,37 @@ public class OptWnd extends Window {
             };
         }
 
+        { /* TRANSLATE OPTIONS TAB */
+            tab = body.new Tab(new Coord(300, 0), 80, "Translation");
+            (new CheckBox(new Coord(10, 30), tab, "Turn on") {
+                public void changed(boolean val) {
+                    GoogleTranslator.turnedon = val;
+                }
+            }).a = GoogleTranslator.turnedon;
+
+            new Label(new Coord(150, 35), tab, "Target Language:");
+
+            final RadioGroup langs = new RadioGroup(tab) {
+                public void changed(int btn, String lbl) {
+                    GoogleTranslator.lang = lbl;
+                }
+            };
+            langs.add("en", new Coord(150, 45));
+            langs.add("ru", new Coord(150, 70));
+            langs.check(GoogleTranslator.lang);
+
+            new Label(new Coord(25, 125), tab, "Google API Key:");
+            final TextEntry te = new TextEntry(new Coord(25, 150), new Coord(300, 20), tab, GoogleTranslator.apikey);
+            new Button(new Coord(330, 150), 50, tab, "set") {
+                public void click() {
+                    GoogleTranslator.apikey = te.text;
+                    Config.saveOptions();
+                }
+            };
+
+            new Label(new Coord(100, 190), tab, "Powered by Google Translate");
+        }
+
         new Frame(new Coord(-10, 20), new Coord(420, 330), this);
         String last = Utils.getpref("optwndtab", "");
         for (Tabs.Tab t : body.tabs) {
@@ -426,7 +550,7 @@ public class OptWnd extends Window {
                 if (channelData[i].startsWith("#")) {
                     if (channel != null) {
                         CustomConfig.ircChannelList.add(channel);
-                        //noinspection UnusedAssignment
+//noinspection UnusedAssignment
                         channel = null;
                     }
                     channel = new Listbox.Option(channelData[i], "");
@@ -444,7 +568,7 @@ public class OptWnd extends Window {
         }
         if (channel != null) {
             CustomConfig.ircChannelList.add(channel);
-            //noinspection UnusedAssignment
+//noinspection UnusedAssignment
             channel = null;
         }
         if (CustomConfig.isSaveable) CustomConfigProcessor.saveSettings();
@@ -456,7 +580,7 @@ public class OptWnd extends Window {
         String[] args = camargs.get(curcam);
         if (args == null) args = new String[0];
 
-        MapView mv = ui.root.findchild(MapView.class);
+        MapView mv = ui.mainview;
         if (mv != null) {
             if (curcam.equals("clicktgt")) mv.cam = new MapView.OrigCam2(args);
             else if (curcam.equals("fixedcake")) mv.cam = new MapView.FixedCakeCam(args);
@@ -486,7 +610,7 @@ public class OptWnd extends Window {
     }
 
     public void wdgmsg(Widget sender, String msg, Object... args) {
-        if (checkIsCloseButton(sender))
+        if (checkIsCloseButton(sender) || (sender == foldButton))
             super.wdgmsg(sender, msg, args);
     }
 

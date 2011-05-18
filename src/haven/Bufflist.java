@@ -103,11 +103,37 @@ public class Bufflist extends Widget {
                     continue;
                 Coord bc = new Coord(i * w, 0);
                 if (c.isect(bc, frame.sz())) {
-                    Resource.Tooltip tt;
+                    Resource res;
+                    String p = "";
+                    if (b.ameter > 0) {
+                        p += " (" + b.ameter + "%)";
+                    }
+                    if (b.cmeter > 0) {
+                        if (b.cticks >= 0) {
+                            long now = System.currentTimeMillis();
+                            double t = (b.cticks * 0.06) - (((double) (now - b.gettime)) / 1000.0);
+                            int m = (int) (t / 60);
+                            int s = (int) (t % 60);
+                            p += " [";
+                            if (m > 0) {
+                                p += m + "m ";
+                            }
+                            p += s + "s]";
+                        } else {
+                            p += " [" + b.cmeter + "%]";
+                        }
+                    }
                     if (b.tt != null)
-                        return (b.tt);
-                    else if ((b.res.get() != null) && ((tt = b.res.get().layer(Resource.tooltip)) != null))
-                        return (tt.t);
+                        return (b.tt + p);
+                    else if ((res = b.res.get()) != null) {
+                        Resource.Tooltip tt;
+                        Resource.AButton act;
+                        if ((tt = res.layer(Resource.tooltip)) != null) {
+                            return tt.t + p;
+                        } else if ((act = res.layer(Resource.action)) != null) {
+                            return act.name + p;
+                        }
+                    }
                 }
                 if (++i >= 5)
                     break;

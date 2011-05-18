@@ -45,10 +45,25 @@ public class MiniMap extends Widget {
     static Coord mappingStartPoint = null;
     static long mappingSession = 0;
     static Map<String, Coord> gridsHashes = new TreeMap<String, Coord>();
+    static Map<Coord, String> coordHashes = new TreeMap<Coord, String>();
+    static Map<Coord, Tex> caveTex = new TreeMap<Coord, Tex>();
     public static final Tex bg = Resource.loadtex("gfx/hud/mmap/ptex");
     public static final Tex nomap = Resource.loadtex("gfx/hud/mmap/nomap");
     public static final Resource plx = Resource.load("gfx/hud/mmap/x");
+    public Coord off, doff;
+    boolean hidden = false, grid = false;
     final MapView mv;
+    boolean dm = false;
+    public int scale = 4;
+    double scales[] = {0.5, 0.66, 0.8, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2};
+
+    public double getScale() {
+        return scales[scale];
+    }
+
+    public void setScale(int scale) {
+        this.scale = Math.max(0, Math.min(scale, scales.length - 1));
+    }
 
     static class Loader implements Runnable {
         Thread me = null;
@@ -75,9 +90,28 @@ public class MiniMap extends Widget {
         }
 
         private static InputStream getcached(String nm) throws IOException {
-            if (ResCache.global == null)
-                throw (new FileNotFoundException("No resource cache installed"));
-            return (ResCache.global.fetch("mm/" + nm));
+            /*if(ResCache.global == null)
+           throw(new FileNotFoundException("No resource cache installed"));
+           return(ResCache.global.fetch("mm/" + nm));*/
+            if (mappingSession > 0) {
+                String fileName;
+                if (gridsHashes.containsKey(nm)) {
+                    Coord coordinates = gridsHashes.get(nm);
+                    fileName = "tile_" + coordinates.x + "_"
+                            + coordinates.y;
+                } else {
+                    fileName = nm;
+                }
+
+                File inputfile = new File("map/"
+                        + Utils.sessdate(mappingSession) + "/" + fileName
+                        + ".png");
+                if (!inputfile.exists())
+                    throw (new FileNotFoundException("Minimap cache not found"));
+                System.out.print(inputfile.toString() + "\n");
+                return new FileInputStream(inputfile);
+            }
+            throw (new FileNotFoundException("No resource cache installed"));
         }
 
         public void run() {
@@ -97,23 +131,30 @@ public class MiniMap extends Widget {
                         break;
                     try {
                         InputStream in;
+                        boolean cached;
                         try {
                             in = getcached(grid);
+                            cached = true;
                         } catch (FileNotFoundException e) {
                             in = getreal(grid);
+                            cached = false;
                         }
                         BufferedImage img;
                         try {
                             img = ImageIO.read(in);
-                            if (mappingSession > 0) {
+                            if ((!cached) & (mappingSession > 0)) {
                                 String fileName;
                                 if (gridsHashes.containsKey(grid)) {
                                     Coord coordinates = gridsHashes.get(grid);
-                                    fileName = "tile_" + coordinates.x + "_" + coordinates.y;
+                                    fileName = "tile_" + coordinates.x + "_"
+                                            + coordinates.y;
                                 } else {
                                     fileName = grid;
                                 }
-                                File outputfile = new File("map/" + mappingSession + "/" + fileName + ".png");
+
+                                File outputfile = new File("map/"
+                                        + Utils.sessdate(mappingSession) + "/" + fileName
+                                        + ".png");
                                 ImageIO.write(img, "png", outputfile);
                             }
                         } finally {
@@ -161,13 +202,15 @@ public class MiniMap extends Widget {
 
     public static void newMappingSession() {
         long newSession = System.currentTimeMillis();
+        String date = Utils.sessdate(newSession);
         try {
-            (new File("map/" + newSession)).mkdirs();
+            (new File("map/" + date)).mkdirs();
             Writer currentSessionFile = new FileWriter("map/currentsession.js");
-            currentSessionFile.write("var currentSession = '" + newSession + "';\n");
+            currentSessionFile.write("var currentSession = '" + date + "';\n");
             currentSessionFile.close();
             mappingSession = newSession;
             gridsHashes.clear();
+            coordHashes.clear();
         } catch (IOException ex) {
         }
     }
@@ -175,6 +218,7 @@ public class MiniMap extends Widget {
     public MiniMap(Coord c, Coord sz, Widget parent, MapView mv) {
         super(c, sz, parent);
         this.mv = mv;
+        off = new Coord();
         newMappingSession();
     }
 
@@ -193,75 +237,213 @@ public class MiniMap extends Widget {
         }));
     }
 
-    @SuppressWarnings({"SynchronizeOnNonFinalField"})
-    public void draw(GOut g) {
-        Coord tc = mv.mc.div(tilesz);
-        Coord ulg = tc.div(cmaps);
-        while ((ulg.x * cmaps.x) - tc.x + (sz.x / 2) > 0)
-            ulg.x--;
-        while ((ulg.y * cmaps.y) - tc.y + (sz.y / 2) > 0)
-            ulg.y--;
-        boolean missing = false;
-        g.image(bg, Coord.z);
-        outer:
-        for (int y = ulg.y; (y * cmaps.y) - tc.y + (sz.y / 2) < sz.y; y++) {
-            for (int x = ulg.x; (x * cmaps.x) - tc.x + (sz.x / 2) < sz.x; x++) {
-                Coord cg = new Coord(x, y);
-                if (mappingStartPoint == null) {
-                    mappingStartPoint = new Coord(cg);
-                }
-                MCache.Grid grid;
-                synchronized (ui.sess.glob.map.req) {
-                    synchronized (ui.sess.glob.map.grids) {
-                        grid = ui.sess.glob.map.grids.get(cg);
-                        if (grid == null)
-                            ui.sess.glob.map.request(cg);
-                    }
-                }
-                if (grid == null)
-                    continue;
-                if (grid.mnm == null) {
-                    missing = true;
-                    break outer;
-                }
-                Coord relativeCoordinates = cg.sub(mappingStartPoint);
-                if (!gridsHashes.containsKey(grid.mnm)) {
-                    if ((Math.abs(relativeCoordinates.x) > 450) || (Math.abs(relativeCoordinates.y) > 450)) {
-                        newMappingSession();
-                        mappingStartPoint = cg;
-                        relativeCoordinates = new Coord(0, 0);
-                    }
-                    gridsHashes.put(grid.mnm, relativeCoordinates);
-                } else {
-                    Coord coordinates = gridsHashes.get(grid.mnm);
-                    if (!coordinates.equals(relativeCoordinates)) {
-                        mappingStartPoint = mappingStartPoint.add(relativeCoordinates.sub(coordinates));
-                    }
-                }
-                Tex tex = getgrid(grid.mnm);
-                if (tex == null)
-                    continue;
-                g.image(tex, cg.mul(cmaps).sub(tc).add(sz.div(2)));
-            }
-        }
-        if (missing) {
-            g.image(nomap, Coord.z);
+    public Coord xlate(Coord c, boolean in) {
+        if (in) {
+            return c.div(getScale());
         } else {
-            if (!plx.loading) {
-                //noinspection SynchronizeOnNonFinalField
-                synchronized (ui.sess.glob.party.memb) {
-                    for (Party.Member m : ui.sess.glob.party.memb.values()) {
-                        Coord ptc = m.getc();
-                        if (ptc == null)
-                            continue;
-                        ptc = ptc.div(tilesz).sub(tc).add(sz.div(2));
-                        g.chcolor(m.col.getRed(), m.col.getGreen(), m.col.getBlue(), 128);
-                        g.image(plx.layer(Resource.imgc).tex(), ptc.sub(plx.layer(Resource.negc).cc));
-                        g.chcolor();
-                    }
+            return c.mul(getScale());
+        }
+    }
+
+    @SuppressWarnings({"SynchronizeOnNonFinalField"})
+    public void draw(GOut og) {
+        double scale = getScale();
+        Coord hsz = sz.div(scale);
+
+        Coord tc = mv.mc.div(tilesz).add(off.div(scale));
+        Coord ulg = tc.div(cmaps);
+        while ((ulg.x * cmaps.x) - tc.x + (hsz.x / 2) > 0)
+            ulg.x--;
+        while ((ulg.y * cmaps.y) - tc.y + (hsz.y / 2) > 0)
+            ulg.y--;
+
+        if (!hidden) {
+            Coord s = bg.sz();
+            for (int y = 0; (y * s.y) < sz.y; y++) {
+                for (int x = 0; (x * s.x) < sz.x; x++) {
+                    og.image(bg, new Coord(x * s.x, y * s.y));
                 }
             }
         }
-        super.draw(g);
+
+        GOut g = og.reclip(og.ul.mul((1 - scale) / scale), hsz);
+        g.gl.glPushMatrix();
+        g.scale(scale);
+
+        synchronized (caveTex) {
+
+            for (int y = ulg.y; (y * cmaps.y) - tc.y + (hsz.y / 2) < hsz.y; y++) {
+                for (int x = ulg.x; (x * cmaps.x) - tc.x + (hsz.x / 2) < hsz.x; x++) {
+                    Coord cg = new Coord(x, y);
+                    if (mappingStartPoint == null) {
+                        mappingStartPoint = new Coord(cg);
+                    }
+                    MCache.Grid grid;
+                    synchronized (ui.sess.glob.map.req) {
+                        synchronized (ui.sess.glob.map.grids) {
+                            grid = ui.sess.glob.map.grids.get(cg);
+                            if (grid == null)
+                                ui.sess.glob.map.request(cg);
+                        }
+                    }
+                    Coord relativeCoordinates = cg.sub(mappingStartPoint);
+                    String mnm = null;
+
+                    if (grid == null) {
+                        mnm = coordHashes.get(relativeCoordinates);
+                    } else {
+                        mnm = grid.mnm;
+                    }
+
+                    Tex tex = null;
+
+                    if (mnm != null) {
+                        caveTex.clear();
+                        if (!gridsHashes.containsKey(mnm)) {
+                            if ((Math.abs(relativeCoordinates.x) > 450)
+                                    || (Math.abs(relativeCoordinates.y) > 450)) {
+                                newMappingSession();
+                                mappingStartPoint = cg;
+                                relativeCoordinates = new Coord(0, 0);
+                            }
+                            gridsHashes.put(mnm, relativeCoordinates);
+                            coordHashes.put(relativeCoordinates, mnm);
+                        } else {
+                            Coord coordinates = gridsHashes.get(mnm);
+                            if (!coordinates.equals(relativeCoordinates)) {
+                                mappingStartPoint = mappingStartPoint.add(relativeCoordinates.sub(coordinates));
+                            }
+                        }
+
+                        tex = getgrid(mnm);
+                        if ((tex == null) && (grid != null)) {
+                            tex = grid.getTex();
+                        }
+                    } else {
+                        if (grid != null) {
+                            tex = grid.getTex();
+                            if (tex != null) {
+                                caveTex.put(cg, tex);
+                            }
+                        }
+                        tex = caveTex.get(cg);
+                    }
+
+                    //caveTex.isEmpty();
+
+                    if (tex == null)
+                        continue;
+
+                    if (!hidden) g.image(tex, cg.mul(cmaps).add(tc.inv()).add(hsz.div(2)));
+                }
+            }
+        }
+        //grid
+        if (grid && !hidden) {
+            g.chcolor(200, 32, 64, 255);
+            Coord c1, c2;
+            c1 = new Coord();
+            c2 = new Coord(hsz.x, 0);
+            for (int y = ulg.y + 1; (y * cmaps.y) - tc.y + (hsz.y / 2) < hsz.y; y++) {
+                c1.y = (y * cmaps.y) - tc.y + (hsz.y / 2);
+                c2.y = c1.y;
+                g.line(c1, c2, 1);
+            }
+            c1 = new Coord();
+            c2 = new Coord(0, hsz.y);
+            for (int x = ulg.x + 1; (x * cmaps.x) - tc.x + (hsz.x / 2) < hsz.x; x++) {
+                c1.x = (x * cmaps.x) - tc.x + (hsz.x / 2);
+                c2.x = c1.x;
+                g.line(c1, c2, 1);
+            }
+            g.chcolor();
+        }
+        //end of grid
+
+        if ((!plx.loading) && (!hidden)) {
+            synchronized (ui.sess.glob.party.memb) {
+                for (Party.Member m : ui.sess.glob.party.memb.values()) {
+                    Coord ptc = m.getc();
+                    if (ptc == null)
+                        continue;
+                    ptc = ptc.div(tilesz).add(tc.inv()).add(hsz.div(2));
+                    g.chcolor(m.col.getRed(), m.col.getGreen(), m.col.getBlue(), 128);
+                    g.image(plx.layer(Resource.imgc).tex(), ptc.add(plx.layer(Resource.negc).cc.inv()));
+                    g.chcolor();
+                }
+            }
+        }
+        g.gl.glPopMatrix();
+        super.draw(og);
+    }
+
+    public boolean isCave() {
+        synchronized (caveTex) {
+            return !caveTex.isEmpty();
+        }
+    }
+
+    public void saveCaveMaps() {
+        synchronized (caveTex) {
+            Coord rc = null;
+            String sess = Utils.sessdate(System.currentTimeMillis());
+            File outputfile = new File("cave/" + sess);
+            try {
+                Writer currentSessionFile = new FileWriter("cave/currentsession.js");
+                currentSessionFile.write("var currentSession = '" + sess + "';\n");
+                currentSessionFile.close();
+            } catch (IOException e1) {
+            }
+            outputfile.mkdirs();
+            for (Coord c : caveTex.keySet()) {
+                if (rc == null) {
+                    rc = c;
+                }
+                TexI tex = (TexI) caveTex.get(c);
+                c = c.sub(rc);
+                String fileName = "tile_" + c.x + "_" + c.y;
+                outputfile = new File("cave/" + sess + "/" + fileName + ".png");
+                try {
+                    ImageIO.write(tex.back, "png", outputfile);
+                } catch (IOException e) {
+                }
+            }
+        }
+    }
+
+    public boolean mousedown(Coord c, int button) {
+        if (button == 1) {
+            ui.grabmouse(this);
+            dm = true;
+            doff = c;
+        }
+        return (true);
+    }
+
+    public boolean mouseup(Coord c, int button) {
+        if (dm) {
+            ui.grabmouse(null);
+            dm = false;
+            return true;
+        } else {
+            return super.mouseup(c, button);
+        }
+    }
+
+    public void mousemove(Coord c) {
+        if (dm) {
+            off = off.add(doff.sub(c));
+            doff = c;
+        } else {
+            super.mousemove(c);
+        }
+    }
+
+    public void hide() {
+        hidden = true;
+    }
+
+    public void show() {
+        hidden = false;
     }
 }

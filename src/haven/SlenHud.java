@@ -26,6 +26,8 @@
 
 package haven;
 
+import ender.timer.TimerController;
+
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.*;
@@ -33,9 +35,9 @@ import java.util.List;
 
 import static haven.Inventory.invsq;
 
-public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console.Directory {
+public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console.Directory, IHWindowParent {
     public static final int _BELTSIZE = 10;
-    public static final Tex bg = Resource.loadtex("gfx/hud/slen/low");
+    public static final Tex bg;
     public static final Tex flarps = Resource.loadtex("gfx/hud/slen/flarps");
     public static final Tex mbg = Resource.loadtex("gfx/hud/slen/mcircle");
     public static final Tex dispbg = Resource.loadtex("gfx/hud/slen/dispbg");
@@ -57,7 +59,8 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
     };
 
     int woff = 0;
-    List<HWindow> wnds = new ArrayList<HWindow>();
+    int dy;
+    final List<HWindow> wnds = new ArrayList<HWindow>();
     HWindow awnd;
     Map<HWindow, Button> btns = new HashMap<HWindow, Button>();
     IButton hb, invb, equb, chrb, budb, optb;
@@ -68,6 +71,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
     Text lasterr;
     long errtime;
     OptWnd optwnd = null;
+    static int dh;
     @SuppressWarnings("unchecked")
     Resource[][] belt = new Resource[_BELTSIZE][_BELTSIZE];
 
@@ -77,20 +81,30 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
                 return (new SlenHud(c, parent));
             }
         });
+        if (Config.new_minimap) {
+            bg = Resource.loadtex("gfx/hud/slen/low2");
+        } else {
+            bg = Resource.loadtex("gfx/hud/slen/low");
+        }
         int h = bg.sz().y;
         sz = new Coord(800, h);
         sz.y = (h - fc.y > sz.y) ? (h - fc.y) : sz.y;
         sz.y = (h - mc.y > sz.y) ? (h - mc.y) : sz.y;
+        dh = h - sz.y;
     }
 
     static class FoldButton extends IButton {
         int urgency;
+        int dy;
 
         FoldButton(Coord c, Widget parent) {
             super(c, parent, Resource.loadimg("gfx/hud/slen/sbu"), Resource.loadimg("gfx/hud/slen/sbd"));
+            dy = sz.y;
         }
 
         public void draw(GOut g) {
+            c.x = CustomConfig.getWindowCenter().x - sz.x / 2;
+            c.y = CustomConfig.getWindowSize().y + dy;
             super.draw(g);
             if (urgcols[urgency] != null) {
                 g.chcolor(urgcols[urgency]);
@@ -164,9 +178,16 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
 
     public SlenHud(Coord c, Widget parent) {
         super(new Coord(CustomConfig.getWindowCenter().x - sz.x / 2, CustomConfig.getWindowSize().y - sz.y), sz, parent);
-        new Img(fc, flarps, this);
+        ui.slen = this;
+        if (Config.new_chat)
+            new ChatHWPanel(new Coord(0, MainFrame.getInnerSize().y - 300), new Coord(350, 300), ui.root);
+        else
+            ChatHWPanel.instance = this;
+        dy = -sz.y;
+        //new Img(fc, flarps, this);
         new Img(mc, mbg, this);
-        new Img(dispc, dispbg, this);
+        if (!Config.new_minimap)
+            new Img(dispc, dispbg, this);
 
         //	Hide button
         hb = new IButton(mc, this, Resource.loadimg("gfx/hud/slen/hbu"), Resource.loadimg("gfx/hud/slen/hbd"));
@@ -183,41 +204,45 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
         //	Kin list button
         budb = new IButton(mc, this, Resource.loadimg("gfx/hud/slen/budu"), Resource.loadimg("gfx/hud/slen/budd"));
         optb = new IButton(mc, this, Resource.loadimg("gfx/hud/slen/optu"), Resource.loadimg("gfx/hud/slen/optd"));
-        {
-            new IButton(dispc, this, Resource.loadimg("gfx/hud/slen/dispauth"), Resource.loadimg("gfx/hud/slen/dispauthd")) {
-                private boolean v = false;
+        if (!Config.new_minimap) {
+            {
+                new IButton(dispc, this, Resource.loadimg("gfx/hud/slen/dispauth"), Resource.loadimg("gfx/hud/slen/dispauthd")) {
+                    private boolean v = false;
 
-                public void click() {
-                    MapView mv = ui.root.findchild(MapView.class);
-                    if (v) {
-                        mv.disol(2, 3);
-                        v = false;
-                    } else {
-                        mv.enol(2, 3);
-                        v = true;
+                    public void click() {
+                        MapView mv = ui.mainview;
+                        if (v) {
+                            mv.disol(2, 3);
+                            v = false;
+                        } else {
+                            mv.enol(2, 3);
+                            v = true;
+                        }
                     }
-                }
-            };
-        }
-        {
-            //	Totem claim button
-            new IButton(dispc, this, Resource.loadimg("gfx/hud/slen/dispclaim"),
-                    Resource.loadimg("gfx/hud/slen/dispclaimd")) {
-                private boolean v = false;
+                };
+            }
+            {
+                //	Totem claim button
+                new IButton(dispc, this, Resource.loadimg("gfx/hud/slen/dispclaim"), Resource.loadimg("gfx/hud/slen/dispclaimd")) {
+                    private boolean v = false;
 
-                public void click() {
-                    MapView mv = ui.root.findchild(MapView.class);
-                    if (v) {
-                        mv.disol(0, 1);
-                        v = false;
-                    } else {
-                        mv.enol(0, 1);
-                        v = true;
+                    public void click() {
+                        MapView mv = ui.mainview;
+                        if (v) {
+                            mv.disol(0, 1);
+                            v = false;
+                        } else {
+                            mv.enol(0, 1);
+                            v = true;
+                        }
                     }
-                }
-            };
+                };
+            }
+            new MiniMap(new Coord(5, 5), new Coord(125, 125), this, ui.mainview);
+        } else {
+            new MinimapPanel(Coord.z, Coord.z, ui.root);
         }
-        vc = new VC(this, fb = new FoldButton(new Coord(CustomConfig.getWindowCenter().x - 20, CustomConfig.getWindowSize().y), parent) {
+        vc = new VC(this, fb = new FoldButton(new Coord((MainFrame.innerSize.width - 40) / 2, MainFrame.innerSize.height), parent) {
             public void click() {
                 vc.show();
             }
@@ -232,9 +257,8 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
                 sdn();
             }
         };
-        new MiniMap(new Coord(5, 5), new Coord(125, 125), this, ui.mainview);
         sub.visible = sdb.visible = false;
-
+        TimerController.getInstance().load();
         //	Load the current belt
         initBelt();
     }
@@ -244,7 +268,8 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
         if (in)
             return (c.add(bgc));
         else
-            return (c.sub(bgc));
+            bgc.y += dh;
+        return (c.sub(bgc));
     }
 
     public void error(String err) {
@@ -295,6 +320,8 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
                 ircConsole.destroy();
             }
         }
+        c.x = CustomConfig.getWindowCenter().x - sz.x / 2;
+        c.y = CustomConfig.getWindowSize().y + dy;
         Coord bgc = sz.sub(bg.sz());
         g.image(bg, bgc);
         super.draw(g);
@@ -344,13 +371,17 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
             wdgmsg("chr");
             return;
         } else if (sender == budb) {
-            wdgmsg("bud");
+            BuddyWnd.instance.visible = !BuddyWnd.instance.visible;
             return;
         } else if (sender == optb) {
             toggleopts();
             return;
         }
         super.wdgmsg(sender, msg, args);
+    }
+
+    public void binded() {
+        wdgmsg("bud");
     }
 
     public void uimsg(String msg, Object... args) {
@@ -413,25 +444,39 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
         updbtns();
     }
 
-    //	Handles the switching of windows
-    public void setawnd(HWindow wnd) {
-        //	Hide the current active window
-        if (awnd != null && awnd != wnd) {
-            awnd.hide();
-        }
-        //	Some windows have special toggles that act when the button is pressed twice
-        if (awnd == wnd) {
-            //	IRC SlenChat userlist toggle
-            if (awnd.getClass().getName().equalsIgnoreCase(SlenChat.class.getName())) {
-                if (((SlenChat) awnd).userList != null) ((SlenChat) awnd).userList.toggle();
+    public void setawnd(HWindow wnd, boolean focus) {
+        // Hide the current active window
+        if (awnd != null) {
+            if (awnd != wnd) {
+                awnd.hide();
+            } else { // Some windows have special toggles that act when the button is pressed twice
+                // IRC SlenChat userlist toggle
+                if (SlenChat.class.equals(awnd.getClass())) {
+                    if (((SlenChat) awnd).userList != null) ((SlenChat) awnd).userList.toggle();
+                }
+                return;
             }
-            return;
         }
-        //	Make the specified window be the active window, set the appropriate coloring, and show
+
+        for (HWindow w : wnds) {
+            w.visible = false;
+        }
+
+        // Make the specified window be the active window, set the appropriate coloring, and show
         awnd = wnd;
+
+        if (awnd == null) return;
 
         awnd.show();
         updurgency(wnd, -1);
+
+        if (focus) {
+            vc.show();
+        }
+    }
+
+    public void setawnd(HWindow wnd) {
+        setawnd(wnd, false);
     }
 
     public void nextWindow() {
@@ -547,7 +592,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
             updbtns();
             return (true);
         }
-        return awnd.mousewheel(c, amount);
+        return (super.mousewheel(c, amount));
     }
 
     private void toggleopts() {

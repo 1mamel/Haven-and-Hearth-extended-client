@@ -26,11 +26,15 @@
 
 package haven;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import static java.lang.Math.PI;
 
 public class Coord implements Comparable<Coord>, java.io.Serializable, Cloneable {
     public int x, y;
     public static final Coord z = new Coord(0, 0);
+    public static final Pattern coordPattern = Pattern.compile("\\((\\d+), (\\d+)\\)");
 
     public Coord(int x, int y) {
         this.x = x;
@@ -43,6 +47,16 @@ public class Coord implements Comparable<Coord>, java.io.Serializable, Cloneable
 
     public Coord() {
         this(0, 0);
+    }
+
+    public Coord(String str) {
+        Matcher m = coordPattern.matcher(str);
+        if (m.find()) {
+            x = Integer.parseInt(m.group(1));
+            y = Integer.parseInt(m.group(2));
+        } else {
+            x = y = 0;
+        }
     }
 
     public Coord(java.awt.Dimension d) {
@@ -107,6 +121,10 @@ public class Coord implements Comparable<Coord>, java.io.Serializable, Cloneable
         return (new Coord(x * f.x, y * f.y));
     }
 
+    public Coord mul(int a, int b) {
+        return (new Coord(x * a, y * b));
+    }
+
     public Coord div(Coord d) {
         int v, w;
 
@@ -123,6 +141,10 @@ public class Coord implements Comparable<Coord>, java.io.Serializable, Cloneable
         return (div(new Coord(d, d)));
     }
 
+    public Coord div(double f) {
+        return (new Coord((int) (x / f), (int) (y / f)));
+    }
+
     public Coord mod(Coord d) {
         int v, w;
 
@@ -133,6 +155,18 @@ public class Coord implements Comparable<Coord>, java.io.Serializable, Cloneable
         if (w < 0)
             w += d.y;
         return (new Coord(v, w));
+    }
+
+    public Coord swap() {
+        return new Coord(y, x);
+    }
+
+    public Coord abs() {
+        return new Coord(Math.abs(x), Math.abs(y));
+    }
+
+    public int sum() {
+        return x + y;
     }
 
     public boolean isect(Coord c, Coord s) {

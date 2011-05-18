@@ -26,8 +26,11 @@
 
 package haven;
 
+import ender.GoogleTranslator;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 public class Window extends Widget implements DTarget {
     // Resources
@@ -35,27 +38,37 @@ public class Window extends Widget implements DTarget {
     private static final Tex cl = Resource.loadtex("gfx/hud/cleft");
     private static final Tex cm = Resource.loadtex("gfx/hud/cmain");
     private static final Tex cr = Resource.loadtex("gfx/hud/cright");
-    private static final BufferedImage[] closeButtonImages = new BufferedImage[]{
+    protected static final BufferedImage[] closeButtonImages = new BufferedImage[]{
             Resource.loadimg("gfx/hud/cbtn"),
             Resource.loadimg("gfx/hud/cbtnd"),
             Resource.loadimg("gfx/hud/cbtnh")};
+    protected static final BufferedImage[] foldButtonImages = new BufferedImage[]{
+            Resource.loadimg("gfx/hud/fbtn"),
+            Resource.loadimg("gfx/hud/fbtnd"),
+            Resource.loadimg("gfx/hud/fbtnh")};
     private static final Color cc = Color.YELLOW;
     // EO Resources
     private static final Text.Foundry cf = new Text.Foundry(new Font("Serif", Font.PLAIN, 12));
     static final IBox wbox = new IBox("gfx/hud", "tl", "tr", "bl", "br", "extvl", "extvr", "extht", "exthb");
+    public boolean justclose = false;
 
-    private final Coord tlo;
-    private final Coord rbo;
-    private final Coord mrgn = new Coord(13, 13);
-    private final IButton closeButton;
+    protected final Coord tlo;
+    protected final Coord rbo;
+    protected Coord mrgn = new Coord(13, 13);
+    protected final IButton closeButton;
+    protected final IButton foldButton;
+
+    public boolean folded;
+    ArrayList<Widget> wfolded;
+    protected Coord ssz;
 
     final Text cap;
 
     boolean dm = false;
     //    private final Coord atl;
     public Coord asz;
-    private Coord wsz;
-    private Coord doff;
+    protected Coord wsz;
+    protected Coord doff;
     private boolean dt = false;
 
     static {
@@ -71,8 +84,9 @@ public class Window extends Widget implements DTarget {
         });
     }
 
-    private void placecbtn() {
+    protected void placecbtn() {
         closeButton.c = new Coord(wsz.x - 3 - closeButtonImages[0].getWidth(), 3).sub(mrgn).sub(wbox.tloff());
+        foldButton.c = new Coord(closeButton.c.x - 1 - foldButtonImages[0].getWidth(), closeButton.c.y);
     }
 
     @SuppressWarnings({"WeakerAccess", "WeakerAccess"})
@@ -96,13 +110,37 @@ public class Window extends Widget implements DTarget {
         } else {
             closeButton = null;
         }
+        foldButton = new IButton(Coord.z, this, foldButtonImages);
         setfocustab(true);
         parent.setfocus(this);
     }
 
     @SuppressWarnings({"WeakerAccess"})
     public Window(Coord c, Coord sz, Widget parent, String cap, Coord tlo, Coord rbo) {
-        this(c, sz, parent, cap, tlo, rbo, true);
+        super(c, new Coord(0, 0), parent);
+        this.tlo = tlo;
+        this.rbo = rbo;
+        closeButton = new IButton(Coord.z, this, closeButtonImages);
+        foldButton = new IButton(Coord.z, this, foldButtonImages);
+        foldButton.hide();
+        folded = false;
+        wfolded = new ArrayList<Widget>();
+        if (cap != null) {
+            this.cap = cf.render(cap, cc);
+        } else {
+            this.cap = null;
+        }
+        ssz = new Coord(sz);
+        sz = sz.add(tlo).add(rbo).add(wbox.bisz()).add(mrgn.mul(2));
+        this.sz = sz;
+//	atl = new Coord(wbox.bl.sz().x, wbox.bt.sz().y).add(tlo);
+        wsz = sz.add(tlo.inv()).add(rbo.inv());
+        asz = new Coord(wsz.x - wbox.bl.sz().x - wbox.br.sz().x - mrgn.x, wsz.y - wbox.bt.sz().y - wbox.bb.sz().y - mrgn.y);
+        placecbtn();
+        setfocustab(true);
+        parent.setfocus(this);
+
+        // TODO simplify with  this(c, sz, parent, cap, tlo, rbo, true);
     }
 
     public Window(Coord c, Coord sz, Widget parent, String cap) {
@@ -130,28 +168,66 @@ public class Window extends Widget implements DTarget {
         if (cap != null) {
             GOut cg = og.reclip(new Coord(0, -7), sz.add(0, 7));
             int w = cap.tex().sz().x;
-            cg.image(cl, new Coord((sz.x / 2) - (w / 2) - cl.sz().x, 0));
-            cg.image(cm, new Coord((sz.x / 2) - (w / 2), 0), new Coord(w, cm.sz().y));
-            cg.image(cr, new Coord((sz.x / 2) + (w / 2), 0));
-            cg.image(cap.tex(), new Coord((sz.x / 2) - (w / 2), 2)); // fix centying window name
+            int x0 = (folded) ? (mrgn.x + (w / 2)) : (sz.x / 2) - (w / 2);
+            cg.image(cl, new Coord(x0 - cl.sz().x, 0));
+            cg.image(cm, new Coord(x0, 0), new Coord(w, cm.sz().y));
+            cg.image(cr, new Coord(x0 + w, 0));
+            cg.image(cap.tex(), new Coord(x0, 0));
         }
         super.draw(og);
     }
 
-    public void pack() {
-        Coord max = Coord.z.clone();
+    public void checkfold() {
         for (Widget wdg = child; wdg != null; wdg = wdg.next) {
-            if (checkIsCloseButton(wdg))
+            if (checkIsCloseButton(wdg) || checkIsFoldButton(wdg))
                 continue;
+            if (folded) {
+                if (wdg.visible) {
+                    wdg.hide();
+                    wfolded.add(wdg);
+                }
+            } else if (wfolded.contains(wdg)) {
+                wdg.show();
+            }
+        }
+        Coord max = new Coord(ssz);
+        if (folded) {
+            max.y = 0;
+        } else {
+            wfolded.clear();
+        }
+
+        recalcsz(max);
+    }
+
+    protected void recalcsz(Coord max) {
+        sz = max.add(wbox.bsz().add(mrgn.mul(2)).add(tlo).add(rbo)).add(-1, -1);
+        wsz = sz.sub(tlo).sub(rbo);
+        if (folded)
+            wsz.y = wsz.y / 2;
+        asz = wsz.sub(wbox.bl.sz()).sub(wbox.br.sz()).sub(mrgn.mul(2));
+    }
+
+    public void pack() {
+        boolean isrunestone = cap.text.equals("Runestone");
+        Coord max = new Coord(0, 0);
+        for (Widget wdg = child; wdg != null; wdg = wdg.next) {
+            if (checkIsCloseButton(wdg) || checkIsFoldButton(wdg))
+                continue;
+            if ((isrunestone) && (wdg instanceof Label)) {
+                Label lbl = (Label) wdg;
+                lbl.settext(GoogleTranslator.translate(lbl.texts));
+            }
             Coord br = wdg.c.add(wdg.sz);
             if (br.x > max.x)
                 max.x = br.x;
             if (br.y > max.y)
                 max.y = br.y;
         }
-        sz = max.add(wbox.bsz().add(mrgn.mul(2)).add(tlo).add(rbo)).add(-1, -1);
-        wsz = sz.sub(tlo).sub(rbo);
-        asz = new Coord(wsz.x - wbox.bl.sz().x - wbox.br.sz().x, wsz.y - wbox.bt.sz().y - wbox.bb.sz().y).sub(mrgn.mul(2));
+        ssz = max;
+//        sz = max.add(wbox.bsz().add(mrgn.mul(2)).add(tlo).add(rbo)).add(-1, -1);
+//        
+        checkfold();
         placecbtn();
     }
 
@@ -209,7 +285,13 @@ public class Window extends Widget implements DTarget {
 
     public void wdgmsg(Widget sender, String msg, Object... args) {
         if (checkIsCloseButton(sender)) {
-            wdgmsg("close");
+            if (justclose)
+                ui.destroy(this);
+            else
+                wdgmsg("close");
+        } else if (checkIsFoldButton(sender)) {
+            folded = !folded;
+            checkfold();
         } else {
             super.wdgmsg(sender, msg, args);
         }
@@ -217,7 +299,10 @@ public class Window extends Widget implements DTarget {
 
     public boolean type(char key, java.awt.event.KeyEvent ev) {
         if (key == 27) {
-            wdgmsg("close");
+            if (justclose)
+                ui.destroy(this);
+            else
+                wdgmsg("close");
             return (true);
         }
         return (super.type(key, ev));
@@ -245,5 +330,9 @@ public class Window extends Widget implements DTarget {
 
     protected boolean checkIsCloseButton(Widget w) {
         return closeButton != null && w == closeButton;
+    }
+
+    protected boolean checkIsFoldButton(Widget w) {
+        return foldButton != null && w == foldButton;
     }
 }

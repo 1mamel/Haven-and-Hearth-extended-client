@@ -27,9 +27,14 @@
 package haven;
 
 import java.awt.*;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.prefs.Preferences;
@@ -80,6 +85,27 @@ public class Utils {
                 q.notify();
             }
         }
+    }
+
+    public static String sessdate(long sess) {
+        return (new SimpleDateFormat("yyyy-MM-dd HH.mm.ss")).format(new Date(sess));
+    }
+
+    public static String timestamp() {
+        return (new SimpleDateFormat("[HH:mm] ")).format(new Date());
+    }
+
+    public static String getClipboard() {
+        Transferable t = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
+        try {
+            if (t != null && t.isDataFlavorSupported(DataFlavor.stringFlavor)) {
+                String text = (String) t.getTransferData(DataFlavor.stringFlavor);
+                return text;
+            }
+        } catch (UnsupportedFlavorException e) {
+        } catch (IOException e) {
+        }
+        return "";
     }
 
     public static void defer(Runnable r) {

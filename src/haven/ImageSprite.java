@@ -37,6 +37,7 @@ public abstract class ImageSprite extends Sprite {
     public class ImagePart extends Part {
         final Resource.Image img;
         Tex ol = null;
+        Color olcol = null;
 
         public ImagePart(Resource.Image img) {
             super(img.z, img.subz);
@@ -57,13 +58,26 @@ public abstract class ImageSprite extends Sprite {
                 drawol(g);
             } else {
                 g.image(img.tex(), sc().add(img.o));
+                if (Config.highlight) {
+                    Gob mg = UI.instance.mainview.onmouse;
+                    Gob og = (Gob) owner;
+                    if ((mg != null) && (og != null) && (og.id == mg.id)) {
+                        drawol(g, Color.GREEN);
+                    }
+                }
             }
         }
 
-        public void drawol(GOut g) {
-            if (ol == null)
-                ol = new TexI(Utils.outline(img.img, java.awt.Color.WHITE));
+        public void drawol(GOut g, Color col) {
+            if ((ol == null) || (olcol != col)) {
+                ol = new TexI(Utils.outline(img.img, col));
+                olcol = col;
+            }
             g.image(ol, sc().add(img.o).add(-1, -1));
+        }
+
+        public void drawol(GOut g) {
+            drawol(g, Color.WHITE);
         }
 
         public Coord sc() {
@@ -72,6 +86,41 @@ public abstract class ImageSprite extends Sprite {
             else
                 return (cc.sub(ImageSprite.this.cc).add(off));
         }
+
+//        public ImagePart(Resource.Image img) {
+//            super(img.z, img.subz);
+//            this.img = img;
+//        }
+//
+//        public void draw(BufferedImage b, Graphics g) {
+//            Coord sc = sc().add(img.o);
+//            if (img.gayp()) {
+//                Utils.drawgay(b, img.img, sc);
+//            } else {
+//                g.drawImage(img.img, sc.x, sc.y, null);
+//            }
+//        }
+//
+//        public void draw(GOut g) {
+//            if (CustomConfig.xray) {
+//                drawol(g);
+//            } else {
+//                g.image(img.tex(), sc().add(img.o));
+//            }
+//        }
+//
+//        public void drawol(GOut g) {
+//            if (ol == null)
+//                ol = new TexI(Utils.outline(img.img, java.awt.Color.WHITE));
+//            g.image(ol, sc().add(img.o).add(-1, -1));
+//        }
+//
+//        public Coord sc() {
+//            if (img.nooff)
+//                return (cc.sub(ImageSprite.this.cc));
+//            else
+//                return (cc.sub(ImageSprite.this.cc).add(off));
+//        }
 
         public void setup(Coord cc, Coord off) {
             super.setup(cc, off);

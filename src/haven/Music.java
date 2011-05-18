@@ -42,6 +42,11 @@ public class Music {
             System.out.println(str);
     }
 
+    public static void setVolume(int vol) {
+        if (player != null)
+            player.setVolume(vol);
+    }
+
     private static class Player extends HackThread {
         private final Resource res;
         private final Thread waitfor;
@@ -58,6 +63,18 @@ public class Music {
             this.loop = loop;
         }
 
+        public void setVolume(int vol) {
+            // Changes the music volume
+            MidiChannel[] channels = synth.getChannels();
+
+            // gain is a value between 0 and 1 (loudest)
+            double gain = Math.sqrt((double) vol / 100);
+            for (int i = 0; i < channels.length; i++) {
+                channels[i].controlChange(7, (int) (gain * 127));
+                channels[i].setMute(vol == 0);
+            }
+        }
+
         public void run() {
             try {
                 if (waitfor != null)
@@ -70,15 +87,8 @@ public class Music {
                     seq.open();
                     seq.setSequence(res.layer(Resource.Music.class).seq);
                     synth.open();
-                    //	Changes the music volume
-                    MidiChannel[] channels = synth.getChannels();
-
-                    // gain is a value between 0 and 1 (loudest)
-                    double gain = Math.sqrt((double) CustomConfig.musicVol / 100);
-                    for (MidiChannel channel : channels) {
-                        channel.controlChange(7, (int) (gain * 127));
-                    }
                     seq.getTransmitter().setReceiver(synth.getReceiver());
+                    setVolume(Config.getMusicVolume());
                 } catch (MidiUnavailableException e) {
                     return;
                 } catch (InvalidMidiDataException e) {

@@ -33,7 +33,7 @@ import java.util.TreeMap;
 
 public class Widget {
     public final UI ui;
-    public Coord c, sz;
+    public Coord c, sz, hsz;
     public Widget next, prev, child, lchild, parent;
     boolean focustab = false, focusctl = false, hasfocus = false, visible = true;
     private boolean canfocus = false, autofocus = false;
@@ -41,7 +41,9 @@ public class Widget {
     Widget focused;
     public Resource cursor = null;
     public Object tooltip = null;
+    public boolean canhastrash = true;
     private Widget prevtt;
+    public boolean isui = true;
     static final Map<String, WidgetFactory> types = new TreeMap<String, WidgetFactory>();
     static final Class<?>[] barda = {Img.class, TextEntry.class, SlenConsole.class, MapView.class, FlowerMenu.class,
             Window.class, Button.class, Inventory.class, Item.class, Listbox.class,
@@ -262,6 +264,10 @@ public class Widget {
         }
     }
 
+    public void binded() {
+
+    }
+
     public void wdgmsg(String msg, Object... args) {
         wdgmsg(this, msg, args);
     }
@@ -279,7 +285,7 @@ public class Widget {
 
             for (Widget wdg = child; wdg != null; wdg = next) {
                 next = wdg.next;
-                if (!wdg.visible)
+                if (!wdg.visible || (!ui.root.visible && wdg.isui))
                     continue;
                 Coord cc = xlate(wdg.c, true);
                 wdg.draw(g.reclip(cc, wdg.sz));
@@ -294,7 +300,7 @@ public class Widget {
             if (!wdg.visible)
                 continue;
             Coord cc = xlate(wdg.c, true);
-            if (c.isect(cc, wdg.sz)) {
+            if (c.isect(cc, (wdg.hsz == null) ? wdg.sz : wdg.hsz)) {
                 if (wdg.mousedown(c.sub(cc), button)) {
                     return (true);
                 }
@@ -308,7 +314,7 @@ public class Widget {
             if (!wdg.visible)
                 continue;
             Coord cc = xlate(wdg.c, true);
-            if (c.isect(cc, wdg.sz)) {
+            if (c.isect(cc, (wdg.hsz == null) ? wdg.sz : wdg.hsz)) {
                 if (wdg.mouseup(c.sub(cc), button)) {
                     return (true);
                 }
@@ -322,7 +328,7 @@ public class Widget {
             if (!wdg.visible)
                 continue;
             Coord cc = xlate(wdg.c, true);
-            if (c.isect(cc, wdg.sz)) {
+            if (c.isect(cc, (wdg.hsz == null) ? wdg.sz : wdg.hsz)) {
                 if (wdg.mousewheel(c.sub(cc), amount)) {
                     return (true);
                 }

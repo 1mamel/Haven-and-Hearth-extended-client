@@ -26,11 +26,16 @@
 
 package haven;
 
+import ender.GoogleTranslator;
+
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class ChatHW extends HWindow {
     final TextEntry in;
     final Textlog out;
+    static final Collection<Color> todarken = new ArrayList<Color>(3);
 
     static {
         Widget.addtype("slenchat", new WidgetFactory() {
@@ -42,14 +47,30 @@ public class ChatHW extends HWindow {
                 return (new ChatHW(parent, t, cl));
             }
         });
+        todarken.add(Color.GREEN);
+        todarken.add(Color.CYAN);
+        todarken.add(Color.YELLOW);
     }
 
     public ChatHW(Widget parent, String title, boolean closable) {
-        super(parent, title, closable);
-        in = new TextEntry(new Coord(0, sz.y - 15), new Coord(sz.x, 15), this, "");
+        super((Widget) ChatHWPanel.instance, title, closable);
+        in = new TextEntry(new Coord(0, sz.y - 20), new Coord(sz.x, 20), this, "");
         in.canactivate = true;
-        out = new Textlog(Coord.z, new Coord(sz.x, sz.y - 15), this);
-        if (closable) cbtn.raise();
+        out = new Textlog(Coord.z, new Coord(sz.x, sz.y - 20), this);
+        out.drawbg = false;
+        if (cbtn != null) {
+            cbtn.raise();
+            if (title.equals("Area Chat"))
+                cbtn.hide();
+        }
+        setsz(sz);
+    }
+
+    public void setsz(Coord s) {
+        super.setsz(s);
+        in.c = new Coord(0, sz.y - 20);
+        in.sz = new Coord(sz.x, 20);
+        out.sz = new Coord(sz.x, sz.y - 20);
     }
 
     public void uimsg(String msg, Object... args) {
@@ -59,10 +80,15 @@ public class ChatHW extends HWindow {
                 col = (Color) args[1];
             if (args.length > 2)
                 makeurgent((Integer) args[2]);
-            out.append((String) args[0], col);
+            String str = (String) args[0];
+            if ((col != null) && (todarken.contains(col)))
+                col = col.darker();
+            str = GoogleTranslator.translate(str);
+            if (Config.timestamp)
+                str = Utils.timestamp() + str;
+            out.append(str, col);
         } else if (msg.equals("focusme")) {
-            shp.setawnd(this);
-            shp.vc.show();
+            shp.setawnd(this, true);
             setfocus(in);
         } else {
             super.uimsg(msg, args);

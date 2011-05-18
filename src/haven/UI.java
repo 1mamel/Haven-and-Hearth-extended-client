@@ -32,7 +32,13 @@ import java.awt.event.MouseEvent;
 import java.util.*;
 
 public class UI {
+    static public UI instance;
     public final RootWidget root;
+    public SlenConsole slenConsole;
+    public SlenHud slen;
+    public MenuGrid mnu;
+    public Speedget spd;
+    public WikiBrowser wiki;
     private Widget keygrab, mousegrab;
     public final Map<Integer, Widget> widgets = new TreeMap<Integer, Widget>();
     public final Map<Widget, Integer> rwidgets = new HashMap<Widget, Integer>();
@@ -110,6 +116,7 @@ public class UI {
     }
 
     public UI(Coord sz, Session sess) {
+        instance = this;
         root = new RootWidget(this, sz);
         widgets.put(0, root);
         rwidgets.put(root, 0);
@@ -162,6 +169,7 @@ public class UI {
                 throw (new UIException("Null parent widget " + parent + " for " + id, type, args));
             Widget wdg = f.create(c, pwdg, args);
             bind(wdg, id);
+            wdg.binded();
             if (wdg instanceof MapView)
                 mainview = (MapView) wdg;
         }

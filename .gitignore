@@ -6,3 +6,7 @@ lib/gluegen-rt.jar
 lib/jogg.jar
 lib/jogl.jar
 lib/jorbis.jar
+
+/dist
+/.settings
+/.externalToolBuilders

@@ -63,8 +63,14 @@ public class GrowingPlant extends CSprite {
             GrowingPlant spr = new GrowingPlant(owner, res);
             spr.addnegative();
             Random rnd = owner.mkrandoom();
-            for (int i = 0; i < num; i++) {
-                Coord c = new Coord(rnd.nextInt(neg.bs.x), rnd.nextInt(neg.bs.y)).add(neg.bc);
+            int n = Config.simple_plants ? 1 : num;
+            for (int i = 0; i < n; i++) {
+                Coord c;
+                if (Config.simple_plants) {
+                    c = neg.bc.add(neg.bs).sub(5, 5);
+                } else {
+                    c = new Coord(rnd.nextInt(neg.bs.x), rnd.nextInt(neg.bs.y)).add(neg.bc);
+                }
                 Tex s = strands[m][rnd.nextInt(strands[m].length)];
                 spr.add(s, 0, MapView.m2s(c), new Coord(s.sz().x / 2, s.sz().y).inv());
             }

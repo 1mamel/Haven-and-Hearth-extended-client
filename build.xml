@@ -42,6 +42,10 @@
     <copy todir="build/classes/haven" file="etc/res-preload" />
     <copy todir="build/classes/haven" file="etc/res-bgload" />
     <copy todir="build/classes/haven" file="etc/icon.png" />
+    <mkdir dir="build/res" />
+    <copy todir="build/res" >
+	<fileset dir="resources/res"/>
+    </copy>
   </target>
 
   <target name="copy-crt">
@@ -104,7 +108,8 @@
   </target>
   
   <target name="clean">
-    <delete dir="build" />
+    <delete dir="build/classes" />
+    <delete dir="build/classes-lib" />
   </target>
   
   <target name="profile" depends="jars">

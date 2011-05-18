@@ -99,6 +99,10 @@ public class MenuGrid extends Widget {
     public MenuGrid(Coord c, Widget parent) {
         super(c, bgsz.mul(gsz).add(1, 1), parent);
         cons(null);
+        ui.mnu = this;
+        ToolbarWnd.loadBelts();
+        new ToolbarWnd(new Coord(0, 300), ui.root, "toolbar1");
+        new ToolbarWnd(new Coord(50, 300), ui.root, "toolbar2", 2, 12, new Coord(4, 10), KeyEvent.VK_F1);
     }
 
     private static final Comparator<Resource> sorter = new Comparator<Resource>() {
@@ -115,8 +119,15 @@ public class MenuGrid extends Widget {
     private void updlayout() {
         Resource[] cur = cons(this.cur);
         Arrays.sort(cur, sorter);
-        int i = curoff;
+        int i;
+//	int i = curoff;
         hotmap.clear();
+        for (i = 0; i < cur.length; i++) {
+            Resource.AButton ad = cur[i].layer(Resource.action);
+            if (ad.hk != 0)
+                hotmap.put(Character.toUpperCase(ad.hk), cur[i]);
+        }
+        i = curoff;
         for (int y = 0; y < gsz.y; y++) {
             for (int x = 0; x < gsz.x; x++) {
                 Resource btn = null;
@@ -125,9 +136,9 @@ public class MenuGrid extends Widget {
                 } else if ((cur.length > ((gsz.x * gsz.y) - 1)) && (x == gsz.x - 2) && (y == gsz.y - 1)) {
                     btn = next;
                 } else if (i < cur.length) {
-                    Resource.AButton ad = cur[i].layer(Resource.action);
-                    if (ad.hk != 0)
-                        hotmap.put(Character.toUpperCase(ad.hk), cur[i]);
+//                    Resource.AButton ad = cur[i].layer(Resource.action);
+//                    if (ad.hk != 0)
+//                        hotmap.put(Character.toUpperCase(ad.hk), cur[i]);
                     btn = cur[i++];
                 }
                 layout[x][y] = btn;
@@ -143,7 +154,7 @@ public class MenuGrid extends Widget {
         if (pos >= 0)
             tt = tt.substring(0, pos) + "$col[255,255,0]{" + tt.charAt(pos) + '}' + tt.substring(pos + 1);
         else if (ad.hk != 0)
-            tt += " [" + ad.hk + ']';
+            tt += " [$col[255,255,0]{" + ad.hk + "}]";
         if (withpg && (pg != null)) {
             tt += "\n\n" + pg.text;
         }
@@ -227,7 +238,7 @@ public class MenuGrid extends Widget {
         }
     }
 
-    private void use(Resource r) {
+    protected void use(Resource r) {
         if (cons(r).length > 0) {
             cur = r;
             curoff = 0;
@@ -240,8 +251,85 @@ public class MenuGrid extends Widget {
             else
                 curoff += 14;
         } else {
-            wdgmsg("act", (Object[]) r.layer(Resource.action).ad);
+            String[] ad = r.layer(Resource.action).ad;
+            if (ad[0].equals("@")) {
+                usecustom(ad);
+//	    } else if (ad[0].equals("declaim")){
+//		new DeclaimVerification(ui.root, ad);
+            } else {
+                int k = 0;
+                if (ad[0].equals("crime")) {
+                    k = -1;
+                }
+                if (ad[0].equals("tracking")) {
+                    k = -2;
+                }
+                if (ad[0].equals("swim")) {
+                    k = -3;
+                }
+                if (k < 0) {
+                    synchronized (ui.sess.glob.buffs) {
+                        if (ui.sess.glob.buffs.containsKey(k)) {
+                            ui.sess.glob.buffs.remove(k);
+                        } else {
+                            Buff buff = new Buff(k, r.indir());
+                            buff.major = true;
+                            ui.sess.glob.buffs.put(k, buff);
+                        }
+                    }
+                }
+                wdgmsg("act", (Object[]) ad);
+            }
         }
+    }
+
+    private void usecustom(String[] list) {
+        if (list[1].equals("radius")) {
+            Config.showRadius = !Config.showRadius;
+            String str = "Radius highlight is turned " + ((Config.showRadius) ? "ON" : "OFF");
+            ui.cons.out.println(str);
+            ui.slen.error(str);
+            Config.saveOptions();
+        } else if (list[1].equals("hidden")) {
+            Config.showHidden = !Config.showHidden;
+            String str = "Hidden object highlight is turned " + ((Config.showHidden) ? "ON" : "OFF");
+            ui.cons.out.println(str);
+            ui.slen.error(str);
+            Config.saveOptions();
+        } else if (list[1].equals("hide")) {
+            for (int i = 2; i < list.length; i++) {
+                String item = list[i];
+                if (Config.hideObjectList.contains(item)) {
+                    Config.hideObjectList.remove(item);
+                } else {
+                    Config.hideObjectList.add(item);
+                }
+            }
+        } else if (list[1].equals("simple plants")) {
+            Config.simple_plants = !Config.simple_plants;
+            String str = "Simplified plants is turned " + ((Config.simple_plants) ? "ON" : "OFF");
+            ui.cons.out.println(str);
+            ui.slen.error(str);
+            Config.saveOptions();
+        } else if (list[1].equals("timers")) {
+            TimerPanel.toggleS();
+        } else if (list[1].equals("animal")) {
+            Config.showBeast = !Config.showBeast;
+            String str = "Animal highlight is turned " + ((Config.showBeast) ? "ON" : "OFF");
+            ui.cons.out.println(str);
+            ui.slen.error(str);
+            Config.saveOptions();
+        } else if (list[1].equals("globalchat")) {
+            ui.root.wdgmsg("gk", 3);
+        } else if (list[1].equals("wiki")) {
+            if (ui.wiki == null) {
+                new WikiBrowser(MainFrame.getCenterPoint().sub(115, 75), Coord.z, ui.root);
+            } else {
+//                ui.wiki.wdgmsg(ui.wiki.cbtn, "click");
+                // TODO : fix it!!!
+            }
+        }
+        use(null);
     }
 
     public boolean mouseup(Coord c, int button) {

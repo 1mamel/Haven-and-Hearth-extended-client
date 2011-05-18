@@ -62,8 +62,20 @@ public class Resource extends Prioritized implements Comparable<Resource>, Seria
     public static Class<Tooltip> tooltip = Tooltip.class;
 
     static {
-        if (!Config.nolocalres)
-            loader = new Loader(new JarSource());
+        try {
+            chainloader(new Loader(new FileSource(new File("./custom_res"))));
+        } catch (Exception e) {
+            /* Ignore these. We don't want to be crashing the client
+            * for users just because of errors in development
+            * aids. */
+        }
+        try {
+            chainloader(new Loader(new FileSource(new File("./res"))));
+        } catch (Exception e) {
+            /* Ignore these. We don't want to be crashing the client
+            * for users just because of errors in development
+            * aids. */
+        }
         try {
             String dir = Config.resdir;
             if (dir == null)
@@ -75,6 +87,8 @@ public class Resource extends Prioritized implements Comparable<Resource>, Seria
             * for users just because of errors in development
             * aids. */
         }
+        if (!Config.nolocalres)
+            chainloader(new Loader(new JarSource()));
     }
 
     private LoadException error;

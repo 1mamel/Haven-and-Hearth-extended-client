@@ -26,7 +26,12 @@
 
 package haven;
 
+import com.sun.opengl.util.Screenshot;
+
+import javax.media.opengl.GLException;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.IOException;
 
 public class RootWidget extends ConsoleHost {
     public static final Resource defcurs = Resource.load("gfx/hud/curs/arw");
@@ -35,6 +40,7 @@ public class RootWidget extends ConsoleHost {
     Profile gprof;
     @SuppressWarnings({"UnusedDeclaration"})
     boolean afk = false;
+    boolean screenshot = false;
 
     public RootWidget(UI ui, Coord sz) {
         super(ui, new Coord(0, 0), sz);
@@ -44,12 +50,38 @@ public class RootWidget extends ConsoleHost {
 
     public boolean globtype(char key, KeyEvent ev) {
         if (!super.globtype(key, ev)) {
+            int code = ev.getKeyCode();
+            boolean ctrl = ev.isControlDown();
+            boolean alt = ev.isAltDown();
+
             if (Config.profile && (key == '`')) {
-                new Profwnd(findchild(SlenHud.class), findchild(MapView.class).prof, "MV prof");
+                new Profwnd(ui.slen, ui.mainview.prof, "MV prof");
             } else if (Config.profile && (key == '~')) {
-                new Profwnd(findchild(SlenHud.class), gprof, "Glob prof");
+                new Profwnd(ui.slen, gprof, "Glob prof");
             } else if (Config.profile && (key == '!')) {
-                new Profwnd(findchild(SlenHud.class), findchild(MapView.class).mask.prof, "ILM prof");
+                new Profwnd(ui.slen, ui.mainview.mask.prof, "ILM prof");
+            } else if ((code == KeyEvent.VK_N) && ctrl) {
+                Config.nightvision = !Config.nightvision;
+            } else if ((code == KeyEvent.VK_X) && ctrl) {
+                Config.xray = !Config.xray;
+            } else if ((code == KeyEvent.VK_H) && ctrl) {
+                Config.hide = !Config.hide;
+            } else if ((code == KeyEvent.VK_Q) && alt) {
+                ui.spd.wdgmsg("set", 0);
+            } else if ((code == KeyEvent.VK_W) && alt) {
+                ui.spd.wdgmsg("set", 1);
+            } else if ((code == KeyEvent.VK_E) && alt) {
+                ui.spd.wdgmsg("set", 2);
+            } else if ((code == KeyEvent.VK_R) && alt) {
+                ui.spd.wdgmsg("set", 3);
+            } else if ((code == KeyEvent.VK_G) && ctrl) {
+                Config.grid = !Config.grid;
+            } else if (((int) key == 2) & ctrl) {//CTRL-B have code of 02
+                BuddyWnd.instance.visible = !BuddyWnd.instance.visible;
+            } else if (code == KeyEvent.VK_HOME) {
+                ui.mainview.resetcam();
+            } else if (code == KeyEvent.VK_END) {
+                screenshot = true;
             } else if (key == ':') {
                 entercmd();
             } else if (key == '`') {
@@ -68,17 +100,36 @@ public class RootWidget extends ConsoleHost {
     }
 
     public void draw(GOut g) {
+        if (screenshot && Config.sshot_noui) {
+            visible = false;
+        }
         super.draw(g);
         drawcmd(g, new Coord(20, 580));
-/*	if(!afk && (System.currentTimeMillis() - ui.lastevent > 300000)) {
-	    afk = true;
-	    Widget slen = findchild(SlenHud.class);
-	    if(slen != null)
-		slen.wdgmsg("afk");
-	} else if(afk && (System.currentTimeMillis() - ui.lastevent < 300000)) {
-	    afk = false;
-	}
-*/
+        if (screenshot) {
+            visible = true;
+            screenshot = false;
+            try {
+                Coord s = MainFrame.getInnerSize();
+                String stamp = Utils.sessdate(System.currentTimeMillis());
+                String ext = Config.sshot_compress ? ".jpg" : ".png";
+                File f = new File("screenshots/SS_" + stamp + ext);
+                f.mkdirs();
+                Screenshot.writeToFile(f, s.x, s.y);
+            } catch (GLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+//	if(!afk && (System.currentTimeMillis() - ui.lastevent > 300000)) {
+//	    afk = true;
+//	    Widget slen = findchild(SlenHud.class);
+//	    if(slen != null)
+//		slen.wdgmsg("afk");
+//	} else if(afk && (System.currentTimeMillis() - ui.lastevent < 300000)) {
+//	    afk = false;
+//	}
     }
 
     public void error(String msg) {

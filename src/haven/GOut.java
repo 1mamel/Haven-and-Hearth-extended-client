@@ -206,10 +206,12 @@ public class GOut {
         texsel(-1);
         gl.glBegin(GL.GL_TRIANGLE_FAN);
         vertex(c);
-        for (int i = a1; i <= a2; i += 5) {
+        for (int i = a1; i < a2; i += 5) {
             double a = (i * Math.PI * 2) / 360.0;
             vertex(c.add((int) (Math.cos(a) * r.x), -(int) (Math.sin(a) * r.y)));
         }
+        double a = (a2 * Math.PI * 2) / 360.0;
+        vertex(c.add((int) (Math.cos(a) * r.x), -(int) (Math.sin(a) * r.y)));
         gl.glEnd();
         checkerr();
     }
@@ -250,5 +252,9 @@ public class GOut {
         g.ul = this.ul.add(ul);
         g.sz = sz;
         return (g);
+    }
+
+    public void scale(double d) {
+        gl.glScaled(d, d, d);
     }
 }

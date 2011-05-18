@@ -30,6 +30,7 @@ public class SlenConsole extends ChatHW implements IRCConnectionListener {
 
     public SlenConsole(SlenHud parent) {
         super(parent, "Console", false);
+        ui.slenConsole = this;
         this.parent = parent;
         if (CustomConfig.ircDefNick == null || CustomConfig.ircDefNick.length() == 0) {
             CustomConfig.ircDefNick = ui.sess.username;

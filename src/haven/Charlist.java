@@ -104,7 +104,11 @@ public class Charlist extends Widget {
                 y += bg.sz().y + margin;
             }
         }
-        super.draw(g);
+        try {
+            super.draw(g);
+        } catch (Exception e) {
+            System.out.println("qweqwe");    // TODO WTF???
+        }
     }
 
     public boolean mousewheel(Coord c, int amount) {
@@ -119,7 +123,7 @@ public class Charlist extends Widget {
                     if (sender == c.plb) {
                         wdgmsg("play", c.name);
                         CustomConfig.setActiveCharacter(c.name);
-                        SlenHud hud = parent.findchild(SlenHud.class);
+                        SlenHud hud = ui.slen;//parent.findchild(SlenHud.class);
                         if (hud != null) {
                             hud.initBelt();
                         }
