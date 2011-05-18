@@ -88,7 +88,7 @@ public class Music {
                     synth = MidiSystem.getSynthesizer();
 
                     seq.open();
-                    seq.setSequence(res.layer(MusicL.class).seq);
+                    seq.setSequence(res.layer(MusicL.class).getSeq());
                     synth.open();
                     seq.getTransmitter().setReceiver(synth.getReceiver());
                     setVolume(Config.getMusicVolume());

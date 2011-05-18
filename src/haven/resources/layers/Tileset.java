@@ -20,10 +20,11 @@ public class Tileset extends Layer {
     private String[] fln;
     private int[] flv;
     private int[] flw;
-    WeightList<Resource> flavobjs;
-    WeightList<Tile> ground;
-    WeightList<Tile>[] ctrans, btrans;
-    int flavprob;
+    private WeightList<Resource> flavobjs;
+    private WeightList<Tile> ground;
+    private WeightList<Tile>[] ctrans;
+    private WeightList<Tile>[] btrans;
+    private int flavprob;
     private Resource resource;
 
     public Tileset(Resource resource, byte[] buf) {
@@ -118,5 +119,53 @@ public class Tileset extends Layer {
             }
         }
         packtiles(tiles, tsz);
+    }
+
+    public WeightList<Resource> getFlavobjs() {
+        return flavobjs;
+    }
+
+    public void setFlavobjs(WeightList<Resource> flavobjs) {
+        this.flavobjs = flavobjs;
+    }
+
+    public WeightList<Tile> getGround() {
+        return ground;
+    }
+
+    public void setGround(WeightList<Tile> ground) {
+        this.ground = ground;
+    }
+
+    public WeightList<Tile>[] getCtrans() {
+        return ctrans;
+    }
+
+    public void setCtrans(WeightList<Tile>[] ctrans) {
+        this.ctrans = ctrans;
+    }
+
+    public WeightList<Tile>[] getBtrans() {
+        return btrans;
+    }
+
+    public void setBtrans(WeightList<Tile>[] btrans) {
+        this.btrans = btrans;
+    }
+
+    public int getFlavprob() {
+        return flavprob;
+    }
+
+    public void setFlavprob(int flavprob) {
+        this.flavprob = flavprob;
+    }
+
+    public Resource getResource() {
+        return resource;
+    }
+
+    public void setResource(Resource resource) {
+        this.resource = resource;
     }
 }

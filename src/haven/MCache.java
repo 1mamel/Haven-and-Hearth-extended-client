@@ -171,10 +171,10 @@ public class MCache {
             for (c.y = 0; c.y < cmaps.x; c.y++) {
                 for (c.x = 0; c.x < cmaps.y; c.x++) {
                     Tileset set = sets[tiles[c.x][c.y]];
-                    if (set.flavobjs.size() > 0) {
+                    if (set.getFlavobjs().size() > 0) {
                         Random rnd = mkrandoom(c);
-                        if (rnd.nextInt(set.flavprob) == 0) {
-                            Resource r = set.flavobjs.pick(rnd);
+                        if (rnd.nextInt(set.getFlavprob()) == 0) {
+                            Resource r = set.getFlavobjs().pick(rnd);
                             Gob g = new Gob(sess.glob, c.add(tc).mul(tilesz), -1, 0);
                             g.setattr(new ResDrawable(g, r));
                             fo.add(g);
@@ -297,7 +297,7 @@ public class MCache {
             int cy[] = {0, 0, 2, 2};
             ArrayList<Tile> buf = new ArrayList<Tile>();
             for (int i = gettilen(tc) - 1; i >= 0; i--) {
-                if ((sets[i] == null) || (sets[i].btrans == null) || (sets[i].ctrans == null))
+                if ((sets[i] == null) || (sets[i].getBtrans() == null) || (sets[i].getCtrans() == null))
                     continue;
                 int bm = 0, cm = 0;
                 for (int o = 0; o < 4; o++) {
@@ -307,9 +307,9 @@ public class MCache {
                         cm |= 1 << o;
                 }
                 if (bm != 0)
-                    buf.add(sets[i].btrans[bm - 1].pick(randoom(tc)));
+                    buf.add(sets[i].getBtrans()[bm - 1].pick(randoom(tc)));
                 if (cm != 0)
-                    buf.add(sets[i].ctrans[cm - 1].pick(randoom(tc)));
+                    buf.add(sets[i].getCtrans()[cm - 1].pick(randoom(tc)));
             }
             g.tcache[gtc.x][gtc.y] = buf.toArray(new Tile[buf.size()]);
         }
@@ -330,7 +330,7 @@ public class MCache {
         Coord gtc = tc.mod(cmaps);
         if (g.gcache[gtc.x][gtc.y] == null) {
             Tileset ts = sets[g.gettile(gtc)];
-            g.gcache[gtc.x][gtc.y] = ts.ground.pick(randoom(tc));
+            g.gcache[gtc.x][gtc.y] = ts.getGround().pick(randoom(tc));
         }
         return (g.gcache[gtc.x][gtc.y]);
     }
@@ -481,7 +481,7 @@ public class MCache {
             }
 
             /* Clean up old buffers */
-            for (Iterator<Map.Entry<Integer, Defrag>> i = fragbufs.entrySet().iterator(); i.hasNext();) {
+            for (Iterator<Map.Entry<Integer, Defrag>> i = fragbufs.entrySet().iterator(); i.hasNext(); ) {
                 Map.Entry<Integer, Defrag> e = i.next();
                 Defrag old = e.getValue();
                 if (now - old.last > 10000)
@@ -518,7 +518,7 @@ public class MCache {
 
     public void trim(Coord ul, Coord lr) {
         synchronized (grids) {
-            for (Iterator<Map.Entry<Coord, Grid>> i = grids.entrySet().iterator(); i.hasNext();) {
+            for (Iterator<Map.Entry<Coord, Grid>> i = grids.entrySet().iterator(); i.hasNext(); ) {
                 Map.Entry<Coord, Grid> e = i.next();
                 Coord gc = e.getKey();
                 Grid g = e.getValue();
@@ -529,7 +529,7 @@ public class MCache {
             }
         }
         synchronized (req) {
-            for (Iterator<Map.Entry<Coord, Grid>> i = req.entrySet().iterator(); i.hasNext();) {
+            for (Iterator<Map.Entry<Coord, Grid>> i = req.entrySet().iterator(); i.hasNext(); ) {
                 Map.Entry<Coord, Grid> e = i.next();
                 Coord gc = e.getKey();
                 Grid g = e.getValue();
@@ -551,7 +551,7 @@ public class MCache {
     public void sendreqs() {
         long now = System.currentTimeMillis();
         synchronized (req) {
-            for (Iterator<Map.Entry<Coord, Grid>> i = req.entrySet().iterator(); i.hasNext();) {
+            for (Iterator<Map.Entry<Coord, Grid>> i = req.entrySet().iterator(); i.hasNext(); ) {
                 Map.Entry<Coord, Grid> e = i.next();
                 Coord c = e.getKey();
                 Grid gr = e.getValue();

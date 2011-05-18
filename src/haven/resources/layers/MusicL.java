@@ -2,6 +2,7 @@ package haven.resources.layers;
 
 import haven.resources.Resource;
 
+import javax.sound.midi.Sequence;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
@@ -14,7 +15,7 @@ import java.io.IOException;
 * @author Vlad.Rassokhin@gmail.com
 */
 public class MusicL extends Layer {
-    transient javax.sound.midi.Sequence seq;
+    private transient javax.sound.midi.Sequence seq;
 
     public MusicL(byte[] buf) {
         try {
@@ -27,5 +28,9 @@ public class MusicL extends Layer {
     }
 
     public void init() {
+    }
+
+    public Sequence getSeq() {
+        return seq;
     }
 }

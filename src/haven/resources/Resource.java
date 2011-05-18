@@ -48,7 +48,7 @@ public class Resource extends Prioritized implements Comparable<Resource>, Seria
     private static CacheSource prscache;
     public static ThreadGroup loadergroup = null;
     private static Map<String, Class<? extends Layer>> ltypes = new TreeMap<String, Class<? extends Layer>>();
-    static final Set<Resource> loadwaited = new HashSet<Resource>();
+    public static final Set<Resource> loadwaited = new HashSet<Resource>();
     public static Class<haven.resources.layers.Image> imgc = haven.resources.layers.Image.class;
     public static Class<Tile> tile = Tile.class;
     public static Class<Neg> negc = Neg.class;

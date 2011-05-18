@@ -344,14 +344,13 @@ public class MainFrame extends Frame implements Runnable, FSMan {
     }
 
     private static void dumplist(Collection<Resource> list, String fn) {
+        if (fn == null) return;
         try {
-            if (fn != null) {
-                Writer w = new OutputStreamWriter(new FileOutputStream(fn), "UTF-8");
-                try {
-                    Resource.dumplist(list, w);
-                } finally {
-                    w.close();
-                }
+            Writer w = new OutputStreamWriter(new FileOutputStream(fn), "UTF-8");
+            try {
+                Resource.dumplist(list, w);
+            } finally {
+                w.close();
             }
         } catch (IOException e) {
             throw (new RuntimeException(e));
