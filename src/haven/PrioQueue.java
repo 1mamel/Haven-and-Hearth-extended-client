@@ -33,6 +33,12 @@ public class PrioQueue<E extends Prioritized> extends PriorityQueue<E> {
     public PrioQueue() {
         super(11, new Comparator<Prioritized>() {
             public int compare(Prioritized o1, Prioritized o2) {
+                if (o1 == null) {
+                    return (o2 == null) ? 0 : 1;
+                }
+                if (o2 == null) {
+                    return -1;
+                }
                 int thisVal = o1.getPriority();
                 int anotherVal = o2.getPriority();
                 return (thisVal < anotherVal ? 1 : (thisVal == anotherVal ? 0 : -1));
@@ -85,6 +91,7 @@ public class PrioQueue<E extends Prioritized> extends PriorityQueue<E> {
 
     @Override
     public boolean add(E e) {
+        if (e == null) return false;
         e.setQueue(this);
         return super.add(e);
     }
