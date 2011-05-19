@@ -111,7 +111,7 @@ public class Session {
                 public Resource get() {
                     if (res == null)
                         return (null);
-                    if (res.loading) {
+                    if (res.loading.get()) {
                         res.boostprio(0);
                         return (null);
                     }
@@ -130,7 +130,7 @@ public class Session {
                     if (res == null) {
                         return ("<res:" + resid + '>');
                     } else {
-                        if (res.loading)
+                        if (res.loading.get())
                             return ("<!" + res + '>');
                         else
                             return ("<" + res + '>');

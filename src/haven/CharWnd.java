@@ -370,7 +370,7 @@ public class CharWnd extends Window {
         }
 
         public void draw(GOut g) {
-            if ((cur != null) && !cur.loading) {
+            if ((cur != null) && !cur.loading.get()) {
                 StringBuilder text = new StringBuilder();
                 text.append("$img[").append(cur.name).append("]\n\n");
                 text.append("$font[serif,16]{").append(cur.layer(Resource.tooltip).t).append("}\n\n");
@@ -437,11 +437,11 @@ public class CharWnd extends Window {
         final Comparator<Resource> rescomp = new Comparator<Resource>() {
             public int compare(Resource a, Resource b) {
                 String an, bn;
-                if (a.loading)
+                if (a.loading.get())
                     an = a.name;
                 else
                     an = a.layer(Resource.tooltip).t;
-                if (b.loading)
+                if (b.loading.get())
                     bn = b.name;
                 else
                     bn = b.layer(Resource.tooltip).t;
@@ -475,7 +475,7 @@ public class CharWnd extends Window {
                 }
                 if (getcost(sk) > exp)
                     g.chcolor(255, 128, 128, 255);
-                if (sk.loading) {
+                if (sk.loading.get()) {
                     g.image(missing, new Coord(0, i * 20), new Coord(20, 20));
                     g.atext("...", new Coord(25, i * 20 + 10), 0, 0.5);
                     continue;

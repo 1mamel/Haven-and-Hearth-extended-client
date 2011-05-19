@@ -338,7 +338,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
             Resource res = null;
             if (belt[activeBelt][i] != null)
                 res = belt[activeBelt][i];
-            if (res != null && !res.loading)
+            if (res != null && !res.loading.get())
                 g.image(res.layer(Resource.imgc).tex(), c.add(1, 1));
             g.chcolor(Color.BLACK);
             g.aimage(nums[activeBelt], x, 1, 1);

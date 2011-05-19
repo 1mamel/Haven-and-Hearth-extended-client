@@ -26,8 +26,6 @@
 
 package haven;
 
-import ender.GoogleTranslator;
-
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -83,7 +81,7 @@ public class ChatHW extends HWindow {
             String str = (String) args[0];
             if ((col != null) && (todarken.contains(col)))
                 col = col.darker();
-            str = GoogleTranslator.translate(str);
+            str = Config.translator.translate(str);
             if (Config.timestamp)
                 str = Utils.timestamp() + str;
             out.append(str, col);

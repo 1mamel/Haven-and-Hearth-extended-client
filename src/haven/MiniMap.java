@@ -362,7 +362,7 @@ public class MiniMap extends Widget {
         }
         //end of grid
 
-        if ((!plx.loading) && (!hidden)) {
+        if ((!plx.loading.get()) && (!hidden)) {
             synchronized (ui.sess.glob.party.memb) {
                 for (Party.Member m : ui.sess.glob.party.memb.values()) {
                     Coord ptc = m.getc();

@@ -561,6 +561,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
         map = glob.map;
         mask = new ILM(MainFrame.getScreenSize(), glob.oc);
         radiuses = new HashMap<String, Integer>();
+        ui.mainview = this;
     }
 
     public void resetcam() {
@@ -1141,7 +1142,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
             }
         }
 
-        if (Config.showHidden && Config.hide) {
+        if (Config.showHidden && CustomConfig.hide) {
             g.chcolor(255, 0, 0, 128);
             synchronized (glob.oc) {
                 for (Gob gob : glob.oc) {

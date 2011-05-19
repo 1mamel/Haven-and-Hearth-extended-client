@@ -303,7 +303,7 @@ public class HavenPanel extends GLCanvas implements Runnable {
             g.image(tt, pos);
         }
         Resource curs = ui.root.getcurs(mousepos);
-        if (!curs.loading) {
+        if (!curs.loading.get()) {
             if (cursmode.equals("awt")) {
                 if (curs != lastcursor) {
                     try {

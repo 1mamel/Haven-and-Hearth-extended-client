@@ -77,7 +77,7 @@ public class MenuGrid extends Widget {
             }
             while (!open.isEmpty()) {
                 for (Resource r : open.toArray(cp)) {
-                    if (!r.loading) {
+                    if (!r.loading.get()) {
                         AButton ad = r.layer(Resource.action);
                         if (ad == null)
                             throw (new PaginaException(r));
@@ -327,8 +327,7 @@ public class MenuGrid extends Widget {
             if (ui.wiki == null) {
                 new WikiBrowser(MainFrame.getCenterPoint().sub(115, 75), Coord.z, ui.root);
             } else {
-//                ui.wiki.wdgmsg(ui.wiki.cbtn, "click");
-                // TODO : fix it!!!
+                ui.wiki.close();
             }
         }
         use(null);

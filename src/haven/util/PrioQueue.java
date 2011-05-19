@@ -27,9 +27,9 @@
 package haven.util;
 
 import java.util.Comparator;
-import java.util.PriorityQueue;
+import java.util.concurrent.PriorityBlockingQueue;
 
-public class PrioQueue<E extends Prioritized> extends PriorityQueue<E> {
+public class PrioQueue<E extends Prioritized> extends PriorityBlockingQueue<E> {
     public PrioQueue() {
         super(11, new Comparator<Prioritized>() {
             public int compare(Prioritized o1, Prioritized o2) {
@@ -97,6 +97,7 @@ public class PrioQueue<E extends Prioritized> extends PriorityQueue<E> {
     }
 
     public void update(E e) {
+        if (e == null) return;
         this.remove(e);
         this.add(e);
     }

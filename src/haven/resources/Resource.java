@@ -41,10 +41,11 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Resource extends Prioritized implements Comparable<Resource>, Serializable {
     private static final Map<String, Resource> cache = new TreeMap<String, Resource>();
-    private static Loader loader;
+    private static ResourceLoader loader;
     private static CacheSource prscache;
     public static ThreadGroup loadergroup = null;
     private static Map<String, Class<? extends Layer>> ltypes = new TreeMap<String, Class<? extends Layer>>();
@@ -61,14 +62,20 @@ public class Resource extends Prioritized implements Comparable<Resource>, Seria
 
     static {
         try {
-            chainloader(new Loader(new FileSource(new File("./custom_res"))));
+            File file = new File("./custom_res");
+            if (file.exists()) {
+                chainloader(new ResourceLoader(new FileSource(file)));
+            }
         } catch (Exception e) {
             /* Ignore these. We don't want to be crashing the client
             * for users just because of errors in development
             * aids. */
         }
         try {
-            chainloader(new Loader(new FileSource(new File("./res"))));
+            File file = new File("./res");
+            if (file.exists()) {
+                chainloader(new ResourceLoader(new FileSource(file)));
+            }
         } catch (Exception e) {
             /* Ignore these. We don't want to be crashing the client
             * for users just because of errors in development
@@ -78,22 +85,26 @@ public class Resource extends Prioritized implements Comparable<Resource>, Seria
             String dir = Config.resdir;
             if (dir == null)
                 dir = System.getenv("HAVEN_RESDIR");
-            if (dir != null)
-                chainloader(new Loader(new FileSource(new File(dir))));
+            if (dir != null) {
+                File base = new File(dir);
+                if (base.exists()) {
+                    chainloader(new ResourceLoader(new FileSource(base)));
+                }
+            }
         } catch (Exception e) {
             /* Ignore these. We don't want to be crashing the client
             * for users just because of errors in development
             * aids. */
         }
         if (!Config.nolocalres)
-            chainloader(new Loader(new JarSource()));
+            chainloader(new ResourceLoader(new JarSource()));
     }
 
     LoadException error;
     private Collection<? extends Layer> layers = new LinkedList<Layer>();
     public final String name;
     public int ver;
-    public boolean loading;
+    public final AtomicBoolean loading;
     public ResSource source;
     private transient Indir<Resource> indir = null;
 
@@ -101,13 +112,13 @@ public class Resource extends Prioritized implements Comparable<Resource>, Seria
         this.name = name;
         this.ver = ver;
         error = null;
-        loading = true;
+        loading = new AtomicBoolean(true);
     }
 
     public static void addcache(ResCache cache) {
         CacheSource src = new CacheSource(cache);
         prscache = src;
-        chainloader(new Loader(src));
+        chainloader(new ResourceLoader(src));
     }
 
     public static void addurl(URL url) {
@@ -120,15 +131,15 @@ public class Resource extends Prioritized implements Comparable<Resource>, Seria
                 }
             };
         }
-        chainloader(new Loader(src));
+        chainloader(new ResourceLoader(src));
     }
 
-    private static void chainloader(Loader nl) {
+    private static void chainloader(ResourceLoader nl) {
         synchronized (Resource.class) {
             if (loader == null) {
                 loader = nl;
             } else {
-                Loader l;
+                ResourceLoader l;
                 //noinspection StatementWithEmptyBody
                 for (l = loader; l.getNext() != null; l = l.getNext()) ;
                 l.chain(nl);
@@ -181,7 +192,7 @@ public class Resource extends Prioritized implements Comparable<Resource>, Seria
 
     public static int qdepth() {
         int ret = 0;
-        for (Loader l = loader; l != null; l = l.getNext())
+        for (ResourceLoader l = loader; l != null; l = l.getNext())
             ret += l.queueSize();
         return (ret);
     }
@@ -198,8 +209,8 @@ public class Resource extends Prioritized implements Comparable<Resource>, Seria
     public void loadwaitint() throws InterruptedException {
         synchronized (this) {
             boostprio(10);
-            while (loading) {
-                wait();
+            while (loading.get()) {
+                wait(2000);
             }
         }
     }
@@ -218,7 +229,7 @@ public class Resource extends Prioritized implements Comparable<Resource>, Seria
         }
         synchronized (this) {
             boostprio(10);
-            while (loading) {
+            while (loading.get()) {
                 try {
                     wait();
                 } catch (InterruptedException e) {
@@ -231,18 +242,6 @@ public class Resource extends Prioritized implements Comparable<Resource>, Seria
     }
 
     public static class LoadException extends RuntimeException {
-
-        public LoadException(String msg, ResSource src) {
-            super(msg);
-        }
-
-        public LoadException(String msg, Resource res) {
-            super(msg);
-        }
-
-        public LoadException(String msg, Throwable cause, Resource res) {
-            super(msg, cause);
-        }
 
         public LoadException(String msg, Throwable cause) {
             super(msg, cause);
@@ -297,7 +296,7 @@ public class Resource extends Prioritized implements Comparable<Resource>, Seria
         while (off < buf.length) {
             ret = in.read(buf, off, buf.length - off);
             if (ret < 0)
-                throw (new LoadException("Incomplete resource at " + name, this));
+                throw (new LoadException("Incomplete resource at " + name));
             off += ret;
         }
     }
@@ -345,7 +344,7 @@ public class Resource extends Prioritized implements Comparable<Resource>, Seria
         byte buf[] = new byte[sig.length()];
         readall(in, buf);
         if (!sig.equals(new String(buf)))
-            throw (new LoadException("Invalid res signature", this));
+            throw (new LoadException("Invalid res signature"));
         buf = new byte[2];
         readall(in, buf);
         int ver = Utils.uint16d(buf, 0);
@@ -354,27 +353,29 @@ public class Resource extends Prioritized implements Comparable<Resource>, Seria
             this.ver = ver;
         } else {
             if (ver != this.ver)
-                throw (new LoadException("Wrong res version (" + ver + " != " + this.ver + ')', this));
+                throw (new LoadException("Wrong res version (" + ver + " != " + this.ver + ')'));
         }
+        StringBuilder tbuf = new StringBuilder();
+        byte[] lenBuf = new byte[4];
+
         outer:
         while (true) {
-            StringBuilder tbuf = new StringBuilder();
+            tbuf.setLength(0);
             while (true) {
                 byte bb;
                 int ib;
                 if ((ib = in.read()) == -1) {
                     if (tbuf.length() == 0)
                         break outer;
-                    throw (new LoadException("Incomplete resource at " + name, this));
+                    throw (new LoadException("Incomplete resource at " + name));
                 }
                 bb = (byte) ib;
                 if (bb == 0)
                     break;
                 tbuf.append((char) bb);
             }
-            buf = new byte[4];
-            readall(in, buf);
-            int len = Utils.int32d(buf, 0);
+            readall(in, lenBuf);
+            int len = Utils.int32d(lenBuf, 0);
             buf = new byte[len];
             readall(in, buf);
             Class<? extends Layer> lc = ltypes.get(tbuf.toString());
@@ -421,7 +422,7 @@ public class Resource extends Prioritized implements Comparable<Resource>, Seria
             public Resource res = Resource.this;
 
             public Resource get() {
-                if (loading)
+                if (loading.get())
                     return (null);
                 return (Resource.this);
             }
@@ -485,7 +486,7 @@ public class Resource extends Prioritized implements Comparable<Resource>, Seria
         List<Resource> sorted = new ArrayList<Resource>(list);
         Collections.sort(sorted);
         for (Resource res : sorted) {
-            if (res.loading)
+            if (res.loading.get())
                 continue;
             out.println(res.name + ':' + res.ver);
         }

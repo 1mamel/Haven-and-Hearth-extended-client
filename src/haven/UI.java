@@ -32,7 +32,11 @@ import haven.resources.layers.CodeEntry;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class UI {
     static public UI instance;
@@ -54,7 +58,7 @@ public class UI {
     public Widget mouseon;
     public FSMan fsm;
     public final Console cons = new WidgetConsole();
-    private Collection<AfterDraw> afterdraws = null;
+    private final Collection<AfterDraw> afterdraws = new ConcurrentLinkedQueue<AfterDraw>();
 
     public interface Receiver {
         public void rcvmsg(int widget, String msg, Object... args);
@@ -106,7 +110,6 @@ public class UI {
         }
     }
 
-    @SuppressWarnings("serial")
     public static class UIException extends RuntimeException {
         public final String mname;
         public final Object[] args;
@@ -136,20 +139,15 @@ public class UI {
     }
 
     public void drawafter(AfterDraw ad) {
-        synchronized (afterdraws) {
-            afterdraws.add(ad);
-        }
+        afterdraws.add(ad);
     }
 
     public void draw(GOut g) {
-        afterdraws = new LinkedList<AfterDraw>();
+        afterdraws.clear();
         root.draw(g);
-        synchronized (afterdraws) {
-            for (AfterDraw ad : afterdraws) {
-                ad.draw(g);
-            }
+        for (AfterDraw ad : afterdraws) {
+            ad.draw(g);
         }
-        afterdraws = null;
     }
 
     public void newwidget(int id, String type, Coord c, int parent, Object... args) throws InterruptedException {
@@ -173,8 +171,6 @@ public class UI {
             Widget wdg = f.create(c, pwdg, args);
             bind(wdg, id);
             wdg.binded();
-            if (wdg instanceof MapView)
-                mainview = (MapView) wdg;
         }
     }
 

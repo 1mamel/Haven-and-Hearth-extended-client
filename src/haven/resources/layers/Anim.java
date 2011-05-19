@@ -25,7 +25,7 @@ public class Anim extends Layer {
         d = Utils.uint16d(buf, 2);
         ids = new int[Utils.uint16d(buf, 4)];
         if (buf.length - 6 != ids.length * 2)
-            throw (new Resource.LoadException("Invalid anim descriptor in " + resource.name, resource));
+            throw (new Resource.LoadException("Invalid anim descriptor in " + resource.name));
         for (int i = 0; i < ids.length; i++)
             ids[i] = Utils.int16d(buf, 6 + (i * 2));
     }

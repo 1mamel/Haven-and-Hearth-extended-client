@@ -54,7 +54,7 @@ public class InventoryExp extends Inventory {
         }
 
         public boolean isCompleted() {
-            return meter == 0;
+            return completedPercents == 0;
         }
 
         public Coord getSizeInCells() {

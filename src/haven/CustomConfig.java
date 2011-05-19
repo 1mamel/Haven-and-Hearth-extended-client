@@ -9,9 +9,7 @@
 package haven;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @SuppressWarnings({"UnusedDeclaration"})
@@ -39,18 +37,6 @@ public class CustomConfig {
         }
     }
 
-    //windows last positions
-    public static Map<String, Coord> windowsCoordinates = new HashMap<String, Coord>();
-
-    public static void setWindowPosition(String windowName, Coord coordinate) {
-        windowsCoordinates.put(windowName, coordinate);
-    }
-
-    public static Coord getWindowPosition(String windowName, Coord defcoordinates) {
-        if (!windowsCoordinates.containsKey(windowName)) return defcoordinates;
-        return windowsCoordinates.get(windowName);
-    }
-
     private static Coord windowSize = new Coord(800, 600);
     private static Coord windowCenter = windowSize.div(2);
     public static Coord invCoord = Coord.z;
@@ -62,7 +48,7 @@ public class CustomConfig {
     public static String ircDefNick = "";
     public static String ircAltNick = "";
     public static CharData activeCharacter;
-    public static AtomicInteger wdgtID = new AtomicInteger(-10); // for Userspace widgets
+    private static AtomicInteger wdgtID = new AtomicInteger(-10); // for Userspace widgets
     public static boolean isMusicOn = true;
     public static boolean isSoundOn = true;
     public static boolean isIRCOn = true;
@@ -106,5 +92,9 @@ public class CustomConfig {
 
     public static Coord getWindowCenter() {
         return windowCenter;
+    }
+
+    public static int getNextCustomWidgetId() {
+        return wdgtID.decrementAndGet();
     }
 }

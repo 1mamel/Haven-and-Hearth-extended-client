@@ -256,7 +256,7 @@ public class Audio {
     public static void play(final Resource clip) {
         queue(new Runnable() {
             public void run() {
-                if (clip.loading)
+                if (clip.loading.get())
                     queue.add(this);
                 else
                     playres(clip);

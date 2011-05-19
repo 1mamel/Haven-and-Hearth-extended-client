@@ -208,7 +208,7 @@ public abstract class Sprite {
     }
 
     public static Sprite create(Owner owner, Resource res, Message sdt) {
-        if (res.loading)
+        if (res.loading.get())
             throw (new RuntimeException("Attempted to create sprite on still loading resource"));
         CodeEntry e = res.layer(CodeEntry.class);
         if (e != null) {

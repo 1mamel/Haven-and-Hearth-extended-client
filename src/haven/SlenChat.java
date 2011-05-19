@@ -38,8 +38,8 @@ public class SlenChat extends ChatHW {
             super(new Coord(10, CustomConfig.getWindowSize().y - parent.sz.y - 10), new Coord(100, parent.sz.y - 10), parent.parent.parent, "Users", false);
             out = new Listbox(Coord.z, new Coord(100, 105), this, users);
             owner = parent;
-            ui.bind(this, CustomConfig.wdgtID.decrementAndGet());
-            ui.bind(out, CustomConfig.wdgtID.decrementAndGet());
+            ui.bind(this, CustomConfig.getNextCustomWidgetId());
+            ui.bind(out, CustomConfig.getNextCustomWidgetId());
         }
 
         synchronized public void addUser(String user, String nick) {

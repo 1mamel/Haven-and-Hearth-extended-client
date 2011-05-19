@@ -71,7 +71,7 @@ public class IMeter extends Widget {
     }
 
     public void draw(GOut g) {
-        if (!bg.loading) {
+        if (!bg.loading.get()) {
             Tex bg = this.bg.layer(Resource.imgc).tex();
             g.chcolor(0, 0, 0, 255);
             g.frect(off, msz);

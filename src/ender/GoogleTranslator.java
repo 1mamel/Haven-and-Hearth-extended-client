@@ -13,14 +13,19 @@ import java.net.URLEncoder;
 
 public class GoogleTranslator {
 
-    static public String apikey = "API-KEY";
-    static public String apiurl = "https://www.googleapis.com/language/translate/v2?key=";
-    static public String lang = "en";
-    static public boolean turnedon = false;
     protected static final String ENCODING = "UTF-8";
 
-    public static String translate(String str) {
-        if (!turnedon)
+    private String apiKey;
+    private static final String apiUrl = "https://www.googleapis.com/language/translate/v2?key=";
+    private String lang = "en";
+    private boolean turnedon = false;
+
+    public String getKey() {
+        return apiKey;
+    }
+
+    public String translate(String str) {
+        if (!turnedon || apiKey == null)
             return str;
         String res = "";
         URL url = url(str);
@@ -82,7 +87,7 @@ public class GoogleTranslator {
         return outputBuilder.toString();
     }
 
-    private static URL url(String str) {
+    private URL url(String str) {
         try {
             str = URLEncoder.encode(str, ENCODING);
         } catch (UnsupportedEncodingException e) {
@@ -90,10 +95,38 @@ public class GoogleTranslator {
         }
         URL url;
         try {
-            url = new URL(apiurl + apikey + "&target=" + lang + "&q=" + str);
+            url = new URL(apiUrl + apiKey + "&target=" + lang + "&q=" + str);
         } catch (MalformedURLException e) {
             return null;
         }
         return url;
+    }
+
+    public void useKey(String apiKey) {
+        this.apiKey = apiKey;
+    }
+
+    public void start() {
+        turnedon = true;
+    }
+
+    public void stop() {
+        turnedon = false;
+    }
+
+    public void turn(boolean run) {
+        turnedon = run;
+    }
+
+    public void useLanguage(String lang) {
+        this.lang = lang;
+    }
+
+    public boolean isWorking() {
+        return turnedon;
+    }
+
+    public String getLanguage() {
+        return lang;
     }
 }

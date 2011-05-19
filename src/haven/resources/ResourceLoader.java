@@ -1,8 +1,8 @@
 package haven.resources;
 
 import haven.HackThread;
-import haven.util.PrioQueue;
 import haven.resources.sources.ResSource;
+import haven.util.PrioQueue;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,28 +15,33 @@ import java.io.InputStream;
  *
  * @author Vlad.Rassokhin@gmail.com
  */
-class Loader implements Runnable {
+class ResourceLoader implements Runnable {
     private ResSource src;
-    private Loader next = null;
+    private ResourceLoader next = null;
     private final PrioQueue<Resource> queue = new PrioQueue<Resource>();
     private transient Thread th = null;
 
-    Loader(ResSource src) {
+    ResourceLoader(ResSource src) {
         this.src = src;
+        checkThread();
     }
 
-    public void chain(Loader next) {
+    public void chain(ResourceLoader next) {
         this.next = next;
     }
 
     public void load(Resource res) {
         synchronized (queue) {
-            queue.add(res);
             queue.notifyAll();
+            queue.add(res);
         }
-        synchronized (Loader.this) {
+        checkThread();
+    }
+
+    private void checkThread() {
+        synchronized (this) {
             if (th == null) {
-                th = new HackThread(Resource.loadergroup, Loader.this, "Haven resource loader");
+                th = new HackThread(Resource.loadergroup, ResourceLoader.this, "Haven resource loader");
                 th.setDaemon(true);
                 th.start();
             }
@@ -44,22 +49,32 @@ class Loader implements Runnable {
     }
 
     public void run() {
+        Resource cur = null;
         try {
             //noinspection InfiniteLoopStatement
             while (true) {
-                Resource cur;
                 synchronized (queue) {
                     while ((cur = queue.poll()) == null)
                         queue.wait();
                 }
                 //noinspection SynchronizationOnLocalVariableOrMethodParameter
                 synchronized (cur) {
-                    handle(cur);
+                    try {
+                        handle(cur);
+                    } finally {
+                        cur.notifyAll();
+                    }
                 }
+                cur = null;
             }
         } catch (InterruptedException ignored) {
         } finally {
-            synchronized (Loader.this) {
+            if (cur != null) {
+                synchronized (cur) {
+                    cur.notifyAll();
+                }
+            }
+            synchronized (this) {
                 /* Yes, I know there's a race condition. */
                 th = null;
             }
@@ -75,21 +90,22 @@ class Loader implements Runnable {
                 try {
                     in = src.get(res.name);
                     res.load(in);
-                    res.loading = false;
-                    res.notifyAll();
+                    res.loading.set(false);
                 } catch (IOException e) {
                     throw (new Resource.LoadException(e, res));
                 }
             } catch (Resource.LoadException e) {
                 if (next == null) {
                     res.error = e;
-                    res.loading = false;
-                    res.notifyAll();
+                    res.loading.set(false);
                 } else {
                     next.load(res);
                 }
             } catch (RuntimeException e) {
-                throw (new Resource.LoadException(e, res));
+                e.printStackTrace();
+                res.loading.set(false);
+                res.error = new Resource.LoadException(e, res);
+                throw (res.error);
             }
         } finally {
             try {
@@ -100,7 +116,7 @@ class Loader implements Runnable {
         }
     }
 
-    public Loader getNext() {
+    public ResourceLoader getNext() {
         return next;
     }
 

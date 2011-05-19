@@ -62,11 +62,11 @@ public class RootWidget extends ConsoleHost {
             } else if (Config.profile && (key == '!')) {
                 new Profwnd(ui.slen, ui.mainview.mask.prof, "ILM prof");
             } else if ((code == KeyEvent.VK_N) && ctrl) {
-                Config.nightvision = !Config.nightvision;
+                CustomConfig.hasNightVision = !CustomConfig.hasNightVision;
             } else if ((code == KeyEvent.VK_X) && ctrl) {
-                Config.xray = !Config.xray;
+                CustomConfig.xray = !CustomConfig.xray;
             } else if ((code == KeyEvent.VK_H) && ctrl) {
-                Config.hide = !Config.hide;
+                CustomConfig.hide = !CustomConfig.hide;
             } else if ((code == KeyEvent.VK_Q) && alt) {
                 ui.spd.wdgmsg("set", 0);
             } else if ((code == KeyEvent.VK_W) && alt) {

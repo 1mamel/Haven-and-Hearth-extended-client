@@ -17,7 +17,7 @@ public class JarSource implements ResSource, Serializable {
     public InputStream get(String name) {
         InputStream s = Resource.class.getResourceAsStream("/res/" + name + ".res");
         if (s == null)
-            throw (new Resource.LoadException("Could not find resource locally: " + name, JarSource.this));
+            throw (new Resource.LoadException("Could not find resource locally: " + name));
         return (s);
     }
 

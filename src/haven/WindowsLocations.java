@@ -13,19 +13,17 @@ public class WindowsLocations {
 
     public static Coord getLocationByName(String name, Coord defLocation) {
         if (name == null) return defLocation;
-        if (ourLocations.containsKey(name)) {
-            return ourLocations.get(name);
-        } else {
-            ourLocations.put(name, defLocation);
-            return defLocation;
+        Coord nc = ourLocations.get(name);
+        if (nc == null) {
+            nc = defLocation;
+            ourLocations.put(name,nc);
         }
+        return nc;
     }
 
     public static void coordChanged(Window wnd, Coord newCoords) {
-        if (wnd.cap == null) return;
-        String name = wnd.cap.text;
-        if (name == null) return;
-        ourLocations.put(name, newCoords);
+        if (wnd == null || wnd.cap == null || wnd.cap.text == null) return;
+        ourLocations.put(wnd.cap.text, newCoords);
     }
 
     public static void loadFromFile() {

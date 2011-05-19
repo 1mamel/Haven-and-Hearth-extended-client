@@ -118,6 +118,7 @@ public class Speedget extends Widget {
 
     @Override
     public void destroy() {
+        ui.spd = null;
         UserInfo.updateSpeed(0, 0, null);
         super.destroy();
     }

@@ -35,18 +35,18 @@ import java.awt.image.BufferedImage;
 import java.util.Arrays;
 
 public class Item extends Widget implements DTarget {
-    static final Resource missing = Resource.load("gfx/invobjs/missing");
-    boolean dm = false;
-    protected int q; // quality
-    boolean hq; // Hide big qualities values
-    Coord doff;
+    private static final Resource missing = Resource.load("gfx/invobjs/missing");
+    private boolean dm = false;
+    private int quality; // quality
+    private boolean isHighQuality; // Hide big qualities values
+    private Coord doff;
     protected String tooltip;
-    protected int num = -1;
-    Indir<Resource> res;
-    Tex sh;
-    Color olcol = null;
-    Tex mask = null;
-    protected int meter = 0;
+    private int num = -1;
+    private Indir<Resource> res;
+    private Tex sh;
+    private Color olcol = null;
+    private Tex mask = null;
+    protected int completedPercents = 0;
 
     static {
         Widget.addtype("item", new WidgetFactory() {
@@ -115,8 +115,8 @@ public class Item extends Widget implements DTarget {
                 g.chcolor(Color.WHITE);
                 g.atext(Integer.toString(num), tex.sz(), 1, 1);
             }
-            if (meter > 0) {
-                double a = ((double) meter) / 100.0;
+            if (completedPercents > 0) {
+                double a = ((double) completedPercents) / 100.0;
                 int r = (int) ((1 - a) * 255);
                 int gr = (int) (a * 255);
                 int b = 0;
@@ -154,16 +154,16 @@ public class Item extends Widget implements DTarget {
         return (new TexI(sh));
     }
 
-    public String shorttip() {
+    String shorttip() {
         if (this.tooltip != null)
             return (this.tooltip);
         Resource res = this.res.get();
         if ((res != null) && (res.layer(Resource.tooltip) != null)) {
             String tt = res.layer(Resource.tooltip).t;
             if (tt != null) {
-                if (q > 0) {
-                    tt = tt + ", quality " + q;
-                    if (hq)
+                if (quality > 0) {
+                    tt = tt + ", quality " + quality;
+                    if (isHighQuality)
                         tt = tt + '+';
                 }
 //		if(meter > 0) {
@@ -175,8 +175,9 @@ public class Item extends Widget implements DTarget {
         return (null);
     }
 
-    long hoverstart;
-    Text shorttip = null, longtip = null;
+    private long hoverstart;
+    private Text shorttip = null;
+    private Text longtip = null;
 
     public Object tooltip(Coord c, boolean again) {
         long now = System.currentTimeMillis();
@@ -186,8 +187,8 @@ public class Item extends Widget implements DTarget {
             if (shorttip == null) {
                 String tt = shorttip();
                 if (tt != null) {
-                    if (meter > 0) {
-                        tt = tt + " (" + meter + "%)";
+                    if (completedPercents > 0) {
+                        tt = tt + " (" + completedPercents + "%)";
                     }
                     shorttip = Text.render(tt);
                 }
@@ -201,8 +202,8 @@ public class Item extends Widget implements DTarget {
                 if (tip == null)
                     return (null);
                 String tt = RichText.Parser.quote(tip);
-                if (meter > 0) {
-                    tt = tt + " (" + meter + "%)";
+                if (completedPercents > 0) {
+                    tt = tt + " (" + completedPercents + "%)";
                 }
                 if (pg != null)
                     tt += "\n\n" + pg.text;
@@ -212,25 +213,25 @@ public class Item extends Widget implements DTarget {
         }
     }
 
-    private void resettt() {
+    private void resetToolTip() {
         shorttip = null;
         longtip = null;
     }
 
-    private void decq(int q) {
+    private void decodeQuality(int q) {
         if (q < 0) {
-            this.q = q;
-            hq = false;
+            this.quality = q;
+            isHighQuality = false;
         } else {
-            this.q = (q & 0xffffff);
-            hq = (q & 0x01000000) != 0;  // Some optimization
+            this.quality = (q & 0xffffff);
+            isHighQuality = (q & 0x01000000) != 0;  // Some optimization
         }
     }
 
-    public Item(Coord c, Indir<Resource> res, int q, Widget parent, Coord drag, int num) {
+    public Item(Coord c, Indir<Resource> res, int quality, Widget parent, Coord drag, int num) {
         super(c, Coord.z, parent);
         this.res = res;
-        decq(q);
+        decodeQuality(quality);
         fixsize();
         this.num = num;
         if (drag == null) {
@@ -243,19 +244,19 @@ public class Item extends Widget implements DTarget {
         }
     }
 
-    public Item(Coord c, int res, int q, Widget parent, Coord drag, int num) {
-        this(c, parent.ui.sess.getres(res), q, parent, drag, num);
+    public Item(Coord c, int res, int quality, Widget parent, Coord drag, int num) {
+        this(c, parent.ui.sess.getres(res), quality, parent, drag, num);
     }
 
-    public Item(Coord c, Indir<Resource> res, int q, Widget parent, Coord drag) {
-        this(c, res, q, parent, drag, -1);
+    private Item(Coord c, Indir<Resource> res, int quality, Widget parent, Coord drag) {
+        this(c, res, quality, parent, drag, -1);
     }
 
-    public Item(Coord c, int res, int q, Widget parent, Coord drag) {
-        this(c, parent.ui.sess.getres(res), q, parent, drag);
+    public Item(Coord c, int res, int quality, Widget parent, Coord drag) {
+        this(c, parent.ui.sess.getres(res), quality, parent, drag);
     }
 
-    public boolean dropon(Widget w, Coord c) {
+    boolean dropon(Widget w, Coord c) {
         for (Widget wdg = w.lchild; wdg != null; wdg = wdg.prev) {
             if (wdg == this)
                 continue;
@@ -272,7 +273,7 @@ public class Item extends Widget implements DTarget {
         return (false);
     }
 
-    public boolean interact(Widget w, Coord c) {
+    boolean interact(Widget w, Coord c) {
         for (Widget wdg = w.lchild; wdg != null; wdg = wdg.prev) {
             if (wdg == this)
                 continue;
@@ -292,7 +293,7 @@ public class Item extends Widget implements DTarget {
     public void chres(Indir<Resource> res, int q) {
         this.res = res;
         sh = null;
-        decq(q);
+        decodeQuality(q);
     }
 
     public void uimsg(String name, Object... args) {
@@ -300,7 +301,7 @@ public class Item extends Widget implements DTarget {
             num = (Integer) args[0];
         } else if (name.equals("chres")) { // Change resource (by id) and quality
             chres(ui.sess.getres((Integer) args[0]), (Integer) args[1]);
-            resettt();
+            resetToolTip();
         } else if (name.equals("color")) { // Change color (?)
             olcol = (Color) args[0];
         } else if (name.equals("tt")) { // Change tooltip
@@ -308,9 +309,9 @@ public class Item extends Widget implements DTarget {
                 tooltip = (String) args[0];
             else
                 tooltip = null;
-            resettt();
+            resetToolTip();
         } else if (name.equals("meter")) { // may be completion indicator on dying fur, etc.
-            meter = (Integer) args[0];
+            completedPercents = (Integer) args[0];
         }
     }
 

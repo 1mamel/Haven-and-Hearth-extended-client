@@ -29,10 +29,12 @@ package haven;
 import ender.GoogleTranslator;
 
 import java.io.*;
+import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
 import static haven.Utils.getprop;
@@ -51,8 +53,6 @@ public class Config {
     public static String resdir;
     public static boolean nopreload;
     public static String loadwaited, allused;
-    public static boolean xray;
-    public static boolean hide;
     public static boolean grid;
     public static boolean timestamp;
     public static boolean new_chat;
@@ -63,8 +63,7 @@ public class Config {
     public static boolean new_minimap;
     public static boolean simple_plants = false;
     public static HashSet<String> hideObjectList;
-    public static HashMap<Pattern, String> smileys;
-    public static boolean nightvision;
+    public static Map<Pattern, String> smileys = new ConcurrentHashMap<Pattern, String>();
     public static String currentCharName;
     public static Properties options, window_props;
     public static int sfxVol;
@@ -81,6 +80,8 @@ public class Config {
     public static boolean sshot_noui;
     public static boolean newclaim;
 
+    public static GoogleTranslator translator = new GoogleTranslator();
+
     static {
         try {
             String p;
@@ -91,7 +92,7 @@ public class Config {
             defserv = getprop("haven.defserv", null);
             if ((p = getprop("haven.resurl", "https://www.havenandhearth.com/res/")).length() != 0)
                 resurl = new URL(p);
-            if (!(p = getprop("haven.mapurl", "http://www.havenandhearth.com/mm/")).equals(""))
+            if (!(p = getprop("haven.mapurl", "http://www.havenandhearth.com/mm/")).isEmpty())
                 mapurl = new URL(p);
             fullscreen = getprop("haven.fullscreen", "off").equals("on");
             loadwaited = getprop("haven.loadwaited", null);
@@ -102,15 +103,12 @@ public class Config {
             nolocalres = getprop("haven.nolocalres", "").equals("yesimsure");
             resdir = getprop("haven.resdir", null);
             nopreload = getprop("haven.nopreload", "no").equals("yes");
-            xray = false;
-            hide = false;
             grid = false;
             timestamp = false;
-            nightvision = false;
             zoom = false;
             new_minimap = true;
-            GoogleTranslator.lang = "en";
-            GoogleTranslator.turnedon = false;
+            translator.useLanguage("en");
+            translator.stop();
             currentCharName = "";
             options = new Properties();
             window_props = new Properties();
@@ -118,17 +116,15 @@ public class Config {
             loadOptions();
             loadWindowOptions();
             loadSmileys();
-        } catch (java.net.MalformedURLException e) {
+        } catch (MalformedURLException e) {
             throw (new RuntimeException(e));
         }
     }
 
     public static String mksmiley(String str) {
-        synchronized (smileys) {
-            for (Pattern p : Config.smileys.keySet()) {
-                String res = Config.smileys.get(p);
-                str = p.matcher(str).replaceAll(res);
-            }
+        for (Map.Entry<Pattern, String> patternStringEntry : Config.smileys.entrySet()) {
+            String res = patternStringEntry.getValue();
+            str = patternStringEntry.getKey().matcher(str).replaceAll(res);
         }
         return str;
     }
@@ -167,7 +163,7 @@ public class Config {
                 case 'U':
                     try {
                         resurl = new URL(opt.arg);
-                    } catch (java.net.MalformedURLException e) {
+                    } catch (MalformedURLException e) {
                         System.err.println(e);
                         System.exit(1);
                     }
@@ -193,7 +189,7 @@ public class Config {
     }
 
     private static void loadSmileys() {
-        smileys = new HashMap<Pattern, String>();
+        smileys.clear();
         try {
             FileInputStream fstream;
             fstream = new FileInputStream("smileys.conf");
@@ -201,15 +197,15 @@ public class Config {
             BufferedReader br = new BufferedReader(new InputStreamReader(in));
             String strLine;
             while ((strLine = br.readLine()) != null) {
-                String[] tmp = strLine.split("\t");
+                String[] tmp = Utils.tabulationPattern.split(strLine);
                 String smile, res;
                 smile = tmp[0];
                 res = "\\$img\\[smiley\\/" + tmp[1] + "\\]";
                 smileys.put(Pattern.compile(smile, Pattern.CASE_INSENSITIVE | Pattern.LITERAL), res);
             }
             in.close();
-        } catch (FileNotFoundException e) {
-        } catch (IOException e) {
+        } catch (FileNotFoundException ignored) {
+        } catch (IOException ignored) {
         }
 
     }
@@ -232,12 +228,12 @@ public class Config {
             return;
         }
         try {
-            options.load(new FileInputStream("haven.conf"));
+            options.load(new FileInputStream(inputFile));
         } catch (IOException e) {
             System.out.println(e);
         }
         String hideObjects = options.getProperty("hideObjects", "");
-        GoogleTranslator.apikey = options.getProperty("GoogleAPIKey", "AIzaSyCuo-ukzI_J5n-inniu2U7729ZfadP16_0");
+        translator.useKey(options.getProperty("GoogleAPIKey", null));
         zoom = options.getProperty("zoom", "false").equals("true");
         noborders = options.getProperty("noborders", "false").equals("true");
         new_minimap = options.getProperty("new_minimap", "true").equals("true");
@@ -294,7 +290,7 @@ public class Config {
             hideObjects.append(objectName).append(',');
         }
         options.setProperty("hideObjects", hideObjects.toString());
-        options.setProperty("GoogleAPIKey", GoogleTranslator.apikey);
+        options.setProperty("GoogleAPIKey", translator.getKey());
         options.setProperty("timestamp", (timestamp) ? "true" : "false");
         options.setProperty("zoom", zoom ? "true" : "false");
         options.setProperty("noborders", noborders ? "true" : "false");

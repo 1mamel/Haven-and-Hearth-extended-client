@@ -502,26 +502,26 @@ public class OptWnd extends Window {
             tab = body.new Tab(new Coord(300, 0), 80, "Translation");
             (new CheckBox(new Coord(10, 30), tab, "Turn on") {
                 public void changed(boolean val) {
-                    GoogleTranslator.turnedon = val;
+                    Config.translator.turn(val);
                 }
-            }).a = GoogleTranslator.turnedon;
+            }).a = Config.translator.isWorking();
 
             new Label(new Coord(150, 35), tab, "Target Language:");
 
             final RadioGroup langs = new RadioGroup(tab) {
                 public void changed(int btn, String lbl) {
-                    GoogleTranslator.lang = lbl;
+                    Config.translator.useLanguage(lbl);
                 }
             };
             langs.add("en", new Coord(150, 45));
             langs.add("ru", new Coord(150, 70));
-            langs.check(GoogleTranslator.lang);
+            langs.check(Config.translator.getLanguage());
 
             new Label(new Coord(25, 125), tab, "Google API Key:");
-            final TextEntry te = new TextEntry(new Coord(25, 150), new Coord(300, 20), tab, GoogleTranslator.apikey);
+            final TextEntry te = new TextEntry(new Coord(25, 150), new Coord(300, 20), tab, Config.translator.getKey());
             new Button(new Coord(330, 150), 50, tab, "set") {
                 public void click() {
-                    GoogleTranslator.apikey = te.text;
+                    Config.translator.useKey(te.text);
                     Config.saveOptions();
                 }
             };

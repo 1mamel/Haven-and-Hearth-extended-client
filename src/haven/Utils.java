@@ -53,6 +53,7 @@ public class Utils {
     private static Preferences prefs = null;
     public static final java.awt.image.ColorModel rgbm = java.awt.image.ColorModel.getRGBdefault();
     private static Background bgworker = null;
+    public static final Pattern tabulationPattern = Pattern.compile("\t");
 
     public static Coord imgsz(BufferedImage img) {
         return (new Coord(img.getWidth(), img.getHeight()));
@@ -252,14 +253,14 @@ public class Utils {
             return ((int) u);
     }
 
-    static void int32e(int num, byte[] buf, int off) {
+    public static void int32e(int num, byte[] buf, int off) {
         if (num < 0)
             uint32e(0x100000000L + ((long) num), buf, off);
         else
             uint32e(num, buf, off);
     }
 
-    static void uint16e(int num, byte[] buf, int off) {
+    public static void uint16e(int num, byte[] buf, int off) {
         buf[off] = sb(num & 0xff);
         buf[off + 1] = sb((num & 0xff00) >> 8);
     }

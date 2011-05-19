@@ -44,7 +44,7 @@ public class Inventory extends Widget implements DTarget {
 
     static {
         invsq = Resource.loadtex("gfx/hud/invsq"); // InvisibleSquare = 1x1 cell
-        invsqSize = invsq.sz();
+        invsqSize = invsq.sz();  //32x32
         invsqSizeSubOne = invsqSize.sub(1, 1);
     }
 
@@ -80,7 +80,7 @@ public class Inventory extends Widget implements DTarget {
     public boolean mousewheel(Coord c, int amount) {
         if (amount < 0)
             wdgmsg("xfer", -1, ui.modflags());
-        if (amount > 0)
+        else if (amount > 0)
             wdgmsg("xfer", 1, ui.modflags());
         return (true);
     }

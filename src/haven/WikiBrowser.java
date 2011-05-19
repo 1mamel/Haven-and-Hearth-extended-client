@@ -148,14 +148,17 @@ public class WikiBrowser extends Window implements DTarget, DropTarget, IHWindow
 
     public void wdgmsg(Widget sender, String msg, Object... args) {
         if (checkIsCloseButton(sender)) {
-            while (!wnds.isEmpty()) {
-                ui.destroy(wnds.get(0));
-            }
-            ui.destroy(this);
-            ui.wiki = null;
+            close();
             return;
         }
         super.wdgmsg(sender, msg, args);
+    }
+
+    void close() {
+        while (!wnds.isEmpty()) {
+            ui.destroy(wnds.get(0));
+        }
+        ui.destroy(this);
     }
 
     public boolean dropthing(Coord c, Object thing) {
@@ -209,6 +212,12 @@ public class WikiBrowser extends Window implements DTarget, DropTarget, IHWindow
         btns.remove(wnd);
         updbtns();
 
+    }
+
+    @Override
+    public void destroy() {
+        ui.wiki = null;
+        super.destroy();
     }
 
     public void updurgency(HWindow wnd, int level) {

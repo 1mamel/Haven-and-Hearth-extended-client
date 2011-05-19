@@ -26,7 +26,6 @@
 
 package haven;
 
-import ender.GoogleTranslator;
 import haven.resources.Resource;
 
 import java.awt.*;
@@ -78,8 +77,9 @@ public class Window extends Widget implements DTarget {
                 if (args.length < 2)
                     return (new Window(c, (Coord) args[0], parent, null));
                 else {
-                    c = WindowsLocations.getLocationByName((String) args[1], c);
-                    return (new Window(c, (Coord) args[0], parent, (String) args[1]));
+                    String name = (String) args[1];
+                    c = WindowsLocations.getLocationByName(name, c);
+                    return (new Window(c, (Coord) args[0], parent, name));
                 }
             }
         });
@@ -217,7 +217,7 @@ public class Window extends Widget implements DTarget {
                 continue;
             if ((isrunestone) && (wdg instanceof Label)) {
                 Label lbl = (Label) wdg;
-                lbl.settext(GoogleTranslator.translate(lbl.texts));
+                lbl.settext(Config.translator.translate(lbl.texts));
             }
             Coord br = wdg.c.add(wdg.sz);
             if (br.x > max.x)
