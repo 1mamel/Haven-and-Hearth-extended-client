@@ -79,7 +79,7 @@ public class Config {
     public static boolean sshot_compress;
     public static boolean sshot_noui;
     public static boolean newclaim;
-
+    public static boolean showq;
     public static GoogleTranslator translator = new GoogleTranslator();
 
     static {
@@ -251,6 +251,7 @@ public class Config {
         sshot_compress = options.getProperty("sshot_compress", "false").equals("true");
         sshot_noui = options.getProperty("sshot_noui", "false").equals("true");
         newclaim = options.getProperty("newclaim", "true").equals("true");
+        showq = options.getProperty("showq", "true").equals("true");
         sfxVol = Integer.parseInt(options.getProperty("sfx_vol", "100"));
         musicVol = Integer.parseInt(options.getProperty("music_vol", "100"));
         hideObjectList.clear();

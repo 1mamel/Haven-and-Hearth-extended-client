@@ -33,8 +33,12 @@ import haven.scriptengine.InventoryExp;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Item extends Widget implements DTarget {
+    static Coord shoff = new Coord(1, 3);
+    static Map<Integer, Tex> qmap;
     private static final Resource missing = Resource.load("gfx/invobjs/missing");
     private boolean dm = false;
     private int quality; // quality
@@ -83,12 +87,13 @@ public class Item extends Widget implements DTarget {
             }
         });
         missing.loadwait();
+        qmap = new HashMap<Integer, Tex>();
     }
 
     private void fixsize() {
         if (res.get() != null) {
             Tex tex = res.get().layer(Resource.imgc).tex();
-            sz = tex.sz().add(1, 3);
+            sz = tex.sz().add(shoff);
         } else {
             sz = new Coord(30, 30);
         }
@@ -125,6 +130,15 @@ public class Item extends Widget implements DTarget {
                 g.frect(new Coord(sz.getX() - 5, (int) ((1 - a) * sz.getY())), new Coord(5, (int) (a * sz.getY())));
                 g.chcolor();
             }
+            if (Config.showq && (quality > 0)) {
+                tex = getqtex(quality);
+                Coord c = sz.sub(1, 1);
+                Coord s = tex.sz();
+                g.chcolor(8, 8, 8, 128);
+                g.frect(c.sub(s), s);
+                g.chcolor();
+                g.aimage(tex, c, 1, 1);
+            }
             ttres = res.get();
         }
         if (olcol != null) {
@@ -136,6 +150,18 @@ public class Item extends Widget implements DTarget {
                 g.chcolor(olcol);
                 g.image(mask, Coord.z);
                 g.chcolor();
+            }
+        }
+    }
+
+    static Tex getqtex(int q) {
+        synchronized (qmap) {
+            if (qmap.containsKey(q)) {
+                return qmap.get(q);
+            } else {
+                Tex tex = Text.render(Integer.toString(q)).tex();
+                qmap.put(q, tex);
+                return tex;
             }
         }
     }
