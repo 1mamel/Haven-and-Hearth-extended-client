@@ -1271,6 +1271,9 @@ public class MapView extends Widget implements DTarget, Console.Directory {
 	    for(KinInfo k : kin) {
 		Tex t = k.rendered();
 		Coord gc = k.gob.sc;
+		    String name = k.gob.resname();
+		    boolean isother = name.contains("hearth") 
+		    	|| name.contains("skeleton");
 		if(gc.isect(Coord.z, sz)) {
 		    if(k.seen == 0)
 			k.seen = now;
@@ -1278,7 +1281,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
 		    Color show = null;
 		    boolean auto = (k.type & 1) == 0;
                     if (k.type == 0) {
-//                    if ((Config.showNames) || (k.gob == onmouse)) {
+//                TODO:    			if((isother && Config.showOtherNames)||(!isother && Config.showNames)||(k.gob == onmouse)) {
                         if (k.gob == onmouse) {
 			show = Color.WHITE;
 		    } else if(auto && (tm < 7500)) {

@@ -75,6 +75,7 @@ public class Config {
     public static boolean showBeast = false;
     public static boolean showDirection;
     public static boolean showNames;
+    public static boolean showOtherNames;
     public static boolean fastFlowerAnim;
     public static boolean sshot_compress;
     public static boolean sshot_noui;
@@ -244,6 +245,7 @@ public class Config {
         isSoundOn = options.getProperty("sound_on", "true").equals("true");
         showDirection = options.getProperty("show_direction", "true").equals("true");
         showNames = options.getProperty("showNames", "true").equals("true");
+        showOtherNames = options.getProperty("showOtherNames", "false").equals("true");
         showBeast = options.getProperty("showBeast", "false").equals("true");
         showRadius = options.getProperty("showRadius", "false").equals("true");
         showHidden = options.getProperty("showHidden", "false").equals("true");
