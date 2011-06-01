@@ -78,6 +78,7 @@ public class Config {
     public static boolean fastFlowerAnim;
     public static boolean sshot_compress;
     public static boolean sshot_noui;
+    public static boolean sshot_nonames;
     public static boolean newclaim;
     public static boolean showq;
     public static GoogleTranslator translator = new GoogleTranslator();
@@ -250,6 +251,7 @@ public class Config {
         fastFlowerAnim = options.getProperty("fastFlowerAnim", "false").equals("true");
         sshot_compress = options.getProperty("sshot_compress", "false").equals("true");
         sshot_noui = options.getProperty("sshot_noui", "false").equals("true");
+        sshot_nonames = options.getProperty("sshot_nonames", "false").equals("true");
         newclaim = options.getProperty("newclaim", "true").equals("true");
         showq = options.getProperty("showq", "true").equals("true");
         sfxVol = Integer.parseInt(options.getProperty("sfx_vol", "100"));
@@ -278,13 +280,13 @@ public class Config {
     }
 
     public static void saveWindowOpt() {
-        try {
-            window_props.store(new FileOutputStream("windows.conf"), "Window config options");
-        } catch (IOException e) {
-            System.out.println(e);
-        }
+	try {
+	    window_props.store(new FileOutputStream("windows.conf"), "Window config options");
+	} catch (IOException e) {
+	    System.out.println(e);
+	}
     }
-
+    
     public static void saveOptions() {
         try {
             StringBuilder hideObjects = new StringBuilder();
@@ -312,7 +314,9 @@ public class Config {
             options.setProperty("fastFlowerAnim", fastFlowerAnim ? "true" : "false");
             options.setProperty("sshot_compress", sshot_compress ? "true" : "false");
             options.setProperty("sshot_noui", sshot_noui ? "true" : "false");
+        options.setProperty("sshot_nonames", sshot_nonames?"true":"false");
             options.setProperty("newclaim", newclaim ? "true" : "false");
+        options.setProperty("showq", showq?"true":"false");
 
             try {
                 options.store(new FileOutputStream("haven.conf"), "Custom config options");

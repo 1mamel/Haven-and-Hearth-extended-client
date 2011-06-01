@@ -1129,104 +1129,104 @@ public class MapView extends Widget implements DTarget, Console.Directory {
                     szo = flw.szo;
             }
 
-            public void addpart(Sprite.Part p) {
-                p.effect = fx;
+	    public void addpart(Sprite.Part p) {
+		p.effect = fx;
                 if ((p.ul.getX() >= sz.getX()) ||
                         (p.ul.getY() >= sz.getY()) ||
                         (p.lr.getX() < 0) ||
                         (p.lr.getY() < 0))
-                    return;
-                sprites.add(p);
-                p.owner = cur;
-                p.szo = szo;
-            }
-        }
-
+		    return;
+		sprites.add(p);
+		p.owner = cur;
+		p.szo = szo;
+	    }
+	}
+	
         if (Config.showHidden && CustomConfig.isHideObjects()) {
-            g.chcolor(255, 0, 0, 128);
-            synchronized (glob.oc) {
-                for (Gob gob : glob.oc) {
-                    Drawable d = gob.getattr(Drawable.class);
+		g.chcolor(255, 0, 0, 128);
+		synchronized(glob.oc) {
+		    for(Gob gob : glob.oc) {
+			Drawable d = gob.getattr(Drawable.class);
                     Neg neg;
-                    String name = gob.resname();
-                    if (!gob.hide || (name.indexOf("wald") > -1) || (name.indexOf("flavobjs") > -1))
-                        continue;
-                    if (d instanceof ResDrawable) {
-                        ResDrawable rd = (ResDrawable) d;
-                        if (rd.spr == null)
-                            continue;
-                        if (rd.spr.res == null)
-                            continue;
-                        neg = rd.spr.res.layer(Resource.negc);
-                    } else if (d instanceof Layered) {
-                        Layered lay = (Layered) d;
-                        if (lay.base.get() == null)
-                            continue;
-                        neg = lay.base.get().layer(Resource.negc);
-                    } else {
-                        continue;
-                    }
+			String name = gob.resname();
+			if(!gob.hide || (name.indexOf("wald")>-1) || (name.indexOf("flavobjs")>-1))
+			    continue;
+			if(d instanceof ResDrawable) {
+			    ResDrawable rd = (ResDrawable)d;
+			    if(rd.spr == null)
+				continue;
+			    if(rd.spr.res == null)
+				continue;
+			    neg = rd.spr.res.layer(Resource.negc);
+			} else if(d instanceof Layered) {
+			    Layered lay = (Layered)d;
+			    if(lay.base.get() == null)
+				continue;
+			    neg = lay.base.get().layer(Resource.negc);
+			} else {
+			    continue;
+			}
                     if ((neg.bs.getX() > 0) && (neg.bs.getY() > 0)) {
-                        Coord c1 = gob.getc().add(neg.bc);
-                        Coord c2 = gob.getc().add(neg.bc).add(neg.bs);
-                        g.frect(m2s(c1).add(oc),
+			    Coord c1 = gob.getc().add(neg.bc);
+			    Coord c2 = gob.getc().add(neg.bc).add(neg.bs);
+			    g.frect(m2s(c1).add(oc),
                                 m2s(new Coord(c2.getX(), c1.getY())).add(oc),
-                                m2s(c2).add(oc),
+				    m2s(c2).add(oc),
                                 m2s(new Coord(c1.getX(), c2.getY())).add(oc));
-                    }
-                }
-            }
-            g.chcolor();
-        }
-
-        GobMapper drawer = new GobMapper();
+			}
+		    }
+		}
+		g.chcolor();
+	    }
+	
+	GobMapper drawer = new GobMapper();
         //noinspection SynchronizeOnNonFinalField
-        synchronized (glob.oc) {
-            for (Gob gob : glob.oc) {
-                drawer.chcur(gob);
-                Coord dc = m2s(gob.getc()).add(oc);
-                gob.sc = dc;
-                gob.drawsetup(drawer, dc, sz);
-                Speaking s = gob.getattr(Speaking.class);
-                if (s != null)
-                    speaking.add(s);
-                KinInfo k = gob.getattr(KinInfo.class);
-                if (k != null)
-                    kin.add(k);
-            }
-            if (curf != null)
-                curf.tick("setup");
-            Collections.sort(sprites, Sprite.partidcmp);
-            {
-                Sprite.Part[] clickable = new Sprite.Part[sprites.size()];
-                for (int o = 0, u = clickable.length - 1; o < clickable.length; o++, u--)
-                    clickable[u] = sprites.get(o);
-                this.clickable = clickable;
-            }
-            if (curf != null)
-                curf.tick("sort");
-            onmouse = null;
-            if (pmousepos != null)
-                onmouse = gobatpos(pmousepos);
-            obscured = findobsc();
-            if (curf != null)
-                curf.tick("obsc");
-            for (Sprite.Part part : sprites) {
-                if (part.effect != null)
-                    part.draw(part.effect.apply(g));
-                else
-                    part.draw(g);
-            }
-            for (Sprite.Part part : obscured) {
-                GOut g2 = new GOut(g);
-                GobHealth hlt;
-                if ((part.owner != null) && (part.owner instanceof Gob) && ((hlt = ((Gob) part.owner).getattr(GobHealth.class)) != null))
-                    g2.chcolor(255, (int) (hlt.asfloat() * 255), 0, 255);
-                else
-                    g2.chcolor(255, 255, 0, 255);
-                part.drawol(g2);
-            }
-
+	synchronized(glob.oc) {
+	    for(Gob gob : glob.oc) {
+		drawer.chcur(gob);
+		Coord dc = m2s(gob.getc()).add(oc);
+		gob.sc = dc;
+		gob.drawsetup(drawer, dc, sz);
+		Speaking s = gob.getattr(Speaking.class);
+		if(s != null)
+		    speaking.add(s);
+		KinInfo k = gob.getattr(KinInfo.class);
+		if(k != null)
+		    kin.add(k);
+	    }
+	    if(curf != null)
+		curf.tick("setup");
+	    Collections.sort(sprites, Sprite.partidcmp);
+	    {
+		Sprite.Part[] clickable = new Sprite.Part[sprites.size()];
+		for(int o = 0, u = clickable.length - 1; o < clickable.length; o++, u--)
+		    clickable[u] = sprites.get(o);
+		this.clickable = clickable;
+	    }
+	    if(curf != null)
+		curf.tick("sort");
+	    onmouse = null;
+	    if(pmousepos != null)
+		onmouse = gobatpos(pmousepos);
+	    obscured = findobsc();
+	    if(curf != null)
+		curf.tick("obsc");
+	    for(Sprite.Part part : sprites) {
+		if(part.effect != null)
+		    part.draw(part.effect.apply(g));
+		else
+		    part.draw(g);
+	    }
+	    for(Sprite.Part part : obscured) {
+		GOut g2 = new GOut(g);
+		GobHealth hlt;
+		if((part.owner != null) && (part.owner instanceof Gob) && ((hlt = ((Gob)part.owner).getattr(GobHealth.class)) != null))
+		    g2.chcolor(255, (int)(hlt.asfloat() * 255), 0, 255);
+		else
+		    g2.chcolor(255, 255, 0, 255);
+		part.drawol(g2);
+	    }
+	    
             if (Config.bounddb && ui.modshift) {
                 g.chcolor(255, 0, 0, 128);
                 //noinspection SynchronizeOnNonFinalField
@@ -1262,49 +1262,51 @@ public class MapView extends Widget implements DTarget, Console.Directory {
                 g.chcolor();
             }
 
-            if (curf != null)
-                curf.tick("draw");
-            g.image(mask, Coord.z);
-            long now = System.currentTimeMillis();
-            for (KinInfo k : kin) {
-                Tex t = k.rendered();
-                Coord gc = k.gob.sc;
-                if (gc.isect(Coord.z, sz)) {
-                    if (k.seen == 0)
-                        k.seen = now;
-                    int tm = (int) (now - k.seen);
-                    Color show = null;
-                    boolean auto = (k.type & 1) == 0;
+	    if(curf != null)
+		curf.tick("draw");
+	    g.image(mask, Coord.z);
+	    long now = System.currentTimeMillis();
+	    RootWidget.names_ready = (RootWidget.screenshot && Config.sshot_nonames);
+	    if(!RootWidget.names_ready){
+	    for(KinInfo k : kin) {
+		Tex t = k.rendered();
+		Coord gc = k.gob.sc;
+		if(gc.isect(Coord.z, sz)) {
+		    if(k.seen == 0)
+			k.seen = now;
+		    int tm = (int)(now - k.seen);
+		    Color show = null;
+		    boolean auto = (k.type & 1) == 0;
                     if (k.type == 0) {
 //                    if ((Config.showNames) || (k.gob == onmouse)) {
                         if (k.gob == onmouse) {
-                            show = Color.WHITE;
-                        } else if (auto && (tm < 7500)) {
-                            show = Utils.clipcol(255, 255, 255, 255 - ((255 * tm) / 7500));
-                        }
+			show = Color.WHITE;
+		    } else if(auto && (tm < 7500)) {
+			show = Utils.clipcol(255, 255, 255, 255 - ((255 * tm) / 7500));
+		    }
                     } else if (k.type == 1) {
                         if (k.gob == onmouse)
                             show = Color.WHITE;
                     }
-                    if (show != null) {
-                        g.chcolor(show);
+		    if(show != null) {
+			g.chcolor(show);
                         g.image(t, gc.add(-t.sz().getX() / 2, -40 - t.sz().getY()));
-                        g.chcolor();
-                    }
-                } else {
-                    k.seen = 0;
-                }
-            }
-            for (Speaking s : speaking) {
-                s.draw(g, s.gob.sc.add(s.off));
-            }
-            if (curf != null) {
-                curf.tick("aux");
-                curf.fin();
-                curf = null;
-            }
-            //System.out.println(curf);
-        }
+			g.chcolor();
+		    }
+		} else {
+		    k.seen = 0;
+		}
+	    }
+	    for(Speaking s : speaking) {
+		s.draw(g, s.gob.sc.add(s.off));
+	    }
+	    if(curf != null) {
+		curf.tick("aux");
+		curf.fin();
+		curf = null;
+	    }
+	    //System.out.println(curf);
+	}
     }
 
     public void drawarrows(GOut g) {
