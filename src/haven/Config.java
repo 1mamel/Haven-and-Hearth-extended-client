@@ -282,13 +282,13 @@ public class Config {
     }
 
     public static void saveWindowOpt() {
-	try {
-	    window_props.store(new FileOutputStream("windows.conf"), "Window config options");
-	} catch (IOException e) {
-	    System.out.println(e);
-	}
+        try {
+            window_props.store(new FileOutputStream("windows.conf"), "Window config options");
+        } catch (IOException e) {
+            System.out.println(e);
+        }
     }
-    
+
     public static void saveOptions() {
         try {
             StringBuilder hideObjects = new StringBuilder();
@@ -316,9 +316,9 @@ public class Config {
             options.setProperty("fastFlowerAnim", fastFlowerAnim ? "true" : "false");
             options.setProperty("sshot_compress", sshot_compress ? "true" : "false");
             options.setProperty("sshot_noui", sshot_noui ? "true" : "false");
-        options.setProperty("sshot_nonames", sshot_nonames?"true":"false");
+            options.setProperty("sshot_nonames", sshot_nonames ? "true" : "false");
             options.setProperty("newclaim", newclaim ? "true" : "false");
-        options.setProperty("showq", showq?"true":"false");
+            options.setProperty("showq", showq ? "true" : "false");
 
             try {
                 options.store(new FileOutputStream("haven.conf"), "Custom config options");

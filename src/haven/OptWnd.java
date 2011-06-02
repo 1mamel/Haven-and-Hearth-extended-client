@@ -27,7 +27,7 @@
 package haven;
 
 import java.awt.font.TextAttribute;
-    import java.util.*;
+import java.util.*;
 
 public class OptWnd extends Window {
     public static final RichText.Foundry foundry = new RichText.Foundry(TextAttribute.FAMILY, "SansSerif", TextAttribute.SIZE, 10);
@@ -140,7 +140,7 @@ public class OptWnd extends Window {
                 }
             }).a = Config.showDirection;
 
-	    (new CheckBox(new Coord(10, 270), tab, "Always show heartling names") {
+            (new CheckBox(new Coord(10, 270), tab, "Always show heartling names") {
                 public void changed(boolean val) {
                     Config.showNames = val;
                     Config.saveOptions();
@@ -148,20 +148,20 @@ public class OptWnd extends Window {
             }).a = Config.showNames;
 
             (new CheckBox(new Coord(10, 305), tab, "Always show other kin names") {
-                    public void changed(boolean val) {
-                        Config.showOtherNames = val;
-                        Config.saveOptions();
-                    }
-                    }).a = Config.showOtherNames;
-	                
-	    (new CheckBox(new Coord(10, 340), tab, "Show smileys in chat") {
+                public void changed(boolean val) {
+                    Config.showOtherNames = val;
+                    Config.saveOptions();
+                }
+            }).a = Config.showOtherNames;
+
+            (new CheckBox(new Coord(10, 340), tab, "Show smileys in chat") {
                 public void changed(boolean val) {
                     Config.use_smileys = val;
                     Config.saveOptions();
                 }
             }).a = Config.use_smileys;
 
-	    (new CheckBox(new Coord(10, 375), tab, "Show item quality") {
+            (new CheckBox(new Coord(10, 375), tab, "Show item quality") {
                 public void changed(boolean val) {
                     Config.showq = val;
                     Config.saveOptions();
@@ -190,12 +190,12 @@ public class OptWnd extends Window {
             }).a = Config.sshot_noui;
 
             (new CheckBox(new Coord(220, 235), tab, "Exclude names from screenshot") {
-            public void changed(boolean val) {
-                Config.sshot_nonames = val;
-                Config.saveOptions();
-            }
+                public void changed(boolean val) {
+                    Config.sshot_nonames = val;
+                    Config.saveOptions();
+                }
             }).a = Config.sshot_nonames;
-	                
+
             (new CheckBox(new Coord(220, 270), tab, "Use optimized claim higlighting") {
                 public void changed(boolean val) {
                     Config.newclaim = val;
@@ -209,14 +209,14 @@ public class OptWnd extends Window {
 //            Config.setWindowOpt(ui.mnu.digitbar.name, val);
 //        }
 //        }).a = ui.mnu.digitbar.visible;
-        
+
 //        (new CheckBox(new Coord(220, 340), tab, "Show F-button toolbar") {
 //        public void changed(boolean val) {
 //            ui.mnu.functionbar.visible = val;
 //            Config.setWindowOpt(ui.mnu.functionbar.name, val);
 //        }
 //        }).a = ui.mnu.functionbar.visible;
-        
+
 //        (new CheckBox(new Coord(220, 375), tab, "Show numpad toolbar") {
 //        public void changed(boolean val) {
 //            ui.mnu.numpadbar.visible = val;
