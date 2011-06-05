@@ -67,12 +67,14 @@ public class ChatHWPanel extends Widget implements IHWindowParent {
     }
 
     private void loadOpts() {
+	synchronized (Config.window_props) {
         String str = Config.window_props.getProperty("chat_pos_folded", "null");
         if (!str.equals("null")) {
             sc = new Coord(str);
         }
         sz = new Coord(Config.window_props.getProperty("chat_size", sz.toString()));
         c = new Coord(Config.window_props.getProperty("chat_pos", c.toString()));
+    }
     }
 
     private void sup() {
