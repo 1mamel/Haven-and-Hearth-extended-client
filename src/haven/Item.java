@@ -40,7 +40,7 @@ public class Item extends Widget implements DTarget {
     static Coord shoff = new Coord(1, 3);
     static Map<Integer, Tex> qmap;
     private static final Resource missing = Resource.load("gfx/invobjs/missing");
-    static Color outcol = new Color(8,8,8,255);
+    static Color outcol = new Color(8, 8, 8, 255);
     private boolean dm = false;
     private int quality; // quality
     private boolean isHighQuality; // Hide big qualities values
@@ -134,7 +134,7 @@ public class Item extends Widget implements DTarget {
             }
             if (Config.showq && (quality > 0)) {
                 tex = getqtex(quality);
-		g.aimage(tex, sz.sub(1,1), 1, 1);
+                g.aimage(tex, sz.sub(1, 1), 1, 1);
             }
             ttres = res.get();
         }
@@ -156,9 +156,9 @@ public class Item extends Widget implements DTarget {
             if (qmap.containsKey(q)) {
                 return qmap.get(q);
             } else {
-		BufferedImage img = Text.render(Integer.toString(q)).img;
-		img = Utils.outline2(img, outcol);
-		Tex tex = new TexI(img);
+                BufferedImage img = Text.render(Integer.toString(q)).img;
+                img = Utils.outline2(img, outcol);
+                Tex tex = new TexI(img);
                 qmap.put(q, tex);
                 return tex;
             }
@@ -178,16 +178,17 @@ public class Item extends Widget implements DTarget {
         }
         return (new TexI(sh));
     }
+
     public String name() {
-	if(this.tooltip != null)
-	    return(this.tooltip);
-	Resource res = this.res.get();
-	if((res != null) && (res.layer(Resource.tooltip) != null)) {
-	    return res.layer(Resource.tooltip).t;
-	}
-	return null;
+        if (this.tooltip != null)
+            return (this.tooltip);
+        Resource res = this.res.get();
+        if ((res != null) && (res.layer(Resource.tooltip) != null)) {
+            return res.layer(Resource.tooltip).t;
+        }
+        return null;
     }
-    
+
     String shorttip() {
         if (this.tooltip != null)
             return (this.tooltip);
@@ -378,9 +379,9 @@ public class Item extends Widget implements DTarget {
         if (dm)
             this.c = this.c.add(c.sub(doff));
     }
-	
+
     public boolean drop(Coord cc, Coord ul, Item item) {
-	return(false);
+        return (false);
     }
 
     public boolean iteminteract(Coord cc, Coord ul) {

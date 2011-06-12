@@ -91,7 +91,7 @@ public class ISBox extends Widget implements DTarget {
             wdgmsg("xfer2", 1, ui.modflags());
         return (true);
     }
-    
+
     public boolean drop(Coord cc, Coord ul, Item item) {
         wdgmsg("drop");
         return (true);

@@ -390,18 +390,18 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
             error((String) args[0]);
         } else if (msg.equals("setbelt")) {
 //            synchronized (belt) {
-                if (args.length < 2) {
-                    //noinspection RedundantCast
-//                    belt[activeBelt][(Integer) (args[0])] = null;
-                    ToolbarWnd.setbelt((Integer) args[0], null);
-                    //noinspection RedundantCast
-                    CustomConfig.activeCharacter.hudBelt[activeBelt][(Integer) (args[0])] = null;
-                } else {/*
+            if (args.length < 2) {
+                //noinspection RedundantCast
+//               TODO:!     belt[activeBelt][(Integer) (args[0])] = null;
+                ToolbarWnd.setbelt((Integer) args[0], null);
+                //noinspection RedundantCast
+                CustomConfig.activeCharacter.hudBelt[activeBelt][(Integer) (args[0])] = null;
+            } else {/*
 		    	belt[activeBelt][(Integer)args[0]] = ui.sess.getres((Integer)args[1]).get();
 		    	ToolbarWnd.setbelt((Integer) args[0], ui.sess.getres((Integer) args[1]));
 				CustomConfig.activeCharacter.hudBelt[activeBelt][(Integer)args[0]] = belt[activeBelt][(Integer)args[0]].name;
 		    */
-                }
+            }
 //            }
         } else {
             super.uimsg(msg, args);

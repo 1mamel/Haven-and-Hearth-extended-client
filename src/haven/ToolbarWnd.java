@@ -22,7 +22,6 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
     private static final BufferedImage ilockch = Resource.loadimg("gfx/hud/lockch");
     private static final BufferedImage ilocko = Resource.loadimg("gfx/hud/locko");
     private static final BufferedImage ilockoh = Resource.loadimg("gfx/hud/lockoh");
-    @SuppressWarnings("unchecked")
     private static final Indir<Resource>[] defbelt = new Indir[10];
     public final static Coord bgsz = bg.sz().add(-1, -1);
     private static final Properties beltsConfig = new Properties();
@@ -365,9 +364,9 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
         }
 
     }
-    
+
     public boolean drop(Coord cc, Coord ul, Item item) {
-	return(true);
+        return (true);
     }
 
     public boolean iteminteract(Coord cc, Coord ul) {
@@ -473,10 +472,10 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
         else
             return true;
     }
-    
-    public static void setbelt(int slot, Indir<Resource> res){
-	synchronized (defbelt) {
-	    defbelt[slot] = res;
-	}
+
+    public static void setbelt(int slot, Indir<Resource> res) {
+        synchronized (defbelt) {
+            defbelt[slot] = res;
+        }
     }
 }

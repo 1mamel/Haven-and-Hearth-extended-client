@@ -153,16 +153,16 @@ public class WikiBrowser extends Window implements DTarget, DropTarget, IHWindow
         }
         super.wdgmsg(sender, msg, args);
     }
-    
+
     public boolean drop(Coord cc, Coord ul, Item item) {
-	//ui.slen.wdgmsg("setbelt", 1, 0);
-	String name = item.name();
-	if(name != null){
-	    open(name);
-	}
-	return(true);
+        //ui.slen.wdgmsg("setbelt", 1, 0);
+        String name = item.name();
+        if (name != null) {
+            open(name);
+        }
+        return (true);
     }
-    
+
     void close() {
         while (!wnds.isEmpty()) {
             ui.destroy(wnds.get(0));
