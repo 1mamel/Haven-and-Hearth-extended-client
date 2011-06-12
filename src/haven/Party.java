@@ -27,8 +27,9 @@
 package haven;
 
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 public class Party {
@@ -61,38 +62,35 @@ public class Party {
     }
 
     public void msg(Message msg) {
+        Set<Integer> ids = new HashSet<Integer>();
         while (!msg.eom()) {
             int type = msg.uint8();
             if (type == PD_LIST) {
-                ArrayList<Integer> ids = new ArrayList<Integer>();
+                ids.clear();
                 while (true) {
                     int id = msg.int32();
-                    if (id < 0)
-                        break;
+                    if (id < 0) break;
                     ids.add(id);
                 }
-                Map<Integer, Member> nmemb = new TreeMap<Integer, Member>();
+                memb.keySet().retainAll(ids);
                 for (int id : ids) {
                     Member m = memb.get(id);
                     if (m == null) {
                         m = new Member();
                         m.gobid = id;
                     }
-                    nmemb.put(id, m);
+                    memb.put(id, m);
                 }
                 int lid = (leader == null) ? -1 : leader.gobid;
-                memb = nmemb;
                 leader = memb.get(lid);
             } else if (type == PD_LEADER) {
                 Member m = memb.get(msg.int32());
-                if (m != null)
-                    leader = m;
+                if (m != null) leader = m;
             } else if (type == PD_MEMBER) {
                 Member m = memb.get(msg.int32());
                 Coord c = null;
-                boolean vis = msg.uint8() == 1;
-                if (vis)
-                    c = msg.coord();
+                boolean visible = msg.uint8() == 1;
+                if (visible) c = msg.coord();
                 Color col = msg.color();
                 if (m != null) {
                     m.c = c;
