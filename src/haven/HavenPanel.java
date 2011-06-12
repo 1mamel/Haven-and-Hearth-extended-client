@@ -34,8 +34,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 @SuppressWarnings({"SynchronizeOnNonFinalField"})
 public class HavenPanel extends GLCanvas implements Runnable {
@@ -45,7 +45,7 @@ public class HavenPanel extends GLCanvas implements Runnable {
     long fps = 0;
     int dth = 0, dtm = 0;
     public static int texhit = 0, texmiss = 0;
-    final Queue<InputEvent> events = new LinkedList<InputEvent>();
+    final Queue<InputEvent> events = new ConcurrentLinkedQueue<InputEvent>();
     private CursorMode cursmode = CursorMode.TEXTURE;
     private Resource lastcursor = null;
     public Coord mousepos = new Coord(0, 0);
@@ -78,6 +78,9 @@ public class HavenPanel extends GLCanvas implements Runnable {
         setCursor(Toolkit.getDefaultToolkit().createCustomCursor(TexI.mkbuf(new Coord(1, 1)), new java.awt.Point(), ""));
     }
 
+    /**
+     * OpenGL Initializer start
+     */
     private void initgl() {
         final Thread caller = Thread.currentThread();
         addGLEventListener(new GLEventListener() {
@@ -122,69 +125,48 @@ public class HavenPanel extends GLCanvas implements Runnable {
         addKeyListener(new KeyAdapter() {
             public void keyTyped(KeyEvent e) {
                 checkfs();
-                synchronized (events) {
-                    events.add(e);
-                    events.notifyAll();
-                }
+                events.add(e);
             }
 
             public void keyPressed(KeyEvent e) {
                 checkfs();
-                synchronized (events) {
-                    events.add(e);
-                    events.notifyAll();
-                }
+                events.add(e);
             }
 
             public void keyReleased(KeyEvent e) {
                 checkfs();
-                synchronized (events) {
-                    events.add(e);
-                    events.notifyAll();
-                }
+                events.add(e);
             }
         });
-        addMouseListener(new MouseAdapter() {
+        MouseAdapter mouseListener = new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
                 checkfs();
-                synchronized (events) {
-                    events.add(e);
-                    events.notifyAll();
-                }
+                events.add(e);
             }
 
             public void mouseReleased(MouseEvent e) {
                 checkfs();
-                synchronized (events) {
-                    events.add(e);
-                    events.notifyAll();
-                }
+                events.add(e);
             }
-        });
-        addMouseMotionListener(new MouseMotionListener() {
+
             public void mouseDragged(MouseEvent e) {
                 checkfs();
-                synchronized (events) {
-                    events.add(e);
-                }
+                events.add(e);
             }
 
             public void mouseMoved(MouseEvent e) {
                 checkfs();
-                synchronized (events) {
-                    events.add(e);
-                }
+                events.add(e);
             }
-        });
-        addMouseWheelListener(new MouseWheelListener() {
+
             public void mouseWheelMoved(MouseWheelEvent e) {
                 checkfs();
-                synchronized (events) {
-                    events.add(e);
-                    events.notifyAll();
-                }
+                events.add(e);
             }
-        });
+        };
+        addMouseListener(mouseListener);
+        addMouseMotionListener(mouseListener);
+        addMouseWheelListener(mouseListener);
         inited = true;
     }
 
@@ -309,50 +291,61 @@ public class HavenPanel extends GLCanvas implements Runnable {
         }
         Resource curs = ui.root.getcurs(mousepos);
         if (!curs.loading.get()) {
-            if (cursmode == CursorMode.AWT) {
-                if (curs != lastcursor) {
+            switch (cursmode) {
+                case AWT:
+                    if (curs == lastcursor) break;
                     try {
                         setCursor(makeawtcurs(curs.layer(Resource.imgc).img, curs.layer(Resource.negc).cc));
                         lastcursor = curs;
                     } catch (Exception e) {
                         cursmode = CursorMode.TEXTURE;
                     }
-                }
-            } else if (cursmode == CursorMode.TEXTURE) {
-                Coord dc = mousepos.sub(curs.layer(Resource.negc).cc);
-                g.image(curs.layer(Resource.imgc), dc);
+                    break;
+                case TEXTURE:
+                    Coord dc = mousepos.sub(curs.layer(Resource.negc).cc);
+                    g.image(curs.layer(Resource.imgc), dc);
+                    break;
             }
         }
     }
 
     void dispatch() {
-        synchronized (events) {
-            InputEvent e;
-            while ((e = events.poll()) != null) {
-                if (e instanceof MouseEvent) {
-                    MouseEvent me = (MouseEvent) e;
-                    if (me.getID() == MouseEvent.MOUSE_PRESSED) {
-                        ui.mousedown(me, new Coord(me.getX(), me.getY()), me.getButton());
-                    } else if (me.getID() == MouseEvent.MOUSE_RELEASED) {
-                        ui.mouseup(me, new Coord(me.getX(), me.getY()), me.getButton());
-                    } else if (me.getID() == MouseEvent.MOUSE_MOVED || me.getID() == MouseEvent.MOUSE_DRAGGED) {
-                        mousepos = new Coord(me.getX(), me.getY());
+        InputEvent e;
+        while ((e = events.poll()) != null) {
+            if (e instanceof MouseEvent) {
+                MouseEvent me = (MouseEvent) e;
+                Coord mouseCoord = new Coord(me.getX(), me.getY());
+                switch (me.getID()) {
+                    case MouseEvent.MOUSE_PRESSED:
+                        ui.mousedown(me, mouseCoord, me.getButton());
+                        break;
+                    case MouseEvent.MOUSE_RELEASED:
+                        ui.mouseup(me, mouseCoord, me.getButton());
+                        break;
+                    case MouseEvent.MOUSE_MOVED:
+                    case MouseEvent.MOUSE_DRAGGED:
+                        mousepos = mouseCoord.getUnmodifiableVersion();
                         ui.mousemove(me, mousepos);
-                    } else if (me instanceof MouseWheelEvent) {
-                        ui.mousewheel(me, new Coord(me.getX(), me.getY()), ((MouseWheelEvent) me).getWheelRotation());
-                    }
-                } else if (e instanceof KeyEvent) {
-                    KeyEvent ke = (KeyEvent) e;
-                    if (ke.getID() == KeyEvent.KEY_PRESSED) {
-                        ui.keydown(ke);
-                    } else if (ke.getID() == KeyEvent.KEY_RELEASED) {
-                        ui.keyup(ke);
-                    } else if (ke.getID() == KeyEvent.KEY_TYPED) {
-                        ui.type(ke);
-                    }
+                        break;
+                    case MouseEvent.MOUSE_WHEEL:
+                        ui.mousewheel(me, mouseCoord, ((MouseWheelEvent) me).getWheelRotation());
+                        break;
                 }
-                ui.lastevent = System.currentTimeMillis();
+            } else if (e instanceof KeyEvent) {
+                KeyEvent ke = (KeyEvent) e;
+                switch (ke.getID()) {
+                    case KeyEvent.KEY_PRESSED:
+                        ui.keydown(ke);
+                        break;
+                    case KeyEvent.KEY_RELEASED:
+                        ui.keyup(ke);
+                        break;
+                    case KeyEvent.KEY_TYPED:
+                        ui.type(ke);
+                        break;
+                }
             }
+            ui.lastevent = System.currentTimeMillis();
         }
     }
 
@@ -395,9 +388,7 @@ public class HavenPanel extends GLCanvas implements Runnable {
                 frames++;
                 now = System.currentTimeMillis();
                 if (now - then < fd) {
-                    synchronized (events) {
-                        events.wait(fd - (now - then));
-                    }
+                    wait(fd - (now - then));
                 }
                 if (curf != null)
                     curf.tick("wait");
