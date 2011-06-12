@@ -38,6 +38,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 public class MainFrame extends Frame implements Runnable, FSMan {
+    private static final String DEFAULT_TITLE = "Haven and Hearth (modified by VladP53 with some code from Ender, Gilbertus, Pacho clients)";
     final HavenPanel panel;
     final ThreadGroup g;
     DisplayMode fsmode = null, prefs = null;
@@ -127,7 +128,7 @@ public class MainFrame extends Frame implements Runnable, FSMan {
 
     @Override
     public void setTitle(String charname) {
-        String str = "Haven and Hearth (modified by VladP53 with some code from Ender, Gilbertus, Pacho clients)";
+        String str = DEFAULT_TITLE;
         if (charname != null) {
             str = charname + " - " + str;
         }
