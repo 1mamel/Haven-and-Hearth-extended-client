@@ -261,19 +261,23 @@ public class Coord implements Comparable<Coord>, java.io.Serializable, Cloneable
     }
 
     public Coord getUnmodifiableVersion() {
-        return new UnmodifiableCoord(this);
+        return new U(this);
     }
 
-    public static class UnmodifiableCoord extends Coord {
-        public UnmodifiableCoord(Coord c) {
+    /**
+     * Inmodifiable version of Coord.
+     * Throws UnsupportedOperationException if any setter invoked.
+     */
+    public static class U extends Coord {
+        public U(Coord c) {
             super(c);
         }
 
-        public UnmodifiableCoord(int x, int y) {
+        public U(int x, int y) {
             super(x, y);
         }
 
-        public UnmodifiableCoord(Dimension d) {
+        public U(Dimension d) {
             super(d);
         }
 

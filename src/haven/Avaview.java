@@ -33,14 +33,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Avaview extends Widget {
-    public static final Coord dasz = new Coord(74, 74);
-    public static final Coord smallSize = new Coord(27, 27);
+    public static final Coord dasz = new Coord.U(74, 74);
+    public static final Coord smallSize = new Coord.U(27, 27);
     private final Coord asz;
     int avagob;
     boolean none = false;
     AvaRender myown = null;
     public Color color = Color.WHITE;
-    public static final Coord unborder = new Coord(2, 2);
+    public static final Coord unborder = new Coord.U(2, 2);
     public static final Tex missing = Resource.loadtex("gfx/hud/equip/missing");
 
     static {

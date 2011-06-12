@@ -152,6 +152,7 @@ public class MainFrame extends Frame implements Runnable, FSMan {
     public void run() {
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
+                if (CustomConfig.isSaveable) CustomConfigProcessor.saveSettings();
                 g.interrupt();
             }
         });
@@ -242,39 +243,6 @@ public class MainFrame extends Frame implements Runnable, FSMan {
         setupres();
         MainFrame mainFrame = new MainFrame(CustomConfig.getWindowSize(), threadGroup);
         //noinspection UnusedParameters
-        mainFrame.addWindowListener(new WindowListener() {
-
-            public void windowClosing(WindowEvent e) {
-                if (CustomConfig.isSaveable) CustomConfigProcessor.saveSettings();
-            }
-
-            public void windowOpened(WindowEvent e) {
-            }
-
-            public void windowClosed(WindowEvent e) {
-            }
-
-            public void windowIconified(WindowEvent e) {
-            }
-
-            public void windowDeiconified(WindowEvent e) {
-            }
-
-            public void windowActivated(WindowEvent e) {
-            }
-
-            public void windowDeactivated(WindowEvent e) {
-            }
-
-            public void windowGainedFocus(WindowEvent e) {
-            }
-
-            public void windowLostFocus(WindowEvent e) {
-            }
-
-            public void windowStateChanged(WindowEvent e) {
-            }
-        });
         CustomConfig.isSaveable = true;
         if (Config.fullscreen)
             mainFrame.setfs();

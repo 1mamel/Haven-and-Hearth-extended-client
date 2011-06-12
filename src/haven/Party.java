@@ -33,7 +33,8 @@ import java.util.Set;
 import java.util.TreeMap;
 
 public class Party {
-    Map<Integer, Member> memb = new TreeMap<Integer, Member>();
+    final Map<Integer, Member> memb = new TreeMap<Integer, Member>();
+    boolean membersMapChanged = false;
     Member leader = null;
     public static final int PD_LIST = 0;
     public static final int PD_LEADER = 1;
@@ -45,9 +46,13 @@ public class Party {
     }
 
     public class Member {
-        int gobid;
+        final int gobid;
         private Coord c = null;
         Color col = Color.BLACK;
+
+        public Member(int gobid) {
+            this.gobid = gobid;
+        }
 
         public Gob getgob() {
             return (glob.oc.getgob(gobid));
@@ -76,11 +81,11 @@ public class Party {
                 for (int id : ids) {
                     Member m = memb.get(id);
                     if (m == null) {
-                        m = new Member();
-                        m.gobid = id;
+                        m = new Member(id);
                     }
                     memb.put(id, m);
                 }
+                membersMapChanged = true;
                 int lid = (leader == null) ? -1 : leader.gobid;
                 leader = memb.get(lid);
             } else if (type == PD_LEADER) {

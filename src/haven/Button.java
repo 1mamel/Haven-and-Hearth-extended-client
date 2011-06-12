@@ -60,19 +60,19 @@ public class Button extends Widget {
         });
     }
 
-    public static Button wrapped(Coord c, int w, Widget parent, String text) {
-        Button ret = new Button(c, w, parent, tf.renderwrap(text, w - 10));
+    public static Button wrapped(Coord c, int width, Widget parent, String text) {
+        Button ret = new Button(c, width, parent, tf.renderwrap(text, width - 10));
         return (ret);
     }
 
-    public Button(Coord c, Integer w, Widget parent, String text) {
-        super(c, new Coord(w, 19), parent);
+    public Button(Coord c, Integer width, Widget parent, String text) {
+        super(c, new Coord(width, 19), parent);
         this.text = tf.render(text);
         this.cont = this.text.img;
     }
 
-    public Button(Coord c, Integer w, Widget parent, Text text) {
-        super(c, new Coord(w, 19), parent);
+    public Button(Coord c, Integer width, Widget parent, Text text) {
+        super(c, new Coord(width, 19), parent);
         this.text = text;
         this.cont = text.img;
     }

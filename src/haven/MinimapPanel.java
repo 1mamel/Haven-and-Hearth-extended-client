@@ -7,8 +7,8 @@ import java.awt.image.BufferedImage;
 public class MinimapPanel extends Window {
 
     static final BufferedImage grip = Resource.loadimg("gfx/hud/gripbr");
-    static final Coord gzsz = new Coord.UnmodifiableCoord(16, 17);
-    static final Coord minsz = new Coord.UnmodifiableCoord(150, 125);
+    static final Coord gzsz = new Coord.U(16, 17);
+    static final Coord minsz = new Coord.U(150, 125);
 
     boolean rsm = false;
     MiniMap mm;

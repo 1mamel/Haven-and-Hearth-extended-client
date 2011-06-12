@@ -31,31 +31,30 @@ import haven.Party.Member;
 import java.util.*;
 import java.util.Map.Entry;
 
-public class Partyview extends Widget {
-    final int ign;
+public class PartyView extends Widget {
+    final int ign; // Player id in group?
     final Party party = ui.sess.glob.party;
-    Map<Integer, Member> om = null;
     final Map<Member, Avaview> avs = new HashMap<Member, Avaview>();
-    Button leave = null;
+    Button leaveButton = null;
 
     static {
         Widget.addtype("pv", new WidgetFactory() {
             public Widget create(Coord c, Widget parent, Object[] args) {
-                return (new Partyview(c, parent, (Integer) args[0]));
+                return (new PartyView(c, parent, (Integer) args[0]));
             }
         });
     }
 
-    Partyview(Coord c, Widget parent, int ign) {
-        super(c, new Coord(84, 140), parent);
+    PartyView(Coord c, Widget parent, int ign) {
+        super(c, new Coord.U(84, 140), parent);
         this.ign = ign;
         update();
     }
 
     private void update() {
-        if (party.memb != om) {
+        if (party.membersMapChanged) {
             Collection<Member> old = new HashSet<Member>(avs.keySet());
-            for (final Member m : (om = party.memb).values()) {
+            for (final Member m : party.memb.values()) {
                 if (m.gobid == ign)
                     continue;
                 Avaview w = avs.get(m);
@@ -97,23 +96,28 @@ public class Partyview extends Widget {
         for (Map.Entry<Member, Avaview> e : avs.entrySet()) {
             e.getValue().color = e.getKey().col;
         }
-        if ((!avs.isEmpty()) && (leave == null)) {
-            leave = new Button(Coord.z, 84, this, "Leave party");
+        if ((!avs.isEmpty()) && (leaveButton == null)) {
+            leaveButton = new Button(Coord.z, 84, this, "Leave party");
         }
-        if ((avs.isEmpty()) && (leave != null)) {
-            ui.destroy(leave);
-            leave = null;
+        if ((avs.isEmpty()) && (leaveButton != null)) {
+            ui.destroy(leaveButton);
+            leaveButton = null;
         }
         sz.setY(CustomConfig.getWindowHeight() - c.getY());
     }
 
-    private static final List<Coord> avaviewCoordinates = new ArrayList<Coord>(20);
+    private static final List<Coord> avaviewCoordinates;
+
+    static {
+        avaviewCoordinates = new ArrayList<Coord>(20);
+        assumeAvaviewCoordinates(20);
+    }
 
     private static void generateAvaviewCoordinates(int toInclusive) {
         synchronized (avaviewCoordinates) {
             for (int i = avaviewCoordinates.size(); i <= toInclusive; ++i) {
                 //noinspection ObjectAllocationInLoop
-                avaviewCoordinates.add(new Coord.UnmodifiableCoord((i % 2) * 43, (i / 2) * 43 + 24));
+                avaviewCoordinates.add(new Coord.U((i % 2) * 43, (i / 2) * 43 + 24));
             }
         }
     }
@@ -134,7 +138,7 @@ public class Partyview extends Widget {
     }
 
     public void wdgmsg(Widget sender, String msg, Object... args) {
-        if (sender == leave) {
+        if (sender == leaveButton) {
             wdgmsg("leave");
             return;
         }
