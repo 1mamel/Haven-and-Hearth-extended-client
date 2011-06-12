@@ -90,7 +90,7 @@ public class Partyview extends Widget {
             });
             int i = 0;
             for (Map.Entry<Member, Avaview> e : wl) {
-                e.getValue().c = new Coord((i % 2) * 43, (i / 2) * 43 + 24);
+                e.getValue().c = getAvavievCoordinates(i); // Performance improved ;)
                 i++;
             }
         }
@@ -105,6 +105,32 @@ public class Partyview extends Widget {
             leave = null;
         }
         sz.setY(CustomConfig.getWindowHeight() - c.getY());
+    }
+
+    private static final List<Coord> avaviewCoordinates = new ArrayList<Coord>(20);
+
+    private static void generateAvaviewCoordinates(int toInclusive) {
+        synchronized (avaviewCoordinates) {
+            for (int i = avaviewCoordinates.size(); i <= toInclusive; ++i) {
+                //noinspection ObjectAllocationInLoop
+                avaviewCoordinates.add(new Coord.UnmodifiableCoord((i % 2) * 43, (i / 2) * 43 + 24));
+            }
+        }
+    }
+
+    private static void assumeAvaviewCoordinates(int i) {
+        if (avaviewCoordinates.size() < i) {
+            synchronized (avaviewCoordinates) {
+                if (avaviewCoordinates.size() < i) {
+                    generateAvaviewCoordinates(i);
+                }
+            }
+        }
+    }
+
+    private static Coord getAvavievCoordinates(int i) {
+        assumeAvaviewCoordinates(i);
+        return avaviewCoordinates.get(i);
     }
 
     public void wdgmsg(Widget sender, String msg, Object... args) {
