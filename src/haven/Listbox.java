@@ -88,8 +88,8 @@ public class Listbox extends Widget {
     public Listbox(Coord c, Coord sz, Widget parent, List<Option> opts) {
         super(c, sz, parent);
         this.opts = opts;
-        height = sz.y / 10;
-        scrollBar = new Scrollbar(Coord.z.add(sz.x, 0), sz.y, this, 0, 50);
+        height = sz.getY() / 10;
+        scrollBar = new Scrollbar(Coord.z.add(sz.getX(), 0), sz.getY(), this, 0, 50);
         chosen = !opts.isEmpty() ? opts.get(0) : null;
         setcanfocus(true);
     }
@@ -109,8 +109,8 @@ public class Listbox extends Widget {
     }
 
     public boolean mousedown(Coord c, int button) {
-        if (button == 1 && c.x < sz.x - 25) {
-            int sel = (c.y / 10) + scrollBar.val;
+        if (button == 1 && c.getX() < sz.getX() - 25) {
+            int sel = (c.getY() / 10) + scrollBar.val;
             if (sel >= opts.size()) {
                 sel = -1;
             }

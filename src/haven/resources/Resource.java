@@ -116,12 +116,14 @@ public class Resource extends Prioritized implements Comparable<Resource>, Seria
     }
 
     public static void addcache(ResCache cache) {
+        if (cache == null) return;
         CacheSource src = new CacheSource(cache);
         prscache = src;
         chainloader(new ResourceLoader(src));
     }
 
     public static void addurl(URL url) {
+        if (url == null) return;
         ResSource src = new HttpSource(url);
         final CacheSource mc = prscache;
         if (mc != null) {
@@ -207,10 +209,20 @@ public class Resource extends Prioritized implements Comparable<Resource>, Seria
     }
 
     public void loadwaitint() throws InterruptedException {
+        int tryed = 0;
         synchronized (this) {
             boostprio(10);
             while (loading.get()) {
-                wait(2000);
+                if (tryed == 10) {
+                    loader.wakeUpChain();
+                }
+                if (tryed == 30) {
+                    tryed = 0;
+                    System.err.println("Trying reload" + name);
+                    loader.load(this);
+                }
+                wait(1000);
+                tryed++;
             }
         }
     }
@@ -227,11 +239,21 @@ public class Resource extends Prioritized implements Comparable<Resource>, Seria
         synchronized (loadwaited) {
             loadwaited.add(this);
         }
+        int tryed = 0;
         synchronized (this) {
             boostprio(10);
             while (loading.get()) {
+                if (tryed == 10) {
+                    loader.wakeUpChain();
+                }
+                if (tryed == 30) {
+                    tryed = 0;
+                    System.err.println("Trying reload" + name);
+                    loader.load(this);
+                }
                 try {
-                    wait();
+                    wait(1000);
+                    tryed++;
                 } catch (InterruptedException e) {
                     i = true;
                 }
@@ -396,6 +418,7 @@ public class Resource extends Prioritized implements Comparable<Resource>, Seria
             }
             Layer l;
             try {
+                //noinspection PrimitiveArrayArgumentToVariableArgMethod
                 l = (isStaticLayerClass) ? cons.newInstance(buf) : cons.newInstance(this, buf);
             } catch (InstantiationException e) {
                 throw (new LoadException(e, Resource.this));

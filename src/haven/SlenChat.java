@@ -35,7 +35,7 @@ public class SlenChat extends ChatHW {
         }
 
         public UserList(SlenChat parent) {
-            super(new Coord(10, CustomConfig.getWindowSize().y - parent.sz.y - 10), new Coord(100, parent.sz.y - 10), parent.parent.parent, "Users", false);
+            super(new Coord(10, CustomConfig.getWindowHeight() - parent.sz.getY() - 10), new Coord(100, parent.sz.getY() - 10), parent.parent.parent, "Users", false);
             out = new Listbox(Coord.z, new Coord(100, 105), this, users);
             owner = parent;
             ui.bind(this, CustomConfig.getNextCustomWidgetId());

@@ -22,15 +22,15 @@ class FillBox extends Widget {
 
     public void draw(GOut g) {
         borders.draw(g, Coord.z, sz);
-        g.frect(Coord.z.add(10, 6), new Coord(value, sz.y - 12));
+        g.frect(Coord.z.add(10, 6), new Coord(value, sz.getY() - 12));
     }
 
     public boolean mousedown(Coord c, int button) {
         if (button == 1) {
             mouseDown = true;
             ui.grabmouse(this);
-            if (c.x > 10 && c.x < 110)
-                value = (c.x - 10) % 100;
+            if (c.getX() > 10 && c.getX() < 110)
+                value = (c.getX() - 10) % 100;
             return true;
         }
         return super.mousedown(c, button);
@@ -47,8 +47,8 @@ class FillBox extends Widget {
 
     public void mousemove(Coord c) {
         if (mouseDown) {
-            if (c.x > 10 && c.x < 110)
-                value = (c.x - 10) % 100;
+            if (c.getX() > 10 && c.getX() < 110)
+                value = (c.getX() - 10) % 100;
             wdgmsg(this, "change", value);
             return;
         }

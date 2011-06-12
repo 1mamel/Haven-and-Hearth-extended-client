@@ -23,7 +23,7 @@ public class GLLine {
         int nextCharLoc = 3;
         Coord strSize = fnd.strsize(line);
         fnd.defcol = col;
-        img = new BufferedImage(strSize.x, strSize.y, BufferedImage.TYPE_INT_ARGB);
+        img = new BufferedImage(strSize.getX(), strSize.getY(), BufferedImage.TYPE_INT_ARGB);
         Matcher match;
         Graphics g = img.getGraphics();
         for (int i = 0; i < words.length; i++) {
@@ -37,7 +37,7 @@ public class GLLine {
                     characters.add(tGLChar);
                     g.drawImage(tGLChar.img(), tGLChar.x, 0, null);
                 }
-                nextCharLoc += tGLChar.size().x;
+                nextCharLoc += tGLChar.size().getX();
                 width += nextCharLoc;
             }
             if (i != words.length) {
@@ -46,7 +46,7 @@ public class GLLine {
                     characters.add(tGLChar);
                     g.drawImage(tGLChar.img(), tGLChar.x, 0, null);
                 }
-                nextCharLoc += tGLChar.size().x;
+                nextCharLoc += tGLChar.size().getX();
                 width += nextCharLoc;
             }
         }

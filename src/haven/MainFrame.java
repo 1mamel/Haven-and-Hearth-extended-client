@@ -35,12 +35,12 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 public class MainFrame extends Frame implements Runnable, FSMan {
-    final HavenPanel p;
-    ThreadGroup g;
+    final HavenPanel panel;
+    final ThreadGroup g;
     DisplayMode fsmode = null, prefs = null;
-    Dimension insetsSize;
-    public static Dimension innerSize;
-    public static Point centerPoint;
+    final Dimension insetsSize;
+
+//    CustomConfig config;
 
     static {
         try {
@@ -49,14 +49,14 @@ public class MainFrame extends Frame implements Runnable, FSMan {
         }
     }
 
-    DisplayMode findmode(int w, int h) {
+    DisplayMode findmode(Dimension size) {
         GraphicsDevice dev = getGraphicsConfiguration().getDevice();
         if (!dev.isFullScreenSupported())
             return (null);
         DisplayMode b = null;
         for (DisplayMode m : dev.getDisplayModes()) {
             int d = m.getBitDepth();
-            if ((m.getWidth() == w) && (m.getHeight() == h) && ((d == 24) || (d == 32) || (d == DisplayMode.BIT_DEPTH_MULTI))) {
+            if ((m.getWidth() == size.width) && (m.getHeight() == size.height) && ((d == 24) || (d == 32) || (d == DisplayMode.BIT_DEPTH_MULTI))) {
                 if ((b == null) || (d > b.getBitDepth()) || ((d == b.getBitDepth()) && (m.getRefreshRate() > b.getRefreshRate())))
                     b = m;
             }
@@ -111,46 +111,42 @@ public class MainFrame extends Frame implements Runnable, FSMan {
     }
 
     private void seticon() {
-        Image icon;
+        Image icon = null;
         try {
             InputStream data = MainFrame.class.getResourceAsStream("icon.png");
             icon = javax.imageio.ImageIO.read(data);
             data.close();
         } catch (IOException e) {
-            throw (new Error(e));
+            CustomConfig.logger.warn("Cannot set window image", e);
         }
         setIconImage(icon);
     }
 
-    public MainFrame(int w, int h) {
+    private MainFrame(final Coord sizeC, ThreadGroup tg) {
         super("Haven and Hearth (modified by VladP53 with some code from Ender, Gilbertus, Pacho clients)");
-        innerSize = new Dimension(w, h);
-        centerPoint = new Point(innerSize.width / 2, innerSize.height / 2);
-        p = new HavenPanel(w, h);
-        fsmode = findmode(w, h);
-        add(p);
+        ourInstance = this;
+        this.g = tg;
+
+        final Dimension size = sizeC.toDimension();
+        panel = new HavenPanel(size);
+        fsmode = findmode(size);
+
+        setResizable(true);
+
+        add(panel);
         pack();
+
         Insets insets = getInsets();
         insetsSize = new Dimension(insets.left + insets.right, insets.top + insets.bottom);
-        setResizable(true);
-        setMinimumSize(new Dimension(800 + insetsSize.width, 600 + insetsSize.height));
-        p.requestFocus();
+        Dimension minimalSizeWithInsets = new Dimension(800 + insetsSize.width, 600 + insetsSize.height);
+        setMinimumSize(minimalSizeWithInsets);
+        setSize(new Dimension(size.width + insetsSize.width, size.height + insetsSize.height));
+
+        panel.requestFocus();
         seticon();
         setVisible(true);
-        p.init();
+        panel.init();
         setExtendedState(getExtendedState() | MAXIMIZED_BOTH);
-    }
-
-    public static Coord getScreenSize() {
-        return new Coord(Toolkit.getDefaultToolkit().getScreenSize());
-    }
-
-    public static Coord getInnerSize() {
-        return new Coord(innerSize.width, innerSize.height);
-    }
-
-    public static Coord getCenterPoint() {
-        return new Coord(centerPoint.x, centerPoint.y);
     }
 
     public void run() {
@@ -161,12 +157,11 @@ public class MainFrame extends Frame implements Runnable, FSMan {
         });
         addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent evt) {
-                innerSize.setSize(getWidth() - insetsSize.width, getHeight() - insetsSize.height);
-                centerPoint.setLocation(innerSize.width / 2, innerSize.height / 2);
+                CustomConfig.updateWindowSize(getWidth() - insetsSize.width, getHeight() - insetsSize.height);
             }
         });
-        Thread ui = new HackThread(p, "Haven UI thread");
-        p.setfsm(this);
+        Thread ui = new HackThread(panel, "Haven UI thread");
+        panel.setfsm(this);
         ui.start();
         try {
             while (true) {
@@ -177,11 +172,11 @@ public class MainFrame extends Frame implements Runnable, FSMan {
                     bill.setinitcookie(Config.authuser, Config.authck);
                     Config.authck = null;
                 }
-                Session sess = bill.run(p);
+                Session sess = bill.run(panel);
                 RemoteUI rui = new RemoteUI(sess);
-                rui.run(p.newui(sess));
+                rui.run(panel.newui(sess));
             }
-        } catch (InterruptedException e) {
+        } catch (InterruptedException ignored) {
         } finally {
             ui.interrupt();
             dispose();
@@ -189,27 +184,32 @@ public class MainFrame extends Frame implements Runnable, FSMan {
     }
 
     public static void setupres() {
-        if (ResCache.global != null)
-            Resource.addcache(ResCache.global);
-        if (Config.resurl != null)
-            Resource.addurl(Config.resurl);
+        Resource.addcache(ResCache.global);
+        Resource.addurl(Config.resurl);
+
         if (ResCache.global != null) {
             try {
                 Resource.loadlist(ResCache.global.fetch("tmp/allused"), -10);
-            } catch (IOException ignored) {
+            } catch (IOException e) {
+                CustomConfig.logger.error("Failed to load resources from tmp/allused", e);
             }
         }
         if (!Config.nopreload) {
             try {
-                InputStream pls;
-                pls = Resource.class.getResourceAsStream("res-preload");
-                if (pls != null)
+                InputStream pls = Resource.class.getResourceAsStream("res-preload");
+                if (pls != null) {
                     Resource.loadlist(pls, -5);
-                pls = Resource.class.getResourceAsStream("res-bgload");
-                if (pls != null)
-                    Resource.loadlist(pls, -10);
+                }
             } catch (IOException e) {
-                throw (new Error(e));
+                CustomConfig.logger.error("Failed to load res-preload", e);
+            }
+            try {
+                InputStream pls = Resource.class.getResourceAsStream("res-bgload");
+                if (pls != null) {
+                    Resource.loadlist(pls, -10);
+                }
+            } catch (IOException e) {
+                CustomConfig.logger.error("Failed to load res-bgload", e);
             }
         }
     }
@@ -238,11 +238,12 @@ public class MainFrame extends Frame implements Runnable, FSMan {
 
     private static void main2(String[] args) {
         Config.cmdline(args);
-        ThreadGroup g = HackThread.tg();
+        ThreadGroup threadGroup = HackThread.tg();
         setupres();
-        MainFrame f = new MainFrame(CustomConfig.getWindowSize().x, CustomConfig.getWindowSize().y);
+        MainFrame mainFrame = new MainFrame(CustomConfig.getWindowSize(), threadGroup);
         //noinspection UnusedParameters
-        f.addWindowListener(new WindowListener() {
+        mainFrame.addWindowListener(new WindowListener() {
+
             public void windowClosing(WindowEvent e) {
                 if (CustomConfig.isSaveable) CustomConfigProcessor.saveSettings();
             }
@@ -276,17 +277,16 @@ public class MainFrame extends Frame implements Runnable, FSMan {
         });
         CustomConfig.isSaveable = true;
         if (Config.fullscreen)
-            f.setfs();
-        f.g = g;
-        if (g instanceof haven.error.ErrorHandler) {
-            final haven.error.ErrorHandler hg = (haven.error.ErrorHandler) g;
+            mainFrame.setfs();
+        if (threadGroup instanceof haven.error.ErrorHandler) {
+            final haven.error.ErrorHandler hg = (haven.error.ErrorHandler) threadGroup;
             hg.sethandler(new haven.error.ErrorGui(null) {
                 public void errorsent() {
                     hg.interrupt();
                 }
             });
         }
-        f.run();
+        mainFrame.run();
         dumplist(Resource.loadwaited, Config.loadwaited);
         dumplist(Resource.cached(), Config.allused);
         if (ResCache.global != null) {
@@ -311,7 +311,7 @@ public class MainFrame extends Frame implements Runnable, FSMan {
         /* Set up the error handler as early as humanly possible. */
         ThreadGroup g = new ThreadGroup("Haven client");
         String ed;
-        if (!(ed = Utils.getprop("haven.errorurl", "")).equals("")) {
+        if (!(ed = Utils.getprop("haven.errorurl", "")).isEmpty()) {
             try {
                 final haven.error.ErrorHandler hg = new haven.error.ErrorHandler(new java.net.URL(ed));
                 hg.sethandler(new haven.error.ErrorGui(null) {
@@ -320,7 +320,7 @@ public class MainFrame extends Frame implements Runnable, FSMan {
                     }
                 });
                 g = hg;
-            } catch (java.net.MalformedURLException e) {
+            } catch (java.net.MalformedURLException ignored) {
             }
         }
         Thread main = new HackThread(g, new Runnable() {
@@ -355,5 +355,12 @@ public class MainFrame extends Frame implements Runnable, FSMan {
         } catch (IOException e) {
             throw (new RuntimeException(e));
         }
+    }
+
+    private static MainFrame ourInstance;
+
+    public static void setWindowSize(Dimension dimension) {
+        if (ourInstance == null) return;
+        ourInstance.setSize(dimension);
     }
 }

@@ -61,7 +61,7 @@ public class IBox {
     }
 
     public Coord tloff() {
-        return (new Coord(bl.sz().x, bt.sz().y));
+        return (new Coord(bl.sz().getX(), bt.sz().getY()));
     }
 
     public Coord ctloff() {
@@ -69,7 +69,7 @@ public class IBox {
     }
 
     public Coord bisz() {
-        return (new Coord(bl.sz().x + br.sz().x, bt.sz().y + bb.sz().y));
+        return (new Coord(bl.sz().getX() + br.sz().getX(), bt.sz().getY() + bb.sz().getY()));
     }
 
     public Coord bsz() {
@@ -77,13 +77,13 @@ public class IBox {
     }
 
     public void draw(GOut g, Coord tl, Coord sz) {
-        g.image(bt, tl.add(new Coord(ctl.sz().x, 0)), new Coord(sz.x - ctr.sz().x - ctl.sz().x, bt.sz().y));
-        g.image(bb, tl.add(new Coord(cbl.sz().x, sz.y - bb.sz().y)), new Coord(sz.x - cbr.sz().x - cbl.sz().x, bb.sz().y));
-        g.image(bl, tl.add(new Coord(0, ctl.sz().y)), new Coord(bl.sz().x, sz.y - cbl.sz().y - ctl.sz().y));
-        g.image(br, tl.add(new Coord(sz.x - br.sz().x, ctr.sz().y)), new Coord(br.sz().x, sz.y - cbr.sz().y - ctr.sz().y));
+        g.image(bt, tl.add(new Coord(ctl.sz().getX(), 0)), new Coord(sz.getX() - ctr.sz().getX() - ctl.sz().getX(), bt.sz().getY()));
+        g.image(bb, tl.add(new Coord(cbl.sz().getX(), sz.getY() - bb.sz().getY())), new Coord(sz.getX() - cbr.sz().getX() - cbl.sz().getX(), bb.sz().getY()));
+        g.image(bl, tl.add(new Coord(0, ctl.sz().getY())), new Coord(bl.sz().getX(), sz.getY() - cbl.sz().getY() - ctl.sz().getY()));
+        g.image(br, tl.add(new Coord(sz.getX() - br.sz().getX(), ctr.sz().getY())), new Coord(br.sz().getX(), sz.getY() - cbr.sz().getY() - ctr.sz().getY()));
         g.image(ctl, tl);
-        g.image(ctr, tl.add(sz.x - ctr.sz().x, 0));
-        g.image(cbl, tl.add(0, sz.y - cbl.sz().y));
-        g.image(cbr, new Coord(sz.x - cbr.sz().x + tl.x, sz.y - cbr.sz().y + tl.y));
+        g.image(ctr, tl.add(sz.getX() - ctr.sz().getX(), 0));
+        g.image(cbl, tl.add(0, sz.getY() - cbl.sz().getY()));
+        g.image(cbr, new Coord(sz.getX() - cbr.sz().getX() + tl.getX(), sz.getY() - cbr.sz().getY() + tl.getY()));
     }
 }

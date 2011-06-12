@@ -51,12 +51,12 @@ public class Bufflist extends Widget {
     }
 
     public Bufflist(Coord c, Widget parent) {
-        super(c, new Coord((num * frame.sz().x) + ((num - 1) * margin), cframe.sz().y), parent);
+        super(c, new Coord((num * frame.sz().getX()) + ((num - 1) * margin), cframe.sz().getY()), parent);
     }
 
     public void draw(GOut g) {
         int i = 0;
-        int w = frame.sz().x + margin;
+        int w = frame.sz().getX() + margin;
         long now = System.currentTimeMillis();
         synchronized (ui.sess.glob.buffs) {
             for (Buff b : ui.sess.glob.buffs.values()) {
@@ -68,7 +68,7 @@ public class Bufflist extends Widget {
                     g.chcolor(Color.BLACK);
                     g.frect(bc.add(ameteroff), ametersz);
                     g.chcolor(Color.WHITE);
-                    g.frect(bc.add(ameteroff), new Coord((b.ameter * ametersz.x) / 100, ametersz.y));
+                    g.frect(bc.add(ameteroff), new Coord((b.ameter * ametersz.getX()) / 100, ametersz.getY()));
                     g.chcolor();
                 } else {
                     g.image(frame, bc);
@@ -100,7 +100,7 @@ public class Bufflist extends Widget {
 
     public Object tooltip(Coord c, boolean again) {
         int i = 0;
-        int w = frame.sz().x + margin;
+        int w = frame.sz().getX() + margin;
         synchronized (ui.sess.glob.buffs) {
             for (Buff b : ui.sess.glob.buffs.values()) {
                 if (!b.major)

@@ -86,19 +86,19 @@ public class Button extends Widget {
         //Graphics g = graphics();
 //        g.image(isMouseDown ? dt : ut, new Coord(3, 3), new Coord(sz.x - 6, 13));
         g.image(isMouseDown ? dt : ut, new Coord(3, 3));
-        g.image(bl, new Coord());
-        g.image(br, new Coord(sz.x - br.getWidth(), 0));
+        g.image(bl, Coord.z);
+        g.image(br, new Coord(sz.getX() - br.getWidth(), 0));
 
 //        g.image(bt, new Coord(3, 0), new Coord(sz.x - 6, bt.getHeight()));
         g.image(bt, new Coord(3, 0));
 
 //        g.image(bb, new Coord(3, sz.y - bb.getHeight()), new Coord(sz.x - 6, bb.getHeight()));
-        g.image(bb, new Coord(3, sz.y - bb.getHeight()));
+        g.image(bb, new Coord(3, sz.getY() - bb.getHeight()));
 
         Coord tc = sz.div(2).add(Utils.imgsz(cont).div(2).inv());
         if (isMouseDown)
             tc = tc.add(1, 1);
-        g.image(cont, new Coord(tc.x, tc.y));
+        g.image(cont, new Coord(tc.getX(), tc.getY()));
     }
 
     public void change(String text, Color col) {
@@ -106,7 +106,6 @@ public class Button extends Widget {
             col = Color.YELLOW;
         this.text = tf.render(text, col);
         this.cont = this.text.img;
-//        render();
     }
 
     public void change(String text) {

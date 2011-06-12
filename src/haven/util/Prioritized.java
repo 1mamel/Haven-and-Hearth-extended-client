@@ -27,19 +27,19 @@
 package haven.util;
 
 public class Prioritized {
-    private PrioQueue myQueue = null;
+    private volatile PrioQueue myQueue = null;
     private int myPriority = 0;
 
     public int getPriority() {
         return myPriority;
     }
 
-    public void setPriority(int p) {
+    public synchronized void setPriority(int p) {
         myPriority = p;
         if (myQueue != null) myQueue.update(this);
     }
 
-    public void setQueue(PrioQueue queue) {
+    public synchronized void setQueue(PrioQueue queue) {
         myQueue = queue;
     }
 }

@@ -285,37 +285,41 @@ public class Config {
     }
 
     public static void saveOptions() {
-        StringBuilder hideObjects = new StringBuilder();
-        for (String objectName : hideObjectList) {
-            hideObjects.append(objectName).append(',');
-        }
-        options.setProperty("hideObjects", hideObjects.toString());
-        options.setProperty("GoogleAPIKey", translator.getKey());
-        options.setProperty("timestamp", (timestamp) ? "true" : "false");
-        options.setProperty("zoom", zoom ? "true" : "false");
-        options.setProperty("noborders", noborders ? "true" : "false");
-        options.setProperty("new_minimap", new_minimap ? "true" : "false");
-        options.setProperty("new_chat", new_chat ? "true" : "false");
-        options.setProperty("use_smileys", use_smileys ? "true" : "false");
-        options.setProperty("sfx_vol", String.valueOf(sfxVol));
-        options.setProperty("music_vol", String.valueOf(musicVol));
-        options.setProperty("music_on", isMusicOn ? "true" : "false");
-        options.setProperty("sound_on", isSoundOn ? "true" : "false");
-        options.setProperty("show_direction", showDirection ? "true" : "false");
-        options.setProperty("showNames", showNames ? "true" : "false");
-        options.setProperty("showBeast", showBeast ? "true" : "false");
-        options.setProperty("showRadius", showRadius ? "true" : "false");
-        options.setProperty("showHidden", showHidden ? "true" : "false");
-        options.setProperty("simple_plants", simple_plants ? "true" : "false");
-        options.setProperty("fastFlowerAnim", fastFlowerAnim ? "true" : "false");
-        options.setProperty("sshot_compress", sshot_compress ? "true" : "false");
-        options.setProperty("sshot_noui", sshot_noui ? "true" : "false");
-        options.setProperty("newclaim", newclaim ? "true" : "false");
-
         try {
-            options.store(new FileOutputStream("haven.conf"), "Custom config options");
-        } catch (IOException e) {
-            System.out.println(e);
+            StringBuilder hideObjects = new StringBuilder();
+            for (String objectName : hideObjectList) {
+                hideObjects.append(objectName).append(',');
+            }
+            options.setProperty("hideObjects", hideObjects.toString());
+            options.setProperty("GoogleAPIKey", translator.getKey());
+            options.setProperty("timestamp", (timestamp) ? "true" : "false");
+            options.setProperty("zoom", zoom ? "true" : "false");
+            options.setProperty("noborders", noborders ? "true" : "false");
+            options.setProperty("new_minimap", new_minimap ? "true" : "false");
+            options.setProperty("new_chat", new_chat ? "true" : "false");
+            options.setProperty("use_smileys", use_smileys ? "true" : "false");
+            options.setProperty("sfx_vol", String.valueOf(sfxVol));
+            options.setProperty("music_vol", String.valueOf(musicVol));
+            options.setProperty("music_on", isMusicOn ? "true" : "false");
+            options.setProperty("sound_on", isSoundOn ? "true" : "false");
+            options.setProperty("show_direction", showDirection ? "true" : "false");
+            options.setProperty("showNames", showNames ? "true" : "false");
+            options.setProperty("showBeast", showBeast ? "true" : "false");
+            options.setProperty("showRadius", showRadius ? "true" : "false");
+            options.setProperty("showHidden", showHidden ? "true" : "false");
+            options.setProperty("simple_plants", simple_plants ? "true" : "false");
+            options.setProperty("fastFlowerAnim", fastFlowerAnim ? "true" : "false");
+            options.setProperty("sshot_compress", sshot_compress ? "true" : "false");
+            options.setProperty("sshot_noui", sshot_noui ? "true" : "false");
+            options.setProperty("newclaim", newclaim ? "true" : "false");
+
+            try {
+                options.store(new FileOutputStream("haven.conf"), "Custom config options");
+            } catch (IOException e) {
+                System.out.println(e);
+            }
+        } catch (Throwable e) {
+            e.printStackTrace();
         }
     }
 }

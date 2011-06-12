@@ -79,16 +79,14 @@ public class RemoteUI implements UI.Receiver {
                         if (args[0].equals("gfx/hud/buttons/ncu") && args[1].equals("gfx/hud/buttons/ncd")) {
                             c = CustomConfig.getWindowCenter().add(86, 214);
                         }
-                    } else if (type.equals("wnd") && c.x == 400 && c.y == 200) {
-                        System.err.println("Strange window name=" + args[1].toString());
+                    } else if (type.equals("wnd") && c.getX() == 400 && c.getY() == 200) {
+                        CustomConfig.logger.info("Strange window name=" + args[1].toString());
                         c = CustomConfig.getWindowCenter().add(0, -100);
                     }
-                    if (CustomConfig.debugMsgs) {
-                        System.out.println("Creating Widget id=" + id + " parentId=" + parent + " type='" + type + "' in coord " + c.toString());
-                        System.out.print("  with args: ");
-                        System.out.println(Arrays.toString(args));
-                    }
                     // UI fixes END
+                    if (CustomConfig.isDebugLogging()) {
+                        CustomConfig.logger.debug("Creating Widget id=" + id + " parentId=" + parent + " type='" + type + "' in coord " + c.toString() + "\n\twith args: " + Arrays.toString(args));
+                    }
 
                     ui.newwidget(id, type, c, parent, args);
 
@@ -96,17 +94,15 @@ public class RemoteUI implements UI.Receiver {
                     int id = msg.uint16();
                     String type = msg.string();
                     Object[] args = msg.list();
-                    if (CustomConfig.debugMsgs) {
-                        System.out.println("Message (type='" + type + "') for widget (id=" + id + ')');
-                        System.out.print("  contains: ");
-                        System.out.println(Arrays.toString(args));
+                    if (CustomConfig.isDebugLogging()) {
+                        CustomConfig.logger.debug("Message (type='" + type + "') for widget (id=" + id + ')' + "\n\tcontains: " + Arrays.toString(args));
                     }
                     ui.uimsg(id, type, args);
 
                 } else if (msg.type == Message.RMSG_DSTWDG) {
                     int id = msg.uint16();
-                    if (CustomConfig.debugMsgs) {
-                        System.out.println("Deleting widget id=" + id);
+                    if (CustomConfig.isDebugLogging()) {
+                        CustomConfig.logger.debug("Deleting widget id=" + id);
                     }
                     ui.destroy(id);
                 }

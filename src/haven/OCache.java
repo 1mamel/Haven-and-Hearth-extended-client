@@ -197,7 +197,7 @@ public class OCache implements Iterable<Gob> {
         Gob g = getgob(id, frame);
         if (g == null)
             return;
-        if ((off.x == 0) && (off.y == 0)) {
+        if ((off.getX() == 0) && (off.getY() == 0)) {
             g.delattr(DrawOffset.class);
         } else {
             DrawOffset dro = g.getattr(DrawOffset.class);

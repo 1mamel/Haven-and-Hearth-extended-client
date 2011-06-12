@@ -52,36 +52,36 @@ public abstract class Tex {
     }
 
     public void crender(GOut g, Coord c, Coord ul, Coord sz, Coord tsz) {
-        if ((tsz.x == 0) || (tsz.y == 0))
+        if ((tsz.getX() == 0) || (tsz.getY() == 0))
             return;
-        if ((c.x >= ul.x + sz.x) || (c.y >= ul.y + sz.y) ||
-                (c.x + tsz.x <= ul.x) || (c.y + tsz.y <= ul.y))
+        if ((c.getX() >= ul.getX() + sz.getX()) || (c.getY() >= ul.getY() + sz.getY()) ||
+                (c.getX() + tsz.getX() <= ul.getX()) || (c.getY() + tsz.getY() <= ul.getY()))
             return;
         Coord t = new Coord(c);
         Coord uld = new Coord(0, 0);
         Coord brd = new Coord(dim);
         Coord szd = new Coord(tsz);
-        if (c.x < ul.x) {
-            int pd = ul.x - c.x;
-            t.x = ul.x;
-            uld.x = (pd * dim.x) / tsz.x;
-            szd.x -= pd;
+        if (c.getX() < ul.getX()) {
+            int pd = ul.getX() - c.getX();
+            t.setX(ul.getX());
+            uld.setX((pd * dim.getX()) / tsz.getX());
+            szd.setX(szd.getX() - pd);
         }
-        if (c.y < ul.y) {
-            int pd = ul.y - c.y;
-            t.y = ul.y;
-            uld.y = (pd * dim.y) / tsz.y;
-            szd.y -= pd;
+        if (c.getY() < ul.getY()) {
+            int pd = ul.getY() - c.getY();
+            t.setY(ul.getY());
+            uld.setY((pd * dim.getY()) / tsz.getY());
+            szd.setY(szd.getY() - pd);
         }
-        if (c.x + tsz.x > ul.x + sz.x) {
-            int pd = (c.x + tsz.x) - (ul.x + sz.x);
-            szd.x -= pd;
-            brd.x -= (pd * dim.x) / tsz.x;
+        if (c.getX() + tsz.getX() > ul.getX() + sz.getX()) {
+            int pd = (c.getX() + tsz.getX()) - (ul.getX() + sz.getX());
+            szd.setX(szd.getX() - pd);
+            brd.setX(brd.getX() - (pd * dim.getX()) / tsz.getX());
         }
-        if (c.y + tsz.y > ul.y + sz.y) {
-            int pd = (c.y + tsz.y) - (ul.y + sz.y);
-            szd.y -= pd;
-            brd.y -= (pd * dim.y) / tsz.y;
+        if (c.getY() + tsz.getY() > ul.getY() + sz.getY()) {
+            int pd = (c.getY() + tsz.getY()) - (ul.getY() + sz.getY());
+            szd.setY(szd.getY() - pd);
+            brd.setY(brd.getY() - (pd * dim.getY()) / tsz.getY());
         }
         render(g, t, uld, brd, szd);
     }

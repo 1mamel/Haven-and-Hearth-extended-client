@@ -139,7 +139,7 @@ public class HavenApplet extends Applet {
     public void startgame() {
         if (running)
             return;
-        h = new HavenPanel(800, 600);
+        h = new HavenPanel(new Dimension(800, 600));
         add(h);
         h.init();
         try {

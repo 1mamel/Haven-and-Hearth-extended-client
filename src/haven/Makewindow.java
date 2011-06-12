@@ -48,7 +48,7 @@ public class Makewindow extends HWindow {
     public Makewindow(Widget parent, String rcpnm) {
         super(parent, "Crafting", true);
         Label nm = new Label(new Coord(10, 10), this, rcpnm, nmf);
-        nm.c = new Coord(sz.x - 10 - nm.sz.x, 10);
+        nm.c = new Coord(sz.getX() - 10 - nm.sz.getX(), 10);
         new Label(new Coord(10, 18), this, "Input:");
         new Label(new Coord(10, 73), this, "Result:");
         obtn = new Button(new Coord(290, 71), 60, this, "Craft");

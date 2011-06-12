@@ -59,9 +59,9 @@ public class GaussianPlant extends CSprite {
             Random rnd = owner.mkrandoom();
             Coord bs = neg.bs;
             for (int i = 0; i < num; i++) {
-                Coord c = new Coord((int) (rnd.nextGaussian() * bs.x / 2), (int) (rnd.nextGaussian() * bs.y / 2));
+                Coord c = new Coord((int) (rnd.nextGaussian() * bs.getX() / 2), (int) (rnd.nextGaussian() * bs.getY() / 2));
                 Tex s = strands[rnd.nextInt(strands.length)];
-                spr.add(s, 0, MapView.m2s(c), new Coord(s.sz().x / 2, s.sz().y).inv());
+                spr.add(s, 0, MapView.m2s(c), new Coord(s.sz().getX() / 2, s.sz().getY()).inv());
             }
             return (spr);
         }

@@ -224,16 +224,16 @@ public class CustomStarter {
             });
             startBtn.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    int x = stdRes.isEnabled() ? ((Coord) stdRes.getSelectedItem()).x : Integer.parseInt(xField.getText());
-                    int y = stdRes.isEnabled() ? ((Coord) stdRes.getSelectedItem()).y : Integer.parseInt(yField.getText());
+                    int x = stdRes.isEnabled() ? ((Coord) stdRes.getSelectedItem()).getX() : Integer.parseInt(xField.getText());
+                    int y = stdRes.isEnabled() ? ((Coord) stdRes.getSelectedItem()).getY() : Integer.parseInt(yField.getText());
                     CustomConfig.setWindowSize(x, y);
-                    CustomConfigProcessor.saveSettings();
-                    Thread mainThread = new Thread() {
+
+                    new Thread() {
                         public void run() {
-                            MainFrame.main(args);
+                            runGame(args);
                         }
-                    };
-                    mainThread.start();
+                    }.start();
+
                     configFrame.dispose();
                 }
             });
@@ -243,8 +243,12 @@ public class CustomStarter {
                     (int) (toolkit.getScreenSize().getHeight() - configFrame.getHeight()) / 2);
             configFrame.setVisible(true);
         } else {
-            CustomConfigProcessor.saveSettings();
-            MainFrame.main(args);
+            runGame(args);
         }
+    }
+
+    public static void runGame(final String[] args) {
+        CustomConfigProcessor.saveSettings();
+        MainFrame.main(args);
     }
 }

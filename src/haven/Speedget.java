@@ -42,9 +42,9 @@ public class Speedget extends Widget {
         for (int i = 0; i < 4; i++) {
             for (int o = 0; o < 3; o++)
                 imgs[i][o] = Resource.loadtex("gfx/hud/meter/rmeter/" + names[i] + '-' + vars[o]);
-            w += imgs[i][0].sz().x;
+            w += imgs[i][0].sz().getX();
         }
-        tsz = new Coord(w, imgs[0][0].sz().y);
+        tsz = new Coord(w, imgs[0][0].sz().getY());
 
         Widget.addtype("speedget", new WidgetFactory() {
             public Widget create(Coord c, Widget parent, Object[] args) {
@@ -74,7 +74,7 @@ public class Speedget extends Widget {
             else
                 t = imgs[i][1];
             g.image(t, new Coord(x, 0));
-            x += t.sz().x;
+            x += t.sz().getX();
         }
     }
 
@@ -101,8 +101,8 @@ public class Speedget extends Widget {
     public boolean mousedown(Coord c, int button) {
         int x = 0;
         for (int i = 0; i < 4; i++) {
-            x += imgs[i][0].sz().x;
-            if (c.x < x) {
+            x += imgs[i][0].sz().getX();
+            if (c.getX() < x) {
                 wdgmsg("set", i);
                 break;
             }

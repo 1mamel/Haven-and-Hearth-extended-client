@@ -26,8 +26,6 @@
 
 package haven;
 
-import ender.GoogleTranslator;
-
 import java.awt.font.TextAttribute;
 import java.util.*;
 
@@ -78,8 +76,8 @@ public class OptWnd extends Window {
         body = new Tabs(Coord.z, new Coord(400, 300), this) {
             public void changed(Tab from, Tab to) {
                 Utils.setpref("optwndtab", to.btn.getText());
-                from.btn.c.y = 0;
-                to.btn.c.y = -2;
+                from.btn.c.setY(0);
+                to.btn.c.setY(-2);
             }
         };
         Widget tab;
@@ -320,7 +318,7 @@ public class OptWnd extends Window {
 
                 public void changed() {
                     CustomConfig.sfxVol = 100 - val;
-                    sfxvol.c.y = 69 + (int) ((val) * 1.86);
+                    sfxvol.c.setY(69 + (int) ((val) * 1.86));
                     sfxvol.settext(String.valueOf(100 - val) + " %");
                 }
 
@@ -340,7 +338,7 @@ public class OptWnd extends Window {
 
                 public void changed() {
                     CustomConfig.musicVol = 100 - val;
-                    musVol.c.y = 69 + (int) ((val) * 1.86);
+                    musVol.c.setY(69 + (int) ((val) * 1.86));
                     musVol.settext(String.valueOf(100 - val) + " %");
                 }
 
@@ -381,7 +379,7 @@ public class OptWnd extends Window {
             altIRCNickLabel = new Label(new Coord(firstCellXOffset, 100), tab, "Alt Nick:");
 
             // TetEntries (2nd column)
-            int secondCellXOffset = 15 + Math.max(serverLabel.sz.x, Math.max(chnlLabel.sz.x, Math.max(defIRCNickLabel.sz.x, altIRCNickLabel.sz.x)));
+            int secondCellXOffset = 15 + Math.max(serverLabel.sz.getX(), Math.max(chnlLabel.sz.getX(), Math.max(defIRCNickLabel.sz.getX(), altIRCNickLabel.sz.getX())));
             final Coord textFieldSize = new Coord(180, 15);
 
             // Server entry
@@ -469,22 +467,22 @@ public class OptWnd extends Window {
             y = 0;
             new CheckBox(new Coord(150, y += 30), tab, "Hiding enabled") {
                 public void changed(boolean val) {
-                    CustomConfig.hide = val;
+                    CustomConfig.setHideObjects(val);
                     Config.saveOptions();
                 }
 
                 {
-                    a = CustomConfig.hide;
+                    a = CustomConfig.isHideObjects();
                 }
             };
             new CheckBox(new Coord(150, y += 30), tab, "XRay enabled") {
                 public void changed(boolean val) {
-                    CustomConfig.xray = val;
+                    CustomConfig.setXray(val);
                     Config.saveOptions();
                 }
 
                 {
-                    a = CustomConfig.xray;
+                    a = CustomConfig.isXray();
                 }
             };
             new CheckBox(new Coord(150, y += 30), tab, "NightVision enabled") {

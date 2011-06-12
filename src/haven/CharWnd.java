@@ -109,7 +109,7 @@ public class CharWnd extends Window {
             this.inv = inv;
             lx = x;
             Label lbl = new Label(new Coord(x, y), belief, String.format("%s / %s", Utils.titlecase(left), Utils.titlecase(right)));
-            lbl.c = new Coord(72 + x - (lbl.sz.x / 2), y);
+            lbl.c = new Coord(72 + x - (lbl.sz.getX() / 2), y);
             y += 15;
             new Img(new Coord(x, y), Resource.loadtex("gfx/hud/charsh/" + left), belief);
             lb = new IButton(new Coord(x + 16, y), belief, lbu, lbd) {
@@ -138,7 +138,7 @@ public class CharWnd extends Window {
             int val = attr.comp;
             if (inv)
                 val = -val;
-            flarper.c = new Coord((7 * (val + 5)) + 31 + lx, flarper.c.y);
+            flarper.c = new Coord((7 * (val + 5)) + 31 + lx, flarper.c.getY());
             if (btime > 0) {
                 lb.up = lbg;
                 lb.down = lbg;
@@ -409,11 +409,11 @@ public class CharWnd extends Window {
         }
 
         public void draw(GOut g) {
-            g.image(title.tex(), new Coord(50 - (title.tex().sz().x / 2), 0));
-            g.image(img, new Coord(50 - (img.sz().x / 2), 15));
-            Coord nmc = new Coord(50 - (nmeter.sz().x / 2), 100);
+            g.image(title.tex(), new Coord(50 - (title.tex().sz().getX() / 2), 0));
+            g.image(img, new Coord(50 - (img.sz().getX() / 2), 15));
+            Coord nmc = new Coord(50 - (nmeter.sz().getX() / 2), 100);
             g.image(nmeter, nmc);
-            g.image(numen.tex(), nmc.add(18, 16 - numen.tex().sz().y));
+            g.image(numen.tex(), nmc.add(18, 16 - numen.tex().sz().getY()));
             super.draw(g);
         }
 
@@ -451,9 +451,9 @@ public class CharWnd extends Window {
 
         SkillList(Coord c, Coord sz, Widget parent) {
             super(c, sz, parent);
-            h = sz.y / 20;
+            h = sz.getY() / 20;
             sel = -1;
-            sb = new Scrollbar(new Coord(sz.x, 0), sz.y, this, 0, 4) {
+            sb = new Scrollbar(new Coord(sz.getX(), 0), sz.getY(), this, 0, 4) {
                 public void changed() {
                 }
             };
@@ -470,7 +470,7 @@ public class CharWnd extends Window {
                 Resource sk = skills.get(i + sb.val);
                 if (i + sb.val == sel) {
                     g.chcolor(255, 255, 0, 128);
-                    g.frect(new Coord(0, i * 20), new Coord(sz.x, 20));
+                    g.frect(new Coord(0, i * 20), new Coord(sz.getX(), 20));
                     g.chcolor();
                 }
                 if (getcost(sk) > exp)
@@ -515,7 +515,7 @@ public class CharWnd extends Window {
             if (super.mousedown(c, button))
                 return (true);
             if (button == 1) {
-                sel = (c.y / 20) + sb.val;
+                sel = (c.getY() / 20) + sb.val;
                 if (sel >= skills.size())
                     sel = -1;
                 changed((sel < 0) ? null : skills.get(sel));

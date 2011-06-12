@@ -72,10 +72,10 @@ public class GrowingPlant extends CSprite {
                 if (Config.simple_plants) {
                     c = neg.bc.add(neg.bs).sub(5, 5);
                 } else {
-                    c = new Coord(rnd.nextInt(neg.bs.x), rnd.nextInt(neg.bs.y)).add(neg.bc);
+                    c = new Coord(rnd.nextInt(neg.bs.getX()), rnd.nextInt(neg.bs.getY())).add(neg.bc);
                 }
                 Tex s = strands[m][rnd.nextInt(strands[m].length)];
-                spr.add(s, 0, MapView.m2s(c), new Coord(s.sz().x / 2, s.sz().y).inv());
+                spr.add(s, 0, MapView.m2s(c), new Coord(s.sz().getX() / 2, s.sz().getY()).inv());
             }
             return (spr);
         }

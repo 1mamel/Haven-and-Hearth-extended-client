@@ -41,19 +41,23 @@ import java.util.Queue;
 public class HavenPanel extends GLCanvas implements Runnable {
     UI ui;
     boolean inited = false, rdr = false;
-    final int w, h;
     final long fd = 20;
     long fps = 0;
     int dth = 0, dtm = 0;
     public static int texhit = 0, texmiss = 0;
     final Queue<InputEvent> events = new LinkedList<InputEvent>();
-    private String cursmode = "tex";
+    private CursorMode cursmode = CursorMode.TEXTURE;
     private Resource lastcursor = null;
     public Coord mousepos = new Coord(0, 0);
     public final Profile prof = new Profile(300);
     private Profile.Frame curf = null;
     private SyncFSM fsm = null;
     private static final GLCapabilities caps;
+
+    private static enum CursorMode {
+        TEXTURE,
+        AWT
+    }
 
     static {
         caps = new GLCapabilities();
@@ -64,12 +68,13 @@ public class HavenPanel extends GLCanvas implements Runnable {
         caps.setBlueBits(8);
     }
 
-    public HavenPanel(int w, int h) {
+    public HavenPanel(Dimension size) {
         super(caps);
-        setSize(this.w = w, this.h = h);
+        setSize(size);
         initgl();
-        if (Toolkit.getDefaultToolkit().getMaximumCursorColors() >= 256)
-            cursmode = "awt";
+        if (Toolkit.getDefaultToolkit().getMaximumCursorColors() >= 256) {
+            cursmode = CursorMode.AWT;
+        }
         setCursor(Toolkit.getDefaultToolkit().createCustomCursor(TexI.mkbuf(new Coord(1, 1)), new java.awt.Point(), ""));
     }
 
@@ -113,7 +118,7 @@ public class HavenPanel extends GLCanvas implements Runnable {
 
     public void init() {
         setFocusTraversalKeysEnabled(false);
-        ui = new UI(new Coord(w, h), null);
+        ui = new UI(getSize(), null);
         addKeyListener(new KeyAdapter() {
             public void keyTyped(KeyEvent e) {
                 checkfs();
@@ -226,7 +231,7 @@ public class HavenPanel extends GLCanvas implements Runnable {
     }
 
     UI newui(Session sess) {
-        ui = new UI(new Coord(w, h), sess);
+        ui = new UI(getSize(), sess);
         ui.root.gprof = prof;
         ui.fsm = this.fsm;
         return (ui);
@@ -238,7 +243,7 @@ public class HavenPanel extends GLCanvas implements Runnable {
         java.awt.Graphics g = buf.getGraphics();
         g.drawImage(img, 0, 0, null);
         g.dispose();
-        return (Toolkit.getDefaultToolkit().createCustomCursor(buf, new java.awt.Point(hs.x, hs.y), ""));
+        return (Toolkit.getDefaultToolkit().createCustomCursor(buf, new java.awt.Point(hs.getX(), hs.getY()), ""));
     }
 
     void redraw(GL gl) {
@@ -291,10 +296,10 @@ public class HavenPanel extends GLCanvas implements Runnable {
         if (tt != null) {
             Coord sz = tt.sz();
             Coord pos = mousepos.sub(sz);
-            if (pos.x < 0)
-                pos.x = 0;
-            if (pos.y < 0)
-                pos.y = 0;
+            if (pos.getX() < 0)
+                pos.setX(0);
+            if (pos.getY() < 0)
+                pos.setY(0);
             g.chcolor(244, 247, 21, 192);
             g.rect(pos.add(-3, -3), sz.add(6, 6));
             g.chcolor(35, 35, 35, 192);
@@ -304,16 +309,16 @@ public class HavenPanel extends GLCanvas implements Runnable {
         }
         Resource curs = ui.root.getcurs(mousepos);
         if (!curs.loading.get()) {
-            if (cursmode.equals("awt")) {
+            if (cursmode == CursorMode.AWT) {
                 if (curs != lastcursor) {
                     try {
                         setCursor(makeawtcurs(curs.layer(Resource.imgc).img, curs.layer(Resource.negc).cc));
                         lastcursor = curs;
                     } catch (Exception e) {
-                        cursmode = "tex";
+                        cursmode = CursorMode.TEXTURE;
                     }
                 }
-            } else if (cursmode.equals("tex")) {
+            } else if (cursmode == CursorMode.TEXTURE) {
                 Coord dc = mousepos.sub(curs.layer(Resource.negc).cc);
                 g.image(curs.layer(Resource.imgc), dc);
             }

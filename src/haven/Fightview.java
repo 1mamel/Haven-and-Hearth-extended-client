@@ -34,9 +34,9 @@ public class Fightview extends Widget {
     static final Tex bg = Resource.loadtex("gfx/hud/bosq");
     static final int height = 5;
     static final int ymarg = 5;
-    static final Coord cavac = new Coord(CustomConfig.getWindowSize().x - 100, 10);
-    static final Coord cgivec = new Coord(CustomConfig.getWindowSize().x - 135, 10);
-    static final Coord meterc = new Coord(CustomConfig.getWindowCenter().x - 85, 10);
+    static final Coord cavac = new Coord(CustomConfig.getWindowWidth() - 100, 10);
+    static final Coord cgivec = new Coord(CustomConfig.getWindowWidth() - 135, 10);
+    static final Coord meterc = new Coord(CustomConfig.getWindowCenter().getX() - 85, 10);
     final LinkedList<Relation> lsrel = new LinkedList<Relation>();
     public Relation current = null;
     public Indir<Resource> blk, batk, iatk;
@@ -91,13 +91,13 @@ public class Fightview extends Widget {
     static {
         Widget.addtype("frv", new WidgetFactory() {
             public Widget create(Coord c, Widget parent, Object[] args) {
-                return (new Fightview(new Coord(CustomConfig.getWindowSize().x - 10, c.y), parent));
+                return (new Fightview(new Coord(CustomConfig.getWindowWidth() - 10, c.getY()), parent));
             }
         });
     }
 
     public Fightview(Coord c, Widget parent) {
-        super(c.add(-bg.sz().x, 0), new Coord(bg.sz().x, (bg.sz().y + ymarg) * height), parent);
+        super(c.add(-bg.sz().getX(), 0), new Coord(bg.sz().getX(), (bg.sz().getY() + ymarg) * height), parent);
         SlenHud s = ui.slen;//  ui.root.findchild(SlenHud.class);
         curgive = new GiveButton(cgivec, ui.root, 0) {
             public void wdgmsg(String name, Object... args) {
@@ -124,10 +124,10 @@ public class Fightview extends Widget {
     }
 
     public void draw(GOut g) {
-        curava.c.x = MainFrame.innerSize.width - 100;
-        curgive.c.x = MainFrame.innerSize.width - 135;
-        comwdg.c.x = MainFrame.centerPoint.x - 85;
-        c.x = MainFrame.innerSize.width - 10 - bg.sz().x;
+        curava.c.setX(CustomConfig.getWindowWidth() - 100);
+        curgive.c.setX(CustomConfig.getWindowWidth() - 135);
+        comwdg.c.setX(CustomConfig.getCenterX() - 85);
+        c.setX(CustomConfig.getWindowWidth() - 10 - bg.sz().getX());
         int y = 0;
         for (Relation rel : lsrel) {
             if (rel == current) {
@@ -135,7 +135,7 @@ public class Fightview extends Widget {
                 continue;
             }
             g.image(bg, new Coord(0, y));
-            rel.ava.c = new Coord(25, ((bg.sz().y - rel.ava.sz.y) / 2) + y);
+            rel.ava.c = new Coord(25, ((bg.sz().getY() - rel.ava.sz.getY()) / 2) + y);
             rel.give.c = new Coord(5, 4 + y);
             rel.show(true);
             Tex name = rel.name();
@@ -149,7 +149,7 @@ public class Fightview extends Widget {
             g.image(text, new Coord(65, y + 10));
             text.dispose();
             //g.text(String.format("%d %d %d/%d", rel.bal, rel.intns, new Coord(65, y + 10));
-            y += bg.sz().y + ymarg;
+            y += bg.sz().getY() + ymarg;
         }
         super.draw(g);
     }

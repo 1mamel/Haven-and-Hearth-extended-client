@@ -64,9 +64,9 @@ public class RootWidget extends ConsoleHost {
             } else if ((code == KeyEvent.VK_N) && ctrl) {
                 CustomConfig.hasNightVision = !CustomConfig.hasNightVision;
             } else if ((code == KeyEvent.VK_X) && ctrl) {
-                CustomConfig.xray = !CustomConfig.xray;
+                CustomConfig.toggleXray();
             } else if ((code == KeyEvent.VK_H) && ctrl) {
-                CustomConfig.hide = !CustomConfig.hide;
+                CustomConfig.toggleHideObjects();
             } else if ((code == KeyEvent.VK_Q) && alt) {
                 ui.spd.wdgmsg("set", 0);
             } else if ((code == KeyEvent.VK_W) && alt) {
@@ -87,7 +87,7 @@ public class RootWidget extends ConsoleHost {
                 entercmd();
             } else if (key == '`') {
                 if (CustomConfig.console == null) {
-                    CustomConfig.console = new CustomConsole(Coord.z, new Coord(CustomConfig.getWindowSize().x - 30, 220), this,
+                    CustomConfig.console = new CustomConsole(Coord.z, new Coord(CustomConfig.getWindowWidth() - 30, 220), this,
                             "Console");
                 } else {
                     CustomConfig.console.toggle();
@@ -110,12 +110,12 @@ public class RootWidget extends ConsoleHost {
             visible = true;
             screenshot = false;
             try {
-                Coord s = MainFrame.getInnerSize();
+                Coord s = CustomConfig.getWindowSize();
                 String stamp = Utils.sessdate(System.currentTimeMillis());
                 String ext = Config.sshot_compress ? ".jpg" : ".png";
                 File f = new File("screenshots/SS_" + stamp + ext);
                 f.mkdirs();
-                Screenshot.writeToFile(f, s.x, s.y);
+                Screenshot.writeToFile(f, s.getX(), s.getY());
             } catch (GLException e) {
                 e.printStackTrace();
             } catch (IOException e) {

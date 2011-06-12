@@ -175,7 +175,7 @@ public class Gob implements Sprite.Owner {
                 }
             }
         }
-        if (CustomConfig.hide) {
+        if (CustomConfig.isHideObjects()) {
             for (String objectName : Config.hideObjectList) {
                 if (resourceName.contains(objectName) && (!resourceName.contains("door"))) {
                     hide = true;

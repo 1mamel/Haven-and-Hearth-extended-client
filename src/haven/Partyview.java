@@ -104,7 +104,7 @@ public class Partyview extends Widget {
             ui.destroy(leave);
             leave = null;
         }
-        sz.y = MainFrame.getScreenSize().y - c.y;
+        sz.setY(CustomConfig.getWindowHeight() - c.getY());
     }
 
     public void wdgmsg(Widget sender, String msg, Object... args) {

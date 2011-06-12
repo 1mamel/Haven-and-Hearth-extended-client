@@ -77,10 +77,10 @@ public class IMeter extends Widget {
             g.frect(off, msz);
             g.chcolor();
             for (Meter m : meters) {
-                int w = msz.x;
+                int w = msz.getX();
                 w = (w * m.a) / 100;
                 g.chcolor(m.c);
-                g.frect(off, new Coord(w, msz.y));
+                g.frect(off, new Coord(w, msz.getY()));
             }
             g.chcolor();
             g.image(bg, Coord.z);

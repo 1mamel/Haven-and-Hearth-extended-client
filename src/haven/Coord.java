@@ -26,15 +26,28 @@
 
 package haven;
 
+import java.awt.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static java.lang.Math.PI;
 
 public class Coord implements Comparable<Coord>, java.io.Serializable, Cloneable {
-    public int x, y;
-    public static final Coord z = new Coord(0, 0);
-    public static final Pattern coordPattern = Pattern.compile("\\((\\d+), (\\d+)\\)");
+    public static final Pattern parsePattern = Pattern.compile("\\((-?\\d+), (-?\\d+)\\)");
+    public static final Coord z = new Coord(0, 0) {
+        @Override
+        public void setX(int x) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void setY(int y) {
+            throw new UnsupportedOperationException();
+        }
+    };
+
+    private int x;
+    private int y;
 
     public Coord(int x, int y) {
         this.x = x;
@@ -45,21 +58,22 @@ public class Coord implements Comparable<Coord>, java.io.Serializable, Cloneable
         this(c.x, c.y);
     }
 
+    @Deprecated
     public Coord() {
         this(0, 0);
     }
 
     public Coord(String str) {
-        Matcher m = coordPattern.matcher(str);
+        Matcher m = parsePattern.matcher(str);
         if (m.find()) {
             x = Integer.parseInt(m.group(1));
             y = Integer.parseInt(m.group(2));
         } else {
-            x = y = 0;
+            throw new IllegalArgumentException("Point format " + parsePattern.pattern() + " not founded in " + str);
         }
     }
 
-    public Coord(java.awt.Dimension d) {
+    public Coord(Dimension d) {
         this(d.width, d.height);
     }
 
@@ -121,24 +135,29 @@ public class Coord implements Comparable<Coord>, java.io.Serializable, Cloneable
         return (new Coord(x * f.x, y * f.y));
     }
 
-    public Coord mul(int a, int b) {
-        return (new Coord(x * a, y * b));
+    public Coord mul(final int mx, final int my) {
+        return (new Coord(x * mx, y * my));
     }
 
-    public Coord div(Coord d) {
+    public Coord div(final Coord d) {
+        return div(d.x, d.y);
+    }
+
+    public Coord div(final int d) {
+        return div(d, d);
+    }
+
+    public Coord div(final int dx, final int dy) {
         int v, w;
 
-        v = ((x < 0) ? (x + 1) : x) / d.x;
-        w = ((y < 0) ? (y + 1) : y) / d.y;
+        v = ((x < 0) ? (x + 1) : x) / dx;
+        w = ((y < 0) ? (y + 1) : y) / dy;
         if (x < 0)
             v--;
         if (y < 0)
             w--;
-        return (new Coord(v, w));
-    }
 
-    public Coord div(int d) {
-        return (div(new Coord(d, d)));
+        return (new Coord(v, w));
     }
 
     public Coord div(double f) {
@@ -157,6 +176,7 @@ public class Coord implements Comparable<Coord>, java.io.Serializable, Cloneable
         return (new Coord(v, w));
     }
 
+    @SuppressWarnings({"SuspiciousNameCombination"})
     public Coord swap() {
         return new Coord(y, x);
     }
@@ -208,6 +228,68 @@ public class Coord implements Comparable<Coord>, java.io.Serializable, Cloneable
             return (Coord) super.clone();
         } catch (CloneNotSupportedException e) {
             return new Coord(x, y);
+        }
+    }
+
+    public Dimension toDimension() {
+        return new Dimension(x, y);
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public Point toPoint() {
+        return new Point(x, y);
+    }
+
+    public void set(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public Coord getUnmodifiableVersion() {
+        return new UnmodifiableCoord(this);
+    }
+
+    public static class UnmodifiableCoord extends Coord {
+        public UnmodifiableCoord(Coord c) {
+            super(c);
+        }
+
+        public UnmodifiableCoord(int x, int y) {
+            super(x, y);
+        }
+
+        public UnmodifiableCoord(Dimension d) {
+            super(d);
+        }
+
+        @Override
+        public void set(int x, int y) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void setY(int y) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void setX(int x) {
+            throw new UnsupportedOperationException();
         }
     }
 }

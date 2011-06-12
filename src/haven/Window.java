@@ -86,8 +86,8 @@ public class Window extends Widget implements DTarget {
     }
 
     protected void placecbtn() {
-        closeButton.c = new Coord(wsz.x - 3 - closeButtonImages[0].getWidth(), 3).sub(mrgn).sub(wbox.tloff());
-        foldButton.c = new Coord(closeButton.c.x - 1 - foldButtonImages[0].getWidth(), closeButton.c.y);
+        closeButton.c = new Coord(wsz.getX() - 3 - closeButtonImages[0].getWidth(), 3).sub(mrgn).sub(wbox.tloff());
+        foldButton.c = new Coord(closeButton.c.getX() - 1 - foldButtonImages[0].getWidth(), closeButton.c.getY());
     }
 
     @SuppressWarnings({"WeakerAccess", "WeakerAccess"})
@@ -104,7 +104,7 @@ public class Window extends Widget implements DTarget {
         this.sz = sz;
 //        atl = new Coord(wbox.bl.sz().x, wbox.bt.sz().y).add(tlo);
         wsz = sz.sub(tlo).sub(rbo);
-        asz = new Coord(wsz.x - wbox.bl.sz().x - wbox.br.sz().x - mrgn.x, wsz.y - wbox.bt.sz().y - wbox.bb.sz().y - mrgn.y);
+        asz = new Coord(wsz.getX() - wbox.bl.sz().getX() - wbox.br.sz().getX() - mrgn.getX(), wsz.getY() - wbox.bt.sz().getY() - wbox.bb.sz().getY() - mrgn.getY());
         if (closable) {
             closeButton = new IButton(Coord.z, this, closeButtonImages);
             placecbtn();
@@ -136,7 +136,7 @@ public class Window extends Widget implements DTarget {
         this.sz = sz;
 //	atl = new Coord(wbox.bl.sz().x, wbox.bt.sz().y).add(tlo);
         wsz = sz.add(tlo.inv()).add(rbo.inv());
-        asz = new Coord(wsz.x - wbox.bl.sz().x - wbox.br.sz().x - mrgn.x, wsz.y - wbox.bt.sz().y - wbox.bb.sz().y - mrgn.y);
+        asz = new Coord(wsz.getX() - wbox.bl.sz().getX() - wbox.br.sz().getX() - mrgn.getX(), wsz.getY() - wbox.bt.sz().getY() - wbox.bb.sz().getY() - mrgn.getY());
         placecbtn();
         setfocustab(true);
         parent.setfocus(this);
@@ -160,18 +160,18 @@ public class Window extends Widget implements DTarget {
     public void draw(GOut og) {
         GOut g = og.reclip(tlo, wsz);
         Coord bgc = new Coord();
-        for (bgc.y = 3; bgc.y < wsz.y - 6; bgc.y += bg.sz().y) {
-            for (bgc.x = 3; bgc.x < wsz.x - 6; bgc.x += bg.sz().x)
+        for (bgc.setY(3); bgc.getY() < wsz.getY() - 6; bgc.setY(bgc.getY() + bg.sz().getY())) {
+            for (bgc.setX(3); bgc.getX() < wsz.getX() - 6; bgc.setX(bgc.getX() + bg.sz().getX()))
                 g.image(bg, bgc, coord3x3, wsz.add(-6, -6));
         }
         cdraw(og.reclip(xlate(Coord.z, true), sz));
         wbox.draw(g, Coord.z, wsz);
         if (cap != null) {
             GOut cg = og.reclip(new Coord(0, -7), sz.add(0, 7));
-            int w = cap.tex().sz().x;
-            int x0 = (folded) ? (mrgn.x + (w / 2)) : (sz.x / 2) - (w / 2);
-            cg.image(cl, new Coord(x0 - cl.sz().x, 0));
-            cg.image(cm, new Coord(x0, 0), new Coord(w, cm.sz().y));
+            int w = cap.tex().sz().getX();
+            int x0 = (folded) ? (mrgn.getX() + (w / 2)) : (sz.getX() / 2) - (w / 2);
+            cg.image(cl, new Coord(x0 - cl.sz().getX(), 0));
+            cg.image(cm, new Coord(x0, 0), new Coord(w, cm.sz().getY()));
             cg.image(cr, new Coord(x0 + w, 0));
             cg.image(cap.tex(), new Coord(x0, 0));
         }
@@ -193,7 +193,7 @@ public class Window extends Widget implements DTarget {
         }
         Coord max = new Coord(ssz);
         if (folded) {
-            max.y = 0;
+            max.setY(0);
         } else {
             wfolded.clear();
         }
@@ -205,7 +205,7 @@ public class Window extends Widget implements DTarget {
         sz = max.add(wbox.bsz().add(mrgn.mul(2)).add(tlo).add(rbo)).add(-1, -1);
         wsz = sz.sub(tlo).sub(rbo);
         if (folded)
-            wsz.y = wsz.y / 2;
+            wsz.setY(wsz.getY() / 2);
         asz = wsz.sub(wbox.bl.sz()).sub(wbox.br.sz()).sub(mrgn.mul(2));
     }
 
@@ -220,10 +220,10 @@ public class Window extends Widget implements DTarget {
                 lbl.settext(Config.translator.translate(lbl.texts));
             }
             Coord br = wdg.c.add(wdg.sz);
-            if (br.x > max.x)
-                max.x = br.x;
-            if (br.y > max.y)
-                max.y = br.y;
+            if (br.getX() > max.getX())
+                max.setX(br.getX());
+            if (br.getY() > max.getY())
+                max.setY(br.getY());
         }
         ssz = max;
 //        sz = max.add(wbox.bsz().add(mrgn.mul(2)).add(tlo).add(rbo)).add(-1, -1);

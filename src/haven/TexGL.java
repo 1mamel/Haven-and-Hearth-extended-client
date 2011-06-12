@@ -45,7 +45,7 @@ public abstract class TexGL extends Tex {
 
     public TexGL(Coord sz) {
         super(sz);
-        tdim = new Coord(nextp2(sz.x), nextp2(sz.y));
+        tdim = new Coord(nextp2(sz.getX()), nextp2(sz.getY()));
     }
 
     protected abstract void fill(GOut gl);
@@ -92,22 +92,22 @@ public abstract class TexGL extends Tex {
         checkerr(gl);
         if (!disableall) {
             gl.glBegin(GL.GL_QUADS);
-            float l = ((float) ul.x) / ((float) tdim.x);
-            float t = ((float) ul.y) / ((float) tdim.y);
-            float r = ((float) br.x) / ((float) tdim.x);
-            float b = ((float) br.y) / ((float) tdim.y);
+            float l = ((float) ul.getX()) / ((float) tdim.getX());
+            float t = ((float) ul.getY()) / ((float) tdim.getY());
+            float r = ((float) br.getX()) / ((float) tdim.getX());
+            float b = ((float) br.getY()) / ((float) tdim.getY());
             gl.glColor4f((float) amb.getRed() / 255.0f,
                     (float) amb.getGreen() / 255.0f,
                     (float) amb.getBlue() / 255.0f,
                     (float) amb.getAlpha() / 255.0f);
             gl.glTexCoord2f(l, t);
-            gl.glVertex3i(c.x, c.y, 0);
+            gl.glVertex3i(c.getX(), c.getY(), 0);
             gl.glTexCoord2f(r, t);
-            gl.glVertex3i(c.x + sz.x, c.y, 0);
+            gl.glVertex3i(c.getX() + sz.getX(), c.getY(), 0);
             gl.glTexCoord2f(r, b);
-            gl.glVertex3i(c.x + sz.x, c.y + sz.y, 0);
+            gl.glVertex3i(c.getX() + sz.getX(), c.getY() + sz.getY(), 0);
             gl.glTexCoord2f(l, b);
-            gl.glVertex3i(c.x, c.y + sz.y, 0);
+            gl.glVertex3i(c.getX(), c.getY() + sz.getY(), 0);
             gl.glEnd();
             checkerr(gl);
         }

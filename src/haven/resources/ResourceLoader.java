@@ -123,4 +123,11 @@ class ResourceLoader implements Runnable {
     public int queueSize() {
         return queue.size();
     }
+
+    public void wakeUpChain() {
+        synchronized (queue) {
+            queue.notifyAll();
+        }
+        if (next != null) next.wakeUpChain();
+    }
 }

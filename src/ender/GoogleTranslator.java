@@ -21,6 +21,7 @@ public class GoogleTranslator {
     private boolean turnedon = false;
 
     public String getKey() {
+        if (apiKey == null) apiKey = "";
         return apiKey;
     }
 

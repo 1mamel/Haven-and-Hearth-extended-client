@@ -55,7 +55,7 @@ public class HWindow extends Widget {
     public void setsz(Coord s) {
         sz = s;
         if (cbtn != null)
-            cbtn.c = new Coord(sz.x - cbtni[0].getWidth(), 0);
+            cbtn.c = new Coord(sz.getX() - cbtni[0].getWidth(), 0);
 
     }
 
@@ -63,10 +63,12 @@ public class HWindow extends Widget {
         super(new Coord(234, 29), new Coord(430, 100), parent);
         canhastrash = false;
         this.title = title;
-        shp = (SlenHud) parent;
-        shp.addwnd(this);
+        if (parent instanceof SlenHud) { // TODO: WFT?
+            shp = (SlenHud) parent;
+            shp.addwnd(this);
+        } else shp = null;
         if (closable)
-            cbtn = new IButton(new Coord(sz.x - cbtni[0].getWidth(), 0), this, cbtni[0], cbtni[1], cbtni[2]);
+            cbtn = new IButton(new Coord(sz.getX() - cbtni[0].getWidth(), 0), this, cbtni[0], cbtni[1], cbtni[2]);
     }
 
     public void wdgmsg(Widget sender, String msg, Object... args) {
@@ -79,10 +81,10 @@ public class HWindow extends Widget {
 
     public void destroy() {
         super.destroy();
-        shp.remwnd(this);
+        if (shp!=null) shp.remwnd(this);
     }
 
     public void makeurgent(int level) {
-        shp.updurgency(this, level);
+        if (shp!=null) shp.updurgency(this, level);
     }
 }

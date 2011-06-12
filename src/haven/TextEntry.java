@@ -87,18 +87,19 @@ public class TextEntry extends Widget {
             tcache = fnd.render(dtext);
         int cx = tcache.advance(buf.point);
         if (cx < sx) sx = cx;
-        if (cx > sx + (sz.x - 1)) sx = cx - (sz.x - 1);
+        if (cx > sx + (sz.getX() - 1)) sx = cx - (sz.getX() - 1);
         g.image(tcache.tex(), new Coord(-sx, 0));
         if (hasfocus && ((System.currentTimeMillis() % 1000) > 500)) {
             int lx = cx - sx + 1;
             g.chcolor(0, 0, 0, 255);
-            g.line(new Coord(lx, 1), new Coord(lx, tcache.sz().y - 1), 1);
+            g.line(new Coord(lx, 1), new Coord(lx, tcache.sz().getY() - 1), 1);
             g.chcolor();
         }
     }
 
     public TextEntry(Coord c, Coord sz, Widget parent, String deftext) {
         super(c, sz, parent);
+        if (deftext == null) deftext = "";
         buf = new LineEdit(text = deftext) {
             protected void done(String line) {
                 activate(line);
@@ -136,7 +137,7 @@ public class TextEntry extends Widget {
     public boolean mousedown(Coord c, int button) {
         parent.setfocus(this);
         if (tcache != null) {
-            buf.point = tcache.charat(c.x + sx);
+            buf.point = tcache.charat(c.getX() + sx);
         }
         return (true);
     }

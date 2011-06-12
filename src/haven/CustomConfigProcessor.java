@@ -19,8 +19,6 @@ import java.io.*;
  */
 public class CustomConfigProcessor {
     public static void setDefaultSettings() {
-        CustomConfig.setWindowSize(800, 600);
-
         CustomConfig.sfxVol = 100;
         CustomConfig.musicVol = 100;
         CustomConfig.ircServerAddress = "irc.synirc.net";
@@ -31,9 +29,9 @@ public class CustomConfigProcessor {
         CustomConfig.isMusicOn = true;
         CustomConfig.isSoundOn = true;
         CustomConfig.hasNightVision = false;
-        CustomConfig.debugMsgs = true;
-        CustomConfig.xray = false;
-        CustomConfig.hide = false;
+        CustomConfig.setDebugLogging(true);
+        CustomConfig.setXray(false);
+        CustomConfig.setHideObjects(false);
     }
 
     public static boolean loadSettings() {
@@ -75,7 +73,7 @@ public class CustomConfigProcessor {
 
                         value = atts.getValue("height") == null ? "1024" : atts.getValue("height");
                         int y = Integer.parseInt(value);
-                        CustomConfig.setWindowSize(new Coord(x, y));
+                        CustomConfig.setWindowSize(x, y);
                     } else if (key.equals("SOUND")) {
                         value = atts.getValue("enabled") == null ? "true" : atts.getValue("enabled");
                         CustomConfig.isSoundOn = Boolean.parseBoolean(value);
@@ -143,7 +141,7 @@ public class CustomConfigProcessor {
             } else {
                 xmlReader.parse("config.xml");
             }
-            if (CustomConfig.getWindowSize().x < 800 || CustomConfig.getWindowSize().y < 600) {
+            if (CustomConfig.getWindowWidth() < 800 || CustomConfig.getWindowHeight() < 600) {
                 System.out.println("Window size must be at least 800x600");
                 CustomConfig.setWindowSize(800, 600);
             }
@@ -180,7 +178,7 @@ public class CustomConfigProcessor {
             }
             writer.write("<?xml version=\"1.0\" ?>\n");
             writer.write("<CONFIG>\n");
-            writer.write("\t<SCREENSIZE width=\"" + CustomConfig.getWindowSize().x + "\" height=\"" + CustomConfig.getWindowSize().y + "\"/>\n");
+            writer.write("\t<SCREENSIZE width=\"" + CustomConfig.getWindowWidth() + "\" height=\"" + CustomConfig.getWindowHeight() + "\"/>\n");
             writer.write("\t<SOUND enabled=\"" + Boolean.toString(CustomConfig.isSoundOn)
                     + "\" volume=\"" + Integer.toString(CustomConfig.sfxVol) + "\"/>\n");
             writer.write("\t<MUSIC enabled=\"" + Boolean.toString(CustomConfig.isMusicOn)

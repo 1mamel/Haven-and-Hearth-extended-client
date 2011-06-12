@@ -46,7 +46,7 @@ public class FlowerMenu extends Widget {
     static {
         Widget.addtype("sm", new WidgetFactory() {
             public Widget create(Coord c, Widget parent, Object[] args) {
-                if ((c.x == -1) && (c.y == -1))
+                if ((c.getX() == -1) && (c.getY() == -1))
                     c = parent.ui.lcc;
                 String[] opts = new String[args.length];
                 for (int i = 0; i < args.length; i++)
@@ -68,7 +68,7 @@ public class FlowerMenu extends Widget {
             super(Coord.z, Coord.z, FlowerMenu.this);
             this.name = name;
             text = ptf.render(name, ptc);
-            sz = new Coord(text.sz().x + 25, ph);
+            sz = new Coord(text.sz().getX() + 25, ph);
         }
 
         public void move(Coord c) {

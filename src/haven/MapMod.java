@@ -88,24 +88,24 @@ public class MapMod extends Window implements MapView.Grabber {
             return;
         Coord tc = mc.div(MCache.tilesz);
         Coord c1 = new Coord(0, 0), c2 = new Coord(0, 0);
-        if (tc.x < sc.x) {
-            c1.x = tc.x;
-            c2.x = sc.x;
+        if (tc.getX() < sc.getX()) {
+            c1.setX(tc.getX());
+            c2.setX(sc.getX());
         } else {
-            c1.x = sc.x;
-            c2.x = tc.x;
+            c1.setX(sc.getX());
+            c2.setX(tc.getX());
         }
-        if (tc.y < sc.y) {
-            c1.y = tc.y;
-            c2.y = sc.y;
+        if (tc.getY() < sc.getY()) {
+            c1.setY(tc.getY());
+            c2.setY(sc.getY());
         } else {
-            c1.y = sc.y;
-            c2.y = tc.y;
+            c1.setY(sc.getY());
+            c2.setY(tc.getY());
         }
         ol.update(c1, c2);
         this.c1 = c1;
         this.c2 = c2;
-        text.settext(String.format(fmt, c2.x - c1.x + 1, c2.y - c1.y + 1));
+        text.settext(String.format(fmt, c2.getX() - c1.getX() + 1, c2.getY() - c1.getY() + 1));
     }
 
     public void wdgmsg(Widget sender, String msg, Object... args) {

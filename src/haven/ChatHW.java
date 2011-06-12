@@ -52,9 +52,9 @@ public class ChatHW extends HWindow {
 
     public ChatHW(Widget parent, String title, boolean closable) {
         super((Widget) ChatHWPanel.instance, title, closable);
-        in = new TextEntry(new Coord(0, sz.y - 20), new Coord(sz.x, 20), this, "");
+        in = new TextEntry(new Coord(0, sz.getY() - 20), new Coord(sz.getX(), 20), this, "");
         in.canactivate = true;
-        out = new Textlog(Coord.z, new Coord(sz.x, sz.y - 20), this);
+        out = new Textlog(Coord.z, new Coord(sz.getX(), sz.getY() - 20), this);
         out.drawbg = false;
         if (cbtn != null) {
             cbtn.raise();
@@ -66,9 +66,9 @@ public class ChatHW extends HWindow {
 
     public void setsz(Coord s) {
         super.setsz(s);
-        in.c = new Coord(0, sz.y - 20);
-        in.sz = new Coord(sz.x, 20);
-        out.sz = new Coord(sz.x, sz.y - 20);
+        in.c = new Coord(0, sz.getY() - 20);
+        in.sz = new Coord(sz.getX(), 20);
+        out.sz = new Coord(sz.getX(), sz.getY() - 20);
     }
 
     public void uimsg(String msg, Object... args) {

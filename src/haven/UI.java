@@ -29,6 +29,7 @@ package haven;
 import haven.resources.Resource;
 import haven.resources.layers.CodeEntry;
 
+import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -121,9 +122,13 @@ public class UI {
         }
     }
 
-    public UI(Coord sz, Session sess) {
+    public UI(Dimension size, Session sess) {
+        this(new Coord(size), sess);
+    }
+
+    public UI(Coord size, Session sess) {
         instance = this;
-        root = new RootWidget(this, sz);
+        root = new RootWidget(this, size);
         widgets.put(0, root);
         rwidgets.put(root, 0);
         this.sess = sess;

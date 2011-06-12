@@ -44,9 +44,9 @@ public class ConfigProvider {
     public void setDebugMsgs(String arg0) {
         arg0 = arg0.toUpperCase();
         if (arg0.equals("ON") || arg0.equals("TRUE"))
-            CustomConfig.debugMsgs = true;
+            CustomConfig.setDebugLogging(true);
         else if (arg0.equals("OFF") || arg0.equals("FALSE"))
-            CustomConfig.debugMsgs = false;
+            CustomConfig.setDebugLogging(false);
         else throw new RuntimeException("setDebugMsgs(ON|OFF)");
     }
 
@@ -114,19 +114,19 @@ public class ConfigProvider {
     }
 
     public int getScreenWidth() {
-        return CustomConfig.getWindowSize().x;
+        return CustomConfig.getWindowWidth();
     }
 
     public int getScreenHeight() {
-        return CustomConfig.getWindowSize().y;
+        return CustomConfig.getWindowHeight();
     }
 
     public int getScreenCenterX() {
-        return CustomConfig.getWindowCenter().x;
+        return CustomConfig.getWindowCenter().getX();
     }
 
     public int getScreenXenterY() {
-        return CustomConfig.getWindowCenter().y;
+        return CustomConfig.getWindowCenter().getY();
     }
 
     public boolean isSoundOn() {
@@ -145,8 +145,8 @@ public class ConfigProvider {
         return CustomConfig.musicVol;
     }
 
-    public boolean isDebugMsgs() {
-        return CustomConfig.debugMsgs;
+    public boolean isDebugLogging() {
+        return CustomConfig.isDebugLogging();
     }
 
     private static ConfigProvider ourInstance = new ConfigProvider();

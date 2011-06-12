@@ -44,7 +44,7 @@ public class CustomConsole extends Window {
         super(c, sz, parent, title, false);
         ui.bind(this, CustomConfig.getNextCustomWidgetId());
         out = new Textlog(Coord.z, sz.add(0, -20), this);
-        in = new TextEntry(new Coord(0, 200), new Coord(sz.x, 20), this, "") {
+        in = new TextEntry(new Coord(0, 200), new Coord(sz.getX(), 20), this, "") {
             public boolean type(char c, KeyEvent ev) {
                 if (c == '`' && !(ev.isAltDown() || ev.isControlDown() || ev.isShiftDown())) {
                     ev.consume();

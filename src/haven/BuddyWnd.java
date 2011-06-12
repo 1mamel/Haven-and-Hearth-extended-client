@@ -112,9 +112,9 @@ public class BuddyWnd extends Window {
         }
 
         public boolean mousedown(Coord c, int button) {
-            if ((c.y >= 2) && (c.y < 17)) {
-                int g = (c.x - 2) / 20;
-                if ((g >= 0) && (g < gc.length) && (c.x >= 2 + (g * 20)) && (c.x < 17 + (g * 20))) {
+            if ((c.getY() >= 2) && (c.getY() < 17)) {
+                int g = (c.getX() - 2) / 20;
+                if ((g >= 0) && (g < gc.length) && (c.getX() >= 2 + (g * 20)) && (c.getX() < 17 + (g * 20))) {
                     changed(g);
                     return (true);
                 }
@@ -201,7 +201,7 @@ public class BuddyWnd extends Window {
                     rl.add(ui.sess.getres((Integer) o));
                 if (ava != null)
                     ui.destroy(ava);
-                ava = new Avaview(new Coord((sz.x / 2) - 40, 10), this, rl);
+                ava = new Avaview(new Coord((sz.getX() / 2) - 40, 10), this, rl);
             } else if (msg.equals("i-set")) {
                 id = (Integer) args[0];
                 String name = (String) args[1];
@@ -236,37 +236,37 @@ public class BuddyWnd extends Window {
                 rmb = invb = chatb = null;
                 int fl = (Integer) args[0];
                 if ((fl & 1) != 0)
-                    rmb = new Button(new Coord(10, 188), sz.x - 20, this, "Forget") {
+                    rmb = new Button(new Coord(10, 188), sz.getX() - 20, this, "Forget") {
                         public void click() {
                             BuddyWnd.this.wdgmsg("rm", id);
                         }
                     };
                 if ((fl & 2) != 0)
-                    chatb = new Button(new Coord(10, 165), sz.x - 20, this, "Private chat") {
+                    chatb = new Button(new Coord(10, 165), sz.getX() - 20, this, "Private chat") {
                         public void click() {
                             BuddyWnd.this.wdgmsg("chat", id);
                         }
                     };
                 if ((fl & 4) != 0)
-                    rmb = new Button(new Coord(10, 188), sz.x - 20, this, "End kinship") {
+                    rmb = new Button(new Coord(10, 188), sz.getX() - 20, this, "End kinship") {
                         public void click() {
                             BuddyWnd.this.wdgmsg("rm", id);
                         }
                     };
                 if ((fl & 8) != 0)
-                    invb = new Button(new Coord(10, 211), sz.x - 20, this, "Invite to party") {
+                    invb = new Button(new Coord(10, 211), sz.getX() - 20, this, "Invite to party") {
                         public void click() {
                             BuddyWnd.this.wdgmsg("inv", id);
                         }
                     };
                 if ((fl & 16) != 0)
-                    descb = new Button(new Coord(10, 234), sz.x - 20, this, "Describe to...") {
+                    descb = new Button(new Coord(10, 234), sz.getX() - 20, this, "Describe to...") {
                         public void click() {
                             BuddyWnd.this.wdgmsg("desc", id);
                         }
                     };
                 if ((fl & 32) != 0)
-                    exb = new Button(new Coord(10, 257), sz.x - 20, this, "Exile") {
+                    exb = new Button(new Coord(10, 257), sz.getX() - 20, this, "Exile") {
                         public void click() {
                             BuddyWnd.this.wdgmsg("exile", id);
                         }
@@ -285,9 +285,9 @@ public class BuddyWnd extends Window {
 
         BuddyList(Coord c, Coord sz, Widget parent) {
             super(c, sz, parent);
-            h = sz.y / 20;
+            h = sz.getY() / 20;
             sel = null;
-            sb = new Scrollbar(new Coord(sz.x, 0), sz.y, this, 0, 4);
+            sb = new Scrollbar(new Coord(sz.getX(), 0), sz.getY(), this, 0, 4);
         }
 
         public void draw(GOut g) {
@@ -304,7 +304,7 @@ public class BuddyWnd extends Window {
                         Buddy b = buddies.get(i + sb.val);
                         if (b == sel) {
                             g.chcolor(255, 255, 0, 128);
-                            g.frect(new Coord(0, i * 20), new Coord(sz.x, 20));
+                            g.frect(new Coord(0, i * 20), new Coord(sz.getX(), 20));
                             g.chcolor();
                         }
                         if (b.online == 1)
@@ -342,7 +342,7 @@ public class BuddyWnd extends Window {
                 return (true);
             synchronized (buddies) {
                 if (button == 1) {
-                    int sel = (c.y / 20) + sb.val;
+                    int sel = (c.getY() / 20) + sb.val;
                     if (sel >= buddies.size())
                         sel = -1;
                     if (sel < 0)
