@@ -56,6 +56,8 @@ public class MiniMap extends Widget {
     boolean hidden = false, grid = false;
     final MapView mv;
     boolean dm = false;
+
+    // Minimap scaling
     public int scale = 4;
     double scales[] = {0.5, 0.66, 0.8, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2};
 
@@ -99,18 +101,18 @@ public class MiniMap extends Widget {
                 String fileName;
                 if (gridsHashes.containsKey(nm)) {
                     Coord coordinates = gridsHashes.get(nm);
-                    fileName = "tile_" + coordinates.getX() + "_"
+                    fileName = "tile_" + coordinates.getX() + '_'
                             + coordinates.getY();
                 } else {
                     fileName = nm;
                 }
 
                 File inputfile = new File("map/"
-                        + Utils.sessdate(mappingSession) + "/" + fileName
+                        + Utils.sessdate(mappingSession) + '/' + fileName
                         + ".png");
                 if (!inputfile.exists())
                     throw (new FileNotFoundException("Minimap cache not found"));
-                System.out.print(inputfile.toString() + "\n");
+                System.out.print(inputfile.toString() + '\n');
                 return new FileInputStream(inputfile);
             }
             throw (new FileNotFoundException("No resource cache installed"));
@@ -148,7 +150,7 @@ public class MiniMap extends Widget {
                                 String fileName;
                                 if (gridsHashes.containsKey(grid)) {
                                     Coord coordinates = gridsHashes.get(grid);
-                                    fileName = "tile_" + coordinates.getX() + "_"
+                                    fileName = "tile_" + coordinates.getX() + '_'
                                             + coordinates.getY();
                                 } else {
                                     fileName = grid;
@@ -220,7 +222,7 @@ public class MiniMap extends Widget {
     public MiniMap(Coord c, Coord sz, Widget parent, MapView mv) {
         super(c, sz, parent);
         this.mv = mv;
-        off = new Coord();
+        off = Coord.z;
         newMappingSession();
     }
 
@@ -306,7 +308,7 @@ public class MiniMap extends Widget {
                                     || (Math.abs(relativeCoordinates.getY()) > 450)) {
                                 newMappingSession();
                                 mappingStartPoint = cg;
-                                relativeCoordinates = new Coord(0, 0);
+                                relativeCoordinates = Coord.z;
                             }
                             gridsHashes.put(mnm, relativeCoordinates);
                             coordHashes.put(relativeCoordinates, mnm);

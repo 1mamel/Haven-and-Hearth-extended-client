@@ -74,7 +74,7 @@ public class MinimapPanel extends Window {
 
         new IButton(new Coord(65, 8), this, Resource.loadimg("gfx/hud/buttons/centeru"), Resource.loadimg("gfx/hud/buttons/centerd")) {
             public void click() {
-                mm.off = new Coord();
+                mm.off = Coord.z;
             }
         };
 

@@ -46,7 +46,7 @@ public class PartyView extends Widget {
     }
 
     PartyView(Coord c, Widget parent, int ign) {
-        super(c, new Coord.U(84, 140), parent);
+        super(c, new Coord(84, 140), parent);
         this.ign = ign;
         update();
     }

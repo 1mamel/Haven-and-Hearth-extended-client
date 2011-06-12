@@ -67,9 +67,7 @@ public class Resource extends Prioritized implements Comparable<Resource>, Seria
                 chainloader(new ResourceLoader(new FileSource(file)));
             }
         } catch (Exception e) {
-            /* Ignore these. We don't want to be crashing the client
-            * for users just because of errors in development
-            * aids. */
+            CustomConfig.logger.error("Cannot load ./custom_res repo", e);
         }
         try {
             File file = new File("./res");
@@ -77,9 +75,7 @@ public class Resource extends Prioritized implements Comparable<Resource>, Seria
                 chainloader(new ResourceLoader(new FileSource(file)));
             }
         } catch (Exception e) {
-            /* Ignore these. We don't want to be crashing the client
-            * for users just because of errors in development
-            * aids. */
+            CustomConfig.logger.error("Cannot load ./res repo", e);
         }
         try {
             String dir = Config.resdir;

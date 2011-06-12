@@ -29,7 +29,10 @@ package haven;
 import haven.resources.Resource;
 
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.*;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -149,6 +152,7 @@ public class MainFrame extends Frame implements Runnable, FSMan {
         setExtendedState(getExtendedState() | MAXIMIZED_BOTH);
     }
 
+    @SuppressWarnings({"ObjectAllocationInLoop"})
     public void run() {
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
@@ -165,10 +169,12 @@ public class MainFrame extends Frame implements Runnable, FSMan {
         panel.setfsm(this);
         ui.start();
         try {
+            // Main Game cycle  Login -> Game -> ...
+            //noinspection InfiniteLoopStatement
             while (true) {
                 Bootstrap bill = new Bootstrap();
-                if (Config.defserv != null)
-                    bill.setaddr(Config.defserv);
+                if (Config.defaultServer != null)
+                    bill.setaddr(Config.defaultServer);
                 if ((Config.authuser != null) && (Config.authck != null)) {
                     bill.setinitcookie(Config.authuser, Config.authck);
                     Config.authck = null;

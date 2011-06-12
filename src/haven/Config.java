@@ -43,7 +43,7 @@ public class Config {
     public static byte[] authck;
     public static String authuser;
     public static String authserv;
-    public static String defserv;
+    public static String defaultServer;
     public static URL resurl, mapurl;
     public static boolean fullscreen;
     public static boolean dbtext;
@@ -89,7 +89,7 @@ public class Config {
                 authck = Utils.hex2byte(p);
             authuser = getprop("haven.authuser", null);
             authserv = getprop("haven.authserv", null);
-            defserv = getprop("haven.defserv", null);
+            defaultServer = getprop("haven.defserv", null);
             if ((p = getprop("haven.resurl", "https://www.havenandhearth.com/res/")).length() != 0)
                 resurl = new URL(p);
             if (!(p = getprop("haven.mapurl", "http://www.havenandhearth.com/mm/")).isEmpty())
@@ -177,7 +177,7 @@ public class Config {
             }
         }
         if (opt.rest.length > 0)
-            defserv = opt.rest[0];
+            defaultServer = opt.rest[0];
     }
 
     public static double getSFXVolume() {

@@ -388,7 +388,9 @@ public class HavenPanel extends GLCanvas implements Runnable {
                 frames++;
                 now = System.currentTimeMillis();
                 if (now - then < fd) {
-                    wait(fd - (now - then));
+                    synchronized (this) {
+                        wait(fd - (now - then));
+                    }
                 }
                 if (curf != null)
                     curf.tick("wait");
