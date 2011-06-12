@@ -125,8 +125,18 @@ public class MainFrame extends Frame implements Runnable, FSMan {
         setIconImage(icon);
     }
 
+    @Override
+    public void setTitle(String charname) {
+        String str = "Haven and Hearth (modified by VladP53 with some code from Ender, Gilbertus, Pacho clients)";
+        if (charname != null) {
+            str = charname + " - " + str;
+        }
+        super.setTitle(str);
+    }
+
     private MainFrame(final Coord sizeC, ThreadGroup tg) {
-        super("Haven and Hearth (modified by VladP53 with some code from Ender, Gilbertus, Pacho clients)");
+        super("");
+        setWindowTitle(null);
         ourInstance = this;
         this.g = tg;
 
@@ -336,5 +346,9 @@ public class MainFrame extends Frame implements Runnable, FSMan {
     public static void setWindowSize(Dimension dimension) {
         if (ourInstance == null) return;
         ourInstance.setSize(dimension);
+    }
+
+    public static void setWindowTitle(String name) {
+        ourInstance.setTitle(name);
     }
 }

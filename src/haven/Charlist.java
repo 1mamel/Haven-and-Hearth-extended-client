@@ -125,6 +125,7 @@ public class Charlist extends Widget {
                     if (sender == c.plb) {
                         wdgmsg("play", c.name);
                         CustomConfig.setActiveCharacter(c.name);
+                        MainFrame.setWindowTitle(c.name);
                         SlenHud hud = ui.slen;//parent.findchild(SlenHud.class);
                         if (hud != null) {
                             hud.initBelt();

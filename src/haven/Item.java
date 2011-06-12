@@ -43,7 +43,7 @@ public class Item extends Widget implements DTarget {
     static Pattern patt = Pattern.compile("quality (\\d+) ");
     static Map<Integer, Tex> qmap;
     private static final Resource missing = Resource.load("gfx/invobjs/missing");
-    static Color outcol = new Color(0,0,0,255);
+    static Color outcol = new Color(0, 0, 0, 255);
     private boolean dm = false;
     private int quality; // quality
     private int innerLiquidQuality;
@@ -88,17 +88,17 @@ public class Item extends Widget implements DTarget {
                     item = new Item(c, res, q, parent, drag, num);
                 }
                 item.tooltip = tooltip;
-		    item.innerLiquidQuality = -1;
-		    if(tooltip != null){
-			try{
-			    Matcher m =patt.matcher(tooltip); 
-			    if(m.find()){
-				item.innerLiquidQuality = Integer.parseInt(m.group(1));
-			    }
-			} catch(IllegalStateException e){
-			    System.out.println(e.getMessage());
-			}
-		    }
+                item.innerLiquidQuality = -1;
+                if (tooltip != null) {
+                    try {
+                        Matcher m = patt.matcher(tooltip);
+                        if (m.find()) {
+                            item.innerLiquidQuality = Integer.parseInt(m.group(1));
+                        }
+                    } catch (IllegalStateException e) {
+                        System.out.println(e.getMessage());
+                    }
+                }
                 return (item);
             }
         });
@@ -147,9 +147,9 @@ public class Item extends Widget implements DTarget {
                 g.frect(new Coord(sz.x() - 5, (int) ((1 - a) * sz.y())), new Coord(5, (int) (a * sz.y())));
                 g.chcolor();
             }
-	    int tq = (innerLiquidQuality>0)?innerLiquidQuality:quality;
-	    if(Config.showq && (tq > 0)){
-		tex = getqtex(tq);
+            int tq = (innerLiquidQuality > 0) ? innerLiquidQuality : quality;
+            if (Config.showq && (tq > 0)) {
+                tex = getqtex(tq);
                 g.aimage(tex, sz.sub(1, 1), 1, 1);
             }
             ttres = res.get();
