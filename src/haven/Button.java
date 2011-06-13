@@ -31,18 +31,40 @@ import java.awt.image.BufferedImage;
 
 public class Button extends Widget {
     // Drawing resources start
-    static final BufferedImage bl = Resource.loadimg("gfx/hud/buttons/tbtn/left");
-    static final BufferedImage br = Resource.loadimg("gfx/hud/buttons/tbtn/right");
-    static final BufferedImage bt = Resource.loadimg("gfx/hud/buttons/tbtn/top");
-    static final BufferedImage bb = Resource.loadimg("gfx/hud/buttons/tbtn/bottom");
-    static final BufferedImage dt = Resource.loadimg("gfx/hud/buttons/tbtn/dtex");
-    static final BufferedImage ut = Resource.loadimg("gfx/hud/buttons/tbtn/utex");
+    private static final TexI bl;
+    private static final TexI br;
+    private static final TexI bt;
+    private static final TexI bb;
+    private static final TexI dt;
+    private static final TexI ut;
+    private static final int bRigthWidth;
+    private static final int bLeftWidth;
+    private static final int bTopHeight;
+    private static final int bBottomHeight;
+    private static final int bLRWidth;
+    private static final int bTBHeight;
+
+    static {
+        bl = new TexI(Resource.loadimg("gfx/hud/buttons/tbtn/left"));
+        br = new TexI(Resource.loadimg("gfx/hud/buttons/tbtn/right"));
+        bt = new TexI(Resource.loadimg("gfx/hud/buttons/tbtn/top"));
+        bb = new TexI(Resource.loadimg("gfx/hud/buttons/tbtn/bottom"));
+        dt = new TexI(Resource.loadimg("gfx/hud/buttons/tbtn/dtex"));
+        ut = new TexI(Resource.loadimg("gfx/hud/buttons/tbtn/utex"));
+        bRigthWidth = br.sz().x();
+        bLeftWidth = bl.sz().x();
+        bTopHeight = bt.sz().y();
+        bBottomHeight = bb.sz().y();
+        bLRWidth = bLeftWidth + bRigthWidth;
+        bTBHeight = bTopHeight + bBottomHeight;
+    }
     // EO resources
 
-    static final Text.Foundry tf = new Text.Foundry(new Font("Serif", Font.PLAIN, 12), Color.YELLOW);
+    private static final Text.Foundry tf = new Text.Foundry(new Font("Serif", Font.PLAIN, 12), Color.YELLOW);
+    private static final Color DEFAULT_COLOR = Color.YELLOW;
 
     private Text text;
-    private BufferedImage cont;
+    private BufferedImage contentImage;
     private boolean isMouseDown = false;
 
     static {
@@ -58,56 +80,89 @@ public class Button extends Widget {
         });
     }
 
+    /**
+     * Creates text-based button with wrapped text.
+     *
+     * @param c      relative coordinates in parent
+     * @param width  width
+     * @param parent parent widget
+     * @param text   text to show
+     */
     public static Button wrapped(Coord c, int width, Widget parent, String text) {
         Button ret = new Button(c, width, parent, tf.renderwrap(text, width - 10));
         return (ret);
     }
 
+    /**
+     * Creates text-based button.
+     *
+     * @param c      relative coordinates in parent
+     * @param width  width
+     * @param parent parent widget
+     * @param text   text to show
+     */
     public Button(Coord c, Integer width, Widget parent, String text) {
-        super(c, new Coord(width, 19), parent);
-        this.text = tf.render(text);
-        this.cont = this.text.img;
+        this(c, width, parent, tf.render(text));
     }
 
-    public Button(Coord c, Integer width, Widget parent, Text text) {
+    /**
+     * Creates text-based button.
+     *
+     * @param c      relative coordinates in parent
+     * @param width  width
+     * @param parent parent widget
+     * @param text   text to show
+     */
+    private Button(Coord c, Integer width, Widget parent, Text text) {
         super(c, new Coord(width, 19), parent);
         this.text = text;
-        this.cont = text.img;
+        this.contentImage = this.text.img;
     }
 
-    public Button(Coord c, Integer w, Widget parent, BufferedImage cont) {
-        super(c, new Coord(w, 19), parent);
-        this.cont = cont;
+    /**
+     * Creates image-based button.
+     *
+     * @param c       relative coordinates in parent
+     * @param width   width
+     * @param parent  parent widget
+     * @param content image
+     */
+    public Button(Coord c, Integer width, Widget parent, BufferedImage content) {
+        super(c, new Coord(width, 19), parent);
+        this.text = null;
+        this.contentImage = content;
     }
 
     public synchronized void draw(GOut g) {
         //Graphics g = graphics();
-//        g.image(isMouseDown ? dt : ut, new Coord(3, 3), new Coord(sz.x - 6, 13));
-        g.image(isMouseDown ? dt : ut, new Coord(3, 3));
-        g.image(bl, Coord.z);
-        g.image(br, new Coord(sz.x() - br.getWidth(), 0));
+        int width = sz.x();
+        int height = sz.y();
 
-//        g.image(bt, new Coord(3, 0), new Coord(sz.x - 6, bt.getHeight()));
-        g.image(bt, new Coord(3, 0));
+        g.image(isMouseDown ? dt : ut, new Coord.U(bLeftWidth, bTopHeight), new Coord.U(width - bLRWidth, height - bTBHeight)); // Background
+        g.image(bl, Coord.z, new Coord.U(bLeftWidth, height)); // Left Border
+        g.image(br, new Coord.U(width - bRigthWidth, 0), new Coord.U(bRigthWidth, height)); // Rigth Border
+        g.image(bt, new Coord.U(bLeftWidth, 0), new Coord.U(width - bLRWidth, bTopHeight)); // Top Border
+        g.image(bb, new Coord.U(bLeftWidth, height - bBottomHeight), new Coord.U(width - bLRWidth, bBottomHeight)); // Bottom Border
 
-//        g.image(bb, new Coord(3, sz.y - bb.getHeight()), new Coord(sz.x - 6, bb.getHeight()));
-        g.image(bb, new Coord(3, sz.y() - bb.getHeight()));
-
-        Coord tc = sz.div(2).add(Utils.imgsz(cont).div(2).inv());
-        if (isMouseDown)
-            tc = tc.add(1, 1);
-        g.image(cont, new Coord(tc.x(), tc.y()));
+        int textX = width / 2 - contentImage.getWidth() / 2;
+        int textY = height / 2 - contentImage.getHeight() / 2;
+        if (isMouseDown) {
+            textX++;
+            textY++;
+        }
+        g.image(contentImage, new Coord.U(textX, textY));
     }
 
     public void change(String text, Color col) {
-        if (col == null)
-            col = Color.YELLOW;
+        if (col == null) {
+            col = DEFAULT_COLOR;
+        }
         this.text = tf.render(text, col);
-        this.cont = this.text.img;
+        this.contentImage = this.text.img;
     }
 
     public void change(String text) {
-        change(text, Color.YELLOW);
+        change(text, DEFAULT_COLOR);
     }
 
     public void click() {
@@ -115,19 +170,24 @@ public class Button extends Widget {
     }
 
     public void uimsg(String msg, Object... args) {
-        if (msg.equals("ch")) {
+        if (msg.equals("ch")) { // Change text & image
             if (args.length > 1)
                 change((String) args[0], (Color) args[1]);
             else
                 change((String) args[0]);
+        } else if (msg.equals("change_image")) { // Change only image
+            changeImage((BufferedImage) args[0]);
         }
+    }
+
+    private void changeImage(BufferedImage arg) {
+        this.contentImage = arg;
     }
 
     public boolean mousedown(Coord c, int button) {
         if (button != 1)
             return (false);
         isMouseDown = true;
-        //render();
         ui.grabmouse(this);
         return (true);
     }
@@ -135,9 +195,8 @@ public class Button extends Widget {
     public boolean mouseup(Coord c, int button) {
         if (isMouseDown && button == 1) {
             isMouseDown = false;
-            //render();
-            ui.grabmouse(null);
-            if (c.isect(new Coord(0, 0), sz))
+            ui.ungrabmouse();
+            if (c.isect(Coord.z, sz))
                 click();
             return (true);
         }
@@ -145,6 +204,7 @@ public class Button extends Widget {
     }
 
     public String getText() {
+        if (text == null) return null;
         return text.text;
     }
 }

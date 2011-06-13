@@ -191,7 +191,7 @@ public class ExtTextlog extends Widget implements ClipboardOwner {
     }
 
     public boolean mouseup(Coord c, int button) {
-        ui.grabmouse(null);
+        ui.ungrabmouse();
         if (c.x() >= sz.x() - 5 && c.x() <= sz.x() && scrollBar.mouseup(c, button)) {
             updateDrawData();
             return true;

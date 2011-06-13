@@ -39,7 +39,7 @@ class FillBox extends Widget {
     public boolean mouseup(Coord c, int button) {
         if (button == 1 && mouseDown) {
             mouseDown = false;
-            ui.grabmouse(null);
+            ui.ungrabmouse();
             return true;
         }
         return super.mouseup(c, button);

@@ -208,12 +208,12 @@ public class FlowerMenu extends Widget {
     public void uimsg(String msg, Object... args) {
         if (msg.equals("cancel")) {
             anim = new Cancel();
-            ui.grabmouse(null);
-            ui.grabkeys(null);
+            ui.ungrabmouse();
+            ui.ungrabkeys();
         } else if (msg.equals("act")) {
             anim = new Chosen(opts[(Integer) args[0]]);
-            ui.grabmouse(null);
-            ui.grabkeys(null);
+            ui.ungrabmouse();
+            ui.ungrabkeys();
         }
     }
 
@@ -228,11 +228,11 @@ public class FlowerMenu extends Widget {
             int opt = (key == '0') ? 10 : (key - '1');
             if (opt < opts.length)
                 wdgmsg("cl", opt);
-            ui.grabkeys(null);
+            ui.ungrabkeys();
             return (true);
         } else if (key == 27) {
             wdgmsg("cl", -1);
-            ui.grabkeys(null);
+            ui.ungrabkeys();
             return (true);
         }
         return (false);

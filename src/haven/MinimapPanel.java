@@ -140,7 +140,7 @@ public class MinimapPanel extends Window {
 	    Config.setWindowOpt("minimap_pos", this.c.toString());
 	}
         if (rsm) {
-            ui.grabmouse(null);
+            ui.ungrabmouse();
             rsm = false;
 	    Config.setWindowOpt("minimap_sz", mm.sz.toString());
         } else {

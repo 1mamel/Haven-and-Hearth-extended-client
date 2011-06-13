@@ -343,7 +343,7 @@ public class MenuGrid extends Widget {
                     use(h);
                 pressed = null;
             }
-            ui.grabmouse(null);
+            ui.ungrabmouse();
         }
         updlayout();
         return (true);

@@ -339,7 +339,7 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
                         ui.mnu.use(h);
                 pressed = null;
             }
-            ui.grabmouse(null);
+            ui.ungrabmouse();
         }
         if (dm) {
             Config.setWindowOpt(name + "_pos", this.c.toString());

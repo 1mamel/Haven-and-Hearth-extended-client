@@ -152,7 +152,7 @@ public class Textlog extends Widget {
     public boolean mouseup(Coord c, int button) {
         if ((button == 1) && sdrag) {
             sdrag = false;
-            ui.grabmouse(null);
+            ui.ungrabmouse();
             return (true);
         }
         return (false);

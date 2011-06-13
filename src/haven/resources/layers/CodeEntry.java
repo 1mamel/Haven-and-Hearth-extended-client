@@ -20,7 +20,6 @@ public class CodeEntry extends Layer {
     private String clnm;
     private Map<String, Code> clmap = new TreeMap<String, Code>();
     private Map<String, String> pe = new TreeMap<String, String>();
-    transient private ClassLoader loader;
     final transient private Map<String, Class<?>> lpe = new TreeMap<String, Class<?>>();
     final transient private Map<Class<?>, Object> ipe = new HashMap<Class<?>, Object>();
     private Resource resource;
@@ -38,7 +37,7 @@ public class CodeEntry extends Layer {
         for (Code c : resource.layers(Code.class)) {
             clmap.put(c.name, c);
         }
-        loader = new ResClassLoader(Resource.class.getClassLoader(), resource) {
+        ClassLoader loader = new ResClassLoader(Resource.class.getClassLoader(), resource) {
             public Class<?> findClass(String name) throws ClassNotFoundException {
                 Code c = clmap.get(name);
                 if (c == null) {

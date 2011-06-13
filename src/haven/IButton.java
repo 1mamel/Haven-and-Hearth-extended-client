@@ -103,7 +103,7 @@ public class IButton extends SSWidget {
     public boolean mouseup(Coord c, int button) {
         if (a && button == 1) {
             a = false;
-            ui.grabmouse(null);
+            ui.ungrabmouse();
             if (c.isect(new Coord(0, 0), sz) && checkhit(c))
                 click();
             render();

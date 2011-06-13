@@ -26,7 +26,7 @@ public class HttpSource implements ResSource, Serializable {
     {
         ssl = new SslHelper();
         try {
-            ssl.trust(SslHelper.loadX509(Resource.class.getResourceAsStream("../ressrv.crt")));
+            ssl.trust(SslHelper.loadX509(Resource.class.getResourceAsStream("ressrv.crt")));
         } catch (java.security.cert.CertificateException e) {
             throw (new Error("Invalid built-in certificate", e));
         }

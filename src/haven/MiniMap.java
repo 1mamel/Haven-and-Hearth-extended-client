@@ -424,7 +424,7 @@ public class MiniMap extends Widget {
 
     public boolean mouseup(Coord c, int button) {
         if (dm) {
-            ui.grabmouse(null);
+            ui.ungrabmouse();
             dm = false;
             return true;
         } else {

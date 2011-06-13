@@ -87,7 +87,7 @@ public class Scrollbar extends Widget {
         if (!drag)
             return (false);
         drag = false;
-        ui.grabmouse(null);
+        ui.ungrabmouse();
         return (true);
     }
 

@@ -265,7 +265,7 @@ public class Window extends Widget implements DTarget {
 
     public boolean mouseup(Coord c, int button) {
         if (dm) {
-            ui.grabmouse(null);
+            ui.ungrabmouse();
             dm = false;
             WindowsLocations.coordChanged(this, this.c);
         } else {

@@ -93,7 +93,7 @@ public class WikiBrowser extends Window implements DTarget, DropTarget, IHWindow
 
     public boolean mouseup(Coord c, int button) {
         if (rsm) {
-            ui.grabmouse(null);
+            ui.ungrabmouse();
             rsm = false;
             deltasz();
         } else {

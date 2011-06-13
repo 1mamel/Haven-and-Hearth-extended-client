@@ -178,6 +178,14 @@ public class UI {
         }
     }
 
+    public void ungrabmouse() {
+        mousegrab = null;
+    }
+
+    public void ungrabkeys() {
+        keygrab = null;
+    }
+
     public void grabmouse(Widget wdg) {
         mousegrab = wdg;
     }

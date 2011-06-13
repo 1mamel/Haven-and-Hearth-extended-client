@@ -197,7 +197,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
 
         public boolean release(MapView mv, Coord sc, Coord mc, int button) {
             if ((button == 2) && dragging) {
-                mv.ui.grabmouse(null);
+                mv.ui.ungrabmouse();
                 dragging = false;
                 if (mo == null) {
                     mv.mc = mc;

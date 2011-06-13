@@ -285,11 +285,11 @@ public class ChatHWPanel extends Widget implements IHWindowParent {
         }
 
         if (dm) {
-            ui.grabmouse(null);
+            ui.ungrabmouse();
             dm = false;
             Config.setWindowOpt("chat_pos" + (folded ? "_folded" : ""), this.c.toString());
         } else if (rsm) {
-            ui.grabmouse(null);
+            ui.ungrabmouse();
             rsm = false;
             Config.setWindowOpt("chat_size", this.sz.toString());
         } else {

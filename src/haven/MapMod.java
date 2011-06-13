@@ -80,7 +80,7 @@ public class MapMod extends Window implements MapView.Grabber {
 
     public void mmouseup(Coord mc, int button) {
         dm = false;
-        ui.grabmouse(null);
+        ui.ungrabmouse();
     }
 
     public void mmousemove(Coord mc) {

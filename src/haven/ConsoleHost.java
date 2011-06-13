@@ -49,7 +49,7 @@ public abstract class ConsoleHost extends Widget {
 
         private void cancel() {
             cmdline = null;
-            ui.grabkeys(null);
+            ui.ungrabkeys();
         }
 
         protected void done(String line) {
