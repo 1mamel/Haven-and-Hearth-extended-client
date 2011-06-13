@@ -2,15 +2,21 @@ package haven;
 
 import ender.timer.Callback;
 import ender.timer.Timer;
-import ender.timer.TimerController;
 import haven.resources.Resource;
 
 public class TimerWdg extends Widget {
 
-    static Tex bg = Resource.loadtex("gfx/hud/bosq");
-    private Timer timer;
-    public Label time, name;
-    private Button start, stop, delete;
+    private static final Tex bg = Resource.loadtex("gfx/hud/bosq");
+
+    private final Timer timer;
+
+    // UI components
+    private final Label time;
+    @SuppressWarnings({"UnusedDeclaration", "FieldCanBeLocal"})
+    private final Label name;
+    private final Button start;
+    private final Button stop;
+    private final Button delete;
 
     public TimerWdg(Coord c, Widget parent, Timer timer) {
         super(c, bg.sz(), parent);
@@ -48,7 +54,6 @@ public class TimerWdg extends Widget {
             ((TimerPanel) parent).pack();
         }
         timer.updcallback = null;
-        timer = null;
         super.destroy();
     }
 
@@ -68,7 +73,6 @@ public class TimerWdg extends Widget {
             updbtns();
         } else if (sender == delete) {
             timer.destroy();
-            TimerController.getInstance().save();
             ui.destroy(this);
         } else {
             super.wdgmsg(sender, msg, args);

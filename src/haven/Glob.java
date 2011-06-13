@@ -102,7 +102,6 @@ public class Glob {
             switch (msg.uint8()) {
                 case GMSG_TIME:
                     Timer.server = msg.int32();
-                    ;
                     Timer.local = System.currentTimeMillis() / 1000;
                     break;
                 case GMSG_ASTRO:

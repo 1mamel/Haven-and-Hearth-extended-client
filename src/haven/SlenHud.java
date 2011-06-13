@@ -26,7 +26,7 @@
 
 package haven;
 
-import ender.timer.TimerController;
+import ender.timer.TimersController;
 import haven.resources.Resource;
 
 import java.awt.*;
@@ -262,7 +262,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
             }
         };
         sub.visible = sdb.visible = false;
-        TimerController.getInstance().load();
+        TimersController.load();
         //	Load the current belt
         initBelt();
     }

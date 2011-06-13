@@ -22,7 +22,7 @@ public class Timer {
         this.start = start;
         this.time = time;
         this.name = name;
-        TimerController.getInstance().add(this);
+        TimersController.add(this);
     }
 
     public Timer(long time, String name) {
@@ -38,12 +38,12 @@ public class Timer {
         if (updcallback != null) {
             updcallback.run(this);
         }
-        TimerController.getInstance().save();
+        TimersController.save();
     }
 
     public void start() {
         start = server + SERVER_RATIO * ((System.currentTimeMillis() / 1000) - local);
-        TimerController.getInstance().save();
+        TimersController.save();
     }
 
     public void start(long start) {
@@ -106,7 +106,7 @@ public class Timer {
     }
 
     public void destroy() {
-        TimerController.getInstance().remove(this);
+        TimersController.remove(this);
         updcallback = null;
     }
 

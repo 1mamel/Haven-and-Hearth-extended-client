@@ -1,7 +1,10 @@
 package haven;
 
 import ender.timer.Timer;
-import ender.timer.TimerController;
+import ender.timer.TimersController;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class TimerPanel extends Window {
 
@@ -31,10 +34,9 @@ public class TimerPanel extends Window {
         justclose = true;
         btnnew = new Button(Coord.z, 100, this, "Add timer");
 
-        synchronized (TimerController.getInstance().timers) {
-            for (Timer timer : TimerController.getInstance().timers) {
-                new TimerWdg(Coord.z, this, timer);
-            }
+        Collection<Timer> timers = new ArrayList<Timer>(TimersController.timers);
+        for (Timer timer : timers) {
+            new TimerWdg(Coord.z, this, timer);
         }
         pack();
     }
@@ -42,14 +44,12 @@ public class TimerPanel extends Window {
     @Override
     public void pack() {
         int n, i = 0, h = 0;
-        synchronized (TimerController.getInstance().timers) {
-            n = TimerController.getInstance().timers.size();
-        }
+        n = TimersController.timers.size();
         n = (int) Math.ceil(Math.sqrt((double) n / 3));
         for (Widget wdg = child; wdg != null; wdg = wdg.next) {
             if (!(wdg instanceof TimerWdg))
                 continue;
-            wdg.c = new Coord((i % n) * wdg.sz.x(), ((int) (i / n)) * wdg.sz.y());
+            wdg.c = new Coord((i % n) * wdg.sz.x(), i / n * wdg.sz.y());
             h = wdg.c.y() + wdg.sz.y();
             i++;
         }
@@ -103,7 +103,7 @@ public class TimerPanel extends Window {
                     time += Integer.parseInt(minutes.text) * 60;
                     time += Integer.parseInt(hours.text) * 3600;
                     Timer timer = new Timer(time, name.text);
-                    TimerController.getInstance().save();
+                    TimersController.save();
                     new TimerWdg(Coord.z, panel, timer);
                     panel.pack();
                     ui.destroy(this);
