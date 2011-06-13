@@ -35,11 +35,19 @@ import java.awt.*;
 public class Bufflist extends Widget {
     static final Tex frame = Resource.loadtex("gfx/hud/buffs/frame");
     static final Tex cframe = Resource.loadtex("gfx/hud/buffs/cframe");
-    static final Coord imgoff = new Coord(3, 3);
-    static final Coord ameteroff = new Coord(3, 36);
-    static final Coord ametersz = new Coord(30, 2);
+    static final int imgoffX = 3;
+    static final int imgoffY = 3;
+    static final int ameteroffX = 3;
+    static final int ameteroffY = 36;
+    static final int ameterszX = 30;
+    static final int ameterszY = 2;
+    //    static final Coord imgoff = new Coord.U(imgoffX, imgoffY);
+//    static final Coord ameteroff = new Coord.U(ameteroffX, ameteroffY);
+//    static final Coord ametersz = new Coord.U(ameterszX, ameterszY);
     static final int margin = 2;
     static final int num = 5;
+    private StringBuilder tooltipBuilder = new StringBuilder(100);
+
 
     static {
         Widget.addtype("buffs", new WidgetFactory() {
@@ -61,23 +69,25 @@ public class Bufflist extends Widget {
             for (Buff b : ui.sess.glob.buffs.values()) {
                 if (!b.major)
                     continue;
-                Coord bc = new Coord(i * w, 0);
+                int bcX = i * w;
                 if (b.ameter >= 0) {
-                    g.image(cframe, bc);
+                    g.image(cframe, bcX, 0);
                     g.chcolor(Color.BLACK);
-                    g.frect(bc.add(ameteroff), ametersz);
+                    g.frect(ameteroffX + bcX, ameteroffY, ameterszX, ameterszY);
                     g.chcolor(Color.WHITE);
-                    g.frect(bc.add(ameteroff), new Coord((b.ameter * ametersz.x()) / 100, ametersz.y()));
+                    g.frect(ameteroffX + bcX, ameteroffY, (b.ameter * ameterszX) / 100, ameterszY);
                     g.chcolor();
                 } else {
-                    g.image(frame, bc);
+                    g.image(frame, bcX, 0);
                 }
                 if (b.res.get() != null) {
                     Tex img = b.res.get().layer(Resource.imgc).tex();
-                    g.image(img, bc.add(imgoff));
+                    g.image(img, imgoffX + bcX, imgoffY);
+                    int imgX = img.sz().x();
+                    int imgY = img.sz().y();
                     if (b.nmeter >= 0) {
                         Tex ntext = b.nmeter();
-                        g.image(ntext, bc.add(imgoff).add(img.sz()).sub(ntext.sz()).add(-1, -1));
+                        g.image(ntext, bcX + imgoffX + imgX - ntext.sz().x() - 1, imgoffY + imgY - ntext.sz().y() - 1);
                     }
                     if (b.cmeter >= 0) {
                         double m = b.cmeter / 100.0;
@@ -87,7 +97,7 @@ public class Bufflist extends Widget {
                             m *= (ot - pt) / ot;
                         }
                         g.chcolor(0, 0, 0, 128);
-                        g.fellipse(bc.add(imgoff).add(img.sz().div(2)), img.sz().div(2), 90, (int) (90 + (360 * m)));
+                        g.fellipseInRectangle(imgoffX, imgoffY, imgoffX + imgX, imgoffY + imgY, 90, (int) (90 + (360 * m)));
                         g.chcolor();
                     }
                 }
@@ -101,15 +111,16 @@ public class Bufflist extends Widget {
         int i = 0;
         int w = frame.sz().x() + margin;
         synchronized (ui.sess.glob.buffs) {
+            StringBuilder sb = tooltipBuilder;
             for (Buff b : ui.sess.glob.buffs.values()) {
                 if (!b.major)
                     continue;
                 Coord bc = new Coord(i * w, 0);
                 if (c.isect(bc, frame.sz())) {
+                    sb.delete(0, sb.length());
                     Resource res;
-                    String p = "";
                     if (b.ameter > 0) {
-                        p += " (" + b.ameter + "%)";
+                        sb.append(" (").append(b.ameter).append("%)");
                     }
                     if (b.cmeter > 0) {
                         if (b.cticks >= 0) {
@@ -117,24 +128,24 @@ public class Bufflist extends Widget {
                             double t = (b.cticks * 0.06) - (((double) (now - b.gettime)) / 1000.0);
                             int m = (int) (t / 60);
                             int s = (int) (t % 60);
-                            p += " [";
+                            sb.append(" [");
                             if (m > 0) {
-                                p += m + "m ";
+                                sb.append(m).append("m ");
                             }
-                            p += s + "s]";
+                            sb.append(s).append("s]");
                         } else {
-                            p += " [" + b.cmeter + "%]";
+                            sb.append(" [").append(b.cmeter).append("%]");
                         }
                     }
-                    if (b.tt != null)
-                        return (b.tt + p);
+                    if (b.tt != null)         // TODO: move to front
+                        return (b.tt + sb);
                     else if ((res = b.res.get()) != null) {
                         Tooltip tt;
                         AButton act;
                         if ((tt = res.layer(Resource.tooltip)) != null) {
-                            return tt.t + p;
+                            return tt.t + sb;
                         } else if ((act = res.layer(Resource.action)) != null) {
-                            return act.name + p;
+                            return act.name + sb;
                         }
                     }
                 }

@@ -236,6 +236,10 @@ public class GOut {
         checkerr();
     }
 
+    public void frect(int ulX, int ulY, Coord size) {
+        frect(ulX, ulY, size.x(), size.y());
+    }
+
     public void frect(Coord c1, Coord c2, Coord c3, Coord c4) {
         glcolor();
         texsel(-1);
@@ -261,6 +265,10 @@ public class GOut {
         vertex(c.add((int) (Math.cos(a) * r.x()), -(int) (Math.sin(a) * r.y())));
         gl.glEnd();
         checkerr();
+    }
+
+    public void fellipseInRectangle(int x1, int y1, int x2, int y2, int a1, int a2) {
+        fellipse((x2 + x1) / 2, (y2 + y1) / 2, (x2 - x1) / 2, (y2 - y1) / 2, a1, a2);
     }
 
     public void fellipse(int cx, int cy, int rx, int ry, int a1, int a2) {
