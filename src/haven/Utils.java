@@ -26,9 +26,6 @@
 
 package haven;
 
-import haven.resources.ResClassLoader;
-import haven.resources.Resource;
-
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;

@@ -28,7 +28,7 @@ package haven.resutil;
 
 import haven.Coord;
 import haven.GOut;
-import haven.resources.Resource;
+import haven.Resource;
 import haven.Sprite;
 
 public abstract class BollSprite extends Sprite {

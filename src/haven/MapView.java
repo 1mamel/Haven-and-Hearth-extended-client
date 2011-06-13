@@ -28,7 +28,6 @@ package haven;
 
 import haven.MCache.Grid;
 import haven.MCache.Overlay;
-import haven.resources.Resource;
 import haven.resources.layers.Neg;
 import haven.resources.layers.Tile;
 

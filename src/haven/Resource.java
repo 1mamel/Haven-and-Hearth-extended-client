@@ -24,9 +24,8 @@
  *  Boston, MA 02111-1307 USA
  */
 
-package haven.resources;
+package haven;
 
-import haven.*;
 import haven.resources.layers.*;
 import haven.resources.sources.*;
 import haven.util.Prioritized;

@@ -26,8 +26,6 @@
 
 package haven;
 
-import haven.resources.Resource;
-
 import java.awt.*;
 import java.text.Collator;
 import java.util.*;

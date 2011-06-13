@@ -26,8 +26,6 @@
 
 package haven;
 
-import haven.resources.Resource;
-
 @Resource.PublishedCode(name = "wdg")
 public interface WidgetFactory {
     public Widget create(Coord c, Widget parent, Object[] par);

@@ -27,7 +27,7 @@
 package haven.resutil;
 
 import haven.*;
-import haven.resources.Resource;
+import haven.Resource;
 import haven.resources.layers.Image;
 
 import java.awt.*;

@@ -26,7 +26,6 @@
 
 package haven;
 
-import haven.resources.Resource;
 import haven.scriptengine.InventoryExp;
 
 import java.awt.image.BufferedImage;

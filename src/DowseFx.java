@@ -1,5 +1,5 @@
 import haven.*;
-import haven.resources.Resource;
+import haven.Resource;
 
 public class DowseFx extends FreeSprite {
     double a = 0.0D;

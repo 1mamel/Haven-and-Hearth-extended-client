@@ -26,8 +26,6 @@
 
 package haven;
 
-import haven.resources.Resource;
-
 public class CheckBox extends Widget {
     static final Tex box;
     static final Tex mark;

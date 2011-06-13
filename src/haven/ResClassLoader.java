@@ -1,4 +1,4 @@
-package haven.resources;
+package haven;
 
 /**
 * // TODO: write javadoc

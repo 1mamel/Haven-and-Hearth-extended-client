@@ -27,8 +27,6 @@
 package haven;
 
 
-import haven.resources.Resource;
-
 public class LoginScreen extends Widget {
     Login cur;
     Text error;

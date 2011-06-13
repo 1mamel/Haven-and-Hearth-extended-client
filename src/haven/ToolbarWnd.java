@@ -1,6 +1,5 @@
 package haven;
 
-import haven.resources.Resource;
 import haven.resources.layers.AButton;
 import haven.resources.layers.Pagina;
 

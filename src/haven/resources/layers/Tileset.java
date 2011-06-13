@@ -1,7 +1,7 @@
 package haven.resources.layers;
 
 import haven.*;
-import haven.resources.Resource;
+import haven.Resource;
 
 import java.awt.*;
 import java.util.Collection;

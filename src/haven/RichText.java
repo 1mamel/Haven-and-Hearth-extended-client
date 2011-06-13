@@ -26,7 +26,6 @@
 
 package haven;
 
-import haven.resources.Resource;
 import haven.resources.layers.Pagina;
 
 import java.awt.*;

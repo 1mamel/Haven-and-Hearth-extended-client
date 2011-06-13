@@ -26,8 +26,6 @@
 
 package haven;
 
-import haven.resources.Resource;
-
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -39,6 +37,7 @@ import java.util.LinkedList;
 
 public class MainFrame extends Frame implements Runnable, FSMan {
     private static final String DEFAULT_TITLE = "Haven and Hearth (modified by VladP53 with some code from Ender, Gilbertus, Pacho clients)";
+    private static MainFrame ourInstance;
     final HavenPanel panel;
     final ThreadGroup g;
     DisplayMode fsmode = null, prefs = null;
@@ -342,14 +341,13 @@ public class MainFrame extends Frame implements Runnable, FSMan {
         }
     }
 
-    private static MainFrame ourInstance;
-
     public static void setWindowSize(Dimension dimension) {
         if (ourInstance == null) return;
         ourInstance.setSize(dimension);
     }
 
     public static void setWindowTitle(String name) {
+        if (ourInstance == null) return;
         ourInstance.setTitle(name);
     }
 }

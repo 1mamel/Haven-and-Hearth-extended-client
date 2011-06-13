@@ -27,7 +27,6 @@
 package haven;
 
 import ender.timer.TimersController;
-import haven.resources.Resource;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;

@@ -1,6 +1,5 @@
-package haven.resources;
+package haven;
 
-import haven.HackThread;
 import haven.resources.sources.ResSource;
 import haven.util.PrioQueue;
 

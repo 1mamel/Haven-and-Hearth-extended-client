@@ -1,7 +1,5 @@
 package haven;
 
-import haven.resources.Resource;
-
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;

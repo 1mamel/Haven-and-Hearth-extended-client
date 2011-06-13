@@ -1,6 +1,6 @@
 package haven.resources.sources;
 
-import haven.resources.Resource;
+import haven.Resource;
 
 import java.io.*;
 

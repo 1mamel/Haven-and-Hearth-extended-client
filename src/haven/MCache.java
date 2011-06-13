@@ -26,7 +26,6 @@
 
 package haven;
 
-import haven.resources.Resource;
 import haven.resources.layers.Tile;
 import haven.resources.layers.Tileset;
 

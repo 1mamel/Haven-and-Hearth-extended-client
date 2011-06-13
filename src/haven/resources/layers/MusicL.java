@@ -1,6 +1,6 @@
 package haven.resources.layers;
 
-import haven.resources.Resource;
+import haven.Resource;
 
 import javax.sound.midi.Sequence;
 import java.io.ByteArrayInputStream;

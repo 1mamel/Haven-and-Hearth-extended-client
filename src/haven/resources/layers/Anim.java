@@ -1,6 +1,6 @@
 package haven.resources.layers;
 
-import haven.resources.Resource;
+import haven.Resource;
 import haven.Utils;
 
 import java.util.LinkedList;

@@ -26,8 +26,6 @@
 
 package haven;
 
-import haven.resources.Resource;
-
 import java.util.Collection;
 import java.util.LinkedList;
 

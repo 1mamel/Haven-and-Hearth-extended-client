@@ -1,7 +1,5 @@
 package haven;
 
-import haven.resources.Resource;
-
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;

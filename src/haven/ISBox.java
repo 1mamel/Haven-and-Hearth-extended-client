@@ -26,8 +26,6 @@
 
 package haven;
 
-import haven.resources.Resource;
-
 public class ISBox extends Widget implements DTarget {
     static final Tex bg = Resource.loadtex("gfx/hud/bosq");
     static final Text.Foundry lf;

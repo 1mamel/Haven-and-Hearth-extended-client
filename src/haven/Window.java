@@ -26,8 +26,6 @@
 
 package haven;
 
-import haven.resources.Resource;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -159,7 +157,7 @@ public class Window extends Widget implements DTarget {
 
     public void draw(GOut og) {
         GOut g = og.reclip(tlo, wsz);
-        Coord bgc = new Coord();
+        Coord bgc = new Coord(3,3);
         for (bgc.setY(3); bgc.y() < wsz.y() - 6; bgc.setY(bgc.y() + bg.sz().y())) {
             for (bgc.setX(3); bgc.x() < wsz.x() - 6; bgc.setX(bgc.x() + bg.sz().x()))
                 g.image(bg, bgc, coord3x3, wsz.add(-6, -6));

@@ -26,8 +26,6 @@
 
 package haven;
 
-import haven.resources.Resource;
-
 public class Img extends Widget {
     private Tex img;
     public boolean hit = false;

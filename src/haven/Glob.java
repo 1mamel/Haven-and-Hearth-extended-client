@@ -27,7 +27,6 @@
 package haven;
 
 import ender.timer.Timer;
-import haven.resources.Resource;
 
 import java.util.*;
 

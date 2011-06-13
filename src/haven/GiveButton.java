@@ -26,8 +26,6 @@
 
 package haven;
 
-import haven.resources.Resource;
-
 public class GiveButton extends Widget {
     public static final Tex bg = Resource.loadtex("gfx/hud/combat/knapp/knapp");
     public static final Tex ol = Resource.loadtex("gfx/hud/combat/knapp/ol");

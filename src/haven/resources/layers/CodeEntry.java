@@ -1,21 +1,21 @@
 package haven.resources.layers;
 
-import haven.resources.Resource;
+import haven.ResClassLoader;
+import haven.Resource;
 import haven.Utils;
-import haven.resources.ResClassLoader;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
 /**
-* // TODO: write javadoc
-* Created by IntelliJ IDEA.
-* Date: 18.05.11
-* Time: 17:36
-*
-* @author Vlad.Rassokhin@gmail.com
-*/
+ * // TODO: write javadoc
+ * Created by IntelliJ IDEA.
+ * Date: 18.05.11
+ * Time: 17:36
+ *
+ * @author Vlad.Rassokhin@gmail.com
+ */
 public class CodeEntry extends Layer {
     private String clnm;
     private Map<String, Code> clmap = new TreeMap<String, Code>();
@@ -35,13 +35,15 @@ public class CodeEntry extends Layer {
     }
 
     public void init() {
-        for (Code c : resource.layers(Code.class))
+        for (Code c : resource.layers(Code.class)) {
             clmap.put(c.name, c);
+        }
         loader = new ResClassLoader(Resource.class.getClassLoader(), resource) {
             public Class<?> findClass(String name) throws ClassNotFoundException {
                 Code c = clmap.get(name);
-                if (c == null)
+                if (c == null) {
                     throw (new ClassNotFoundException("Could not find class " + name + " in resource (" + resource + ')'));
+                }
                 return (defineClass(name, c.data, 0, c.data.length));
             }
         };

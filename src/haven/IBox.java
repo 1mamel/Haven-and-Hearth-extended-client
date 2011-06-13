@@ -26,8 +26,6 @@
 
 package haven;
 
-import haven.resources.Resource;
-
 public class IBox {
     final Tex ctl;
     final Tex ctr;

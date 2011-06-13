@@ -2,7 +2,7 @@ package haven.resources.layers;
 
 import haven.Coord;
 import haven.MapView;
-import haven.resources.Resource;
+import haven.Resource;
 import haven.Utils;
 
 /**

@@ -27,7 +27,6 @@
 package haven;
 
 import haven.error.ErrorHandler;
-import haven.resources.Resource;
 
 import javax.media.opengl.*;
 import java.awt.*;
