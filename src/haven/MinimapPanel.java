@@ -97,11 +97,11 @@ public class MinimapPanel extends Window {
         };
 
         pack();
-        this.c = new Coord(CustomConfig.getWindowWidth() - this.sz.getX(), 7);
+        this.c = new Coord(CustomConfig.getWindowWidth() - this.sz.x(), 7);
     }
 
     protected void placecbtn() {
-        foldButton.c = new Coord(wsz.getX() - 3 - closeButtonImages[0].getWidth(), 3).add(mrgn.inv().add(wbox.tloff().inv()));
+        foldButton.c = new Coord(wsz.x() - 3 - closeButtonImages[0].getWidth(), 3).add(mrgn.inv().add(wbox.tloff().inv()));
         //fbtn.c = new Coord(cbtn.c.x - 1 - Utils.imgsz(fbtni[0]).x, cbtn.c.y);
     }
 
@@ -143,8 +143,8 @@ public class MinimapPanel extends Window {
         if (rsm) {
             Coord d = c.sub(doff);
             mm.sz = mm.sz.add(d);
-            mm.sz.setX(Math.max(minsz.getX(), mm.sz.getX()));
-            mm.sz.setY(Math.max(minsz.getY(), mm.sz.getY()));
+            mm.sz.setX(Math.max(minsz.x(), mm.sz.x()));
+            mm.sz.setY(Math.max(minsz.y(), mm.sz.y()));
             doff = c;
             pack();
         } else {

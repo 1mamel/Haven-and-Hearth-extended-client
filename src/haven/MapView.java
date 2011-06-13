@@ -144,19 +144,19 @@ public class MapView extends Widget implements DTarget, Console.Directory {
             }
             Coord mc = mv.mc;
             Coord oc = m2s(mc).inv();
-            int bt = -((sz.getY() / 2) - border.getY());
-            int bb = (sz.getY() / 2) - border.getY();
-            int bl = -((sz.getX() / 2) - border.getX());
-            int br = (sz.getX() / 2) - border.getX();
+            int bt = -((sz.y() / 2) - border.y());
+            int bb = (sz.y() / 2) - border.y();
+            int bl = -((sz.x() / 2) - border.x());
+            int br = (sz.x() / 2) - border.x();
             Coord sc = m2s(player.getc()).add(oc);
-            if (sc.getX() < bl)
-                mc = mc.add(s2m(new Coord(sc.getX() - bl, 0)));
-            if (sc.getX() > br)
-                mc = mc.add(s2m(new Coord(sc.getX() - br, 0)));
-            if (sc.getY() < bt)
-                mc = mc.add(s2m(new Coord(0, sc.getY() - bt)));
-            if (sc.getY() > bb)
-                mc = mc.add(s2m(new Coord(0, sc.getY() - bb)));
+            if (sc.x() < bl)
+                mc = mc.add(s2m(new Coord(sc.x() - bl, 0)));
+            if (sc.x() > br)
+                mc = mc.add(s2m(new Coord(sc.x() - br, 0)));
+            if (sc.y() < bt)
+                mc = mc.add(s2m(new Coord(0, sc.y() - bt)));
+            if (sc.y() > bb)
+                mc = mc.add(s2m(new Coord(0, sc.y() - bb)));
             mv.mc = mc;
         }
 
@@ -294,14 +294,14 @@ public class MapView extends Widget implements DTarget, Console.Directory {
 
         public void setpos(MapView mv, Gob player, Coord sz) {
             Coord sc = m2s(player.getc().sub(mv.mc));
-            if (sc.getX() < -region.getX())
-                mv.mc = mv.mc.add(s2m(new Coord(-region.getX() * 2, 0)));
-            if (sc.getX() > region.getX())
-                mv.mc = mv.mc.add(s2m(new Coord(region.getX() * 2, 0)));
-            if (sc.getY() < -region.getY())
-                mv.mc = mv.mc.add(s2m(new Coord(0, -region.getY() * 2)));
-            if (sc.getY() > region.getY())
-                mv.mc = mv.mc.add(s2m(new Coord(0, region.getY() * 2)));
+            if (sc.x() < -region.x())
+                mv.mc = mv.mc.add(s2m(new Coord(-region.x() * 2, 0)));
+            if (sc.x() > region.x())
+                mv.mc = mv.mc.add(s2m(new Coord(region.x() * 2, 0)));
+            if (sc.y() < -region.y())
+                mv.mc = mv.mc.add(s2m(new Coord(0, -region.y() * 2)));
+            if (sc.y() > region.y())
+                mv.mc = mv.mc.add(s2m(new Coord(0, region.y() * 2)));
         }
     }
 
@@ -345,8 +345,8 @@ public class MapView extends Widget implements DTarget, Console.Directory {
             Coord mc = mv.mc.add(s2m(sz.sub(mv.sz).div(2)));
             Coord sc = m2s(player.getc()).sub(m2s(mc));
             if (reset) {
-                xa = (double) sc.getX() / (double) sz.getX();
-                ya = (double) sc.getY() / (double) sz.getY();
+                xa = (double) sc.x() / (double) sz.x();
+                ya = (double) sc.y() / (double) sz.y();
                 if (xa < -0.25) xa = -0.25;
                 if (xa > 0.25) xa = 0.25;
                 if (ya < -0.15) ya = -0.15;
@@ -354,31 +354,31 @@ public class MapView extends Widget implements DTarget, Console.Directory {
                 reset = false;
             }
             Coord vsz = sz.div(16);
-            Coord vc = new Coord((int) (sz.getX() * xa), (int) (sz.getY() * ya));
+            Coord vc = new Coord((int) (sz.x() * xa), (int) (sz.y() * ya));
             boolean moved = false;
-            if (sc.getX() < vc.getX() - vsz.getX()) {
+            if (sc.x() < vc.x() - vsz.x()) {
                 if (xa < 0.25)
                     xa += speed * dt;
                 moved = true;
-                mc = mc.add(s2m(new Coord(sc.getX() - (vc.getX() - vsz.getX()) - 4, 0)));
+                mc = mc.add(s2m(new Coord(sc.x() - (vc.x() - vsz.x()) - 4, 0)));
             }
-            if (sc.getX() > vc.getX() + vsz.getX()) {
+            if (sc.x() > vc.x() + vsz.x()) {
                 if (xa > -0.25)
                     xa -= speed * dt;
                 moved = true;
-                mc = mc.add(s2m(new Coord(sc.getX() - (vc.getX() + vsz.getX()) + 4, 0)));
+                mc = mc.add(s2m(new Coord(sc.x() - (vc.x() + vsz.x()) + 4, 0)));
             }
-            if (sc.getY() < vc.getY() - vsz.getY()) {
+            if (sc.y() < vc.y() - vsz.y()) {
                 if (ya < 0.25)
                     ya += speed * dt;
                 moved = true;
-                mc = mc.add(s2m(new Coord(0, sc.getY() - (vc.getY() - vsz.getY()) - 2)));
+                mc = mc.add(s2m(new Coord(0, sc.y() - (vc.y() - vsz.y()) - 2)));
             }
-            if (sc.getY() > vc.getY() + vsz.getY()) {
+            if (sc.y() > vc.y() + vsz.y()) {
                 if (ya > -0.15)
                     ya -= speed * dt;
                 moved = true;
-                mc = mc.add(s2m(new Coord(0, sc.getY() - (vc.getY() + vsz.getY()) + 2)));
+                mc = mc.add(s2m(new Coord(0, sc.y() - (vc.y() + vsz.y()) + 2)));
             }
             if (!moved) {
                 sincemove += dt;
@@ -482,7 +482,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
                 off = mv.mc.sub(player.getc());
                 setoff = false;
             }
-            if (mv.pmousepos != null && (mv.pmousepos.getX() == 0 || mv.pmousepos.getX() == sz.getX() - 1 || mv.pmousepos.getY() == 0 || mv.pmousepos.getY() == sz.getY() - 1)) {
+            if (mv.pmousepos != null && (mv.pmousepos.x() == 0 || mv.pmousepos.x() == sz.x() - 1 || mv.pmousepos.y() == 0 || mv.pmousepos.y() == sz.y() - 1)) {
                 if (size == null || !size.equals(sz)) {
                     size = new Coord(sz);
                     center = size.div(2);
@@ -571,11 +571,11 @@ public class MapView extends Widget implements DTarget, Console.Directory {
     }
 
     public static Coord m2s(Coord c) {
-        return (new Coord((c.getX() * 2) - (c.getY() * 2), c.getX() + c.getY()));
+        return (new Coord((c.x() * 2) - (c.y() * 2), c.x() + c.y()));
     }
 
     public static Coord s2m(Coord c) {
-        return (new Coord((c.getX() / 4) + (c.getY() / 2), (c.getY() / 2) - (c.getX() / 4)));
+        return (new Coord((c.x() / 4) + (c.y() / 2), (c.y() / 2) - (c.x() / 4)));
     }
 
     static Coord viewoffset(Coord sz, Coord vc) {
@@ -612,7 +612,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
     public boolean mousedown(Coord c, int button) {
         setfocus(this);
         Coord c0 = c;
-        c = new Coord((int) (c.getX() / getScale()), (int) (c.getY() / getScale()));
+        c = new Coord((int) (c.x() / getScale()), (int) (c.y() / getScale()));
         Gob hit = gobatpos(c);
         Coord mc = s2m(c.sub(viewoffset(sz, this.mc)));
         if (grab != null) {
@@ -635,7 +635,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
     }
 
     public boolean mouseup(Coord c, int button) {
-        c = new Coord((int) (c.getX() / getScale()), (int) (c.getY() / getScale()));
+        c = new Coord((int) (c.x() / getScale()), (int) (c.y() / getScale()));
         Coord mc = s2m(c.sub(viewoffset(sz, this.mc)));
         if (grab != null) {
             grab.mmouseup(mc, button);
@@ -648,7 +648,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
     }
 
     public void mousemove(Coord c) {
-        c = new Coord((int) (c.getX() / getScale()), (int) (c.getY() / getScale()));
+        c = new Coord((int) (c.x() / getScale()), (int) (c.y() / getScale()));
         this.pmousepos = c;
         Coord mc = s2m(c.sub(viewoffset(sz, this.mc)));
         this.mousepos = mc;
@@ -815,9 +815,9 @@ public class MapView extends Widget implements DTarget, Console.Directory {
             if (ol == 0)
                 return;
             @SuppressWarnings({"UnnecessaryLocalVariable"}) Coord c1 = sc;
-            Coord c2 = sc.add(m2s(new Coord(0, tilesz.getY())));
-            Coord c3 = sc.add(m2s(new Coord(tilesz.getX(), tilesz.getY())));
-            Coord c4 = sc.add(m2s(new Coord(tilesz.getX(), 0)));
+            Coord c2 = sc.add(m2s(new Coord(0, tilesz.y())));
+            Coord c3 = sc.add(m2s(new Coord(tilesz.x(), tilesz.y())));
+            Coord c4 = sc.add(m2s(new Coord(tilesz.x(), 0)));
             for (i = 0; i < olc.length; i++) {
                 if (olc[i] == null)
                     continue;
@@ -989,18 +989,18 @@ public class MapView extends Widget implements DTarget, Console.Directory {
     private void drawol2(GOut g, int id, Coord c0, Coord cx, Coord sc) {
         cx = cx.add(1, 1);
         Coord c1 = m2s(c0.mul(tilesz)).add(sc);
-        Coord c2 = m2s(new Coord(c0.getX(), cx.getY()).mul(tilesz)).add(sc);
+        Coord c2 = m2s(new Coord(c0.x(), cx.y()).mul(tilesz)).add(sc);
         Coord c3 = m2s(cx.mul(tilesz)).add(sc);
-        Coord c4 = m2s(new Coord(cx.getX(), c0.getY()).mul(tilesz)).add(sc);
+        Coord c4 = m2s(new Coord(cx.x(), c0.y()).mul(tilesz)).add(sc);
 
         Color fc = new Color(olc[id].getRed(), olc[id].getGreen(), olc[id].getBlue(), 32);
         g.chcolor(fc);
         g.frect(c1, c2, c3, c4);
         cx = cx.sub(1, 1);
-        drawline(g, new Coord(0, -1), c0.getY(), id, c0, cx, sc);
-        drawline(g, new Coord(0, 1), cx.getY(), id, c0, cx, sc);
-        drawline(g, new Coord(1, 0), cx.getX(), id, c0, cx, sc);
-        drawline(g, new Coord(-1, 0), c0.getX(), id, c0, cx, sc);
+        drawline(g, new Coord(0, -1), c0.y(), id, c0, cx, sc);
+        drawline(g, new Coord(0, 1), cx.y(), id, c0, cx, sc);
+        drawline(g, new Coord(1, 0), cx.x(), id, c0, cx, sc);
+        drawline(g, new Coord(-1, 0), c0.x(), id, c0, cx, sc);
         g.chcolor();
     }
 
@@ -1046,20 +1046,20 @@ public class MapView extends Widget implements DTarget, Console.Directory {
 
         if (Config.profile)
             curf = prof.new Frame();
-        stw = (tilesz.getX() * 4) - 2;
-        sth = tilesz.getY() * 2;
+        stw = (tilesz.x() * 4) - 2;
+        sth = tilesz.y() * 2;
         oc = viewoffset(sz, mc);
         tc = mc.div(tilesz);
-        tc.setX(tc.getX() + -(sz.getX() / (2 * stw)) - (sz.getY() / (2 * sth)) - 2);
-        tc.setY(tc.getY() + (sz.getX() / (2 * stw)) - (sz.getY() / (2 * sth)));
-        for (y = 0; y < (sz.getY() / sth) + 2; y++) {
-            for (x = 0; x < (sz.getX() / stw) + 3; x++) {
+        tc.setX(tc.x() + -(sz.x() / (2 * stw)) - (sz.y() / (2 * sth)) - 2);
+        tc.setY(tc.y() + (sz.x() / (2 * stw)) - (sz.y() / (2 * sth)));
+        for (y = 0; y < (sz.y() / sth) + 2; y++) {
+            for (x = 0; x < (sz.x() / stw) + 3; x++) {
                 for (i = 0; i < 2; i++) {
                     ctc = tc.add(new Coord(x + y, -x + y + i));
                     sc = m2s(ctc.mul(tilesz)).add(oc);
-                    sc.setX(sc.getX() - tilesz.getX() * 2);
+                    sc.setX(sc.x() - tilesz.x() * 2);
                     drawtile(g, ctc, sc);
-                    sc.setX(sc.getX() + tilesz.getX() * 2);
+                    sc.setX(sc.x() + tilesz.x() * 2);
                     if (!Config.newclaim) {
                         drawol(g, ctc, sc);
                     }
@@ -1073,21 +1073,21 @@ public class MapView extends Widget implements DTarget, Console.Directory {
             g.chcolor(new Color(40, 40, 40));
             Coord c1, c2, d;
             d = tc.mul(tilesz);
-            int hy = (sz.getY() / sth) * tilesz.getY();
-            int hx = (sz.getX() / stw) * tilesz.getX();
+            int hy = (sz.y() / sth) * tilesz.y();
+            int hx = (sz.x() / stw) * tilesz.x();
             c1 = d.add(0, 0);
             c2 = d.add(5 * hx / 2, 0);
-            for (y = d.getY() - hy; y < d.getY() + hy; y = y + tilesz.getY()) {
+            for (y = d.y() - hy; y < d.y() + hy; y = y + tilesz.y()) {
                 c1.setY(y);
-                c2.setY(c1.getY());
+                c2.setY(c1.y());
                 g.line(m2s(c1).add(oc), m2s(c2).add(oc), 1);
             }
             c1 = d.add(0, -hy);
             c2 = d.add(0, hy);
 
-            for (x = d.getX(); x < d.getX() + 5 * hx / 2; x = x + tilesz.getX()) {
+            for (x = d.x(); x < d.x() + 5 * hx / 2; x = x + tilesz.x()) {
                 c1.setX(x);
-                c2.setX(c1.getX());
+                c2.setX(c1.x());
                 g.line(m2s(c1).add(oc), m2s(c2).add(oc), 1);
             }
             g.chcolor();
@@ -1131,10 +1131,10 @@ public class MapView extends Widget implements DTarget, Console.Directory {
 
             public void addpart(Sprite.Part p) {
                 p.effect = fx;
-                if ((p.ul.getX() >= sz.getX()) ||
-                        (p.ul.getY() >= sz.getY()) ||
-                        (p.lr.getX() < 0) ||
-                        (p.lr.getY() < 0))
+                if ((p.ul.x() >= sz.x()) ||
+                        (p.ul.y() >= sz.y()) ||
+                        (p.lr.x() < 0) ||
+                        (p.lr.y() < 0))
                     return;
                 sprites.add(p);
                 p.owner = cur;
@@ -1166,13 +1166,13 @@ public class MapView extends Widget implements DTarget, Console.Directory {
                     } else {
                         continue;
                     }
-                    if ((neg.bs.getX() > 0) && (neg.bs.getY() > 0)) {
+                    if ((neg.bs.x() > 0) && (neg.bs.y() > 0)) {
                         Coord c1 = gob.getc().add(neg.bc);
                         Coord c2 = gob.getc().add(neg.bc).add(neg.bs);
                         g.frect(m2s(c1).add(oc),
-                                m2s(new Coord(c2.getX(), c1.getY())).add(oc),
+                                m2s(new Coord(c2.x(), c1.y())).add(oc),
                                 m2s(c2).add(oc),
-                                m2s(new Coord(c1.getX(), c2.getY())).add(oc));
+                                m2s(new Coord(c1.x(), c2.y())).add(oc));
                     }
                 }
             }
@@ -1249,13 +1249,13 @@ public class MapView extends Widget implements DTarget, Console.Directory {
                         } else {
                             continue;
                         }
-                        if ((neg.bs.getX() > 0) && (neg.bs.getY() > 0)) {
+                        if ((neg.bs.x() > 0) && (neg.bs.y() > 0)) {
                             Coord c1 = gob.getc().add(neg.bc);
                             Coord c2 = gob.getc().add(neg.bc).add(neg.bs);
                             g.frect(m2s(c1).add(oc),
-                                    m2s(new Coord(c2.getX(), c1.getY())).add(oc),
+                                    m2s(new Coord(c2.x(), c1.y())).add(oc),
                                     m2s(c2).add(oc),
-                                    m2s(new Coord(c1.getX(), c2.getY())).add(oc));
+                                    m2s(new Coord(c1.x(), c2.y())).add(oc));
                         }
                     }
                 }
@@ -1293,7 +1293,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
                         }
                         if (show != null) {
                             g.chcolor(show);
-                            g.image(t, gc.add(-t.sz().getX() / 2, -40 - t.sz().getY()));
+                            g.image(t, gc.add(-t.sz().x() / 2, -40 - t.sz().y()));
                             g.chcolor();
                         }
                     } else {
@@ -1327,13 +1327,13 @@ public class MapView extends Widget implements DTarget, Console.Directory {
                 double a = -hsz.angle(sc);
                 Coord ac;
                 if ((a > ca) && (a < -ca)) {
-                    ac = new Coord(sz.getX(), hsz.getY() - (int) (Math.tan(a) * hsz.getX()));
+                    ac = new Coord(sz.x(), hsz.y() - (int) (Math.tan(a) * hsz.x()));
                 } else if ((a > -ca) && (a < Math.PI + ca)) {
-                    ac = new Coord(hsz.getX() - (int) (Math.tan(a - Math.PI / 2) * hsz.getY()), 0);
+                    ac = new Coord(hsz.x() - (int) (Math.tan(a - Math.PI / 2) * hsz.y()), 0);
                 } else if ((a > -Math.PI - ca) && (a < ca)) {
-                    ac = new Coord(hsz.getX() + (int) (Math.tan(a + Math.PI / 2) * hsz.getY()), sz.getY());
+                    ac = new Coord(hsz.x() + (int) (Math.tan(a + Math.PI / 2) * hsz.y()), sz.y());
                 } else {
-                    ac = new Coord(0, hsz.getY() + (int) (Math.tan(a) * hsz.getX()));
+                    ac = new Coord(0, hsz.y() + (int) (Math.tan(a) * hsz.x()));
                 }
                 g.chcolor(m.col);
                 Coord bc = ac.add(Coord.sc(a, -10));
@@ -1396,8 +1396,8 @@ public class MapView extends Widget implements DTarget, Console.Directory {
         Coord requl = mc.add(-500, -500).div(tilesz).div(cmaps);
         Coord reqbr = mc.add(500, 500).div(tilesz).div(cmaps);
         Coord cgc = new Coord(0, 0);
-        for (cgc.setY(requl.getY()); cgc.getY() <= reqbr.getY(); cgc.setY(cgc.getY() + 1)) {
-            for (cgc.setX(requl.getX()); cgc.getX() <= reqbr.getX(); cgc.setX(cgc.getX() + 1)) {
+        for (cgc.setY(requl.y()); cgc.y() <= reqbr.y(); cgc.setY(cgc.y() + 1)) {
+            for (cgc.setX(requl.x()); cgc.x() <= reqbr.x(); cgc.setX(cgc.x() + 1)) {
                 if (map.grids.get(cgc) == null)
                     map.request(new Coord(cgc));
             }
@@ -1446,7 +1446,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
 
     public boolean iteminteract(Coord cc, Coord ul) {
         Coord cc0 = cc;
-        cc = new Coord((int) (cc.getX() / getScale()), (int) (cc.getY() / getScale()));
+        cc = new Coord((int) (cc.x() / getScale()), (int) (cc.y() / getScale()));
         Gob hit = gobatpos(cc);
         Coord mc = s2m(cc.sub(viewoffset(sz, this.mc)));
         if (hit == null)

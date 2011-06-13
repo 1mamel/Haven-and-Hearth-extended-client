@@ -71,11 +71,11 @@ public class CustomConfig {
     }
 
     public static int getWindowWidth() {
-        return windowSize.getX();
+        return windowSize.x();
     }
 
     public static int getWindowHeight() {
-        return windowSize.getY();
+        return windowSize.y();
     }
 
     public static Coord getWindowCenter() {
@@ -83,11 +83,11 @@ public class CustomConfig {
     }
 
     public static int getCenterX() {
-        return windowCenter.getX();
+        return windowCenter.x();
     }
 
     public static int getCenterY() {
-        return windowCenter.getY();
+        return windowCenter.y();
     }
 
     public static void setWindowSize(Coord size) {

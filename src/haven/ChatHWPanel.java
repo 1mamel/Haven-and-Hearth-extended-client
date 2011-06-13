@@ -48,7 +48,7 @@ public class ChatHWPanel extends Widget implements IHWindowParent {
     public ChatHWPanel(Coord c, Coord sz, Widget parent) {
         super(c, sz, parent);
         instance = this;
-        btnc = sz.sub(sz.getX(), btnh);
+        btnc = sz.sub(sz.x(), btnh);
         sub = new Button(new Coord(300, 260), sbtnw, this,
                 Resource.loadimg("gfx/hud/slen/sau")) {
             public void click() {
@@ -95,17 +95,17 @@ public class ChatHWPanel extends Widget implements IHWindowParent {
                 g.chcolor(SlenHud.urgcols[urgency]);
             g.image(icon, Coord.z.add(cl.sz()));
             g.chcolor();
-            int w = cap.tex().sz().getX();
-            int x0 = (isz.getX() / 2) - (w / 2) + cl.sz().getX();
-            g.image(cl, new Coord(x0 - cl.sz().getX(), 0));
-            g.image(cm, new Coord(x0, 0), new Coord(w, cm.sz().getY()));
+            int w = cap.tex().sz().x();
+            int x0 = (isz.x() / 2) - (w / 2) + cl.sz().x();
+            g.image(cl, new Coord(x0 - cl.sz().x(), 0));
+            g.image(cm, new Coord(x0, 0), new Coord(w, cm.sz().y()));
             g.image(cr, new Coord(x0 + w, 0));
             g.image(cap.tex(), new Coord(x0, 0));
         } else {
             g.chcolor(230, 230, 255, 235);
             g.frect(Coord.z, sz);
             g.chcolor();
-            g.image(grip, new Coord(sz.getX() - gzsz.getX(), 0));
+            g.image(grip, new Coord(sz.x() - gzsz.x(), 0));
             super.draw(g);
             g.chcolor(64, 64, 64, 255);
             g.rect(Coord.z, sz.add(new Coord(1, 1)));
@@ -114,13 +114,13 @@ public class ChatHWPanel extends Widget implements IHWindowParent {
     }
 
     private void updbtns() {
-        int k = Math.max((sz.getX() - sbtnw) / minbtnw, 1);
+        int k = Math.max((sz.x() - sbtnw) / minbtnw, 1);
         if (k > wnds.size() / 2) {
             k = Math.max(wnds.size() / 2, 1);
             if ((wnds.size() % 2) != 0)
                 k++;
         }
-        int bw = Math.min((sz.getX() - sbtnw) / k, maxbtnw);
+        int bw = Math.min((sz.x() - sbtnw) / k, maxbtnw);
         int bpp = 2 * k;
 
         if (wnds.size() <= bpp) {
@@ -140,11 +140,11 @@ public class ChatHWPanel extends Widget implements IHWindowParent {
                 continue;
             if (woff > 0) {
                 sub.visible = true;
-                sub.c = btnc.add(sz.getX() - sbtnw, 0);
+                sub.c = btnc.add(sz.x() - sbtnw, 0);
             }
             if (woff < wnds.size() - bpp) {
                 sdb.visible = true;
-                sdb.c = btnc.add(sz.getX() - sbtnw, 20);
+                sdb.c = btnc.add(sz.x() - sbtnw, 20);
             }
             HWindow w = wnds.get(wi);
             Button b = btns.get(w);
@@ -181,8 +181,8 @@ public class ChatHWPanel extends Widget implements IHWindowParent {
 
     public void addwnd(final HWindow wnd) {
         fbtn.raise();
-        wnd.sz = sz.sub(0, btnh + gzsz.getY());
-        wnd.c = new Coord(0, gzsz.getY());
+        wnd.sz = sz.sub(0, btnh + gzsz.y());
+        wnd.c = new Coord(0, gzsz.y());
         wnds.add(wnd);
         btns.put(wnd, new Button(new Coord(0, 260), 100, this, wnd.title) {
             public void click() {
@@ -270,7 +270,7 @@ public class ChatHWPanel extends Widget implements IHWindowParent {
         if (button == 1) {
             ui.grabmouse(this);
             doff = c;
-            if (c.isect(new Coord(sz.getX() - gzsz.getX(), 0), gzsz))
+            if (c.isect(new Coord(sz.x() - gzsz.x(), 0), gzsz))
                 rsm = true;
             else
                 dm = true;
@@ -304,23 +304,23 @@ public class ChatHWPanel extends Widget implements IHWindowParent {
         } else if (rsm) {
             Coord d = c.sub(doff);
             deltasz(d);
-            doff = c.add(0, d.getY());
+            doff = c.add(0, d.y());
         } else {
             super.mousemove(c);
         }
     }
 
     private void deltasz(Coord d) {
-        d.setY(-d.getY());
+        d.setY(-d.y());
         sz = sz.add(d);
-        if (sz.getX() < minsz.getX())
-            sz.setX(minsz.getX());
-        if (sz.getY() < minsz.getY())
-            sz.setY(minsz.getY());
+        if (sz.x() < minsz.x())
+            sz.setX(minsz.x());
+        if (sz.y() < minsz.y())
+            sz.setY(minsz.y());
         else
-            this.c.setY(this.c.getY() - d.getY());
-        btnc = sz.sub(sz.getX(), btnh);
-        Coord s = sz.sub(0, btnh + gzsz.getY());
+            this.c.setY(this.c.y() - d.y());
+        btnc = sz.sub(sz.x(), btnh);
+        Coord s = sz.sub(0, btnh + gzsz.y());
         for (HWindow wnd : wnds) {
             wnd.setsz(s);
         }

@@ -56,8 +56,8 @@ public class Textlog extends Widget {
     public void draw(GOut g) {
         Coord dc = new Coord();
         if (drawbg)
-            for (dc.setY(0); dc.getY() < sz.getY(); dc.setY(dc.getY() + texpap.sz().getY())) {
-                for (dc.setX(0); dc.getX() < sz.getX(); dc.setX(dc.getX() + texpap.sz().getX())) {
+            for (dc.setY(0); dc.y() < sz.y(); dc.setY(dc.y() + texpap.sz().y())) {
+                for (dc.setX(0); dc.x() < sz.x(); dc.setX(dc.x() + texpap.sz().x())) {
                     g.image(texpap, dc);
                 }
             }
@@ -65,20 +65,20 @@ public class Textlog extends Widget {
         int y = -cury;
         synchronized (lines) {
             for (Text line : lines) {
-                int dy1 = sz.getY() + y;
-                int dy2 = dy1 + line.sz().getY();
-                if ((dy2 > 0) && (dy1 < sz.getY()))
+                int dy1 = sz.y() + y;
+                int dy2 = dy1 + line.sz().y();
+                if ((dy2 > 0) && (dy1 < sz.y()))
                     g.image(line.tex(), new Coord(margin, dy1));
-                y += line.sz().getY();
+                y += line.sz().y();
             }
         }
-        if (maxy > sz.getY()) {
-            int fx = sz.getX() - sflarp.sz().getX();
-            int cx = fx + (sflarp.sz().getX() / 2) - (schain.sz().getX() / 2);
-            for (y = 0; y < sz.getY(); y += schain.sz().getY() - 1)
+        if (maxy > sz.y()) {
+            int fx = sz.x() - sflarp.sz().x();
+            int cx = fx + (sflarp.sz().x() / 2) - (schain.sz().x() / 2);
+            for (y = 0; y < sz.y(); y += schain.sz().y() - 1)
                 g.image(schain, new Coord(cx, y));
-            double a = (double) (cury - sz.getY()) / (double) (maxy - sz.getY());
-            int fy = (int) ((sz.getY() - sflarp.sz().getY()) * a);
+            double a = (double) (cury - sz.y()) / (double) (maxy - sz.y());
+            int fy = (int) ((sz.y() - sflarp.sz().y()) * a);
             g.image(sflarp, new Coord(fx, fy));
         }
     }
@@ -98,13 +98,13 @@ public class Textlog extends Widget {
         if (Config.use_smileys) {
             line = Config.mksmiley(line);
         }
-        rl = fnd.render(line, sz.getX() - (margin * 2) - sflarp.sz().getX(), TextAttribute.FOREGROUND, col, TextAttribute.SIZE, 12);
+        rl = fnd.render(line, sz.x() - (margin * 2) - sflarp.sz().x(), TextAttribute.FOREGROUND, col, TextAttribute.SIZE, 12);
         synchronized (lines) {
             lines.add(rl);
         }
         if (cury == maxy)
-            cury += rl.sz().getY();
-        maxy += rl.sz().getY();
+            cury += rl.sz().y();
+        maxy += rl.sz().y();
     }
 
     public void append(String line) {
@@ -119,8 +119,8 @@ public class Textlog extends Widget {
 
     public boolean mousewheel(Coord c, int amount) {
         cury += amount * 20;
-        if (cury < sz.getY())
-            cury = sz.getY();
+        if (cury < sz.y())
+            cury = sz.y();
         if (cury > maxy)
             cury = maxy;
         return (true);
@@ -129,9 +129,9 @@ public class Textlog extends Widget {
     public boolean mousedown(Coord c, int button) {
         if (button != 1)
             return (false);
-        int fx = sz.getX() - sflarp.sz().getX();
+        int fx = sz.x() - sflarp.sz().x();
 //        int cx = fx + (sflarp.sz().x / 2) - (schain.sz().x / 2);
-        if ((maxy > sz.getY()) && (c.getX() >= fx)) {
+        if ((maxy > sz.y()) && (c.x() >= fx)) {
             sdrag = true;
             ui.grabmouse(this);
             mousemove(c);
@@ -142,12 +142,12 @@ public class Textlog extends Widget {
 
     public void mousemove(Coord c) {
         if (sdrag) {
-            double a = (double) (c.getY() - (sflarp.sz().getY() / 2)) / (double) (sz.getY() - sflarp.sz().getY());
+            double a = (double) (c.y() - (sflarp.sz().y() / 2)) / (double) (sz.y() - sflarp.sz().y());
             if (a < 0)
                 a = 0;
             if (a > 1)
                 a = 1;
-            cury = (int) (a * (maxy - sz.getY())) + sz.getY();
+            cury = (int) (a * (maxy - sz.y())) + sz.y();
         }
     }
 

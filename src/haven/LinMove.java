@@ -42,8 +42,8 @@ public class LinMove extends Moving {
 
     public Coord getc() {
         double dx, dy;
-        dx = t.getX() - s.getX();
-        dy = t.getY() - s.getY();
+        dx = t.x() - s.x();
+        dy = t.y() - s.y();
         Coord m = new Coord((int) (dx * a), (int) (dy * a));
         return (s.add(m));
     }

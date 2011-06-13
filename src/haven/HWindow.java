@@ -55,7 +55,7 @@ public class HWindow extends Widget {
     public void setsz(Coord s) {
         sz = s;
         if (cbtn != null)
-            cbtn.c = new Coord(sz.getX() - cbtni[0].getWidth(), 0);
+            cbtn.c = new Coord(sz.x() - cbtni[0].getWidth(), 0);
 
     }
 
@@ -68,7 +68,7 @@ public class HWindow extends Widget {
             shp.addwnd(this);
         } else shp = null;
         if (closable)
-            cbtn = new IButton(new Coord(sz.getX() - cbtni[0].getWidth(), 0), this, cbtni[0], cbtni[1], cbtni[2]);
+            cbtn = new IButton(new Coord(sz.x() - cbtni[0].getWidth(), 0), this, cbtni[0], cbtni[1], cbtni[2]);
     }
 
     public void wdgmsg(Widget sender, String msg, Object... args) {

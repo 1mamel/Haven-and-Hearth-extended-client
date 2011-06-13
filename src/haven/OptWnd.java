@@ -421,7 +421,7 @@ public class OptWnd extends Window {
             altIRCNickLabel = new Label(new Coord(firstCellXOffset, 100), tab, "Alt Nick:");
 
             // TetEntries (2nd column)
-            int secondCellXOffset = 15 + Math.max(serverLabel.sz.getX(), Math.max(chnlLabel.sz.getX(), Math.max(defIRCNickLabel.sz.getX(), altIRCNickLabel.sz.getX())));
+            int secondCellXOffset = 15 + Math.max(serverLabel.sz.x(), Math.max(chnlLabel.sz.x(), Math.max(defIRCNickLabel.sz.x(), altIRCNickLabel.sz.x())));
             final Coord textFieldSize = new Coord(180, 15);
 
             // Server entry

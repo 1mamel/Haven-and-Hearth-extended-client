@@ -101,8 +101,8 @@ public class MiniMap extends Widget {
                 String fileName;
                 if (gridsHashes.containsKey(nm)) {
                     Coord coordinates = gridsHashes.get(nm);
-                    fileName = "tile_" + coordinates.getX() + '_'
-                            + coordinates.getY();
+                    fileName = "tile_" + coordinates.x() + '_'
+                            + coordinates.y();
                 } else {
                     fileName = nm;
                 }
@@ -150,8 +150,8 @@ public class MiniMap extends Widget {
                                 String fileName;
                                 if (gridsHashes.containsKey(grid)) {
                                     Coord coordinates = gridsHashes.get(grid);
-                                    fileName = "tile_" + coordinates.getX() + '_'
-                                            + coordinates.getY();
+                                    fileName = "tile_" + coordinates.x() + '_'
+                                            + coordinates.y();
                                 } else {
                                     fileName = grid;
                                 }
@@ -256,16 +256,16 @@ public class MiniMap extends Widget {
 
         Coord tc = mv.mc.div(tilesz).add(off.div(scale));
         Coord ulg = tc.div(cmaps);
-        while ((ulg.getX() * cmaps.getX()) - tc.getX() + (hsz.getX() / 2) > 0)
-            ulg.setX(ulg.getX() - 1);
-        while ((ulg.getY() * cmaps.getY()) - tc.getY() + (hsz.getY() / 2) > 0)
-            ulg.setY(ulg.getY() - 1);
+        while ((ulg.x() * cmaps.x()) - tc.x() + (hsz.x() / 2) > 0)
+            ulg.setX(ulg.x() - 1);
+        while ((ulg.y() * cmaps.y()) - tc.y() + (hsz.y() / 2) > 0)
+            ulg.setY(ulg.y() - 1);
 
         if (!hidden) {
             Coord s = bg.sz();
-            for (int y = 0; (y * s.getY()) < sz.getY(); y++) {
-                for (int x = 0; (x * s.getX()) < sz.getX(); x++) {
-                    og.image(bg, new Coord(x * s.getX(), y * s.getY()));
+            for (int y = 0; (y * s.y()) < sz.y(); y++) {
+                for (int x = 0; (x * s.x()) < sz.x(); x++) {
+                    og.image(bg, new Coord(x * s.x(), y * s.y()));
                 }
             }
         }
@@ -276,8 +276,8 @@ public class MiniMap extends Widget {
 
         synchronized (caveTex) {
 
-            for (int y = ulg.getY(); (y * cmaps.getY()) - tc.getY() + (hsz.getY() / 2) < hsz.getY(); y++) {
-                for (int x = ulg.getX(); (x * cmaps.getX()) - tc.getX() + (hsz.getX() / 2) < hsz.getX(); x++) {
+            for (int y = ulg.y(); (y * cmaps.y()) - tc.y() + (hsz.y() / 2) < hsz.y(); y++) {
+                for (int x = ulg.x(); (x * cmaps.x()) - tc.x() + (hsz.x() / 2) < hsz.x(); x++) {
                     Coord cg = new Coord(x, y);
                     if (mappingStartPoint == null) {
                         mappingStartPoint = new Coord(cg);
@@ -304,8 +304,8 @@ public class MiniMap extends Widget {
                     if (mnm != null) {
                         caveTex.clear();
                         if (!gridsHashes.containsKey(mnm)) {
-                            if ((Math.abs(relativeCoordinates.getX()) > 450)
-                                    || (Math.abs(relativeCoordinates.getY()) > 450)) {
+                            if ((Math.abs(relativeCoordinates.x()) > 450)
+                                    || (Math.abs(relativeCoordinates.y()) > 450)) {
                                 newMappingSession();
                                 mappingStartPoint = cg;
                                 relativeCoordinates = Coord.z;
@@ -347,17 +347,17 @@ public class MiniMap extends Widget {
             g.chcolor(200, 32, 64, 255);
             Coord c1, c2;
             c1 = new Coord();
-            c2 = new Coord(hsz.getX(), 0);
-            for (int y = ulg.getY() + 1; (y * cmaps.getY()) - tc.getY() + (hsz.getY() / 2) < hsz.getY(); y++) {
-                c1.setY((y * cmaps.getY()) - tc.getY() + (hsz.getY() / 2));
-                c2.setY(c1.getY());
+            c2 = new Coord(hsz.x(), 0);
+            for (int y = ulg.y() + 1; (y * cmaps.y()) - tc.y() + (hsz.y() / 2) < hsz.y(); y++) {
+                c1.setY((y * cmaps.y()) - tc.y() + (hsz.y() / 2));
+                c2.setY(c1.y());
                 g.line(c1, c2, 1);
             }
             c1 = new Coord();
-            c2 = new Coord(0, hsz.getY());
-            for (int x = ulg.getX() + 1; (x * cmaps.getX()) - tc.getX() + (hsz.getX() / 2) < hsz.getX(); x++) {
-                c1.setX((x * cmaps.getX()) - tc.getX() + (hsz.getX() / 2));
-                c2.setX(c1.getX());
+            c2 = new Coord(0, hsz.y());
+            for (int x = ulg.x() + 1; (x * cmaps.x()) - tc.x() + (hsz.x() / 2) < hsz.x(); x++) {
+                c1.setX((x * cmaps.x()) - tc.x() + (hsz.x() / 2));
+                c2.setX(c1.x());
                 g.line(c1, c2, 1);
             }
             g.chcolor();
@@ -405,7 +405,7 @@ public class MiniMap extends Widget {
                 }
                 TexI tex = (TexI) caveTex.get(c);
                 c = c.sub(rc);
-                String fileName = "tile_" + c.getX() + "_" + c.getY();
+                String fileName = "tile_" + c.x() + "_" + c.y();
                 outputfile = new File("cave/" + sess + "/" + fileName + ".png");
                 try {
                     ImageIO.write(tex.back, "png", outputfile);

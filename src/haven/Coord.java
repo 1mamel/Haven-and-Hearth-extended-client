@@ -235,7 +235,7 @@ public class Coord implements Comparable<Coord>, java.io.Serializable, Cloneable
         return new Dimension(x, y);
     }
 
-    public int getX() {
+    public int x() {
         return x;
     }
 
@@ -243,7 +243,7 @@ public class Coord implements Comparable<Coord>, java.io.Serializable, Cloneable
         this.x = x;
     }
 
-    public int getY() {
+    public int y() {
         return y;
     }
 

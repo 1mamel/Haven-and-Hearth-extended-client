@@ -103,7 +103,7 @@ public class PartyView extends Widget {
             ui.destroy(leaveButton);
             leaveButton = null;
         }
-        sz.setY(CustomConfig.getWindowHeight() - c.getY());
+        sz.setY(CustomConfig.getWindowHeight() - c.y());
     }
 
     private static final List<Coord> avaviewCoordinates;

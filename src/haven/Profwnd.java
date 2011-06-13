@@ -60,9 +60,9 @@ public class Profwnd extends HWindow {
     }
 
     public String tooltip(Coord c, boolean again) {
-        if ((c.getX() >= 10) && (c.getX() < 10 + prof.hist.length) && (c.getY() >= 10) && (c.getY() < 10 + h)) {
-            int x = c.getX() - 10;
-            int y = c.getY() - 10;
+        if ((c.x() >= 10) && (c.x() < 10 + prof.hist.length) && (c.y() >= 10) && (c.y() < 10 + h)) {
+            int x = c.x() - 10;
+            int y = c.y() - 10;
             long t = (h - y) * (mt / h);
             Profile.Frame f = prof.hist[x];
             if (f != null) {

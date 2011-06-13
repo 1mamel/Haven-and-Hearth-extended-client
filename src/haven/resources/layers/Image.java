@@ -51,8 +51,8 @@ public class Image extends Layer implements Comparable<Image> {
     }
 
     private boolean detectgay() {
-        for (int y = 0; y < sz.getY(); y++) {
-            for (int x = 0; x < sz.getX(); x++) {
+        for (int y = 0; y < sz.y(); y++) {
+            for (int x = 0; x < sz.x(); x++) {
                 if ((img.getRGB(x, y) & 0x00ffffff) == 0x00ff0080)
                     return (true);
             }

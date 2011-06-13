@@ -31,6 +31,7 @@ import haven.resources.Resource;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.List;
 
@@ -45,7 +46,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
     public static final Tex uglow = Resource.loadtex("gfx/hud/slen/sbg");
     public static final Coord fc = new Coord(96, -29);
     public static final Coord mc = new Coord(316, -55);
-    public static final Coord dispc = new Coord(0, 4 - dispbg.sz().getY());
+    public static final Coord dispc = new Coord(0, 4 - dispbg.sz().y());
     public static final Coord bc1 = new Coord(147, -8); //	Belt 1 location start
     public static final Coord bc2 = new Coord(485, -8); //	Belt 2 location start
     public static final Coord sz;
@@ -87,24 +88,26 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
         } else {
             bg = Resource.loadtex("gfx/hud/slen/low");
         }
-        int h = bg.sz().getY();
+        int h = bg.sz().y();
         sz = new Coord(800, h);
-        sz.setY((h - fc.getY() > sz.getY()) ? (h - fc.getY()) : sz.getY());
-        sz.setY((h - mc.getY() > sz.getY()) ? (h - mc.getY()) : sz.getY());
-        dh = h - sz.getY();
+        sz.setY((h - fc.y() > sz.y()) ? (h - fc.y()) : sz.y());
+        sz.setY((h - mc.y() > sz.y()) ? (h - mc.y()) : sz.y());
+        dh = h - sz.y();
     }
 
     static class FoldButton extends IButton {
+        private static final BufferedImage ButtonImgUp = Resource.loadimg("gfx/hud/slen/sbu");
+        private static final BufferedImage ButtonImgDown = Resource.loadimg("gfx/hud/slen/sbd");
         int urgency;
         int dy;
 
         FoldButton(Coord c, Widget parent) {
-            super(c, parent, Resource.loadimg("gfx/hud/slen/sbu"), Resource.loadimg("gfx/hud/slen/sbd"));
-            dy = sz.getY();
+            super(c, parent, ButtonImgUp, ButtonImgDown);
+            dy = sz.y();
         }
 
         public void draw(GOut g) {
-            c.setX(CustomConfig.getWindowCenter().getX() - sz.getX() / 2);
+            c.setX(CustomConfig.getWindowCenter().x() - sz.x() / 2);
             c.setY(CustomConfig.getWindowHeight() + dy);
             super.draw(g);
             if (urgcols[urgency] != null) {
@@ -154,18 +157,18 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
             }
             if (!w && c) {
                 if (ca < 0.6) {
-                    m.c.setY(CustomConfig.getWindowHeight() - (int) (sz.getY() * (1 - (ca / 0.6))));
+                    m.c.setY(CustomConfig.getWindowHeight() - (int) (sz.y() * (1 - (ca / 0.6))));
                 } else {
                     m.c.setY(CustomConfig.getWindowHeight());
-                    sb.c.setY(CustomConfig.getWindowHeight() - (int) (sb.sz.getY() * ((ca - 0.6) / 0.4)));
+                    sb.c.setY(CustomConfig.getWindowHeight() - (int) (sb.sz.y() * ((ca - 0.6) / 0.4)));
                 }
             }
             if (w && !c) {
                 if (ca < 0.6) {
-                    m.c.setY(CustomConfig.getWindowHeight() - (int) (sz.getY() * (ca / 0.6)));
-                    sb.c.setY(CustomConfig.getWindowHeight() - (int) (sb.sz.getY() * (1 - (ca / 0.6))));
+                    m.c.setY(CustomConfig.getWindowHeight() - (int) (sz.y() * (ca / 0.6)));
+                    sb.c.setY(CustomConfig.getWindowHeight() - (int) (sb.sz.y() * (1 - (ca / 0.6))));
                 } else {
-                    m.c.setY(CustomConfig.getWindowHeight() - sz.getY());
+                    m.c.setY(CustomConfig.getWindowHeight() - sz.y());
                     sb.c.setY(CustomConfig.getWindowHeight());
                 }
             }
@@ -178,13 +181,13 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
     }
 
     public SlenHud(Coord c, Widget parent) {
-        super(new Coord(CustomConfig.getWindowCenter().getX() - sz.getX() / 2, CustomConfig.getWindowHeight() - sz.getY()), sz, parent);
+        super(new Coord(CustomConfig.getWindowCenter().x() - sz.x() / 2, CustomConfig.getWindowHeight() - sz.y()), sz, parent);
         ui.slen = this;
         if (Config.new_chat)
             new ChatHWPanel(new Coord(0, CustomConfig.getWindowHeight() - 300), new Coord(350, 300), ui.root);
         else
             ChatHWPanel.instance = this;
-        dy = -sz.getY();
+        dy = -sz.y();
         //new Img(fc, flarps, this);
         new Img(mc, mbg, this);
         if (!Config.new_minimap)
@@ -269,7 +272,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
         if (in)
             return (c.add(bgc));
         else
-            bgc.setY(bgc.getY() + dh);
+            bgc.setY(bgc.y() + dh);
         return (c.sub(bgc));
     }
 
@@ -280,25 +283,25 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
 
     private static Coord beltc(int i) {
         if (i < 5) {
-            return (bc1.add(i * (invsq.sz().getX() + 2), 0));
+            return (bc1.add(i * (invsq.sz().x() + 2), 0));
         } else {
-            return (bc2.add((i - 5) * (invsq.sz().getX() + 2), 0));
+            return (bc2.add((i - 5) * (invsq.sz().x() + 2), 0));
         }
     }
 
     private int beltslot(Coord c) {
         c = xlate(c, false);
-        int sw = invsq.sz().getX() + 2;
-        if ((c.getX() >= bc1.getX()) && (c.getY() >= bc1.getY()) && (c.getY() < bc1.getY() + invsq.sz().getY())) {
-            if ((c.getX() - bc1.getX()) / sw < 5) {
-                if ((c.getX() - bc1.getX()) % sw < invsq.sz().getX())
-                    return ((c.getX() - bc1.getX()) / sw);
+        int sw = invsq.sz().x() + 2;
+        if ((c.x() >= bc1.x()) && (c.y() >= bc1.y()) && (c.y() < bc1.y() + invsq.sz().y())) {
+            if ((c.x() - bc1.x()) / sw < 5) {
+                if ((c.x() - bc1.x()) % sw < invsq.sz().x())
+                    return ((c.x() - bc1.x()) / sw);
             }
         }
-        if ((c.getX() >= bc2.getX()) && (c.getY() >= bc2.getY()) && (c.getY() < bc2.getY() + invsq.sz().getY())) {
-            if ((c.getX() - bc2.getX()) / sw < 5) {
-                if ((c.getX() - bc2.getX()) % sw < invsq.sz().getX())
-                    return (((c.getX() - bc2.getX()) / sw) + 5);
+        if ((c.x() >= bc2.x()) && (c.y() >= bc2.y()) && (c.y() < bc2.y() + invsq.sz().y())) {
+            if ((c.x() - bc2.x()) / sw < 5) {
+                if ((c.x() - bc2.x()) % sw < invsq.sz().x())
+                    return (((c.x() - bc2.x()) / sw) + 5);
             }
         }
         return (-1);
@@ -321,7 +324,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
                 ircConsole.destroy();
             }
         }
-        c.setX(CustomConfig.getWindowCenter().getX() - sz.getX() / 2);
+        c.setX(CustomConfig.getWindowCenter().x() - sz.x() / 2);
         c.setY(CustomConfig.getWindowHeight() + dy);
         Coord bgc = sz.sub(bg.sz());
         g.image(bg, bgc);
@@ -346,13 +349,13 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
         }
 
         if (cmdline != null) {
-            drawcmd(g.reclip(new Coord(0, -20), new Coord(sz.getX(), 20)), new Coord(15, 0));
-            @SuppressWarnings({"UnusedAssignment"}) GOut eg = g.reclip(new Coord(0, -20), new Coord(sz.getX(), 20));
+            drawcmd(g.reclip(new Coord(0, -20), new Coord(sz.x(), 20)), new Coord(15, 0));
+            @SuppressWarnings({"UnusedAssignment"}) GOut eg = g.reclip(new Coord(0, -20), new Coord(sz.x(), 20));
         } else if (lasterr != null) {
             if ((System.currentTimeMillis() - errtime) > 3000) {
                 lasterr = null;
             } else {
-                GOut eg = g.reclip(new Coord(0, -20), new Coord(sz.getX(), 20));
+                GOut eg = g.reclip(new Coord(0, -20), new Coord(sz.x(), 20));
                 eg.image(lasterr.tex(), new Coord(15, 0));
             }
         }
@@ -432,7 +435,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
                 HWindow w = wnds.get(wi);
                 Button b = btns.get(w);
                 b.visible = true;
-                b.c = new Coord(b.c.getX(), 29 + (i * 20));
+                b.c = new Coord(b.c.x(), 29 + (i * 20));
             }
         }
     }
@@ -643,7 +646,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
     }
 
     public int foldheight() {
-        return (CustomConfig.getWindowHeight() - c.getY());
+        return (CustomConfig.getWindowHeight() - c.y());
     }
 
     public boolean drop(Coord cc, Coord ul, Item item) {

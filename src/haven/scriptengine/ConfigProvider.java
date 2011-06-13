@@ -122,11 +122,11 @@ public class ConfigProvider {
     }
 
     public int getScreenCenterX() {
-        return CustomConfig.getWindowCenter().getX();
+        return CustomConfig.getWindowCenter().x();
     }
 
     public int getScreenXenterY() {
-        return CustomConfig.getWindowCenter().getY();
+        return CustomConfig.getWindowCenter().y();
     }
 
     public boolean isSoundOn() {

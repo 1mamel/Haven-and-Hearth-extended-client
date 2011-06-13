@@ -79,7 +79,7 @@ public class RemoteUI implements UI.Receiver {
                         if (args[0].equals("gfx/hud/buttons/ncu") && args[1].equals("gfx/hud/buttons/ncd")) {
                             c = CustomConfig.getWindowCenter().add(86, 214);
                         }
-                    } else if (type.equals("wnd") && c.getX() == 400 && c.getY() == 200) {
+                    } else if (type.equals("wnd") && c.x() == 400 && c.y() == 200) {
                         CustomConfig.logger.info("Strange window name=" + args[1].toString());
                         c = CustomConfig.getWindowCenter().add(0, -100);
                     }

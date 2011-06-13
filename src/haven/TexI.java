@@ -46,13 +46,13 @@ public class TexI extends TexGL {
 
     public TexI(Coord sz) {
         super(sz);
-        pixels = new byte[tdim.getX() * tdim.getY() * 4];
+        pixels = new byte[tdim.x() * tdim.y() * 4];
     }
 
     protected void fill(GOut g) {
         GL gl = g.gl;
         ByteBuffer data = ByteBuffer.wrap(pixels);
-        gl.glTexImage2D(GL.GL_TEXTURE_2D, 0, fmt, tdim.getX(), tdim.getY(), 0, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, data);
+        gl.glTexImage2D(GL.GL_TEXTURE_2D, 0, fmt, tdim.x(), tdim.y(), 0, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, data);
     }
 
     protected void update(byte[] n) {
@@ -63,7 +63,7 @@ public class TexI extends TexGL {
     }
 
     public int getRGB(Coord c) {
-        return (back.getRGB(c.getX(), c.getY()));
+        return (back.getRGB(c.x(), c.y()));
     }
 
     public TexI mkmask() {
@@ -75,13 +75,13 @@ public class TexI extends TexGL {
     }
 
     public static BufferedImage mkbuf(Coord sz) {
-        WritableRaster buf = Raster.createInterleavedRaster(DataBuffer.TYPE_BYTE, sz.getX(), sz.getY(), 4, null);
+        WritableRaster buf = Raster.createInterleavedRaster(DataBuffer.TYPE_BYTE, sz.x(), sz.y(), 4, null);
         BufferedImage tgt = new BufferedImage(glcm, buf, false, null);
         return (tgt);
     }
 
     public static byte[] convert(BufferedImage img, Coord tsz) {
-        WritableRaster buf = Raster.createInterleavedRaster(DataBuffer.TYPE_BYTE, tsz.getX(), tsz.getY(), 4, null);
+        WritableRaster buf = Raster.createInterleavedRaster(DataBuffer.TYPE_BYTE, tsz.x(), tsz.y(), 4, null);
         BufferedImage tgt = new BufferedImage(glcm, buf, false, null);
         Graphics g = tgt.createGraphics();
         g.drawImage(img, 0, 0, null);

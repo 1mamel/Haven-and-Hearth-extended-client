@@ -44,7 +44,7 @@ public class NpcChat extends Window {
 
     public NpcChat(Coord c, Coord sz, Widget parent, String title) {
         super(c, sz, parent, title);
-        out = new Textlog(Coord.z, new Coord(sz.getX(), sz.getY()), this);
+        out = new Textlog(Coord.z, new Coord(sz.x(), sz.y()), this);
     }
 
     public void uimsg(String msg, Object... args) {
@@ -60,11 +60,11 @@ public class NpcChat extends Window {
             }
             btns.clear();
             if (args.length > 0) {
-                int y = out.sz.getY() + 3;
+                int y = out.sz.y() + 3;
                 for (Object text : args) {
-                    Button b = Button.wrapped(new Coord(0, y), out.sz.getX(), this, (String) text);
+                    Button b = Button.wrapped(new Coord(0, y), out.sz.x(), this, (String) text);
                     btns.add(b);
-                    y += b.sz.getY() + 3;
+                    y += b.sz.y() + 3;
                 }
             }
             pack();

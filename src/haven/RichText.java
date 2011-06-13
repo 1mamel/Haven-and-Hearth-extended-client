@@ -73,7 +73,7 @@ public class RichText extends Text {
                 String action = null;
                 if (part instanceof TextPart) {
                     TextPart tp = (TextPart) part;
-                    action = tp.getAction(tp.charAt(c.getX() - part.x));
+                    action = tp.getAction(tp.charAt(c.x() - part.x));
                 }
                 return action;
             }
@@ -637,8 +637,8 @@ public class RichText extends Text {
             for (Part p : parts) {
                 int x = p.x + p.width();
                 int y = p.y + p.height();
-                if (x > sz.getX()) sz.setX(x);
-                if (y > sz.getY()) sz.setY(y);
+                if (x > sz.x()) sz.setX(x);
+                if (y > sz.y()) sz.setY(y);
             }
             return (sz);
         }
@@ -653,9 +653,9 @@ public class RichText extends Text {
             fp.prepare(rs);
             rt.parts = layout(fp, width);
             Coord sz = bounds(rt.parts);
-            if ((width > 0) && (sz.getX() > width)) sz.setX(width);
-            if (sz.getX() < 1) sz = sz.add(1, 0);
-            if (sz.getY() < 1) sz = sz.add(0, 1);
+            if ((width > 0) && (sz.x() > width)) sz.setX(width);
+            if (sz.x() < 1) sz = sz.add(1, 0);
+            if (sz.y() < 1) sz = sz.add(0, 1);
             BufferedImage img = TexI.mkbuf(sz);
             Graphics2D g = img.createGraphics();
             if (aa)

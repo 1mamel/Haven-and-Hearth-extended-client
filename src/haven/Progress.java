@@ -43,7 +43,7 @@ public class Progress extends Widget {
     }
 
     public void draw(GOut g) {
-        g.image(text.tex(), new Coord(sz.getX() / 2 - text.tex().sz().getX() / 2, 0));
+        g.image(text.tex(), new Coord(sz.x() / 2 - text.tex().sz().x() / 2, 0));
     }
 
     public void uimsg(String msg, Object... args) {

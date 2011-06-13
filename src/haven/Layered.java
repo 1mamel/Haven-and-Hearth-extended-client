@@ -211,14 +211,14 @@ public class Layered extends Drawable {
         Coord ul = new Coord(0, 0);
         Coord lr = new Coord(0, 0);
         for (Sprite.Part part : parts) {
-            if (part.ul.getX() < ul.getX())
-                ul.setX(part.ul.getX());
-            if (part.ul.getY() < ul.getY())
-                ul.setY(part.ul.getY());
-            if (part.lr.getX() > lr.getX())
-                lr.setX(part.lr.getX());
-            if (part.lr.getY() > lr.getY())
-                lr.setY(part.lr.getY());
+            if (part.ul.x() < ul.x())
+                ul.setX(part.ul.x());
+            if (part.ul.y() < ul.y())
+                ul.setY(part.ul.y());
+            if (part.lr.x() > lr.x())
+                lr.setX(part.lr.x());
+            if (part.lr.y() > lr.y())
+                lr.setY(part.lr.y());
         }
         BufferedImage buf = TexI.mkbuf(lr.sub(ul).add(1, 1));
         Graphics g = buf.getGraphics();
@@ -252,7 +252,7 @@ public class Layered extends Drawable {
             if (p == null) {
                 p = new Sprite.Part(z) {
                     public void draw(BufferedImage buf, Graphics g) {
-                        g.drawImage(l.img, -l.cc.getX(), -l.cc.getY(), null);
+                        g.drawImage(l.img, -l.cc.x(), -l.cc.y(), null);
                     }
 
                     public void draw(GOut g) {

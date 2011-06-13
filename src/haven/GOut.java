@@ -117,7 +117,7 @@ public class GOut {
 
     public void aimage(Tex tex, Coord c, double ax, double ay) {
         Coord sz = tex.sz();
-        image(tex, c.add((int) ((double) sz.getX() * -ax), (int) ((double) sz.getY() * -ay)));
+        image(tex, c.add((int) ((double) sz.x() * -ax), (int) ((double) sz.y() * -ay)));
     }
 
     public void image(Tex tex, Coord c, Coord sz) {
@@ -135,7 +135,7 @@ public class GOut {
     }
 
     private void vertex(Coord c) {
-        gl.glVertex2i(c.getX() + ul.getX(), c.getY() + ul.getY());
+        gl.glVertex2i(c.x() + ul.x(), c.y() + ul.y());
     }
 
     void texsel(int id) {
@@ -172,7 +172,7 @@ public class GOut {
         Text t = Text.render(text, null);
         Tex T = t.tex();
         Coord sz = t.sz();
-        image(T, c.add((int) ((double) sz.getX() * -ax), (int) ((double) sz.getY() * -ay)));
+        image(T, c.add((int) ((double) sz.x() * -ax), (int) ((double) sz.y() * -ay)));
         T.dispose();
         checkerr();
     }
@@ -182,9 +182,9 @@ public class GOut {
         texsel(-1);
         gl.glBegin(GL.GL_QUADS);
         vertex(ul);
-        vertex(ul.add(new Coord(sz.getX(), 0)));
+        vertex(ul.add(new Coord(sz.x(), 0)));
         vertex(ul.add(sz));
-        vertex(ul.add(new Coord(0, sz.getY())));
+        vertex(ul.add(new Coord(0, sz.y())));
         gl.glEnd();
         checkerr();
     }
@@ -208,10 +208,10 @@ public class GOut {
         vertex(c);
         for (int i = a1; i < a2; i += 5) {
             double a = (i * Math.PI * 2) / 360.0;
-            vertex(c.add((int) (Math.cos(a) * r.getX()), -(int) (Math.sin(a) * r.getY())));
+            vertex(c.add((int) (Math.cos(a) * r.x()), -(int) (Math.sin(a) * r.y())));
         }
         double a = (a2 * Math.PI * 2) / 360.0;
-        vertex(c.add((int) (Math.cos(a) * r.getX()), -(int) (Math.sin(a) * r.getY())));
+        vertex(c.add((int) (Math.cos(a) * r.x()), -(int) (Math.sin(a) * r.y())));
         gl.glEnd();
         checkerr();
     }
@@ -222,9 +222,9 @@ public class GOut {
 
     public void rect(Coord ul, Coord sz) {
         Coord ur, bl, br;
-        ur = new Coord(ul.getX() + sz.getX() - 1, ul.getY());
-        bl = new Coord(ul.getX(), ul.getY() + sz.getY() - 1);
-        br = new Coord(ur.getX(), bl.getY());
+        ur = new Coord(ul.x() + sz.x() - 1, ul.y());
+        bl = new Coord(ul.x(), ul.y() + sz.y() - 1);
+        br = new Coord(ur.x(), bl.y());
         line(ul, ur, 1);
         line(ur, br, 1);
         line(br, bl, 1);

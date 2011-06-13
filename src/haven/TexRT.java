@@ -67,13 +67,13 @@ public abstract class TexRT extends TexGL {
     }
 
     protected byte[] initdata() {
-        return (new byte[tdim.getX() * tdim.getY() * 4]);
+        return (new byte[tdim.x() * tdim.y() * 4]);
     }
 
     protected void fill(GOut g) {
         rerender(g.gl);
         byte[] idat = initdata();
-        g.gl.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, tdim.getX(), tdim.getY(), 0, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, (idat == null) ? null : java.nio.ByteBuffer.wrap(idat));
+        g.gl.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, tdim.x(), tdim.y(), 0, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, (idat == null) ? null : java.nio.ByteBuffer.wrap(idat));
         GOut.checkerr(g.gl);
     }
 
@@ -89,7 +89,7 @@ public abstract class TexRT extends TexGL {
             curf.tick("render");
         g.texsel(id);
         GOut.checkerr(gl);
-        gl.glCopyTexSubImage2D(GL.GL_TEXTURE_2D, 0, 0, 0, 0, 0, dim.getX(), dim.getY());
+        gl.glCopyTexSubImage2D(GL.GL_TEXTURE_2D, 0, 0, 0, 0, 0, dim.x(), dim.y());
         GOut.checkerr(gl);
         if (curf != null) {
             curf.tick("copy");

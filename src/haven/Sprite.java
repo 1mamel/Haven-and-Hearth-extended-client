@@ -50,8 +50,8 @@ public abstract class Sprite {
         public int compare(Part a, Part b) {
             if (a.z != b.z)
                 return (a.z - b.z);
-            if (a.cc.getY() != b.cc.getY())
-                return (a.cc.getY() - b.cc.getY());
+            if (a.cc.y() != b.cc.y())
+                return (a.cc.y() - b.cc.y());
             return ((a.subz + a.szo) - (b.subz + b.szo));
         }
     };
