@@ -138,7 +138,7 @@ public class Button extends Widget {
         int width = sz.x();
         int height = sz.y();
 
-        g.image(isMouseDown ? dt : ut, new Coord.U(bLeftWidth, bTopHeight), new Coord.U(width - bLRWidth, height - bTBHeight)); // Background
+        g.image(isMouseDown ? dt : ut, new Coord.U(bLeftWidth - 3, bTopHeight - 2), new Coord.U(width - (bLRWidth - 6), height - (bTBHeight - 4))); // Background
         g.image(bl, Coord.z, new Coord.U(bLeftWidth, height)); // Left Border
         g.image(br, new Coord.U(width - bRigthWidth, 0), new Coord.U(bRigthWidth, height)); // Rigth Border
         g.image(bt, new Coord.U(bLeftWidth, 0), new Coord.U(width - bLRWidth, bTopHeight)); // Top Border

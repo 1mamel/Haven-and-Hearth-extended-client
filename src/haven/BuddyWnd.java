@@ -33,25 +33,22 @@ import java.util.List;
 
 public class BuddyWnd extends Window {
     public static BuddyWnd instance;
-    private List<Buddy> buddies = new ArrayList<Buddy>();
+    private final List<Buddy> buddies = new ArrayList<Buddy>();
     private Map<Integer, Buddy> idmap = new HashMap<Integer, Buddy>();
     private BuddyList bl;
     private BuddyInfo bi;
-    private Button sbalpha;
-    private Button sbgroup;
-    private Button sbstatus;
     private TextEntry charpass, opass;
     public static final Tex online = Resource.loadtex("gfx/hud/online");
     public static final Tex offline = Resource.loadtex("gfx/hud/offline");
-    public static final Color[] gc = new Color[] {
-	new Color(255, 255, 255),
-	new Color(64, 255, 64),
-	new Color(255, 64, 64),
-	new Color(96, 160, 255),
-	new Color(0, 255, 255),
-	new Color(255, 255, 0),
-	new Color(211, 64, 255),
-	new Color(255, 128, 16),
+    public static final Color[] gc = new Color[]{
+            new Color(255, 255, 255),
+            new Color(64, 255, 64),
+            new Color(255, 64, 64),
+            new Color(96, 160, 255),
+            new Color(0, 255, 255),
+            new Color(255, 255, 0),
+            new Color(211, 64, 255),
+            new Color(255, 128, 16),
     };
     private Comparator<Buddy> bcmp;
     private final Comparator<Buddy> alphacmp = new Comparator<Buddy>() {
@@ -101,10 +98,10 @@ public class BuddyWnd extends Window {
             for (int i = 0; i < gc.length; i++) {
                 if (i == group) {
                     g.chcolor();
-                    g.frect(new Coord(i * 20, 0), new Coord(19, 19));
+                    g.frect(i * 20, 0, 19, 19);
                 }
                 g.chcolor(gc[i]);
-                g.frect(new Coord(2 + (i * 20), 2), new Coord(15, 15));
+                g.frect(2 + (i * 20), 2, 15, 15);
             }
             g.chcolor();
         }
@@ -302,15 +299,15 @@ public class BuddyWnd extends Window {
                         Buddy b = buddies.get(i + sb.val);
                         if (b == sel) {
                             g.chcolor(96, 96, 96, 255);
-                            g.frect(new Coord(0, i * 20), new Coord(sz.x(), 20));
+                            g.frect(0, i * 20, sz.x(), 20);
                             g.chcolor();
                         }
                         if (b.online == 1)
-                            g.image(online, new Coord(0, i * 20));
+                            g.image(online, 0, i * 20);
                         else if (b.online == 0)
-                            g.image(offline, new Coord(0, i * 20));
+                            g.image(offline, 0, i * 20);
                         g.chcolor(gc[b.group]);
-                        g.aimage(b.name.tex(), new Coord(25, i * 20 + 10), 0, 0.5);
+                        g.aimage(b.name.tex(), 25, i * 20 + 10, 0, 0.5);
                         g.chcolor();
                     }
                 }
@@ -366,17 +363,17 @@ public class BuddyWnd extends Window {
             }
         };
         bi = new BuddyInfo(new Coord(210, 5), new Coord(180, 280), this);
-        sbstatus = new Button(new Coord(5, 290), 120, this, "Sort by status") {
+        new Button(new Coord(5, 290), 120, this, "Sort by status") {
             public void click() {
                 setcmp(statuscmp);
             }
         };
-        sbgroup = new Button(new Coord(140, 290), 120, this, "Sort by group") {
+        new Button(new Coord(140, 290), 120, this, "Sort by group") {
             public void click() {
                 setcmp(groupcmp);
             }
         };
-        sbalpha = new Button(new Coord(275, 290), 120, this, "Sort alphabetically") {
+        new Button(new Coord(275, 290), 120, this, "Sort alphabetically") {
             public void click() {
                 setcmp(alphacmp);
             }

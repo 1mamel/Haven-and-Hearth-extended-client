@@ -115,9 +115,21 @@ public class GOut {
         checkerr();
     }
 
+    public void image(Tex tex, int x, int y) {
+        if (tex == null)
+            return;
+        tex.crender(this, ul.add(x, y), ul, sz);
+        checkerr();
+    }
+
     public void aimage(Tex tex, Coord c, double ax, double ay) {
         Coord sz = tex.sz();
         image(tex, c.add((int) ((double) sz.x() * -ax), (int) ((double) sz.y() * -ay)));
+    }
+
+    public void aimage(Tex tex, int x, int y, double ax, double ay) {
+        Coord sz = tex.sz();
+        image(tex, x - (int) ((double) sz.x() * ax), y - (int) ((double) sz.y() * ay));
     }
 
     public void image(Tex tex, Coord c, Coord sz) {
@@ -136,6 +148,10 @@ public class GOut {
 
     private void vertex(Coord c) {
         gl.glVertex2i(c.x() + ul.x(), c.y() + ul.y());
+    }
+
+    private void vertex(int x, int y) {
+        gl.glVertex2i(x + ul.x(), y + ul.y());
     }
 
     void texsel(int id) {
@@ -164,6 +180,25 @@ public class GOut {
         checkerr();
     }
 
+    public void line(int x1, int y1, int x2, int y2, double w) {
+        texsel(-1);
+        gl.glLineWidth((float) w);
+        gl.glBegin(GL.GL_LINES);
+        glcolor();
+        vertex(x1, y1);
+        vertex(x2, y2);
+        gl.glEnd();
+        checkerr();
+    }
+
+    public void lineY(int x, int y1, int y2, double w) {
+        line(x, y1, x, y2, w);
+    }
+
+    public void lineX(int y, int x1, int x2, double w) {
+        line(x1, y, x2, y, w);
+    }
+
     public void text(String text, Coord c) {
         atext(text, c, 0, 0);
     }
@@ -180,11 +215,23 @@ public class GOut {
     public void frect(Coord ul, Coord sz) {
         glcolor();
         texsel(-1);
-        gl.glBegin(GL.GL_QUADS);
+        gl.glBegin(GL.GL_QUADS); // Because summ of ints faster than Coord.add
         vertex(ul);
-        vertex(ul.add(new Coord(sz.x(), 0)));
-        vertex(ul.add(sz));
-        vertex(ul.add(new Coord(0, sz.y())));
+        vertex(ul.x() + sz.x(), ul.y());
+        vertex(ul.x() + sz.x(), ul.y() + sz.y());
+        vertex(ul.x(), ul.y() + sz.y());
+        gl.glEnd();
+        checkerr();
+    }
+
+    public void frect(int ulX, int ulY, int lenX, int lenY) {
+        glcolor();
+        texsel(-1);
+        gl.glBegin(GL.GL_QUADS); // Because summ of ints faster than Coord.add
+        vertex(ulX, ulY);
+        vertex(ulX + lenX, ulY);
+        vertex(ulX + lenX, ulY + lenY);
+        vertex(ulX, ulY + lenY);
         gl.glEnd();
         checkerr();
     }
@@ -216,19 +263,41 @@ public class GOut {
         checkerr();
     }
 
+    public void fellipse(int cx, int cy, int rx, int ry, int a1, int a2) {
+        glcolor();
+        texsel(-1);
+        gl.glBegin(GL.GL_TRIANGLE_FAN);
+        vertex(cx, cy);
+        for (int i = a1; i < a2; i += 5) {
+            double a = (i * Math.PI * 2) / 360.0;
+            vertex(cx + (int) (Math.cos(a) * rx), cy - (int) (Math.sin(a) * ry));
+        }
+        double a = (a2 * Math.PI * 2) / 360.0;
+        vertex(cx + (int) (Math.cos(a) * rx), cx - (int) (Math.sin(a) * ry));
+        gl.glEnd();
+        checkerr();
+    }
+
+    public void fellipse(int cx, int cy, int rx, int ry) {
+        fellipse(cx, cy, rx, ry, 0, 360);
+    }
+
     public void fellipse(Coord c, Coord r) {
-        fellipse(c, r, 0, 360);
+        fellipse(c.x(), c.y(), r.x(), r.y(), 0, 360);
     }
 
     public void rect(Coord ul, Coord sz) {
-        Coord ur, bl, br;
-        ur = new Coord(ul.x() + sz.x() - 1, ul.y());
-        bl = new Coord(ul.x(), ul.y() + sz.y() - 1);
-        br = new Coord(ur.x(), bl.y());
-        line(ul, ur, 1);
-        line(ur, br, 1);
-        line(br, bl, 1);
-        line(bl, ul, 1);
+        int top, bottom, left, right;
+
+        top = ul.y();
+        bottom = ul.y() + sz.y() - 1;
+        left = ul.x();
+        right = ul.x() + sz.x() - 1;
+
+        lineX(top, left, right, 1);
+        lineY(right, top, bottom, 1);
+        lineX(bottom, right, left, 1);
+        lineY(left, bottom, top, 1);
     }
 
     public void chcolor(Color c) {
