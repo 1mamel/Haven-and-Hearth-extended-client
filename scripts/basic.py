@@ -6,13 +6,16 @@
 from includes import *
 
 def set_bot1(name):
-    Config.bot1 = name
+    PConfig.bot1 = name
+
 
 def set_bot2(name):
-    Config.bot2 = name
+    PConfig.bot2 = name
+
 
 def sleep(seconds):
     import time
+
     time.sleep(seconds)
 
 # print already exists
@@ -20,8 +23,10 @@ def sleep(seconds):
 def exit(obj):
     Manager.kill(obj)
 
+
 def logout():
     return False # TODO
+
 
 def say(s):
     PPlayer.sayArea(s)
@@ -29,39 +34,42 @@ def say(s):
 
 # послать клик по объекту на карте. объект указывается по objid. кнопка мыши btn (1 - левая. 3 - правая). дополнительные флаги mod (1-шифт. 2-ктрл. 4-альт. 8-вин)
 def do_click(objectId, button, mode):
-    Player.mapCLick(objectId, button, mode)
+    PPlayer.mapCLick(objectId, button, mode)
 
 # простой клик по карте. как обычно щелкаем мышью. только координаты относительно игрока
 def map_click(x, y, button, mode):
-    Player.mapClick(x,y,button,mode)
+    PPlayer.mapClick(x, y, button, mode)
 
 # абсолютный клик по карте. как обычно щелкаем мышью. указываем координаты мира
 def map_abs_click(x, y, btn, mode):
-    Player.mapAbsoluteClick(x, y, button,mode)
+    PPlayer.mapAbsoluteClick(x, y, button, mode)
 
 # передвинутся на указанное количество тайлов от текущей позиции игрока, фактически это map_click всегда с левой кнопкой
 def map_move_step(x, y):
-    Player.moveStep(x, y)
+    PPlayer.moveStep(x, y)
 
 # бежать к указанной точке. объект и оффсет от него в координатах карты. (1 тайл = 11 точек)
 def map_move(objid, x, y):
-    Player.move(x, y)
+    PPlayer.move(x, y)
 
 # Player coordinates
 # получить мои мировые координаты (абсолютные)
 def my_coord():
-    return Player.coord
+    return PPlayer.coord
+
 
 def my_coord_x():
-    return Player.x
+    return PPlayer.x
+
 
 def my_coord_y():
-    return Player.y
+    return PPlayer.y
 
 
 # кликнуть по карте (взаимодействие, чтото держим в руках) координаты указываются в тайлах от текущей позиции игрока
 def map_interact_click(x, y, mode):
     return
+
 
 def map_interact_click(objid, mode):
     return
@@ -115,7 +123,6 @@ def find_object_by_type(type, radius):
     return 0 #integer
 
 
-
 # найти объект по оффсету от себя в заданном радиусе и с заданным именем. ВНИМАНИЕ!!! радиус в точках карты. отступ в тайлах
 # если имя не указано (пустая строка) ищет любой объект в заданном радиусе
 def find_map_object(name, radius, x, y):
@@ -160,24 +167,42 @@ def set_item_equip(index):
     return
 
 # получаем параметры текущей вещи установленной итератором
-    #int is_item_name(string name) - 0 или 1 совпадает ли имя вещи
-    #int is_item_tooltip(string name) - 0 или 1 совпадает ли тултип (всплывающая подсказка на вещи)
-    #int item_quality() - возвращает качество
-    #def item_click(string action) - щелчок по вещи
-    #def item_click(string action, mod) - щелчок по вещи, с модификатором клавиатуры
-#        команды (action):
-#            take - взять вещь
-#            itemact - взаимодействие на вещь. чтото держим в руках и щелкаем правой кнопкой по вещи
-#            transfer - переместить. щелчек лкм с зажатым шифтом
-#            iact - фактически правый щелчек по вещи. для вызова контекстного меню
-#            drop - дропнуть вещь на землю. щелчек лкм с зажатым контролом
+
+# - 0 или 1 совпадает ли имя вещи
+def is_item_name(name):
+    return 0
+
+
+def is_item_tooltip(name):# - 0 или 1 совпадает ли тултип (всплывающая подсказка на вещи)
+    return 0
+
+
+def item_quality():# - возвращает качество
+    return 10
+
+
+def item_click(action):# - щелчок по вещи
+    return
+
+
+def item_click(action, mod):# - щелчок по вещи, с модификатором клавиатуры
+    return
+
+#  команды (action):
+#    take - взять вещь
+#    itemact - взаимодействие на вещь. чтото держим в руках и щелкаем правой кнопкой по вещи
+#    transfer - переместить. щелчек лкм с зажатым шифтом
+#    iact - фактически правый щелчек по вещи. для вызова контекстного меню
+#    drop - дропнуть вещь на землю. щелчек лкм с зажатым контролом
 
 # координаты вещи в инвентаре
 def item_coord():
-    return (0,0) #(int,int)
+    return (0, 0) #(int,int)
+
 
 def item_coord_x():
     return 0 #integer
+
 
 def item_coord_y():
     return 0 #integer
@@ -207,9 +232,9 @@ def item_drop(x, y):
 def inventory(name, x, y, action):
     return
 
+
 def inventory(name, x, y, action, mode):
     return
-
 
 
 # дропнуть вещь в указанный инвентарь, допустим когда надо из моего инвентаря не закрывая его дропнуть в шкаф или ящик
@@ -268,7 +293,6 @@ def buff_time_meter():
 # проверить имя баффа на вхождение строки. вернет 0 или 1
 def is_buff_name(name):
     return 0 #integer
-
 
 
 # нажать кнопку строительства в окошке билда
