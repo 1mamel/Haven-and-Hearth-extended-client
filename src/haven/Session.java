@@ -361,89 +361,90 @@ public class Session {
 //                } catch (Exception ignored) {
 //                }
             }
-            if (msg.type != Message.RMSG_TILES)
+            if (msg.type != Message.RMSG_TILES) {
 //                if (CustomConfig.logServerMessages)
 //                    CustomConsole.log("\nMESSAGE TYPE - " + msg.type);
-                if (msg.type == Message.RMSG_NEWWDG) {
-                    //	Message Logging
+            }
+            if (msg.type == Message.RMSG_NEWWDG) {
+                //	Message Logging
 //                if (CustomConfig.logServerMessages) {
 //                    CustomConsole.log("\nCREATE\tID: " + id + "\tType: " + type + "\tCoord:" + c + "\tParent: " + parent + "\tArgs: ");
 //                    for (int i = 0; i < args.length; i++)
 //                        CustomConsole.log("|" + i + "| " + args[i] + '\t');
 //                }
-                    synchronized (uimsgs) {
-                        uimsgs.add(msg);
-                    }
-                } else if (msg.type == Message.RMSG_WDGMSG) {
-                    //	Message Logging
+                synchronized (uimsgs) {
+                    uimsgs.add(msg);
+                }
+            } else if (msg.type == Message.RMSG_WDGMSG) {
+                //	Message Logging
 //                if (CustomConfig.logServerMessages) {
 //                    CustomConsole.log("\nMSG\tID: " + id + ' ' /*+ ui.widgets.get(new Integer(id))*/ + "\tType: " + type + "\tArgs: ");
 //                    if (args != null)
 //                        for (int i = 0; i < args.length; i++)
 //                            CustomConsole.log("|" + i + "| " + args[i] + '\t');
 //                }
-                    synchronized (uimsgs) {
-                        uimsgs.add(msg);
-                    }
-                } else if (msg.type == Message.RMSG_DSTWDG) {
-                    //	Message Logging
+                synchronized (uimsgs) {
+                    uimsgs.add(msg);
+                }
+            } else if (msg.type == Message.RMSG_DSTWDG) {
+                //	Message Logging
 //                if (CustomConfig.logServerMessages)
 //                    CustomConsole.log("DESTROY" + '\t' + id + ' ' /*+ ui.widgets.get(new Integer(id))*/);
-                    synchronized (uimsgs) {
-                        uimsgs.add(msg);
-                    }
-                } else if (msg.type == Message.RMSG_MAPIV) {
-                    glob.map.invalblob(msg);
-                } else if (msg.type == Message.RMSG_GLOBLOB) {
-                    //Message Logging
+                synchronized (uimsgs) {
+                    uimsgs.add(msg);
+                }
+            } else if (msg.type == Message.RMSG_MAPIV) {
+                glob.map.invalblob(msg);
+            } else if (msg.type == Message.RMSG_GLOBLOB) {
+                //Message Logging
 //                if (CustomConfig.logServerMessages) {
 //                    CustomConsole.log("\nGLOBLOB\tID: " + id + ' ' /*+ ui.widgets.get(new Integer(id))*/ + "\tType: " + type + "\tArgs: ");
 //                    if (args != null)
 //                        for (int i = 0; i < args.length; i++)
 //                            CustomConsole.log("|" + i + "| " + args[i] + '\t');
 //                }
-                    glob.blob(msg);
-                } else if (msg.type == Message.RMSG_PAGINAE) {
-                    glob.paginae(msg);
-                } else if (msg.type == Message.RMSG_RESID) {
+                glob.blob(msg);
+            } else if (msg.type == Message.RMSG_PAGINAE) {
+                glob.paginae(msg);
+            } else if (msg.type == Message.RMSG_RESID) {
 //                if (CustomConfig.logServerMessages)
 //                    CustomConsole.log("\nRESID\tID: " + id + "\tName: " + type + "\tVer: " + parent);
-                    int resid = msg.uint16();
-                    String resname = msg.string();
-                    int resver = msg.uint16();
-                    synchronized (rescache) {
-                        getres(resid).set(Resource.load(resname, resver, -5));
-                    }
-                } else if (msg.type == Message.RMSG_PARTY) {
-                    glob.party.msg(msg);
-                } else if (msg.type == Message.RMSG_SFX) {
-                    if (!CustomConfig.isSoundOn) return;        //	Sound effects disabled
-                    Indir<Resource> res = getres(msg.uint16());
-                    double vol = ((double) msg.uint16()) / 256.0;
-                    double spd = ((double) msg.uint16()) / 256.0;
-                    Audio.play(res);
-                } else if (msg.type == Message.RMSG_CATTR) {
-                    glob.cattr(msg);
-                } else if (msg.type == Message.RMSG_MUSIC) {
+                int resid = msg.uint16();
+                String resname = msg.string();
+                int resver = msg.uint16();
+                synchronized (rescache) {
+                    getres(resid).set(Resource.load(resname, resver, -5));
+                }
+            } else if (msg.type == Message.RMSG_PARTY) {
+                glob.party.msg(msg);
+            } else if (msg.type == Message.RMSG_SFX) {
+                if (!CustomConfig.isSoundOn) return;        //	Sound effects disabled
+                Indir<Resource> res = getres(msg.uint16());
+                double vol = ((double) msg.uint16()) / 256.0;
+                double spd = ((double) msg.uint16()) / 256.0;
+                Audio.play(res);
+            } else if (msg.type == Message.RMSG_CATTR) {
+                glob.cattr(msg);
+            } else if (msg.type == Message.RMSG_MUSIC) {
 //                if (CustomConfig.logServerMessages) {
 //                    CustomConsole.log("\nMUSIC\tName: " + type + "\tVer: " + id);
 //                }
-                    String resnm = msg.string();
-                    int resver = msg.uint16();
-                    boolean loop = !msg.eom() && (msg.uint8() != 0);
-                    if (Music.enabled) {
-                        if (resnm.length() == 0)
-                            Music.stop();
-                        else
-                            Music.play(Resource.load(resnm, resver), loop);
-                    }
-                } else if (msg.type == Message.RMSG_TILES) {
-                    glob.map.tilemap(msg);
-                } else if (msg.type == Message.RMSG_BUFF) {
-                    glob.buffmsg(msg);
-                } else {
-                    throw (new MessageException("Unknown rmsg type: " + msg.type, msg));
+                String resnm = msg.string();
+                int resver = msg.uint16();
+                boolean loop = !msg.eom() && (msg.uint8() != 0);
+                if (Music.enabled) {
+                    if (resnm.length() == 0)
+                        Music.stop();
+                    else
+                        Music.play(Resource.load(resnm, resver), loop);
                 }
+            } else if (msg.type == Message.RMSG_TILES) {
+                glob.map.tilemap(msg);
+            } else if (msg.type == Message.RMSG_BUFF) {
+                glob.buffmsg(msg);
+            } else {
+                throw (new MessageException("Unknown rmsg type: " + msg.type, msg));
+            }
         }
 
         private void getrel(int seq, Message msg) {
