@@ -78,10 +78,6 @@ public class CustomConsole extends Window {
         setfocus(in);
     }
 
-    private void append(String text, Color color) {
-        out.append(text, color);
-    }
-
     public class CustomWriter extends Writer {
         private final Color color;
 
@@ -95,10 +91,10 @@ public class CustomConsole extends Window {
 
         @Override
         public void write(char[] cbuf, int off, int len) throws IOException {
-            StringBuilder builder = new StringBuilder();
-            builder.append(cbuf, off, len);
+            String line = new String(cbuf, off, len);
             try {
-                CustomConsole.this.append(builder.toString(), color);
+                System.out.println("console writer:" + line);
+                out.append(line, color);
             } catch (Exception ignored) {
             }
         }

@@ -169,15 +169,7 @@ public class MCache {
             for (int cy = 0; cy < cmaps.x(); ++cy) {
                 for (int cx = 0; cx < cmaps.y(); ++cx) {
                     Tileset set = sets[tiles[cx][cy]];
-                    if (set == null) {
-//                        System.err.println("set[tiles[x][y]] are null with x,y=" + cx + ',' + cy);
-                        continue;
-                    }
                     WeightList<Resource> flavobjs = set.getFlavobjs();
-                    if (flavobjs == null) {
-                        System.err.println("Nulled flavobjs");
-                        continue;
-                    }
                     if (!flavobjs.isEmpty()) {
                         Random rnd = mkrandoom(cx, cy);
                         if (rnd.nextInt(set.getFlavprob()) == 0) {
@@ -212,7 +204,6 @@ public class MCache {
         Resource res = Resource.load(name, ver);
         res.loadwait();
         Tileset layer = res.layer(Resource.tileset);
-        System.err.println("loadset returning "+ layer);
         return layer;
     }
 

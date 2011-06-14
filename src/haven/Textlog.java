@@ -72,9 +72,9 @@ public class Textlog extends Widget {
         int y = -cury;
         for (Text line : lines) {
             int lineHeight = line.sz().y();
-            int dy1 = y + y;
+            int dy1 = height + y;
             int dy2 = dy1 + lineHeight;
-            if ((dy2 > 0) && (dy1 < y)) {
+            if ((dy2 > 0) && (dy1 < height)) {
                 g.image(line.tex(), margin, dy1);
             }
             y += lineHeight;
@@ -84,11 +84,11 @@ public class Textlog extends Widget {
         if (maxy > y) {
             int fx = width - sflarp.sz().x();
             int cx = fx + (sflarp.sz().x() / 2) - (schain.sz().x() / 2);
-            for (y = 0; y < y; y += schain.sz().y() - 1) {
+            for (y = 0; y < height; y += schain.sz().y() - 1) {
                 g.image(schain, cx, y);
             }
-            double a = (double) (cury - y) / (double) (maxy - y);
-            int fy = (int) ((y - sflarp.sz().y()) * a);
+            double a = (double) (cury - height) / (double) (maxy - height);
+            int fy = (int) ((height - sflarp.sz().y()) * a);
             g.image(sflarp, new Coord(fx, fy));
         }
     }
