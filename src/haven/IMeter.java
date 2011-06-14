@@ -26,7 +26,7 @@
 
 package haven;
 
-import haven.scriptengine.UserInfo;
+import haven.scriptengine.providers.Player;
 
 import java.awt.*;
 import java.util.LinkedList;
@@ -44,10 +44,12 @@ public class IMeter extends Widget {
             public Widget create(Coord c, Widget parent, Object[] args) {
                 Resource bg = Resource.load((String) args[0]);
                 List<Meter> meters = new LinkedList<Meter>();
-                for (int i = 1; i < args.length; i += 2)
+                for (int i = 1; i < args.length; i += 2) {
+                    //noinspection ObjectAllocationInLoop
                     meters.add(new Meter((Color) args[i], (Integer) args[i + 1]));
+                }
                 IMeter res = new IMeter(c, parent, bg, meters);
-                UserInfo.iMeterGenerated(res, (String) args[0]);
+                Player.iMeterGenerated(res, (String) args[0]);
                 return res;
             }
         });
@@ -79,7 +81,7 @@ public class IMeter extends Widget {
                 int w = msz.x();
                 w = (w * m.a) / 100;
                 g.chcolor(m.c);
-                g.frect(off, new Coord(w, msz.y()));
+                g.frect(off, w, msz.y());
             }
             g.chcolor();
             g.image(bg, Coord.z);
@@ -89,12 +91,14 @@ public class IMeter extends Widget {
     public void uimsg(String msg, Object... args) {
         if (msg.equals("set")) {
             List<Meter> meters = new LinkedList<Meter>();
-            for (int i = 0; i < args.length; i += 2)
+            for (int i = 0; i < args.length; i += 2) {
+                //noinspection ObjectAllocationInLoop
                 meters.add(new Meter((Color) args[i], (Integer) args[i + 1]));
+            }
             this.meters = meters;
         } else if (msg.equals("tt")) {
             tooltip = args[0];
-            UserInfo.meterUpdated(this, (String) args[0]);
+            Player.meterUpdated(this, (String) args[0]);
         } else {
             super.uimsg(msg, args);
         }

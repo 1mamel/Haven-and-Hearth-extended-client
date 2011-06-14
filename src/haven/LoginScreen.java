@@ -68,7 +68,7 @@ public class LoginScreen extends Widget {
         private Pwbox(String username, boolean save) {
             super(CustomConfig.getWindowCenter().add(-55, 10), new Coord(150, 150), LoginScreen.this);
             setfocustab(true);
-            new Label(new Coord(0, 0), this, "User name", textf);
+            new Label(new Coord(0, 0), this, "Player name", textf);
             user = new TextEntry(new Coord(0, 20), new Coord(150, 20), this, username);
             new Label(new Coord(0, 60), this, "Password", textf);
             pass = new TextEntry(new Coord(0, 80), new Coord(150, 20), this, "");

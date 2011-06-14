@@ -11,7 +11,7 @@ import java.awt.event.FocusListener;
 
 /**
  * Created by IntelliJ IDEA.
- * User: Vlad.Rassokhin@gmail.com
+ * Player: Vlad.Rassokhin@gmail.com
  * Date: 12.01.11
  * Time: 14:12
  */

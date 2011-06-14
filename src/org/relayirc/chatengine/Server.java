@@ -91,7 +91,7 @@ public class Server implements IChatObject, Serializable {
     private transient Vector _listeners = null;
 
     /**
-     * User objects that are waiting for WHOIS information.
+     * Player objects that are waiting for WHOIS information.
      */
     private transient Hashtable _userWaitingList = null;
 
@@ -557,7 +557,7 @@ public class Server implements IChatObject, Serializable {
     //------------------------------------------------------------------
 
     /**
-     * Send WHIOS for user specified by User object, object will be
+     * Send WHIOS for user specified by Player object, object will be
      * updated when WHOIS information is received.
      */
     public void sendWhoIs(User user) {
@@ -929,7 +929,7 @@ public class Server implements IChatObject, Serializable {
             if (chan.startsWith("#")) {
                 channel = getChannel(chan, true);
             } else {
-                // User has messaged us, use their nick as the channel name
+                // Player has messaged us, use their nick as the channel name
                 channel = getChannel(orgnick, true);
                 channel.getChannelMux().onJoin("", orgnick, chan, false);
                 channel.getChannelMux().onJoin("", getNick(), chan, false);
@@ -960,7 +960,7 @@ public class Server implements IChatObject, Serializable {
                 if (!nick.equals(getNick())) {
                     channel.getChannelMux().onPart(user, nick, chan);
                 } else {
-                    // User is our user, send part then disconnect channel
+                    // Player is our user, send part then disconnect channel
                     channel.getChannelMux().onPart(user, nick, chan);
                     channel.disconnect();
                 }

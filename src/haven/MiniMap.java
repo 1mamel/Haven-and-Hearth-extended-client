@@ -73,7 +73,7 @@ public class MiniMap extends Widget {
         private static InputStream getreal(String nm) throws IOException {
             URL url = new URL(Config.mapurl, nm + ".png");
             URLConnection c = url.openConnection();
-            c.addRequestProperty("User-Agent", "Haven/1.0");
+            c.addRequestProperty("Player-Agent", "Haven/1.0");
             InputStream s = c.getInputStream();
             /*
             * I've commented this out, since it seems that the JNLP

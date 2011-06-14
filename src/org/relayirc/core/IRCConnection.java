@@ -85,10 +85,10 @@ public class IRCConnection implements Runnable, IRCConstants {
      *
      * @param server   DNS-resolvable hostname of server.
      * @param port     Server port number to connect to.
-     * @param nick     User's IRC nick name (e.g. Mortz).
+     * @param nick     Player's IRC nick name (e.g. Mortz).
      * @param altNick  TODO
-     * @param userName User's login/user name (e.g. mps).
-     * @param fullName User's full name (e.g. Mortimer P. Snerd)
+     * @param userName Player's login/user name (e.g. mps).
+     * @param fullName Player's full name (e.g. Mortimer P. Snerd)
      */
     public IRCConnection(String server, int port,
                          String nick, String altNick, String userName, String fullName) {
@@ -371,7 +371,7 @@ public class IRCConnection implements Runnable, IRCConstants {
 
         try {
             String message;  // The full message
-            String origin;   // User who sent the message (nick!email@host)
+            String origin;   // Player who sent the message (nick!email@host)
             String command;  // Message's command
             String response; // Response to be sent
 

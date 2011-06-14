@@ -54,7 +54,7 @@ public class HttpSource implements ResSource, Serializable {
             c = ssl.connect(resurl);
         else
             c = resurl.openConnection();
-        c.addRequestProperty("User-Agent", "Haven/1.0");
+        c.addRequestProperty("Player-Agent", "Haven/1.0");
         return (c.getInputStream());
     }
 

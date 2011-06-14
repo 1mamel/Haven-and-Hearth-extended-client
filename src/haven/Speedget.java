@@ -26,7 +26,7 @@
 
 package haven;
 
-import haven.scriptengine.UserInfo;
+import haven.scriptengine.providers.Player;
 
 public class Speedget extends Widget {
     public static final Tex imgs[][];
@@ -88,7 +88,7 @@ public class Speedget extends Widget {
     }
 
     private void updateUserInfo() {
-        UserInfo.updateSpeed(cur, max, this);
+        Player.updateSpeed(cur, max, this);
     }
 
     public boolean changeSpeed(int speed) {
@@ -118,7 +118,7 @@ public class Speedget extends Widget {
     @Override
     public void destroy() {
         ui.spd = null;
-        UserInfo.updateSpeed(0, 0, null);
+        Player.updateSpeed(0, 0, null);
         super.destroy();
     }
 }

@@ -75,7 +75,7 @@ public class RemoteUI implements UI.Receiver {
                             c = CustomConfig.getWindowCenter().add(-415, -300);
                     } else if (type.equals("charlist") && args.length >= 1) {
                         c = CustomConfig.getWindowCenter().add(-380, -50);
-                    } else if (type.equals("ibtn") && args.length >= 2) { // New User Button
+                    } else if (type.equals("ibtn") && args.length >= 2) { // New Player Button
                         if (args[0].equals("gfx/hud/buttons/ncu") && args[1].equals("gfx/hud/buttons/ncd")) {
                             c = CustomConfig.getWindowCenter().add(86, 214);
                         }

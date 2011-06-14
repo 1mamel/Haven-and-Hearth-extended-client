@@ -50,7 +50,7 @@ public interface ServerListener {
     abstract public void onChannelAdd(ServerEvent event);
 
     /**
-     * User has joined a channel.
+     * Player has joined a channel.
      * Will always follow an onChannelAdd event.
      * event.getUser() and event.getChannel() will be valid.
      */
@@ -63,13 +63,13 @@ public interface ServerListener {
     abstract public void onIsOn(ServerEvent event);
 
     /**
-     * User has invited us to join a channel.
+     * Player has invited us to join a channel.
      * event.getUser() and event.getChannel() will be valid.
      */
     abstract public void onInvite(ServerEvent event);
 
     /**
-     * User has parted from a channel.
+     * Player has parted from a channel.
      * event.getUser() and event.getChannel() will be valid.
      */
     abstract public void onChannelPart(ServerEvent event);

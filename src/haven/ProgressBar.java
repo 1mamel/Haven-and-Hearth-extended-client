@@ -1,6 +1,6 @@
 package haven;
 
-import haven.scriptengine.UserInfo;
+import haven.scriptengine.providers.Player;
 
 import java.awt.*;
 import java.util.regex.Matcher;
@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 /**
  * Created by IntelliJ IDEA.
- * User: Vlad.Rassokhin@gmail.com
+ * Player: Vlad.Rassokhin@gmail.com
  * Date: 11.01.11
  * Time: 15:55
  */
@@ -71,18 +71,18 @@ public class ProgressBar extends Widget {
         int progress = Integer.parseInt(m.group());
         myProgress = progress * 5;
         myLabel.settext(String.valueOf(myProgress) + '%');
-        UserInfo.updateProgress(myProgress);
+        Player.updateProgress(myProgress);
     }
 
     @Override
     protected void finalize() throws Throwable {
-        UserInfo.updateProgress(-1);
+        Player.updateProgress(-1);
         super.finalize();
     }
 
     @Override
     public void destroy() {
-        UserInfo.updateProgress(-1);
+        Player.updateProgress(-1);
         super.destroy();    //TODO: implement
     }
 

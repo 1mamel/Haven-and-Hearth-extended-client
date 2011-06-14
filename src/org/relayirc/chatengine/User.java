@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-// $RCSfile: User.java,v $
+// $RCSfile: Player.java,v $
 // $Revision: 1.1.2.1 $
 // $Author: snoopdave $
 // $Date: 2001/02/09 03:46:33 $
@@ -86,7 +86,7 @@ public class User implements IChatObject, Serializable {
     //------------------------------------------------------------------
 
     /**
-     * User objects are equal if they have the same nick name.
+     * Player objects are equal if they have the same nick name.
      */
     public boolean equals(Object obj) {
         if (obj instanceof User) {
@@ -357,7 +357,7 @@ public class User implements IChatObject, Serializable {
             sb.append("Seconds Idle: ").append(getIdleTime()).append('\n');
             sb.append("On since: ").append(getSignonTime()).append('\n');
         } else {
-            sb.append("User is currently OFFLINE").append('\n');
+            sb.append("Player is currently OFFLINE").append('\n');
         }
         return sb.toString();
     }

@@ -1,6 +1,6 @@
 package haven;
 
-import haven.scriptengine.ScriptsMachine;
+import haven.scriptengine.ScriptsManager;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -172,7 +172,7 @@ public class CustomConsole extends Window {
                         append("SRVMSG - " + (CustomConfig.logServerMessages ? "ON" : "OFF"), Color.GREEN.darker());
                     }
                 } else {
-                    ScriptsMachine.executeScript((String) args[0]);
+                    ScriptsManager.exec((String) args[0]);
                 }
             }
         } else {

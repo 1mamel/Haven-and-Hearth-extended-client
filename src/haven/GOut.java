@@ -240,6 +240,10 @@ public class GOut {
         frect(ulX, ulY, size.x(), size.y());
     }
 
+    public void frect(Coord ul, int sizeX, int sizeY) {
+        frect(ul.x(), ul.y(), sizeX, sizeY);
+    }
+
     public void frect(Coord c1, Coord c2, Coord c3, Coord c4) {
         glcolor();
         texsel(-1);

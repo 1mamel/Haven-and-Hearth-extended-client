@@ -36,7 +36,7 @@ public interface ChannelListener {
     abstract public void onActivation(ChannelEvent event);
 
     /**
-     * User has acted. Event includes origin nick, origin address and the
+     * Player has acted. Event includes origin nick, origin address and the
      * value is a string containing the text of the user's action.
      */
     abstract public void onAction(ChannelEvent event);
