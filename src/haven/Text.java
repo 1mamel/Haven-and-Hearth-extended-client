@@ -141,7 +141,7 @@ public class Text {
         public Line render(String text, Color c) {
             Line t = new Line(text);
             Coord sz = strsize(text);
-            if (sz.x() < 1)
+            if (sz.x < 1)
                 sz = sz.add(1, 0);
             t.img = TexI.mkbuf(sz);
             Graphics g = t.img.createGraphics();

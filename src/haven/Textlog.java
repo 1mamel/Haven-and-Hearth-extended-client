@@ -36,8 +36,8 @@ public class Textlog extends Widget {
     static final Tex schain = Resource.loadtex("gfx/hud/schain");
     static final Tex sflarp = Resource.loadtex("gfx/hud/sflarp");
     static final RichText.Foundry fnd = new RichText.Foundry(TextAttribute.FAMILY, "SansSerif", TextAttribute.SIZE, 9, TextAttribute.FOREGROUND, Color.BLACK);
-    private static final int textpapWidth = texpap.sz().x();
-    private static final int textpapHeight = texpap.sz().y();
+    private static final int textpapWidth = texpap.sz().x;
+    private static final int textpapHeight = texpap.sz().y;
     public static final Color DEFAULT_COLOR = Color.BLACK;
     static final int margin = 3;
 
@@ -55,8 +55,8 @@ public class Textlog extends Widget {
     }
 
     public void draw(GOut g) {
-        int height = sz.y();
-        int width = sz.x();
+        int height = sz.y;
+        int width = sz.x;
 
         // Draw background
         if (background) {
@@ -71,7 +71,7 @@ public class Textlog extends Widget {
         g.chcolor();
         int y = -cury;
         for (Text line : lines) {
-            int lineHeight = line.sz().y();
+            int lineHeight = line.sz().y;
             int dy1 = height + y;
             int dy2 = dy1 + lineHeight;
             if ((dy2 > 0) && (dy1 < height)) {
@@ -82,13 +82,13 @@ public class Textlog extends Widget {
 
         // Draw scroller
         if (maxy > y) {
-            int fx = width - sflarp.sz().x();
-            int cx = fx + (sflarp.sz().x() / 2) - (schain.sz().x() / 2);
-            for (y = 0; y < height; y += schain.sz().y() - 1) {
+            int fx = width - sflarp.sz().x;
+            int cx = fx + (sflarp.sz().x / 2) - (schain.sz().x / 2);
+            for (y = 0; y < height; y += schain.sz().y - 1) {
                 g.image(schain, cx, y);
             }
             double a = (double) (cury - height) / (double) (maxy - height);
-            int fy = (int) ((height - sflarp.sz().y()) * a);
+            int fy = (int) ((height - sflarp.sz().y) * a);
             g.image(sflarp, new Coord(fx, fy));
         }
     }
@@ -112,14 +112,14 @@ public class Textlog extends Widget {
         if (Config.use_smileys) {
             line = Config.mksmiley(line);
         }
-        int lineWidth = sz.x() - ((margin * 2) + sflarp.sz().x());
+        int lineWidth = sz.x - ((margin * 2) + sflarp.sz().x);
 
         Text renderedLine = fnd.render(line, lineWidth, TextAttribute.FOREGROUND, col, TextAttribute.SIZE, 12);
         lines.add(renderedLine);
 
         if (cury == maxy)
-            cury += renderedLine.sz().y();
-        maxy += renderedLine.sz().y();
+            cury += renderedLine.sz().y;
+        maxy += renderedLine.sz().y;
     }
 
     public void append(String line) {
@@ -134,8 +134,8 @@ public class Textlog extends Widget {
 
     public boolean mousewheel(Coord c, int amount) {
         cury += amount * 20;
-        if (cury < sz.y()) {
-            cury = sz.y();
+        if (cury < sz.y) {
+            cury = sz.y;
         }
         if (cury > maxy) {
             cury = maxy;
@@ -146,9 +146,9 @@ public class Textlog extends Widget {
     public boolean mousedown(Coord c, int button) {
         if (button != 1)
             return (false);
-        int fx = sz.x() - sflarp.sz().x();
+        int fx = sz.x - sflarp.sz().x;
 //        int cx = fx + (sflarp.sz().x / 2) - (schain.sz().x / 2);
-        if ((maxy > sz.y()) && (c.x() >= fx)) {
+        if ((maxy > sz.y) && (c.x >= fx)) {
             sdrag = true;
             ui.grabmouse(this);
             mousemove(c);
@@ -159,12 +159,12 @@ public class Textlog extends Widget {
 
     public void mousemove(Coord c) {
         if (sdrag) {
-            double a = (double) (c.y() - (sflarp.sz().y() / 2)) / (double) (sz.y() - sflarp.sz().y());
+            double a = (double) (c.y - (sflarp.sz().y / 2)) / (double) (sz.y - sflarp.sz().y);
             if (a < 0)
                 a = 0;
             if (a > 1)
                 a = 1;
-            cury = (int) (a * (maxy - sz.y())) + sz.y();
+            cury = (int) (a * (maxy - sz.y)) + sz.y;
         }
     }
 

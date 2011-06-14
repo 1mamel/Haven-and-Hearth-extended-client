@@ -5,8 +5,8 @@ import java.awt.image.BufferedImage;
 public class MinimapPanel extends Window {
 
     static final BufferedImage grip = Resource.loadimg("gfx/hud/gripbr");
-    static final Coord gzsz = new Coord.U(16, 17);
-    static final Coord minsz = new Coord.U(150, 125);
+    static final Coord gzsz = new Coord(16, 17);
+    static final Coord minsz = new Coord(150, 125);
 
     boolean rsm = false;
     MiniMap mm;
@@ -94,7 +94,7 @@ public class MinimapPanel extends Window {
             }
         };
         pack();
-        this.c = new Coord(CustomConfig.getWindowWidth() - this.sz.x(), 7);
+        this.c = new Coord(CustomConfig.getWindowWidth() - this.sz.x, 7);
         loadpos();
     }
 
@@ -107,7 +107,7 @@ public class MinimapPanel extends Window {
     }
 
     protected void placecbtn() {
-        foldButton.c = new Coord(wsz.x() - 3 - closeButtonImages[0].getWidth(), 3).add(mrgn.inv().add(wbox.tloff().inv()));
+        foldButton.c = new Coord(wsz.x - 3 - closeButtonImages[0].getWidth(), 3).add(mrgn.inv().add(wbox.tloff().inv()));
         //fbtn.c = new Coord(cbtn.c.x - 1 - Utils.imgsz(fbtni[0]).x, cbtn.c.y);
     }
 
@@ -153,8 +153,8 @@ public class MinimapPanel extends Window {
         if (rsm) {
             Coord d = c.sub(doff);
             mm.sz = mm.sz.add(d);
-            mm.sz.setX(Math.max(minsz.x(), mm.sz.x()));
-            mm.sz.setY(Math.max(minsz.y(), mm.sz.y()));
+            mm.sz.setX(Math.max(minsz.x, mm.sz.x));
+            mm.sz.setY(Math.max(minsz.y, mm.sz.y));
             doff = c;
             pack();
         } else {

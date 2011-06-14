@@ -41,9 +41,9 @@ public class Bufflist extends Widget {
     static final int ameteroffY = 36;
     static final int ameterszX = 30;
     static final int ameterszY = 2;
-    //    static final Coord imgoff = new Coord.U(imgoffX, imgoffY);
-//    static final Coord ameteroff = new Coord.U(ameteroffX, ameteroffY);
-//    static final Coord ametersz = new Coord.U(ameterszX, ameterszY);
+    //    static final Coord imgoff = new Coord(imgoffX, imgoffY);
+//    static final Coord ameteroff = new Coord(ameteroffX, ameteroffY);
+//    static final Coord ametersz = new Coord(ameterszX, ameterszY);
     static final int margin = 2;
     static final int num = 5;
     private StringBuilder tooltipBuilder = new StringBuilder(100);
@@ -58,12 +58,12 @@ public class Bufflist extends Widget {
     }
 
     public Bufflist(Coord c, Widget parent) {
-        super(c, new Coord((num * frame.sz().x()) + ((num - 1) * margin), cframe.sz().y()), parent);
+        super(c, new Coord((num * frame.sz().x) + ((num - 1) * margin), cframe.sz().y), parent);
     }
 
     public void draw(GOut g) {
         int i = 0;
-        int w = frame.sz().x() + margin;
+        int w = frame.sz().x + margin;
         long now = System.currentTimeMillis();
         synchronized (ui.sess.glob.buffs) {
             for (Buff b : ui.sess.glob.buffs.values()) {
@@ -83,11 +83,11 @@ public class Bufflist extends Widget {
                 if (b.res.get() != null) {
                     Tex img = b.res.get().layer(Resource.imgc).tex();
                     g.image(img, imgoffX + bcX, imgoffY);
-                    int imgX = img.sz().x();
-                    int imgY = img.sz().y();
+                    int imgX = img.sz().x;
+                    int imgY = img.sz().y;
                     if (b.nmeter >= 0) {
                         Tex ntext = b.nmeter();
-                        g.image(ntext, bcX + imgoffX + imgX - ntext.sz().x() - 1, imgoffY + imgY - ntext.sz().y() - 1);
+                        g.image(ntext, bcX + imgoffX + imgX - ntext.sz().x - 1, imgoffY + imgY - ntext.sz().y - 1);
                     }
                     if (b.cmeter >= 0) {
                         double m = b.cmeter / 100.0;
@@ -109,7 +109,7 @@ public class Bufflist extends Widget {
 
     public Object tooltip(Coord c, boolean again) {
         int i = 0;
-        int w = frame.sz().x() + margin;
+        int w = frame.sz().x + margin;
         synchronized (ui.sess.glob.buffs) {
             StringBuilder sb = tooltipBuilder;
             for (Buff b : ui.sess.glob.buffs.values()) {

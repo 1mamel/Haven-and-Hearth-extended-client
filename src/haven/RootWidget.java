@@ -115,7 +115,7 @@ public class RootWidget extends ConsoleHost {
                 String ext = Config.sshot_compress ? ".jpg" : ".png";
                 File f = new File("screenshots/SS_" + stamp + ext);
                 f.mkdirs();
-                Screenshot.writeToFile(f, s.x(), s.y());
+                Screenshot.writeToFile(f, s.x, s.y);
             } catch (GLException e) {
                 e.printStackTrace();
             } catch (IOException e) {

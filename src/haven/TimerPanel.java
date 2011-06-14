@@ -49,8 +49,8 @@ public class TimerPanel extends Window {
         for (Widget wdg = child; wdg != null; wdg = wdg.next) {
             if (!(wdg instanceof TimerWdg))
                 continue;
-            wdg.c = new Coord((i % n) * wdg.sz.x(), i / n * wdg.sz.y());
-            h = wdg.c.y() + wdg.sz.y();
+            wdg.c = new Coord((i % n) * wdg.sz.x, i / n * wdg.sz.y);
+            h = wdg.c.y + wdg.sz.y;
             i++;
         }
 

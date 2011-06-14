@@ -21,8 +21,8 @@ public class ExtTextlog extends Widget implements ClipboardOwner {
     private final List<GLLine> lines;
     private int nextLineLoc = -11;
     private final int lineHeight = 11;
-    private final BufferedImage visibleCharacters = new BufferedImage(sz.x(), sz.y(), BufferedImage.TYPE_INT_ARGB);
-    private BufferedImage drawnCharacters = new BufferedImage(sz.x(), lineHeight * MAX_LINES, BufferedImage.TYPE_INT_ARGB);
+    private final BufferedImage visibleCharacters = new BufferedImage(sz.x, sz.y, BufferedImage.TYPE_INT_ARGB);
+    private BufferedImage drawnCharacters = new BufferedImage(sz.x, lineHeight * MAX_LINES, BufferedImage.TYPE_INT_ARGB);
     private final Scrollbar scrollBar;
     private boolean scrollLocked;
     private boolean dragging = false;
@@ -42,8 +42,8 @@ public class ExtTextlog extends Widget implements ClipboardOwner {
 
     public void draw(GOut g) {
         Coord dc = new Coord();
-        for (dc.setY(0); dc.y() < sz.y(); dc.setY(dc.y() + texpap.sz().y())) {
-            for (dc.setX(0); dc.x() < sz.x(); dc.setX(dc.x() + texpap.sz().x())) {
+        for (dc.setY(0); dc.y < sz.y; dc.setY(dc.y + texpap.sz().y)) {
+            for (dc.setX(0); dc.x < sz.x; dc.setX(dc.x + texpap.sz().x)) {
                 g.image(texpap, dc);
             }
         }
@@ -62,7 +62,7 @@ public class ExtTextlog extends Widget implements ClipboardOwner {
         super(c, sz, parent);
         lines = new LinkedList<GLLine>();
         setcanfocus(true);
-        scrollBar = new Scrollbar(Coord.z.add(sz.x(), 5), sz.y() - 10, this, 0, 0);
+        scrollBar = new Scrollbar(Coord.z.add(sz.x, 5), sz.y - 10, this, 0, 0);
     }
 
     @SuppressWarnings({"UnusedAssignment"})
@@ -101,7 +101,7 @@ public class ExtTextlog extends Widget implements ClipboardOwner {
         fnd.defcol = col;
 
         //	Handle the scrollbar
-        if (nextLineLoc + lineHeight > sz.y() && !scrollLocked) {
+        if (nextLineLoc + lineHeight > sz.y && !scrollLocked) {
             scrollBar.max++;
         }
         if (scrollBar.val + 1 == scrollBar.max) {
@@ -113,8 +113,8 @@ public class ExtTextlog extends Widget implements ClipboardOwner {
         boolean hasExtraLines = false;
         for (int i = 0, lineWidth = 0, wordchars = 0;
              i < words.length;
-             i++, lineWidth += fnd.strsize(line.toString().trim()).x()) {
-            if (lineWidth >= sz.x() - 5) {
+             i++, lineWidth += fnd.strsize(line.toString().trim()).x) {
+            if (lineWidth >= sz.x - 5) {
                 text = text.substring(wordchars - 1);
                 lineWidth = 0;
                 wordchars = 0;
@@ -146,8 +146,8 @@ public class ExtTextlog extends Widget implements ClipboardOwner {
     public void updateDrawData() {
         BufferedImage background = ((TexI) texpap).back;
         Graphics g = visibleCharacters.createGraphics();
-        g.clearRect(0, 0, sz.x(), sz.y());
-        g.drawImage(background, 0, 0, sz.x(), sz.y(), null);
+        g.clearRect(0, 0, sz.x, sz.y);
+        g.drawImage(background, 0, 0, sz.x, sz.y, null);
         if (scrollBar != null)
             g.drawImage(drawnCharacters, 0, 0 - (lineHeight * (scrollBar.val)), null);
     }
@@ -162,15 +162,15 @@ public class ExtTextlog extends Widget implements ClipboardOwner {
 
     public boolean mousedown(Coord c, int button) {
         ui.grabmouse(this);
-        if (c.x() >= sz.x() - 5 && c.x() <= sz.x() && scrollBar.mousedown(c, button)) {
+        if (c.x >= sz.x - 5 && c.x <= sz.x && scrollBar.mousedown(c, button)) {
             updateDrawData();
             return true;
         }
-        if (button == 1 && c.x() >= 0 && c.x() < sz.x() - 5 && c.y() >= 0 && c.y() < sz.y()) {
+        if (button == 1 && c.x >= 0 && c.x < sz.x - 5 && c.y >= 0 && c.y < sz.y) {
             parent.setfocus(this);
             dragging = true;
             synchronized (selectedArea) {
-                selectedArea.setBounds(c.x(), c.y(), 0, 0);
+                selectedArea.setBounds(c.x, c.y, 0, 0);
             }
             return true;
         }
@@ -178,25 +178,25 @@ public class ExtTextlog extends Widget implements ClipboardOwner {
     }
 
     public void mousemove(Coord c) {
-        if (c.x() >= sz.x() - 5 && c.x() <= sz.x()) {
+        if (c.x >= sz.x - 5 && c.x <= sz.x) {
             scrollBar.mousemove(c);
             updateDrawData();
             return;
         }
-        if (dragging && c.x() >= 0 && c.x() < sz.x() - 5 && c.y() > 0 && c.y() < sz.y()) {
+        if (dragging && c.x >= 0 && c.x < sz.x - 5 && c.y > 0 && c.y < sz.y) {
             synchronized (selectedArea) {
-                selectedArea.setSize(c.x() - selectedArea.getLocation().x, c.y() - selectedArea.getLocation().y);
+                selectedArea.setSize(c.x - selectedArea.getLocation().x, c.y - selectedArea.getLocation().y);
             }
         }
     }
 
     public boolean mouseup(Coord c, int button) {
         ui.ungrabmouse();
-        if (c.x() >= sz.x() - 5 && c.x() <= sz.x() && scrollBar.mouseup(c, button)) {
+        if (c.x >= sz.x - 5 && c.x <= sz.x && scrollBar.mouseup(c, button)) {
             updateDrawData();
             return true;
         }
-        if (button == 1 && c.x() >= 0 && c.x() < sz.x() - 5 && dragging) {
+        if (button == 1 && c.x >= 0 && c.x < sz.x - 5 && dragging) {
             dragging = false;
             if (selectedArea.width == 0 && selectedArea.height == 0) {
                 return checkLink();

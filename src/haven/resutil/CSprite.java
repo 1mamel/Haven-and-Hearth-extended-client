@@ -110,7 +110,7 @@ public class CSprite extends Sprite {
                 return (false);
             c = c.sub(moff).sub(soff);
             TexI img = (TexI) this.tex;
-            if ((c.x() < 0) || (c.y() < 0) || (c.x() >= img.sz().x()) || (c.y() >= img.sz().y()))
+            if ((c.x < 0) || (c.y < 0) || (c.x >= img.sz().x) || (c.y >= img.sz().y))
                 return (false);
             int cl = img.getRGB(c);
             return (Utils.rgbm.getAlpha(cl) >= 128);

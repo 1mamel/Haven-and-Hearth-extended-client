@@ -128,7 +128,7 @@ public class LoginScreen extends Widget {
         }
 
         public void draw(GOut g) {
-            g.image(label.tex(), new Coord((sz.x() / 2) - (label.sz().x() / 2), 0));
+            g.image(label.tex(), new Coord((sz.x / 2) - (label.sz().x / 2), 0));
             super.draw(g);
         }
     }
@@ -200,9 +200,9 @@ public class LoginScreen extends Widget {
     public void draw(GOut g) {
         super.draw(g);
         if (error != null)
-            g.image(error.tex(), new Coord(CustomConfig.getWindowCenter().x() - (error.sz().x() / 2), CustomConfig.getWindowCenter().y() + 200));
+            g.image(error.tex(), new Coord(CustomConfig.getWindowCenter().x - (error.sz().x / 2), CustomConfig.getWindowCenter().y + 200));
         if (progress != null)
-            g.image(progress.tex(), new Coord(CustomConfig.getWindowCenter().x() + 20 - (progress.sz().x() / 2), CustomConfig.getWindowCenter().y() + 50));
+            g.image(progress.tex(), new Coord(CustomConfig.getWindowCenter().x + 20 - (progress.sz().x / 2), CustomConfig.getWindowCenter().y + 50));
     }
 
     public boolean type(char k, java.awt.event.KeyEvent ev) {

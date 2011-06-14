@@ -49,7 +49,7 @@ public class RadioGroup {
         }
 
         public boolean mousedown(Coord c, int button) {
-            if (a || button != 1 || c.y() < 16 || c.y() > sz.y() - 10)
+            if (a || button != 1 || c.y < 16 || c.y > sz.y - 10)
                 return (false);
             check(this);
             return (true);

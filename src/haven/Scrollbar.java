@@ -36,7 +36,7 @@ public class Scrollbar extends Widget {
     private boolean drag = false;
 
     public Scrollbar(Coord c, int h, Widget parent, int min, int max) {
-        super(c.add(-sflarp.sz().x(), 0), new Coord(sflarp.sz().x(), h), parent);
+        super(c.add(-sflarp.sz().x, 0), new Coord(sflarp.sz().x, h), parent);
         this.min = min;
         this.max = max;
         val = min;
@@ -44,11 +44,11 @@ public class Scrollbar extends Widget {
 
     public void draw(GOut g) {
         if (max > min) {
-            int cx = (sflarp.sz().x() / 2) - (schain.sz().x() / 2);
-            for (int y = 0; y < sz.y(); y += schain.sz().y() - 1)
+            int cx = (sflarp.sz().x / 2) - (schain.sz().x / 2);
+            for (int y = 0; y < sz.y; y += schain.sz().y - 1)
                 g.image(schain, new Coord(cx, y));
             double a = (double) val / (double) (max - min);
-            int fy = (int) ((sz.y() - sflarp.sz().y()) * a);
+            int fy = (int) ((sz.y - sflarp.sz().y) * a);
             g.image(sflarp, new Coord(0, fy));
         }
     }
@@ -71,7 +71,7 @@ public class Scrollbar extends Widget {
 
     public void mousemove(Coord c) {
         if (drag) {
-            double a = (double) (c.y() - (sflarp.sz().y() / 2)) / (double) (sz.y() - sflarp.sz().y());
+            double a = (double) (c.y - (sflarp.sz().y / 2)) / (double) (sz.y - sflarp.sz().y);
             if (a < 0)
                 a = 0;
             if (a > 1)

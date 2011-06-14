@@ -53,7 +53,7 @@ public class TexIM extends TexI {
     }
 
     public void clear() {
-        buf = Raster.createInterleavedRaster(DataBuffer.TYPE_BYTE, tdim.x(), tdim.y(), 4, null);
+        buf = Raster.createInterleavedRaster(DataBuffer.TYPE_BYTE, tdim.x, tdim.y, 4, null);
         back = new BufferedImage(glcm, buf, false, null);
     }
 }

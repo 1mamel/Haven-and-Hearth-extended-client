@@ -46,7 +46,7 @@ public class Homing extends Moving {
             tc = tgt.rc;
         Coord d = tc.sub(gob.rc);
         double e = gob.rc.dist(tc);
-        return (gob.rc.add((int) ((d.x() / e) * dist), (int) ((d.y() / e) * dist)));
+        return (gob.rc.add((int) ((d.x / e) * dist), (int) ((d.y / e) * dist)));
     }
 
     public void move(Coord c) {

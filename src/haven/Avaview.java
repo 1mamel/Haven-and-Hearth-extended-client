@@ -31,14 +31,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Avaview extends Widget {
-    public static final Coord dasz = new Coord.U(74, 74);
-    public static final Coord smallSize = new Coord.U(27, 27);
+    public static final Coord dasz = new Coord(74, 74);
+    public static final Coord smallSize = new Coord(27, 27);
     private final Coord asz;
     int avagob;
     boolean none = false;
     AvaRender myown = null;
     public Color color = Color.WHITE;
-    public static final Coord unborder = new Coord.U(2, 2);
+    public static final Coord unborder = new Coord(2, 2);
     public static final Tex missing = Resource.loadtex("gfx/hud/equip/missing");
 
     static {
@@ -122,11 +122,11 @@ public class Avaview extends Widget {
             at = missing;
             yo = 0;
         } else {
-            g2.image(Equipory.bg, new Coord(Equipory.bg.sz().x() / 2 - asz.x() / 2, 20).inv());
-            yo = (20 * asz.y()) / dasz.y();
+            g2.image(Equipory.bg, new Coord(Equipory.bg.sz().x / 2 - asz.x / 2, 20).inv());
+            yo = (20 * asz.y) / dasz.y;
         }
-        Coord tsz = new Coord((at.sz().x() * asz.x()) / dasz.x(), (at.sz().y() * asz.y()) / dasz.y());
-        g2.image(at, new Coord(tsz.x() / 2 - asz.x() / 2, yo).inv(), tsz);
+        Coord tsz = new Coord((at.sz().x * asz.x) / dasz.x, (at.sz().y * asz.y) / dasz.y);
+        g2.image(at, new Coord(tsz.x / 2 - asz.x / 2, yo).inv(), tsz);
         g.chcolor(color);
         Window.wbox.draw(g, Coord.z, asz.add(Window.wbox.bisz()).sub(unborder.mul(2)));
     }

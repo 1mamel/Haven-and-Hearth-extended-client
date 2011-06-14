@@ -58,9 +58,9 @@ public class CommonPlant extends CSprite {
             spr.addnegative();
             Random rnd = owner.mkrandoom();
             for (int i = 0; i < num; i++) {
-                Coord c = new Coord(rnd.nextInt(neg.bs.x()), rnd.nextInt(neg.bs.y())).add(neg.bc);
+                Coord c = new Coord(rnd.nextInt(neg.bs.x), rnd.nextInt(neg.bs.y)).add(neg.bc);
                 Tex s = strands[rnd.nextInt(strands.length)];
-                spr.add(s, 0, MapView.m2s(c), new Coord(s.sz().x() / 2, s.sz().y()).inv());
+                spr.add(s, 0, MapView.m2s(c), new Coord(s.sz().x / 2, s.sz().y).inv());
             }
             return (spr);
         }

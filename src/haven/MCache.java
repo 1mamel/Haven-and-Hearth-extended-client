@@ -41,8 +41,8 @@ public class MCache {
     final java.util.Map<Coord, Grid> grids = new TreeMap<Coord, Grid>();
     final Session sess;
     final Set<Overlay> ols = new HashSet<Overlay>();
-    public static final Coord tilesz = new Coord.U(11, 11);
-    public static final Coord cmaps = new Coord.U(100, 100);
+    public static final Coord tilesz = new Coord(11, 11);
+    public static final Coord cmaps = new Coord(100, 100);
     final Random gen = new Random();
     final java.util.Map<Integer, Defrag> fragbufs = new TreeMap<Integer, Defrag>();
     public static final Map<Integer, Color> colors = new TreeMap<Integer, Color>();
@@ -116,18 +116,18 @@ public class MCache {
 
         public Grid(Coord gc) {
             this.gc = gc;
-            tiles = new int[cmaps.x()][cmaps.y()];
-            ol = new int[cmaps.x()][cmaps.y()];
-            gcache = new Tile[cmaps.x()][cmaps.y()];
-            tcache = new Tile[cmaps.x()][cmaps.y()][];
+            tiles = new int[cmaps.x][cmaps.y];
+            ol = new int[cmaps.x][cmaps.y];
+            gcache = new Tile[cmaps.x][cmaps.y];
+            tcache = new Tile[cmaps.x][cmaps.y][];
         }
 
         public int gettile(Coord tc) {
-            return (tiles[tc.x()][tc.y()]);
+            return (tiles[tc.x][tc.y]);
         }
 
         public int getol(Coord tc) {
-            return (ol[tc.x()][tc.y()]);
+            return (ol[tc.x][tc.y]);
         }
 
         public void remove() {
@@ -142,16 +142,16 @@ public class MCache {
             Graphics2D g = img.createGraphics();
             Coord c = new Coord();
 
-            for (c.setY(0); c.y() < cmaps.x(); c.setY(c.y() + 1)) {
-                for (c.setX(0); c.x() < cmaps.y(); c.setX(c.x() + 1)) {
-                    int id = tiles[c.x()][c.y()];
+            for (c.setY(0); c.y < cmaps.x; c.setY(c.y + 1)) {
+                for (c.setX(0); c.x < cmaps.y; c.setX(c.x + 1)) {
+                    int id = tiles[c.x][c.y];
                     Color col = colors.get(id);
                     if (col == null) {
                         col = new Color(255, 0, 255);
                         System.out.println(id);
                     }
                     g.setColor(col);
-                    g.fillRect(c.x(), c.y(), 1, 1);
+                    g.fillRect(c.x, c.y, 1, 1);
                 }
             }
         }
@@ -166,8 +166,8 @@ public class MCache {
         public void makeflavor() {
             fo.clear();
             Coord tc = gc.mul(cmaps);
-            for (int cy = 0; cy < cmaps.x(); ++cy) {
-                for (int cx = 0; cx < cmaps.y(); ++cx) {
+            for (int cy = 0; cy < cmaps.x; ++cy) {
+                for (int cx = 0; cx < cmaps.y; ++cx) {
                     Tileset set = sets[tiles[cx][cy]];
                     WeightList<Resource> flavobjs = set.getFlavobjs();
                     if (!flavobjs.isEmpty()) {
@@ -212,8 +212,8 @@ public class MCache {
     }
 
     private static void initrandoom(Random r, Coord c) {
-        r.setSeed(c.x());
-        r.setSeed(r.nextInt() ^ c.y());
+        r.setSeed(c.x);
+        r.setSeed(r.nextInt() ^ c.y);
     }
 
     public int randoom(Coord c) {
@@ -273,7 +273,7 @@ public class MCache {
         if (g == null)
             return (null);
         Coord gtc = tc.mod(cmaps);
-        if (g.tcache[gtc.x()][gtc.y()] == null) {
+        if (g.tcache[gtc.x][gtc.y] == null) {
             int tr[][] = new int[3][3];
             for (int y = -1; y <= 1; y++) {
                 for (int x = -1; x <= 1; x++) {
@@ -313,9 +313,9 @@ public class MCache {
                 if (cm != 0)
                     buf.add(sets[i].getCtrans()[cm - 1].pick(randoom(tc)));
             }
-            g.tcache[gtc.x()][gtc.y()] = buf.toArray(new Tile[buf.size()]);
+            g.tcache[gtc.x][gtc.y] = buf.toArray(new Tile[buf.size()]);
         }
-        return (g.tcache[gtc.x()][gtc.y()]);
+        return (g.tcache[gtc.x][gtc.y]);
     }
 
     public Tile getground(Coord tc) {
@@ -330,13 +330,13 @@ public class MCache {
         if (g == null)
             return (null);
         Coord gtc = tc.mod(cmaps);
-        if (g.gcache[gtc.x()][gtc.y()] == null) {
+        if (g.gcache[gtc.x][gtc.y] == null) {
             Tileset ts = sets[g.gettile(gtc)];
             if (ts != null) {
-                g.gcache[gtc.x()][gtc.y()] = ts.getGround().pick(randoom(tc));
+                g.gcache[gtc.x][gtc.y] = ts.getGround().pick(randoom(tc));
             }
         }
-        return (g.gcache[gtc.x()][gtc.y()]);
+        return (g.gcache[gtc.x][gtc.y]);
     }
 
     public int gettilen(Coord tc) {
@@ -415,13 +415,13 @@ public class MCache {
                 if (req.containsKey(c)) {
                     Grid g = req.get(c);
                     g.mnm = mmname;
-                    for (int y = 0; y < cmaps.y(); y++) {
-                        for (int x = 0; x < cmaps.x(); x++) {
+                    for (int y = 0; y < cmaps.y; y++) {
+                        for (int x = 0; x < cmaps.x; x++) {
                             g.tiles[x][y] = blob.uint8();
                         }
                     }
-                    for (int y = 0; y < cmaps.y(); y++) {
-                        for (int x = 0; x < cmaps.x(); x++)
+                    for (int y = 0; y < cmaps.y; y++) {
+                        for (int x = 0; x < cmaps.x; x++)
                             g.ol[x][y] = 0;
                     }
                     while (true) {
@@ -446,8 +446,8 @@ public class MCache {
                         } else {
                             throw (new RuntimeException("Unknown plot type " + type));
                         }
-                        for (int y = c1.y(); y <= c2.y(); y++) {
-                            for (int x = c1.x(); x <= c2.x(); x++) {
+                        for (int y = c1.y; y <= c2.y; y++) {
+                            for (int x = c1.x; x <= c2.x; x++) {
                                 g.ol[x][y] |= ol;
                             }
                         }
@@ -526,7 +526,7 @@ public class MCache {
                 Map.Entry<Coord, Grid> e = i.next();
                 Coord gc = e.getKey();
                 Grid g = e.getValue();
-                if ((gc.x() < ul.x()) || (gc.y() < ul.y()) || (gc.x() > lr.x()) || (gc.y() > lr.y())) {
+                if ((gc.x < ul.x) || (gc.y < ul.y) || (gc.x > lr.x) || (gc.y > lr.y)) {
                     i.remove();
                     g.remove();
                 }
@@ -537,7 +537,7 @@ public class MCache {
                 Map.Entry<Coord, Grid> e = i.next();
                 Coord gc = e.getKey();
                 Grid g = e.getValue();
-                if ((gc.x() < ul.x()) || (gc.y() < ul.y()) || (gc.x() > lr.x()) || (gc.y() > lr.y())) {
+                if ((gc.x < ul.x) || (gc.y < ul.y) || (gc.x > lr.x) || (gc.y > lr.y)) {
                     i.remove();
                     g.remove();
                 }

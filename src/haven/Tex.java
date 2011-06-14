@@ -52,36 +52,36 @@ public abstract class Tex {
     }
 
     public void crender(GOut g, Coord c, Coord ul, Coord sz, Coord tsz) {
-        if ((tsz.x() == 0) || (tsz.y() == 0))
+        if ((tsz.x == 0) || (tsz.y == 0))
             return;
-        if ((c.x() >= ul.x() + sz.x()) || (c.y() >= ul.y() + sz.y()) ||
-                (c.x() + tsz.x() <= ul.x()) || (c.y() + tsz.y() <= ul.y()))
+        if ((c.x >= ul.x + sz.x) || (c.y >= ul.y + sz.y) ||
+                (c.x + tsz.x <= ul.x) || (c.y + tsz.y <= ul.y))
             return;
         Coord t = new Coord(c);
         Coord uld = new Coord(0, 0);
         Coord brd = new Coord(dim);
         Coord szd = new Coord(tsz);
-        if (c.x() < ul.x()) {
-            int pd = ul.x() - c.x();
-            t.setX(ul.x());
-            uld.setX((pd * dim.x()) / tsz.x());
-            szd.setX(szd.x() - pd);
+        if (c.x < ul.x) {
+            int pd = ul.x - c.x;
+            t.setX(ul.x);
+            uld.setX((pd * dim.x) / tsz.x);
+            szd.setX(szd.x - pd);
         }
-        if (c.y() < ul.y()) {
-            int pd = ul.y() - c.y();
-            t.setY(ul.y());
-            uld.setY((pd * dim.y()) / tsz.y());
-            szd.setY(szd.y() - pd);
+        if (c.y < ul.y) {
+            int pd = ul.y - c.y;
+            t.setY(ul.y);
+            uld.setY((pd * dim.y) / tsz.y);
+            szd.setY(szd.y - pd);
         }
-        if (c.x() + tsz.x() > ul.x() + sz.x()) {
-            int pd = (c.x() + tsz.x()) - (ul.x() + sz.x());
-            szd.setX(szd.x() - pd);
-            brd.setX(brd.x() - (pd * dim.x()) / tsz.x());
+        if (c.x + tsz.x > ul.x + sz.x) {
+            int pd = (c.x + tsz.x) - (ul.x + sz.x);
+            szd.setX(szd.x - pd);
+            brd.setX(brd.x - (pd * dim.x) / tsz.x);
         }
-        if (c.y() + tsz.y() > ul.y() + sz.y()) {
-            int pd = (c.y() + tsz.y()) - (ul.y() + sz.y());
-            szd.setY(szd.y() - pd);
-            brd.setY(brd.y() - (pd * dim.y()) / tsz.y());
+        if (c.y + tsz.y > ul.y + sz.y) {
+            int pd = (c.y + tsz.y) - (ul.y + sz.y);
+            szd.setY(szd.y - pd);
+            brd.setY(brd.y - (pd * dim.y) / tsz.y);
         }
         render(g, t, uld, brd, szd);
     }

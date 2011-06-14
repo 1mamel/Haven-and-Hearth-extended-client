@@ -224,7 +224,7 @@ public class HavenPanel extends GLCanvas implements Runnable {
         java.awt.Graphics g = buf.getGraphics();
         g.drawImage(img, 0, 0, null);
         g.dispose();
-        return (Toolkit.getDefaultToolkit().createCustomCursor(buf, new java.awt.Point(hs.x(), hs.y()), ""));
+        return (Toolkit.getDefaultToolkit().createCustomCursor(buf, new java.awt.Point(hs.x, hs.y), ""));
     }
 
     void redraw(GL gl) {
@@ -277,9 +277,9 @@ public class HavenPanel extends GLCanvas implements Runnable {
         if (tt != null) {
             Coord sz = tt.sz();
             Coord pos = mousepos.sub(sz);
-            if (pos.x() < 0)
+            if (pos.x < 0)
                 pos.setX(0);
-            if (pos.y() < 0)
+            if (pos.y < 0)
                 pos.setY(0);
             g.chcolor(244, 247, 21, 192);
             g.rect(pos.add(-3, -3), sz.add(6, 6));
@@ -323,7 +323,7 @@ public class HavenPanel extends GLCanvas implements Runnable {
                         break;
                     case MouseEvent.MOUSE_MOVED:
                     case MouseEvent.MOUSE_DRAGGED:
-                        mousepos = mouseCoord.getUnmodifiableVersion();
+                        mousepos = mouseCoord;
                         ui.mousemove(me, mousepos);
                         break;
                     case MouseEvent.MOUSE_WHEEL:

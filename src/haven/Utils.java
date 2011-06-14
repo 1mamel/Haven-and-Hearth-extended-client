@@ -119,14 +119,14 @@ public class Utils {
 
     static void drawgay(BufferedImage t, BufferedImage img, Coord c) {
         Coord sz = imgsz(img);
-        for (int y = 0; y < sz.y(); y++) {
-            for (int x = 0; x < sz.x(); x++) {
+        for (int y = 0; y < sz.y; y++) {
+            for (int x = 0; x < sz.x; x++) {
                 int p = img.getRGB(x, y);
                 if (Utils.rgbm.getAlpha(p) > 128) {
                     if ((p & 0x00ffffff) == 0x00ff0080)
-                        t.setRGB(x + c.x(), y + c.y(), 0);
+                        t.setRGB(x + c.x, y + c.y, 0);
                     else
-                        t.setRGB(x + c.x(), y + c.y(), p);
+                        t.setRGB(x + c.x, y + c.y, p);
                 }
             }
         }
@@ -134,7 +134,7 @@ public class Utils {
 
     public static int drawtext(Graphics g, String text, Coord c) {
         java.awt.FontMetrics m = g.getFontMetrics();
-        g.drawString(text, c.x(), c.y() + m.getAscent());
+        g.drawString(text, c.x, c.y + m.getAscent());
         return (m.getHeight());
     }
 
@@ -147,11 +147,11 @@ public class Utils {
     static void aligntext(Graphics g, String text, Coord c, double ax, double ay) {
         java.awt.FontMetrics m = g.getFontMetrics();
         java.awt.geom.Rectangle2D ts = m.getStringBounds(text, g);
-        g.drawString(text, (int) (c.x() - ts.getWidth() * ax), (int) (c.y() + m.getAscent() - ts.getHeight() * ay));
+        g.drawString(text, (int) (c.x - ts.getWidth() * ax), (int) (c.y + m.getAscent() - ts.getHeight() * ay));
     }
 
     static void line(Graphics g, Coord c1, Coord c2) {
-        g.drawLine(c1.x(), c1.y(), c2.x(), c2.y());
+        g.drawLine(c1.x, c1.y, c2.x, c2.y);
     }
 
     static void AA(Graphics g) {
@@ -486,10 +486,10 @@ public class Utils {
     public static BufferedImage outline(BufferedImage img, Color col) {
         Coord sz = imgsz(img).add(2, 2);
         BufferedImage ol = TexI.mkbuf(sz);
-        for (int y = 0; y < sz.y(); y++) {
-            for (int x = 0; x < sz.x(); x++) {
+        for (int y = 0; y < sz.y; y++) {
+            for (int x = 0; x < sz.x; x++) {
                 boolean t;
-                if ((y == 0) || (x == 0) || (y == sz.y() - 1) || (x == sz.x() - 1)) {
+                if ((y == 0) || (x == 0) || (y == sz.y - 1) || (x == sz.x - 1)) {
                     t = true;
                 } else {
                     int cl = img.getRGB(x - 1, y - 1);
@@ -497,10 +497,10 @@ public class Utils {
                 }
                 if (!t)
                     continue;
-                if (((x > 1) && (y > 0) && (y < sz.y() - 1) && (Utils.rgbm.getAlpha(img.getRGB(x - 2, y - 1)) >= 250)) ||
-                        ((x > 0) && (y > 1) && (x < sz.x() - 1) && (Utils.rgbm.getAlpha(img.getRGB(x - 1, y - 2)) >= 250)) ||
-                        ((x < sz.x() - 2) && (y > 0) && (y < sz.y() - 1) && (Utils.rgbm.getAlpha(img.getRGB(x, y - 1)) >= 250)) ||
-                        ((x > 0) && (y < sz.y() - 2) && (x < sz.x() - 1) && (Utils.rgbm.getAlpha(img.getRGB(x - 1, y)) >= 250)))
+                if (((x > 1) && (y > 0) && (y < sz.y - 1) && (Utils.rgbm.getAlpha(img.getRGB(x - 2, y - 1)) >= 250)) ||
+                        ((x > 0) && (y > 1) && (x < sz.x - 1) && (Utils.rgbm.getAlpha(img.getRGB(x - 1, y - 2)) >= 250)) ||
+                        ((x < sz.x - 2) && (y > 0) && (y < sz.y - 1) && (Utils.rgbm.getAlpha(img.getRGB(x, y - 1)) >= 250)) ||
+                        ((x > 0) && (y < sz.y - 2) && (x < sz.x - 1) && (Utils.rgbm.getAlpha(img.getRGB(x - 1, y)) >= 250)))
                     ol.setRGB(x, y, col.getRGB());
             }
         }

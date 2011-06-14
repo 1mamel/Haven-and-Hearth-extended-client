@@ -103,7 +103,7 @@ public class PartyView extends Widget {
             ui.destroy(leaveButton);
             leaveButton = null;
         }
-        sz.setY(CustomConfig.getWindowHeight() - c.y());
+        sz.setY(CustomConfig.getWindowHeight() - c.y);
     }
 
     private static final List<Coord> avaviewCoordinates;
@@ -117,7 +117,7 @@ public class PartyView extends Widget {
         synchronized (avaviewCoordinates) {
             for (int i = avaviewCoordinates.size(); i <= toInclusive; ++i) {
                 //noinspection ObjectAllocationInLoop
-                avaviewCoordinates.add(new Coord.U((i % 2) * 43, (i / 2) * 43 + 24));
+                avaviewCoordinates.add(new Coord((i % 2) * 43, (i / 2) * 43 + 24));
             }
         }
     }

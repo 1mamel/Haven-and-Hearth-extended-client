@@ -30,12 +30,12 @@ class GLCharacter {
     }
 
     private void init() {
-        if (size.x() <= 0) size.setX(1);
+        if (size.x <= 0) size.setX(1);
         img = TexI.mkbuf(size);
         Graphics g = img.createGraphics();
         Graphics bkgndG;
         if (background == null) {
-            background = new BufferedImage(size.x(), size.y(), BufferedImage.TYPE_INT_ARGB);
+            background = new BufferedImage(size.x, size.y, BufferedImage.TYPE_INT_ARGB);
         }
         bkgndG = background.createGraphics();
         if (aa) {
@@ -45,13 +45,13 @@ class GLCharacter {
         g.setColor(color);
         if (selected) {
             bkgndG.setColor(Color.BLUE.darker());
-            bkgndG.fillRect(0, 0, size.x(), size.y());
+            bkgndG.fillRect(0, 0, size.x, size.y);
             g.setColor(Color.WHITE);
         } else {
-            bkgndG.drawImage(((TexI) ExtTextlog.texpap).back, 0, 0, size.x(), size.y(), null);
+            bkgndG.drawImage(((TexI) ExtTextlog.texpap).back, 0, 0, size.x, size.y, null);
         }
-        g.drawImage(background, 0, 0, size.x(), size.y(), null);
-        g.drawString(String.valueOf(letter), 0, size.y() - 2);
+        g.drawImage(background, 0, 0, size.x, size.y, null);
+        g.drawString(String.valueOf(letter), 0, size.y - 2);
     }
 
     public boolean setLink(String address) {

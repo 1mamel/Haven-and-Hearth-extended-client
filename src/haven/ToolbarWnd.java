@@ -183,8 +183,8 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
         super.draw(g);
         if (folded)
             return;
-        for (int y = 0; y < gsz.y(); y++) {
-            for (int x = 0; x < gsz.x(); x++) {
+        for (int y = 0; y < gsz.y; y++) {
+            for (int x = 0; x < gsz.x; x++) {
                 Coord p = getcoord(x, y);
                 g.image(bg, p);
                 int slot = x + y;
@@ -217,11 +217,11 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
 
     private Coord getcoord(int x, int y) {
         Coord p = xlate(bgsz.mul(new Coord(x, y)), true);
-        if (off.x() > 0)
+        if (off.x > 0)
             if (flipped) {
-                p.setX(p.x() + off.y() * (x / off.x()));
+                p.setX(p.x + off.y * (x / off.x));
             } else {
-                p.setY(p.y() + off.y() * (y / off.x()));
+                p.setY(p.y + off.y * (y / off.x));
             }
         return p;
     }
@@ -241,28 +241,28 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
         wsz = sz.sub(tlo).sub(rbo);
         if (folded)
             if (flipped)
-                wsz.setX(wsz.x() / 2);
+                wsz.setX(wsz.x / 2);
             else
-                wsz.setY(wsz.y() / 2);
+                wsz.setY(wsz.y / 2);
         asz = wsz.sub(wbox.bl.sz()).sub(wbox.br.sz()).sub(mrgn.mul(2));
     }
 
     public void flip() {
         flipped = !flipped;
-        gsz = new Coord(gsz.y(), gsz.x());
-        mrgn = new Coord(mrgn.y(), mrgn.x());
+        gsz = new Coord(gsz.y, gsz.x);
+        mrgn = new Coord(mrgn.y, mrgn.x);
         pack();
         Config.setWindowOpt(name + "_flipped", flipped);
     }
 
     protected void placecbtn() {
-        closeButton.c = new Coord(wsz.x() - 3 - closeButtonImages[0].getWidth(), 3).sub(mrgn).sub(wbox.tloff());
+        closeButton.c = new Coord(wsz.x - 3 - closeButtonImages[0].getWidth(), 3).sub(mrgn).sub(wbox.tloff());
         if (flipped) {
-            foldButton.c = new Coord(closeButton.c.x(), wsz.y() - 3 - foldButtonImages[0].getHeight() - mrgn.y() - wbox.tloff().y());
+            foldButton.c = new Coord(closeButton.c.x, wsz.y - 3 - foldButtonImages[0].getHeight() - mrgn.y - wbox.tloff().y);
             if (lockButton != null)
-                lockButton.c = new Coord(3 - wbox.tloff().x() - mrgn.x(), closeButton.c.y());
+                lockButton.c = new Coord(3 - wbox.tloff().x - mrgn.x, closeButton.c.y);
             if (flipbtn != null)
-                flipbtn.c = new Coord(5 - wbox.tloff().x() - mrgn.x(), foldButton.c.y());
+                flipbtn.c = new Coord(5 - wbox.tloff().x - mrgn.x, foldButton.c.y);
             if (plus != null)
                 plus.c = closeButton.c.sub(16, 0);
             if (minus != null) {
@@ -270,11 +270,11 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
                 beltNumC = minus.c.add(plus.c).div(2).add(36, 22);
             }
         } else {
-            foldButton.c = new Coord(3 - wbox.tloff().x(), closeButton.c.y());
+            foldButton.c = new Coord(3 - wbox.tloff().x, closeButton.c.y);
             if (lockButton != null)
-                lockButton.c = new Coord(foldButton.c.x(), wsz.y() - 21 - mrgn.y() - wbox.tloff().y());
+                lockButton.c = new Coord(foldButton.c.x, wsz.y - 21 - mrgn.y - wbox.tloff().y);
             if (flipbtn != null)
-                flipbtn.c = new Coord(closeButton.c.x() - 2, wsz.y() - 21 - mrgn.y() - wbox.tloff().y());
+                flipbtn.c = new Coord(closeButton.c.x - 2, wsz.y - 21 - mrgn.y - wbox.tloff().y);
             if (plus != null)
                 plus.c = flipbtn.c.sub(0, 16);
             if (minus != null) {
@@ -286,11 +286,11 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
 
     public void pack() {
         ssz = bgsz.mul(gsz);
-        if (off.x() > 0)
+        if (off.x > 0)
             if (flipped) {
-                ssz.setX(ssz.x() + off.y() * ((gsz.x() / off.x()) - ((gsz.x() % off.x() == 0) ? 1 : 0)) + 16);
+                ssz.setX(ssz.x + off.y * ((gsz.x / off.x) - ((gsz.x % off.x == 0) ? 1 : 0)) + 16);
             } else {
-                ssz.setY(ssz.y() + off.y() * ((gsz.y() / off.x()) - ((gsz.y() % off.x() == 0) ? 1 : 0)) + 16);
+                ssz.setY(ssz.y + off.y * ((gsz.y / off.x) - ((gsz.y % off.x == 0) ? 1 : 0)) + 16);
             }
         checkfold();
         placecbtn();
@@ -305,8 +305,8 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
     }
 
     private int index(Coord c) {
-        for (int y = 0; y < gsz.y(); y++) {
-            for (int x = 0; x < gsz.x(); x++) {
+        for (int y = 0; y < gsz.y; y++) {
+            for (int x = 0; x < gsz.x; x++) {
                 if (c.isect(getcoord(x, y), bgsz))
                     return x + y;
             }
@@ -443,7 +443,7 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
                 loadBelt(slot);
                 return true;
             }
-        } else if (!alt && !ctrl && (slot >= 0) && (slot < gsz.x() * gsz.y())) {
+        } else if (!alt && !ctrl && (slot >= 0) && (slot < gsz.x * gsz.y)) {
             if (key == KeyEvent.VK_0)
                 slot = (slot == 0) ? 9 : slot - 1;
             Resource h = layout[slot];

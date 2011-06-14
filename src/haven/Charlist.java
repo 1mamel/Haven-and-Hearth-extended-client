@@ -59,7 +59,7 @@ public class Charlist extends Widget {
     }
 
     public Charlist(Coord c, Widget parent, int height) {
-        super(c, new Coord(bg.sz().x(), 40 + (bg.sz().y() * height) + (margin * (height - 1))), parent);
+        super(c, new Coord(bg.sz().x, 40 + (bg.sz().y * height) + (margin * (height - 1))), parent);
         this.height = height;
         y = 0;
         sau = new Button(new Coord(0, 0), 100, this, Resource.loadimg("gfx/hud/slen/sau")) {
@@ -67,7 +67,7 @@ public class Charlist extends Widget {
                 scroll(-1);
             }
         };
-        sad = new Button(new Coord(0, sz.y() - 19), 100, this, Resource.loadimg("gfx/hud/slen/sad")) {
+        sad = new Button(new Coord(0, sz.y - 19), 100, this, Resource.loadimg("gfx/hud/slen/sad")) {
             public void click() {
                 scroll(1);
             }
@@ -97,11 +97,11 @@ public class Charlist extends Widget {
                 g.image(bg, new Coord(0, y));
                 c.ava.visible = true;
                 c.plb.visible = true;
-                int off = (bg.sz().y() - c.ava.sz.y()) / 2;
+                int off = (bg.sz().y - c.ava.sz.y) / 2;
                 c.ava.c = new Coord(off, off + y);
                 c.plb.c = bg.sz().add(-105, -24 + y);
-                g.image(c.nt.tex(), new Coord(off + c.ava.sz.x() + 5, off + y));
-                y += bg.sz().y() + margin;
+                g.image(c.nt.tex(), new Coord(off + c.ava.sz.x + 5, off + y));
+                y += bg.sz().y + margin;
             }
         }
         try {

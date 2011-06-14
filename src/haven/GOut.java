@@ -124,12 +124,12 @@ public class GOut {
 
     public void aimage(Tex tex, Coord c, double ax, double ay) {
         Coord sz = tex.sz();
-        image(tex, c.add((int) ((double) sz.x() * -ax), (int) ((double) sz.y() * -ay)));
+        image(tex, c.add((int) ((double) sz.x * -ax), (int) ((double) sz.y * -ay)));
     }
 
     public void aimage(Tex tex, int x, int y, double ax, double ay) {
         Coord sz = tex.sz();
-        image(tex, x - (int) ((double) sz.x() * ax), y - (int) ((double) sz.y() * ay));
+        image(tex, x - (int) ((double) sz.x * ax), y - (int) ((double) sz.y * ay));
     }
 
     public void image(Tex tex, Coord c, Coord sz) {
@@ -147,11 +147,11 @@ public class GOut {
     }
 
     private void vertex(Coord c) {
-        gl.glVertex2i(c.x() + ul.x(), c.y() + ul.y());
+        gl.glVertex2i(c.x + ul.x, c.y + ul.y);
     }
 
     private void vertex(int x, int y) {
-        gl.glVertex2i(x + ul.x(), y + ul.y());
+        gl.glVertex2i(x + ul.x, y + ul.y);
     }
 
     void texsel(int id) {
@@ -207,7 +207,7 @@ public class GOut {
         Text t = Text.render(text, null);
         Tex T = t.tex();
         Coord sz = t.sz();
-        image(T, c.add((int) ((double) sz.x() * -ax), (int) ((double) sz.y() * -ay)));
+        image(T, c.add((int) ((double) sz.x * -ax), (int) ((double) sz.y * -ay)));
         T.dispose();
         checkerr();
     }
@@ -217,9 +217,9 @@ public class GOut {
         texsel(-1);
         gl.glBegin(GL.GL_QUADS); // Because summ of ints faster than Coord.add
         vertex(ul);
-        vertex(ul.x() + sz.x(), ul.y());
-        vertex(ul.x() + sz.x(), ul.y() + sz.y());
-        vertex(ul.x(), ul.y() + sz.y());
+        vertex(ul.x + sz.x, ul.y);
+        vertex(ul.x + sz.x, ul.y + sz.y);
+        vertex(ul.x, ul.y + sz.y);
         gl.glEnd();
         checkerr();
     }
@@ -237,11 +237,11 @@ public class GOut {
     }
 
     public void frect(int ulX, int ulY, Coord size) {
-        frect(ulX, ulY, size.x(), size.y());
+        frect(ulX, ulY, size.x, size.y);
     }
 
     public void frect(Coord ul, int sizeX, int sizeY) {
-        frect(ul.x(), ul.y(), sizeX, sizeY);
+        frect(ul.x, ul.y, sizeX, sizeY);
     }
 
     public void frect(Coord c1, Coord c2, Coord c3, Coord c4) {
@@ -263,10 +263,10 @@ public class GOut {
         vertex(c);
         for (int i = a1; i < a2; i += 5) {
             double a = (i * Math.PI * 2) / 360.0;
-            vertex(c.add((int) (Math.cos(a) * r.x()), -(int) (Math.sin(a) * r.y())));
+            vertex(c.add((int) (Math.cos(a) * r.x), -(int) (Math.sin(a) * r.y)));
         }
         double a = (a2 * Math.PI * 2) / 360.0;
-        vertex(c.add((int) (Math.cos(a) * r.x()), -(int) (Math.sin(a) * r.y())));
+        vertex(c.add((int) (Math.cos(a) * r.x), -(int) (Math.sin(a) * r.y)));
         gl.glEnd();
         checkerr();
     }
@@ -295,16 +295,16 @@ public class GOut {
     }
 
     public void fellipse(Coord c, Coord r) {
-        fellipse(c.x(), c.y(), r.x(), r.y(), 0, 360);
+        fellipse(c.x, c.y, r.x, r.y, 0, 360);
     }
 
     public void rect(Coord ul, Coord sz) {
         int top, bottom, left, right;
 
-        top = ul.y();
-        bottom = ul.y() + sz.y() - 1;
-        left = ul.x();
-        right = ul.x() + sz.x() - 1;
+        top = ul.y;
+        bottom = ul.y + sz.y - 1;
+        left = ul.x;
+        right = ul.x + sz.x - 1;
 
         lineX(top, left, right, 1);
         lineY(right, top, bottom, 1);

@@ -51,10 +51,10 @@ public class Button extends Widget {
         bb = new TexI(Resource.loadimg("gfx/hud/buttons/tbtn/bottom"));
         dt = new TexI(Resource.loadimg("gfx/hud/buttons/tbtn/dtex"));
         ut = new TexI(Resource.loadimg("gfx/hud/buttons/tbtn/utex"));
-        bRigthWidth = br.sz().x();
-        bLeftWidth = bl.sz().x();
-        bTopHeight = bt.sz().y();
-        bBottomHeight = bb.sz().y();
+        bRigthWidth = br.sz().x;
+        bLeftWidth = bl.sz().x;
+        bTopHeight = bt.sz().y;
+        bBottomHeight = bb.sz().y;
         bLRWidth = bLeftWidth + bRigthWidth;
         bTBHeight = bTopHeight + bBottomHeight;
     }
@@ -135,14 +135,14 @@ public class Button extends Widget {
 
     public synchronized void draw(GOut g) {
         //Graphics g = graphics();
-        int width = sz.x();
-        int height = sz.y();
+        int width = sz.x;
+        int height = sz.y;
 
-        g.image(isMouseDown ? dt : ut, new Coord.U(bLeftWidth - 3, bTopHeight - 2), new Coord.U(width - (bLRWidth - 6), height - (bTBHeight - 4))); // Background
-        g.image(bl, Coord.z, new Coord.U(bLeftWidth, height)); // Left Border
-        g.image(br, new Coord.U(width - bRigthWidth, 0), new Coord.U(bRigthWidth, height)); // Rigth Border
-        g.image(bt, new Coord.U(bLeftWidth, 0), new Coord.U(width - bLRWidth, bTopHeight)); // Top Border
-        g.image(bb, new Coord.U(bLeftWidth, height - bBottomHeight), new Coord.U(width - bLRWidth, bBottomHeight)); // Bottom Border
+        g.image(isMouseDown ? dt : ut, new Coord(bLeftWidth - 3, bTopHeight - 2), new Coord(width - (bLRWidth - 6), height - (bTBHeight - 4))); // Background
+        g.image(bl, Coord.z, new Coord(bLeftWidth, height)); // Left Border
+        g.image(br, new Coord(width - bRigthWidth, 0), new Coord(bRigthWidth, height)); // Rigth Border
+        g.image(bt, new Coord(bLeftWidth, 0), new Coord(width - bLRWidth, bTopHeight)); // Top Border
+        g.image(bb, new Coord(bLeftWidth, height - bBottomHeight), new Coord(width - bLRWidth, bBottomHeight)); // Bottom Border
 
         int textX = width / 2 - contentImage.getWidth() / 2;
         int textY = height / 2 - contentImage.getHeight() / 2;
@@ -150,7 +150,7 @@ public class Button extends Widget {
             textX++;
             textY++;
         }
-        g.image(contentImage, new Coord.U(textX, textY));
+        g.image(contentImage, new Coord(textX, textY));
     }
 
     public void change(String text, Color col) {

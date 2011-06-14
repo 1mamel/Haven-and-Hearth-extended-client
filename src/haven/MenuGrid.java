@@ -44,7 +44,7 @@ public class MenuGrid extends Widget {
     private Resource cur;
     private Resource pressed;
     private Resource dragging;
-    private final Resource[][] layout = new Resource[gsz.x()][gsz.y()];
+    private final Resource[][] layout = new Resource[gsz.x][gsz.y];
     private int curoff = 0;
     private final Map<Character, Resource> hotmap = new TreeMap<Character, Resource>();
 
@@ -129,12 +129,12 @@ public class MenuGrid extends Widget {
                 hotmap.put(Character.toUpperCase(ad.hk), cur[i]);
         }
         i = curoff;
-        for (int y = 0; y < gsz.y(); y++) {
-            for (int x = 0; x < gsz.x(); x++) {
+        for (int y = 0; y < gsz.y; y++) {
+            for (int x = 0; x < gsz.x; x++) {
                 Resource btn = null;
-                if ((this.cur != null) && (x == gsz.x() - 1) && (y == gsz.y() - 1)) {
+                if ((this.cur != null) && (x == gsz.x - 1) && (y == gsz.y - 1)) {
                     btn = bk;
-                } else if ((cur.length > ((gsz.x() * gsz.y()) - 1)) && (x == gsz.x() - 2) && (y == gsz.y() - 1)) {
+                } else if ((cur.length > ((gsz.x * gsz.y) - 1)) && (x == gsz.x - 2) && (y == gsz.y - 1)) {
                     btn = next;
                 } else if (i < cur.length) {
 //                    Resource.AButton ad = cur[i].layer(Resource.action);
@@ -164,8 +164,8 @@ public class MenuGrid extends Widget {
 
     public void draw(GOut g) {
         updlayout();
-        for (int y = 0; y < gsz.y(); y++) {
-            for (int x = 0; x < gsz.x(); x++) {
+        for (int y = 0; y < gsz.y; y++) {
+            for (int x = 0; x < gsz.x; x++) {
                 Coord p = bgsz.mul(new Coord(x, y));
                 g.image(bg, p);
                 Resource btn = layout[x][y];
@@ -216,8 +216,8 @@ public class MenuGrid extends Widget {
 
     private Resource bhit(Coord c) {
         Coord bc = c.div(bgsz);
-        if ((bc.x() >= 0) && (bc.y() >= 0) && (bc.x() < gsz.x()) && (bc.y() < gsz.y()))
-            return (layout[bc.x()][bc.y()]);
+        if ((bc.x >= 0) && (bc.y >= 0) && (bc.x < gsz.x) && (bc.y < gsz.y))
+            return (layout[bc.x][bc.y]);
         else
             return (null);
     }
@@ -366,7 +366,7 @@ public class MenuGrid extends Widget {
             curoff = 0;
             updlayout();
             return (true);
-        } else if ((k == 'N') && (layout[gsz.x() - 2][gsz.y() - 1] == next)) {
+        } else if ((k == 'N') && (layout[gsz.x - 2][gsz.y - 1] == next)) {
             use(next);
             return (true);
         }

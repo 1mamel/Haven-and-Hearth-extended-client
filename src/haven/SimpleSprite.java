@@ -67,7 +67,7 @@ public class SimpleSprite {
 
     public final void draw(Graphics g, Coord cc) {
         Coord c = cc.add(ul());
-        g.drawImage(img.img, c.x(), c.y(), null);
+        g.drawImage(img.img, c.x, c.y, null);
     }
 
     public final Coord ul() {
@@ -80,9 +80,9 @@ public class SimpleSprite {
 
     public boolean checkhit(Coord c) {
         c = c.sub(ul());
-        if ((c.x() < 0) || (c.y() < 0) || (c.x() >= img.sz.x()) || (c.y() >= img.sz.y()))
+        if ((c.x < 0) || (c.y < 0) || (c.x >= img.sz.x) || (c.y >= img.sz.y))
             return (false);
-        int cl = img.img.getRGB(c.x(), c.y());
+        int cl = img.img.getRGB(c.x, c.y);
         return (Utils.rgbm.getAlpha(cl) >= 128);
     }
 }

@@ -60,8 +60,8 @@ public class Inventory extends Widget implements DTarget {
     public void draw(GOut g) {
         Coord c = new Coord();
         Coord sz = invsqSizeSubOne;
-        for (c.setY(0); c.y() < isz.y(); c.setY(c.y() + 1)) {
-            for (c.setX(0); c.x() < isz.x(); c.setX(c.x() + 1)) {
+        for (c.setY(0); c.y < isz.y; c.setY(c.y + 1)) {
+            for (c.setX(0); c.x < isz.x; c.setX(c.x + 1)) {
                 g.image(invsq, c.mul(sz));
             }
         }
@@ -166,7 +166,7 @@ public class Inventory extends Widget implements DTarget {
     private void recalcsz() {
         sz = invsq.sz().add(new Coord(-1, -1)).mul(isz).add(new Coord(1, 1));
         if (trashButton.visible) {
-            trashButton.c = sz.sub(0, invsq.sz().y());
+            trashButton.c = sz.sub(0, invsq.sz().y);
             hsz = sz.add(16, 0);
             if (needshift()) {//small inventory, button should be shifted (Finery forge, oven, crucible)
                 trashButton.c = trashButton.c.add(18, 0);

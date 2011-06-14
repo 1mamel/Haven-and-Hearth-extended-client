@@ -64,15 +64,15 @@ public class Cal extends SSWidget {
         BufferedImage moon = Cal.moon[mp];
         Coord mc = Coord.sc((a.dt + 0.25) * 2 * PI, hbr).add(sz.div(2)).sub(Utils.imgsz(moon).div(2));
         Coord sc = Coord.sc((a.dt + 0.75) * 2 * PI, hbr).add(sz.div(2)).sub(Utils.imgsz(sun).div(2));
-        g.drawImage(moon, mc.x(), mc.y(), null);
-        g.drawImage(sun, sc.x(), sc.y(), null);
+        g.drawImage(moon, mc.x, mc.y, null);
+        g.drawImage(sun, sc.x, sc.y, null);
         g.drawImage(a.night ? nlnd : dlnd, 0, 0, null);
         update();
         update = System.currentTimeMillis();
     }
 
     public Cal(Coord c, Widget parent) {
-        super(new Coord(CustomConfig.getWindowCenter().x() - (Utils.imgsz(bg).x() / 2), c.y()), Utils.imgsz(bg), parent);
+        super(new Coord(CustomConfig.getWindowCenter().x - (Utils.imgsz(bg).x / 2), c.y), Utils.imgsz(bg), parent);
         render();
     }
 

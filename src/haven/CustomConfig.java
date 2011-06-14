@@ -71,11 +71,11 @@ public class CustomConfig {
     }
 
     public static int getWindowWidth() {
-        return windowSize.x();
+        return windowSize.x;
     }
 
     public static int getWindowHeight() {
-        return windowSize.y();
+        return windowSize.y;
     }
 
     public static Coord getWindowCenter() {
@@ -83,25 +83,25 @@ public class CustomConfig {
     }
 
     public static int getCenterX() {
-        return windowCenter.x();
+        return windowCenter.x;
     }
 
     public static int getCenterY() {
-        return windowCenter.y();
+        return windowCenter.y;
     }
 
     public static void setWindowSize(Coord size) {
-        windowSize = size.getUnmodifiableVersion();
+        windowSize = size;
         MainFrame.setWindowSize(size.toDimension());
     }
 
     public static void setWindowSize(int width, int height) {
-        windowSize = new Coord(width, height).getUnmodifiableVersion();
+        windowSize = new Coord(width, height);
         MainFrame.setWindowSize(new Dimension(width, height));
     }
 
     public static void updateWindowSize(int width, int height) {
-        windowSize = new Coord(width, height).getUnmodifiableVersion();
+        windowSize = new Coord(width, height);
     }
 
     static class CharData {

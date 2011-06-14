@@ -143,7 +143,7 @@ public class Item extends Widget implements DTarget {
                 int b = 0;
                 g.chcolor(r, gr, b, 255);
                 //g.fellipse(sz.div(2), new Coord(15, 15), 90, (int)(90 + (360 * a)));
-                g.frect(new Coord(sz.x() - 5, (int) ((1 - a) * sz.y())), new Coord(5, (int) (a * sz.y())));
+                g.frect(new Coord(sz.x - 5, (int) ((1 - a) * sz.y)), new Coord(5, (int) (a * sz.y)));
                 g.chcolor();
             }
             int tq = (innerLiquidQuality > 0) ? innerLiquidQuality : quality;
@@ -183,9 +183,9 @@ public class Item extends Widget implements DTarget {
     static Tex makesh(Resource res) {
         BufferedImage img = res.layer(Resource.imgc).img;
         Coord sz = Utils.imgsz(img);
-        BufferedImage sh = new BufferedImage(sz.x(), sz.y(), BufferedImage.TYPE_INT_ARGB);
-        for (int y = 0; y < sz.y(); y++) {
-            for (int x = 0; x < sz.x(); x++) {
+        BufferedImage sh = new BufferedImage(sz.x, sz.y, BufferedImage.TYPE_INT_ARGB);
+        for (int y = 0; y < sz.y; y++) {
+            for (int x = 0; x < sz.x; x++) {
                 long c = img.getRGB(x, y) & 0x00000000ffffffffL;
                 int a = (int) ((c & 0xff000000) >> 24);
                 sh.setRGB(x, y, (a / 2) << 24);

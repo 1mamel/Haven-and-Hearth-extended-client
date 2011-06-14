@@ -81,7 +81,7 @@ public class IButton extends SSWidget {
 
     public boolean checkhit(Coord c) {
         if (recthit) return true;
-        int cl = up.getRGB(c.x(), c.y());
+        int cl = up.getRGB(c.x, c.y);
         return (Utils.rgbm.getAlpha(cl) >= 128);
     }
 

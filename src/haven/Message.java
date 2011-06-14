@@ -140,8 +140,8 @@ public class Message implements java.io.Serializable {
     }
 
     public void addcoord(Coord c) {
-        addint32(c.x());
-        addint32(c.y());
+        addint32(c.x);
+        addint32(c.y);
     }
 
     public void addlist(Object... args) {

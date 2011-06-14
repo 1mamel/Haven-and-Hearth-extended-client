@@ -38,8 +38,8 @@ public class RichTextBox extends Widget {
     public RichTextBox(Coord c, Coord sz, Widget parent, String text, RichText.Foundry fnd) {
         super(c, sz, parent);
         this.fnd = fnd;
-        this.text = fnd.render(text, sz.x() - 20);
-        this.sb = new Scrollbar(new Coord(sz.x(), 0), sz.y(), this, 0, this.text.sz().y() + 20 - sz.y());
+        this.text = fnd.render(text, sz.x - 20);
+        this.sb = new Scrollbar(new Coord(sz.x, 0), sz.y, this, 0, this.text.sz().y + 20 - sz.y);
     }
 
     public RichTextBox(Coord c, Coord sz, Widget parent, String text, Object... attrs) {
@@ -57,15 +57,15 @@ public class RichTextBox extends Widget {
     }
 
     public void settext(String text) {
-        this.text = fnd.render(text, sz.x() - 20);
-        sb.max = this.text.sz().y() + 20 - sz.y();
+        this.text = fnd.render(text, sz.x - 20);
+        sb.max = this.text.sz().y + 20 - sz.y;
         sb.val = 0;
     }
 
     public void setsz(Coord s) {
         sz = s;
-        sb.c = new Coord(sz.x() - 10, 0);
-        sb.sz = new Coord(10, sz.y());
+        sb.c = new Coord(sz.x - 10, 0);
+        sb.sz = new Coord(10, sz.y);
         settext(text.text);
     }
 

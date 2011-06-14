@@ -82,7 +82,7 @@ public class ComWin extends HWindow {
         Fightview.Relation rel = fv.current;
         if (rel != null) {
             g.chcolor(0, 0, 0, 255);
-            g.text(rel.ip + "/" + rel.oip, new Coord(205 + iptex.sz().x(), 30));
+            g.text(rel.ip + "/" + rel.oip, new Coord(205 + iptex.sz().x, 30));
             g.chcolor();
         }
         long now = System.currentTimeMillis();

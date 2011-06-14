@@ -86,11 +86,11 @@ public class Config {
     }
 
     public static int getWindowCenterX() {
-        return CustomConfig.getWindowCenter().x();
+        return CustomConfig.getWindowCenter().x;
     }
 
     public static int getWindowCenterY() {
-        return CustomConfig.getWindowCenter().y();
+        return CustomConfig.getWindowCenter().y;
     }
 
     public static boolean getSound() {

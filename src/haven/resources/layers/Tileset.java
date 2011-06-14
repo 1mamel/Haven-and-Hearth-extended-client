@@ -51,13 +51,13 @@ public class Tileset extends Layer {
         int min = -1, minw = -1, minh = -1;
         int nt = tiles.size();
         for (int i = 1; i <= nt; i++) {
-            int w = Tex.nextp2(tsz.x() * i);
+            int w = Tex.nextp2(tsz.x * i);
             int h;
             if ((nt % i) == 0)
                 h = nt / i;
             else
                 h = (nt / i) + 1;
-            h = Tex.nextp2(tsz.y() * h);
+            h = Tex.nextp2(tsz.y * h);
             int a = w * h;
             if ((min == -1) || (a < min)) {
                 min = a;
@@ -71,9 +71,9 @@ public class Tileset extends Layer {
         for (Tile t : tiles) {
             g.drawImage(t.img, x, y, null);
             t.tex = new TexSI(packbuf, new Coord(x, y), tsz);
-            if ((x += tsz.x()) > (minw - tsz.x())) {
+            if ((x += tsz.x) > (minw - tsz.x)) {
                 x = 0;
-                if ((y += tsz.y()) >= minh)
+                if ((y += tsz.y) >= minh)
                     throw (new Resource.LoadException("Could not pack tiles into calculated minimum texture"));
             }
         }

@@ -34,10 +34,10 @@ import static java.lang.Math.PI;
 
 public class Coord implements Comparable<Coord>, java.io.Serializable, Cloneable {
     public static final Pattern parsePattern = Pattern.compile("\\((-?\\d+), (-?\\d+)\\)");
-    public static final Coord z = new Coord.U(0, 0);
+    public static final Coord z = new Coord(0, 0);
 
-    private int x;
-    private int y;
+    public int x;
+    public int y;
 
     public Coord(int x, int y) {
         this.x = x;
@@ -225,7 +225,7 @@ public class Coord implements Comparable<Coord>, java.io.Serializable, Cloneable
         return new Dimension(x, y);
     }
 
-    public int x() {
+    public int getX() {
         return x;
     }
 
@@ -233,7 +233,7 @@ public class Coord implements Comparable<Coord>, java.io.Serializable, Cloneable
         this.x = x;
     }
 
-    public int y() {
+    public int getY() {
         return y;
     }
 
@@ -250,40 +250,4 @@ public class Coord implements Comparable<Coord>, java.io.Serializable, Cloneable
         this.y = y;
     }
 
-    public Coord getUnmodifiableVersion() {
-        return new U(this);
-    }
-
-    /**
-     * Inmodifiable version of Coord.
-     * Throws UnsupportedOperationException if any setter invoked.
-     */
-    public static class U extends Coord {
-        public U(Coord c) {
-            super(c);
-        }
-
-        public U(int x, int y) {
-            super(x, y);
-        }
-
-        public U(Dimension d) {
-            super(d);
-        }
-
-        @Override
-        public void set(int x, int y) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public void setY(int y) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public void setX(int x) {
-            throw new UnsupportedOperationException();
-        }
-    }
 }

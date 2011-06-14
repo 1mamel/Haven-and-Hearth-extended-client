@@ -36,7 +36,7 @@ public class WikiBrowser extends Window implements DTarget, DropTarget, IHWindow
         ui.wiki = this;
         mrgn = Coord.z;
         btnc = Coord.z.add(0, addrh);
-        search = new TextEntry(new Coord(5, 15), new Coord(sz.x(), 20), this, "");
+        search = new TextEntry(new Coord(5, 15), new Coord(sz.x, 20), this, "");
         sub = new Button(new Coord(300, 260), sbtnw, this,
                 Resource.loadimg("gfx/hud/slen/sau")) {
             public void click() {
@@ -107,8 +107,8 @@ public class WikiBrowser extends Window implements DTarget, DropTarget, IHWindow
             Coord d = c.sub(doff);
             doff = c;
             ssz = ssz.add(d);
-            ssz.setX(Math.max(ssz.x(), minsz.x()));
-            ssz.setY(Math.max(ssz.y(), minsz.y()));
+            ssz.setX(Math.max(ssz.x, minsz.x));
+            ssz.setY(Math.max(ssz.y, minsz.y));
             pack();
         } else {
             super.mousemove(c);
@@ -121,11 +121,11 @@ public class WikiBrowser extends Window implements DTarget, DropTarget, IHWindow
     }
 
     private void deltasz() {
-        Coord s = ssz.sub(0, btnh + gzsz.y() + addrh);
+        Coord s = ssz.sub(0, btnh + gzsz.y + addrh);
         for (HWindow wnd : wnds) {
             wnd.setsz(s);
         }
-        search.sz = new Coord(s.x() - 10, 20);
+        search.sz = new Coord(s.x - 10, 20);
         updbtns();
     }
 
@@ -190,8 +190,8 @@ public class WikiBrowser extends Window implements DTarget, DropTarget, IHWindow
     }
 
     public void addwnd(final HWindow wnd) {
-        wnd.sz = ssz.sub(0, btnh + gzsz.y() + addrh);
-        wnd.c = new Coord(0, btnh + gzsz.y() + addrh);
+        wnd.sz = ssz.sub(0, btnh + gzsz.y + addrh);
+        wnd.c = new Coord(0, btnh + gzsz.y + addrh);
         wnds.add(wnd);
         Button btn = new Button(new Coord(), maxbtnw + 1, this, wnd.title) {
             public void click() {
@@ -250,13 +250,13 @@ public class WikiBrowser extends Window implements DTarget, DropTarget, IHWindow
 
     private void updbtns() {
         int ws = wnds.size();
-        int k = Math.max((ssz.x() - sbtnw) / minbtnw, 1);
+        int k = Math.max((ssz.x - sbtnw) / minbtnw, 1);
         if (k > (ws >> 1)) {
             k = Math.max(ws >> 1, 1);
             if ((ws % 2) != 0)
                 k++;
         }
-        int bw = Math.min((ssz.x() - sbtnw) / k, maxbtnw);
+        int bw = Math.min((ssz.x - sbtnw) / k, maxbtnw);
         int bpp = 2 * k;
 
         if (ws <= bpp) {
@@ -276,18 +276,18 @@ public class WikiBrowser extends Window implements DTarget, DropTarget, IHWindow
                 continue;
             if (woff > 0) {
                 sub.visible = true;
-                sub.c = btnc.add(ssz.x() - sbtnw, 0);
+                sub.c = btnc.add(ssz.x - sbtnw, 0);
             }
             if (woff < ws - bpp) {
                 sdb.visible = true;
-                sdb.c = btnc.add(ssz.x() - sbtnw, 20);
+                sdb.c = btnc.add(ssz.x - sbtnw, 20);
             }
             HWindow w = wnds.get(wi);
             Button b = btns.get(w);
             //w.sz = ssz.sub(0, btnh + addrh+gzsz.y);
             b.change(w.title, w.visible ? Color.WHITE : null);
             b.visible = true;
-            b.sz = new Coord(bw, b.sz.y());
+            b.sz = new Coord(bw, b.sz.y);
             b.c = btnc.add(bw * (i % k), ((int) i / k) * 20);
         }
     }

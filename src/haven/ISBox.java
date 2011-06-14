@@ -59,10 +59,10 @@ public class ISBox extends Widget implements DTarget {
         g.image(bg, Coord.z);
         if (!res.loading.get()) {
             Tex t = res.layer(Resource.imgc).tex();
-            Coord dc = new Coord(6, (bg.sz().y() / 2) - (t.sz().y() / 2));
+            Coord dc = new Coord(6, (bg.sz().y / 2) - (t.sz().y / 2));
             g.image(t, dc);
         }
-        g.image(label.tex(), new Coord(40, (bg.sz().y() / 2) - (label.tex().sz().y() / 2)));
+        g.image(label.tex(), new Coord(40, (bg.sz().y / 2) - (label.tex().sz().y / 2)));
     }
 
     public Object tooltip(Coord c, boolean again) {

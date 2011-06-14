@@ -50,9 +50,9 @@ public class Speaking extends GAttrib {
 
     public void draw(GOut g, Coord c) {
         Coord sz = text.sz();
-        if (sz.x() < 10)
+        if (sz.x < 10)
             sz.setX(10);
-        Coord tl = c.sub(new Coord(sx, sb.bsz().y() + sz.y() + svans.sz().y() - 1));
+        Coord tl = c.sub(new Coord(sx, sb.bsz().y + sz.y + svans.sz().y - 1));
         Coord ftl = tl.add(sb.tloff());
         g.chcolor(Color.WHITE);
         g.frect(ftl, sz);
@@ -60,6 +60,6 @@ public class Speaking extends GAttrib {
         g.chcolor(Color.BLACK);
         g.image(text.tex(), ftl);
         g.chcolor(Color.WHITE);
-        g.image(svans, c.add(0, -svans.sz().y()));
+        g.image(svans, c.add(0, -svans.sz().y));
     }
 }

@@ -52,7 +52,7 @@ public abstract class ImageSprite extends Sprite {
             if (img.gayp()) {
                 Utils.drawgay(b, img.img, sc);
             } else {
-                g.drawImage(img.img, sc.x(), sc.y(), null);
+                g.drawImage(img.img, sc.x, sc.y, null);
             }
         }
 
@@ -133,9 +133,9 @@ public abstract class ImageSprite extends Sprite {
 
         public boolean checkhit(Coord c) {
             c = c.add(ImageSprite.this.cc);
-            if ((c.x() < img.o.x()) || (c.y() < img.o.y()) || (c.x() >= img.o.x() + img.sz.x()) || (c.y() >= img.o.y() + img.sz.y()))
+            if ((c.x < img.o.x) || (c.y < img.o.y) || (c.x >= img.o.x + img.sz.x) || (c.y >= img.o.y + img.sz.y))
                 return (false);
-            int cl = img.img.getRGB(c.x() - img.o.x(), c.y() - img.o.y());
+            int cl = img.img.getRGB(c.x - img.o.x, c.y - img.o.y);
             return (Utils.rgbm.getAlpha(cl) >= 128);
         }
     }
