@@ -12,12 +12,10 @@ import java.awt.*;
  * Date: 10.01.11
  * Time: 23:33
  */
-@SuppressWarnings({"UnusedDeclaration", "MethodMayBeStatic"})
+@SuppressWarnings({"UnusedDeclaration"})
 public class Config {
-    private boolean nightvision;
-    private boolean irc;
 
-    public void setNightvision(boolean nightvision) {
+    public static void setNightvision(boolean nightvision) {
         CustomConfig.hasNightVision = nightvision;
     }
 
@@ -30,7 +28,7 @@ public class Config {
 //        else throw new RuntimeException("setNightvision(ON|OFF) " + arg0);
 //    }
 
-    public void setIrc(boolean irc) {
+    public static void setIrc(boolean irc) {
         CustomConfig.isIRCOn = irc;
     }
 
@@ -43,7 +41,7 @@ public class Config {
 //        else throw new RuntimeException("setIrc(ON|OFF)");
 //    }
 
-    public void setDebugMsgs(String arg0) {
+    public static void setDebugMsgs(String arg0) {
         arg0 = arg0.toUpperCase();
         if (arg0.equals("ON") || arg0.equals("TRUE"))
             CustomConfig.setDebugLogging(true);
@@ -52,7 +50,7 @@ public class Config {
         else throw new RuntimeException("setDebugMsgs(ON|OFF)");
     }
 
-    public void setScreenSize(int width, int height) {
+    public static void setScreenSize(int width, int height) {
         try {
             CustomConfig.setWindowSize(Math.max(width, 800), Math.max(height, 600));
             CustomConfigProcessor.saveSettings();
@@ -62,11 +60,11 @@ public class Config {
         }
     }
 
-    public void setSound(int sound) {
+    public static void setSound(int sound) {
         setSound(String.valueOf(sound));
     }
 
-    public void setSound(String arg0) {
+    public static void setSound(String arg0) {
         arg0 = arg0.toUpperCase();
         int vol;
         try {
@@ -82,7 +80,7 @@ public class Config {
         }
     }
 
-    public void setMusic(String arg0) {
+    public static void setMusic(String arg0) {
         arg0 = arg0.toUpperCase();
         int vol;
         try {
@@ -98,63 +96,57 @@ public class Config {
         }
     }
 
-    public void save() {
+    public static void save() {
         CustomConfigProcessor.saveSettings();
     }
 
-    public void forcesave() {
+    public static void forcesave() {
         CustomConfig.isSaveable = true;
         CustomConfigProcessor.saveSettings();
     }
 
-    public boolean getNightvision() {
+    public static boolean getNightvision() {
         return CustomConfig.hasNightVision;
     }
 
-    public boolean getIrc() {
+    public static boolean getIrc() {
         return CustomConfig.isIRCOn;
     }
 
-    public int getScreenWidth() {
+    public static int getScreenWidth() {
         return CustomConfig.getWindowWidth();
     }
 
-    public int getScreenHeight() {
+    public static int getScreenHeight() {
         return CustomConfig.getWindowHeight();
     }
 
-    public int getScreenCenterX() {
+    public static int getScreenCenterX() {
         return CustomConfig.getWindowCenter().x();
     }
 
-    public int getScreenXenterY() {
+    public static int getScreenXenterY() {
         return CustomConfig.getWindowCenter().y();
     }
 
-    public boolean isSoundOn() {
+    public static boolean isSoundOn() {
         return CustomConfig.isSoundOn;
     }
 
-    public int getSoundVolume() {
+    public static int getSoundVolume() {
         return CustomConfig.sfxVol;
     }
 
-    public boolean isMusicOn() {
+    public static boolean isMusicOn() {
         return CustomConfig.isMusicOn;
     }
 
-    public int getMusicVolume() {
+    public static int getMusicVolume() {
         return CustomConfig.musicVol;
     }
 
-    public boolean isDebugLogging() {
+    public static boolean isDebugLogging() {
         return CustomConfig.isDebugLogging();
-    }
-
-    private static Config ourInstance = new Config();
-
-    public static Config getInstance() {
-        return ourInstance;
     }
 
     private Config() {

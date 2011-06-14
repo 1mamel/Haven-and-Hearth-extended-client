@@ -21,6 +21,8 @@ import org.python.util.PythonInterpreter;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ScriptsManager {
     static PythonInterpreter interpreter;
@@ -42,12 +44,13 @@ public class ScriptsManager {
     }
 
     private static void relinkInterpreterScope() {
-        interpreter.set("util", Util.getInstance());
-        interpreter.set("player", Player.getInstance());
-        interpreter.set("config", Config.getInstance());
-        interpreter.set("manager", ScriptsManager.class);
         interpreter.setOut(java.lang.System.out);
         interpreter.setErr(java.lang.System.err);
+        interpreter.eval("import includes");
+        interpreter.set("util", Util.class);
+        interpreter.set("player", Player.class);
+        interpreter.set("config", Config.class);
+        interpreter.set("manager", ScriptsManager.class);
 //        PrintStream stream = new PrintStream(CustomConsole.OutStream.getInstance());
 //        interpreter.setOut(stream);
 //        interpreter.setErr(stream);
@@ -72,11 +75,32 @@ public class ScriptsManager {
         }
     }
 
-    public static Class<? extends Bot> getBotClass(String name) {
+    private static Class<? extends Bot> getBotClass(String name) {
         return botsMap.get(name);
     }
 
-    public static Bot createBot(String name) {
+    static final Map<Bot, Thread> runningBots = new ConcurrentHashMap<Bot, Thread>();
+    static final ThreadGroup tg = new ThreadGroup("Scripts thread groop");
+
+    public static boolean runBot(String name) {
+        Bot bot = createBot(name);
+        if (bot == null) return false;
+
+        Thread thread = new Thread(tg, bot);
+        thread.setDaemon(true);
+        runningBots.put(bot, thread);
+
+        thread.start();
+        return true;
+    }
+
+    public static void killBot(Bot bot) {
+        if (!runningBots.containsKey(bot)) return;
+        runningBots.get(bot).interrupt();
+    }
+
+    private static Bot createBot(String name) {
+        if (!botsMap.containsKey(name)) return null;
         try {
             return botsMap.get(name).newInstance();
         } catch (InstantiationException e) {

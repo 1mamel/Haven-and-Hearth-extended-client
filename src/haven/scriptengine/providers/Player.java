@@ -15,63 +15,63 @@ import java.util.regex.Pattern;
 @SuppressWarnings({"UnusedDeclaration"})
 public class Player {
 
-    public int getEnergy() {
+    public static int getEnergy() {
         return energy;
     }
 
-    public int getAuthority() {
+    public static int getAuthority() {
         return authorityNow;
     }
 
-    public int getAuthorityMax() {
+    public static int getAuthorityMax() {
         return authorityMax;
     }
 
-    public int getHPHard() {
+    public static int getHPHard() {
         return hpHard;
     }
 
-    public int getHPSoft() {
+    public static int getHPSoft() {
         return hpSoft;
     }
 
-    public int getHPCurrent() {
+    public static int getHPCurrent() {
         return hpNow;
     }
 
-    public int getHappy() {
+    public static int getHappy() {
         return happy;
     }
 
-    public int getHappyTowards() {
+    public static int getHappyTowards() {
         return happyTowards;
     }
 
-    public int getHungry() {
+    public static int getHungry() {
         return hungry;
     }
 
-    public int getSpeed() {
+    public static int getSpeed() {
         return speedCurrent;
     }
 
-    public int getMaxSpeed() {
+    public static int getMaxSpeed() {
         return speedMax;
     }
 
-    public boolean setSpeed(int speed) {
+    public static boolean setSpeed(int speed) {
         return speedGet != null && speedGet.changeSpeed(speed);
     }
 
     public static void iMeterGenerated(IMeter meter, String resName) {
-        ourInstance.newMeter(meter, resName);
+        newMeter(meter, resName);
     }
 
     public static void meterUpdated(IMeter meter, String tooltip) {
-        ourInstance.meterUp(meter, tooltip);
+        meterUp(meter, tooltip);
     }
 
-    private void meterUp(IMeter meter, String tooltip) {
+    private static void meterUp(IMeter meter, String tooltip) {
         try {
             if (meter == hpMeter) updateHp(tooltip);
             if (meter == energyMeter) updateEnergy(tooltip);
@@ -83,7 +83,7 @@ public class Player {
         }
     }
 
-    private void newMeter(IMeter meter, String resName) {
+    private static void newMeter(IMeter meter, String resName) {
         if (resName.equals("gfx/hud/meter/hp")) //HP meter
             hpMeter = meter;
         else if (resName.equals("gfx/hud/meter/nrj")) // Energy Meter
@@ -98,7 +98,7 @@ public class Player {
             System.err.println("Unexpected IMeter with imagename=" + resName);
     }
 
-    private void updateAuthority(String tooltip) {
+    private static void updateAuthority(String tooltip) {
         Matcher makeMatch = intsOnly.matcher(tooltip);
         makeMatch.find();
         authorityNow = Integer.parseInt(makeMatch.group());
@@ -106,14 +106,14 @@ public class Player {
         authorityMax = Integer.parseInt(makeMatch.group());
     }
 
-    private void updateHungry(String tooltip) {
+    private static void updateHungry(String tooltip) {
         Matcher makeMatch = intsOnly.matcher(tooltip);
         makeMatch.find();
         makeMatch.find();
         hungry = Integer.parseInt(makeMatch.group());
     }
 
-    private void updateHappy(String tooltip) {
+    private static void updateHappy(String tooltip) {
         Matcher makeMatch = intsOnly.matcher(tooltip);
         makeMatch.find();
         happy = Integer.parseInt(makeMatch.group());
@@ -125,14 +125,14 @@ public class Player {
         if (tooltip.startsWith("Un")) happy *= -1;
     }
 
-    private void updateEnergy(String tooltip) {
+    private static void updateEnergy(String tooltip) {
         Matcher makeMatch = intsOnly.matcher(tooltip);
         makeMatch.find();
         energy = Integer.parseInt(makeMatch.group());
     }
 
 
-    public void updateHp(String tooltip) {
+    public static void updateHp(String tooltip) {
         Matcher makeMatch = intsOnly.matcher(tooltip);
         makeMatch.find();
         hpNow = Integer.parseInt(makeMatch.group());
@@ -142,51 +142,45 @@ public class Player {
         hpHard = Integer.parseInt(makeMatch.group());
     }
 
-    private IMeter hpMeter;
-    private IMeter energyMeter;
-    private IMeter happyMeter;
-    private IMeter hungryMeter;
-    private IMeter authorityMeter;
+    static private IMeter hpMeter;
+    static private IMeter energyMeter;
+    static private IMeter happyMeter;
+    static private IMeter hungryMeter;
+    static private IMeter authorityMeter;
 
-    private int energy = -1;
-    private int hpNow = -1;
-    private int hpSoft = -1;
-    private int hpHard = -1;
-    private int hungry = -1;
-    private int authorityNow = -1;
-    private int authorityMax = -1;
-    private int happy = -1;
-    private int happyTowards = -1;
+    static private int energy = -1;
+    static private int hpNow = -1;
+    static private int hpSoft = -1;
+    static private int hpHard = -1;
+    static private int hungry = -1;
+    static private int authorityNow = -1;
+    static private int authorityMax = -1;
+    static private int happy = -1;
+    static private int happyTowards = -1;
 
-    private int progress = -1; // [0-100] or -1 if not in progress
+    static private int progress = -1; // [0-100] or -1 if not in progress
 
-    private Speedget speedGet;
-    private int speedCurrent = -1; // [0-3]
-    private int speedMax = -1; // [0-3]
+    static private Speedget speedGet;
+    static private int speedCurrent = -1; // [0-3]
+    static private int speedMax = -1; // [0-3]
 
     static final Pattern intsOnly = Pattern.compile("[-]?\\d+");
 
-    private static final Player ourInstance = new Player();
-
-    public static Player getInstance() {
-        return ourInstance;
-    }
-
     public static void updateProgress(int p) {
-        getInstance().progress = p;
+        progress = p;
     }
 
-    public int getProgress() {
+    public static int getProgress() {
         return progress;
     }
 
-    public boolean isInProgress() {
+    public static boolean isInProgress() {
         return progress > 0;
     }
 
     public static void updateSpeed(int cur, int max, Speedget sg) {
-        getInstance().speedCurrent = cur;
-        getInstance().speedMax = max;
-        getInstance().speedGet = sg;
+        speedCurrent = cur;
+        speedMax = max;
+        speedGet = sg;
     }
 }
