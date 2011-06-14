@@ -1,3 +1,5 @@
+# coding=UTF-8
+
 # Basic functions
 # Thanks to ark.su for simple basic functions
 
@@ -19,30 +21,30 @@ def exit(obj):
     Manager.kill(obj)
 
 def logout():
-    return // TODO
+    return False # TODO
 
 def say(s):
     PPlayer.sayArea(s)
 
 
 # послать клик по объекту на карте. объект указывается по objid. кнопка мыши btn (1 - левая. 3 - правая). дополнительные флаги mod (1-шифт. 2-ктрл. 4-альт. 8-вин)
-def do_click(int objectId, int button, int mode):
+def do_click(objectId, button, mode):
     Player.mapCLick(objectId, button, mode)
 
 # простой клик по карте. как обычно щелкаем мышью. только координаты относительно игрока
-def map_click(int x, int y, int button, int mode):
+def map_click(x, y, button, mode):
     Player.mapClick(x,y,button,mode)
 
 # абсолютный клик по карте. как обычно щелкаем мышью. указываем координаты мира
-def map_abs_click(int x, int y, int btn, int mod):
-    Player.mapAbsoluteClick(x,y,button,mode)
+def map_abs_click(x, y, btn, mode):
+    Player.mapAbsoluteClick(x, y, button,mode)
 
 # передвинутся на указанное количество тайлов от текущей позиции игрока, фактически это map_click всегда с левой кнопкой
-def map_move_step(int x, int y):
+def map_move_step(x, y):
     Player.moveStep(x, y)
 
 # бежать к указанной точке. объект и оффсет от него в координатах карты. (1 тайл = 11 точек)
-def map_move(int objid, int x, int y):
+def map_move(objid, x, y):
     Player.move(x, y)
 
 # Player coordinates
@@ -58,72 +60,82 @@ def my_coord_y():
 
 
 # кликнуть по карте (взаимодействие, чтото держим в руках) координаты указываются в тайлах от текущей позиции игрока
-def map_interact_click(int x, int y, int mode):
+def map_interact_click(x, y, mode):
+    return
 
-def map_interact_click(int objid, int mode):
-
+def map_interact_click(objid, mode):
+    return
 
 # то же самое только указываем абсолютные координаты
-def map_abs_interact_click(int x, int y, int mod):
+def map_abs_interact_click(x, y, mod):
+    return
 
 # поставить объек который хотим построить в указанные координаты относительно игрока. координаты задаем в тайлах
-def map_place(int x, int y, int btn, int mod):
+def map_place(x, y, btn, mod):
+    return
 
 # выбрать опцию в контекстном выпадающем меню над объектом
-def select_context_menu(string option_name):
+def select_context_menu(option_name):
+    return
 
 
 # послать действие из меню внизу справа, с одним параметром. параметр видно при щелчке на кнопку в логе по ф12
 # laystone - укладка камней. асфальтирование
 # carry - перетаскивание объектов (lift)
-def send_action(string name):
+def send_action(name):
+    return
 
 # послать действие из меню внизу справа, если нужно указывать 2 параметра
-def send_action(string name, string name2):
+def send_action(name, name2):
+    return
 
 # проверяет стоит ли указанный курсор в данный момент
 # dig - лопата
 # chi - курсор пипетка. появляется когда хотим чето перетаскивать. и надо указать объект
-def is_cursor(string cursor_name):
+def is_cursor(cursor_name):
     return True # boolean
 
 # дропнуть вещь в руках на землю
-def drop(int mod):
+def drop(mod):
+    return
 
 # сказать игроку выбрать объект мышкой. все объекты подсвечиваются зеленым. пользователь должен щелкнуть на какой нить объект тогда управление вернется в скрипт
 # msg - выведет сообщение красным цветом на экран
-def input_get_object(string msg):
+def input_get_object(msg):
     return 0 #integer
 
 # найти объект по имени, проверяется вхождение имени в имя ресурса, радиус в тайлах
-def find_object_by_name(string name, int radius):
+def find_object_by_name(name, radius):
     return 0 #integer
 
 
 # найти объект по типу, радиус в тайлах. доступные типы:
 #   tree - дерево
-def find_object_by_type(string type, int radius):
+def find_object_by_type(type, radius):
     return 0 #integer
 
 
 
 # найти объект по оффсету от себя в заданном радиусе и с заданным именем. ВНИМАНИЕ!!! радиус в точках карты. отступ в тайлах
 # если имя не указано (пустая строка) ищет любой объект в заданном радиусе
-def find_map_object(String name, int radius, int x, int y):
+def find_map_object(name, radius, x, y):
     return 0 #integer
 
 # проверить наличие инвентаря по имени
-def have_inventory(string name):
+def have_inventory(name):
     return 0 #integer
 
 #открыть мой инвентарь
 def open_inventory():
+    return
 
 #поставить текущий инвентарь, после автоматически сбрасывается итератор
-def set_inventory(string name):
+def set_inventory(name):
+    return
 
 #сбросить итератор итемов в инвентаре
 def reset_inventory():
+    return
 
 #вызывать итератор для установки итема
 #0 - если вещи нет (прошли весь список). 1 если есть
@@ -136,20 +148,23 @@ def get_items_count():
 
 
 # установить текущую вещь по индексу в списке
-def set_item_index(int index):
+def set_item_index(index):
+    return
 
 # установить текущей вещью - то что держим в руках если оно есть. (чтобы получить ее параметры)
 def set_item_drag():
+    return
 
 # установить текущей вещью - вещь из инвентаря. указываем индекс (чтобы получить ее параметры)
-def set_item_equip(int index):
+def set_item_equip(index):
+    return
 
 # получаем параметры текущей вещи установленной итератором
     #int is_item_name(string name) - 0 или 1 совпадает ли имя вещи
     #int is_item_tooltip(string name) - 0 или 1 совпадает ли тултип (всплывающая подсказка на вещи)
     #int item_quality() - возвращает качество
     #def item_click(string action) - щелчок по вещи
-    #def item_click(string action, int mod) - щелчок по вещи, с модификатором клавиатуры
+    #def item_click(string action, mod) - щелчок по вещи, с модификатором клавиатуры
 #        команды (action):
 #            take - взять вещь
 #            itemact - взаимодействие на вещь. чтото держим в руках и щелкаем правой кнопкой по вещи
@@ -177,35 +192,42 @@ def item_meter():
     return 0 #integer
 
 #  - положить вещь которую держим в руках в текущий инвентарь установленный set_inventory. в указанные координаты. нумерация клеток с нуля
-def item_drop(int x, int y):
+def item_drop(x, y):
+    return
 
 
 # тоже самое но с модификатором клавиатуры
-#  дать команду вещи в инвентаре с указаныым именем. по указанным координатам вещи в этом инвентаре.
-#   take - взять вещь
-#   itemact - взаимодействие на вещь. чтото держим в руках и щелкаем правой кнопкой по вещи
-#   transfer - переместить. щелчек лкм с зажатым шифтом
-#   iact - фактически правый щелчек по вещи. для вызова контекстного меню
-#   drop - дропнуть вещь на землю. щелчек лкм с зажатым контролом
-def inventory(string name, int x, int y, string action):
+# дать команду вещи в инвентаре с указаныым именем. по указанным координатам вещи в этом инвентаре.
+# take - взять вещь
+# itemact - взаимодействие на вещь. чтото держим в руках и щелкаем правой кнопкой по вещи
+# transfer - переместить. щелчек лкм с зажатым шифтом
+# iact - фактически правый щелчек по вещи. для вызова контекстного меню
+# drop - дропнуть вещь на землю. щелчек лкм с зажатым контролом
 
-def inventory(string name, int x, int y, string action, int mode):
+def inventory(name, x, y, action):
+    return
+
+def inventory(name, x, y, action, mode):
+    return
 
 
 
 # дропнуть вещь в указанный инвентарь, допустим когда надо из моего инвентаря не закрывая его дропнуть в шкаф или ящик
-def item_drop_to_inventory(String name, int x, int y):
+def item_drop_to_inventory(name, x, y):
+    return
 
 
 # проверить есть ли окно крафта с указанным заголовком
-def check_craft(string wnd):
+def check_craft(wnd):
     return 0 #integer
 
 # подождать появления и готовности окна с указанным заголовком
-def wait_craft(string wnd):
+def wait_craft(wnd):
+    return
 
 # скрафтить вещь. all - 0 или 1. если 1 - то крафтим все. если 0 только одну вещь. перед крафтом надо каким то образом открыть окно крафта
-def craft(int all):
+def craft(all):
+    return
 
 #дать команду в эквип (одевалку), указываем какому слоту даем команду и саму команду
 #слоты: hh_slots.png
@@ -215,18 +237,21 @@ def craft(int all):
 #   transfer - переместить. щелчек лкм с зажатым шифтом
 #   iact - фактически правый щелчек по вещи. для вызова контекстного меню
 #   drop - дропнуть вещь которую держим в руках в указанный слот.
-def equip(int slot, string action):
+def equip(slot, action):
+    return
 
 
 #включить/выключить (0 или 1) рендер в клиенте. нужно для экономии ресурсов
-def render_mode(int enabled):
+def render_mode(enabled):
+    return
 
 #получить данные из мессаги объекта. именно так задаются стадрии роста ( пример: get_object_blob(34676844, 0) вернет стадию роста указанного объекта если там есть данные. либо вернет 0)
-def get_object_blob(int id, int index):
+def get_object_blob(id, index):
     return 0 #integer
 
 # сбросить итератор бафов
-def reset_buff()
+def reset_buff():
+    return
 
 # перейти на следующий элемент баф листа. вернет либо 0 если уже конец. либо 1 если перешли на след бафф
 def next_buff():
@@ -240,14 +265,15 @@ def buff_meter():
 def buff_time_meter():
     return 0 #integer
 
-проверить имя баффа на вхождение строки. вернет 0 или 1
-def is_buff_name(string name):
+# проверить имя баффа на вхождение строки. вернет 0 или 1
+def is_buff_name(name):
     return 0 #integer
 
 
 
 # нажать кнопку строительства в окошке билда
 def build_click():
+    return
 
 #игровые переменные:
 #    int HourGlass - 0 или 1 - есть песочные часы или нет

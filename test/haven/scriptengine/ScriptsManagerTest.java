@@ -2,6 +2,8 @@ package haven.scriptengine;
 
 import junit.framework.TestCase;
 
+import java.util.Scanner;
+
 /**
  * Created by IntelliJ IDEA.
  * Player: Vlad.Rassokhin@gmail.com
@@ -64,5 +66,14 @@ public class ScriptsManagerTest extends TestCase {
         System.out.println("\tstarting bot...\n");
         bot.run();
         System.out.println("\n\tbot stopped");
+    }
+
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        String line;
+        while (!(line = in.nextLine()).equals("exit")) {
+            ScriptsManager.exec(line);
+        }
+
     }
 }

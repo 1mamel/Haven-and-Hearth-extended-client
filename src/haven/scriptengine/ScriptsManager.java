@@ -99,6 +99,14 @@ public class ScriptsManager {
         return true;
     }
 
+    public static boolean run(String name) {
+        return runBot(name);
+    }
+
+    public static void kill(Bot bot) {
+        killBot(bot);
+    }
+
     public static void killBot(Bot bot) {
         if (!runningBots.containsKey(bot)) return;
         runningBots.get(bot).interrupt();
