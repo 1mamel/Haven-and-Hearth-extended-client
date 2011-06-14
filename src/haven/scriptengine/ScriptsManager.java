@@ -20,6 +20,7 @@ import org.python.core.PySystemState;
 import org.python.util.PythonInterpreter;
 
 import java.io.IOException;
+import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -46,12 +47,12 @@ public class ScriptsManager {
     private static void relinkInterpreterScope() {
         interpreter.setOut(java.lang.System.out);
         interpreter.setErr(java.lang.System.err);
-        interpreter.eval("import includes");
+        interpreter.exec("import includes");
         interpreter.set("util", Util.class);
         interpreter.set("player", Player.class);
         interpreter.set("config", Config.class);
         interpreter.set("manager", ScriptsManager.class);
-//        PrintStream stream = new PrintStream(CustomConsole.OutStream.getInstance());
+//        PrintStream stream = new PrintStream(CustomConsole.CustomWriter.getInstance());
 //        interpreter.setOut(stream);
 //        interpreter.setErr(stream);
     }
@@ -69,9 +70,13 @@ public class ScriptsManager {
             pySysState.path.append(Py.newString("../scripts"));
             Py.setSystemState(pySysState);
             interpreter = new PythonInterpreter();
-            relinkInterpreterScope();
         } catch (PyException e) {
             logger.error("Jython engine initialization exception", e);
+        }
+        try {
+            relinkInterpreterScope();
+        } catch (PyException e) {
+            logger.error("Cannot relink interpreter scope", e);
         }
     }
 
@@ -99,7 +104,7 @@ public class ScriptsManager {
         runningBots.get(bot).interrupt();
     }
 
-    private static Bot createBot(String name) {
+    static Bot createBot(String name) {
         if (!botsMap.containsKey(name)) return null;
         try {
             return botsMap.get(name).newInstance();
@@ -117,5 +122,13 @@ public class ScriptsManager {
 
     public static boolean containsBot(Class<? extends Bot> clazz) {
         return botsMap.containsValue(clazz);
+    }
+
+    public static void registerOut(Writer w) {
+        interpreter.setOut(w);
+    }
+
+    public static void registerErr(Writer w) {
+        interpreter.setErr(w);
     }
 }

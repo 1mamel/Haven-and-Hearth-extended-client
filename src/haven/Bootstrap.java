@@ -183,7 +183,8 @@ public class Bootstrap implements UI.Receiver {
             }
             Thread.sleep(100);
             while (true) {
-                if (sess.state.length() == 0) {
+//                if (sess.state.length() == 0) {
+                if (sess.state == Session.State.ERROR) {
                     Utils.setpref("username", username);
                     ui.destroy(1);
                     break retry;

@@ -34,6 +34,11 @@ public class CustomConfigProcessor {
         CustomConfig.setHideObjects(false);
     }
 
+    public static boolean loadSettings2(){
+        // TODO create json formatted config loader
+        return false;
+    }
+
     public static boolean loadSettings() {
         setDefaultSettings();
         BufferedReader reader = null;
@@ -54,18 +59,18 @@ public class CustomConfigProcessor {
                     String key = qName.toUpperCase().trim();
 
                     //	Logs the loading sequence on the console
-                    if (CustomConfig.logLoad) {
-                        CustomConsole.log.append("|| ").append(key).append(" \t ");
-                        for (int i = 0; i < atts.getLength(); i++) {
-                            CustomConsole.log.append(" \t ").append(atts.getQName(i)).append(" \t ").append(atts.getValue(i));
-                        }
-                        if (CustomConfig.console != null) {
-                            CustomConsole.out.append(CustomConsole.log.toString());
-                            CustomConsole.log = new StringBuilder();
-                        } else {
-                            CustomConsole.log.append('\n');
-                        }
-                    }
+//                    if (CustomConfig.logLoad) {
+//                        CustomConsole.log.append("|| ").append(key).append(" \t ");
+//                        for (int i = 0; i < atts.getLength(); i++) {
+//                            CustomConsole.log.append(" \t ").append(atts.getQName(i)).append(" \t ").append(atts.getValue(i));
+//                        }
+//                        if (CustomConfig.console != null) {
+//                            CustomConsole.out.append(CustomConsole.log.toString());
+//                            CustomConsole.log = new StringBuilder();
+//                        } else {
+//                            CustomConsole.log.append('\n');
+//                        }
+//                    }
 
                     if (key.equals("SCREENSIZE")) {
                         value = atts.getValue("width") == null ? "1024" : atts.getValue("width");

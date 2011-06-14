@@ -75,7 +75,16 @@ public class Session {
     InetAddress server;
     final Thread rworker, sworker, ticker;
     public int connfailed = 0;
-    public String state = "conn";
+    public State state = State.CONN;
+
+    public static enum State {
+        CONN,
+        FIN,
+        DEAD,
+        CLOSE,
+        ERROR
+    }
+
     int tseq = 0, rseq = 0;
     int ackseq;
     long acktime = -1;
@@ -177,6 +186,7 @@ public class Session {
         }
     }
 
+    @SuppressWarnings({"ObjectAllocationInLoop"})
     private class RWorker extends HackThread {
         boolean alive;
 
@@ -187,7 +197,7 @@ public class Session {
 
         private void gotack(int seq) {
             synchronized (pending) {
-                for (ListIterator<Message> i = pending.listIterator(); i.hasNext();) {
+                for (ListIterator<Message> i = pending.listIterator(); i.hasNext(); ) {
                     Message msg = i.next();
                     if (msg.seq <= seq)
                         i.remove();
@@ -330,6 +340,7 @@ public class Session {
             }
         }
 
+        @SuppressWarnings({"UnusedAssignment"})
         private void handlerel(Message msg) {
             //	New Widget
             Message msgClone;
@@ -340,99 +351,99 @@ public class Session {
             Object[] args = null;
 
             if (CustomConfig.logServerMessages) {
-                msgClone = msg.clone();
-                try {
-                    id = msgClone.uint16();
-                    type = msgClone.string();
-                    c = msgClone.coord();
-                    parent = msgClone.uint16();
-                    args = msgClone.list();
-                } catch (Exception ignored) {
-                }
+//                msgClone = msg.clone();
+//                try {
+//                    id = msgClone.uint16();
+//                    type = msgClone.string();
+//                    c = msgClone.coord();
+//                    parent = msgClone.uint16();
+//                    args = msgClone.list();
+//                } catch (Exception ignored) {
+//                }
             }
             if (msg.type != Message.RMSG_TILES)
-                if (CustomConfig.logServerMessages)
-                    CustomConsole.log("\nMESSAGE TYPE - " + msg.type);
-            if (msg.type == Message.RMSG_NEWWDG) {
-                //	Message Logging
-                if (CustomConfig.logServerMessages) {
-                    CustomConsole.log("\nCREATE\tID: " + id + "\tType: " + type + "\tCoord:" + c + "\tParent: " + parent + "\tArgs: ");
-                    for (int i = 0; i < args.length; i++)
-                        CustomConsole.log("|" + i + "| " + args[i] + '\t');
+//                if (CustomConfig.logServerMessages)
+//                    CustomConsole.log("\nMESSAGE TYPE - " + msg.type);
+                if (msg.type == Message.RMSG_NEWWDG) {
+                    //	Message Logging
+//                if (CustomConfig.logServerMessages) {
+//                    CustomConsole.log("\nCREATE\tID: " + id + "\tType: " + type + "\tCoord:" + c + "\tParent: " + parent + "\tArgs: ");
+//                    for (int i = 0; i < args.length; i++)
+//                        CustomConsole.log("|" + i + "| " + args[i] + '\t');
+//                }
+                    synchronized (uimsgs) {
+                        uimsgs.add(msg);
+                    }
+                } else if (msg.type == Message.RMSG_WDGMSG) {
+                    //	Message Logging
+//                if (CustomConfig.logServerMessages) {
+//                    CustomConsole.log("\nMSG\tID: " + id + ' ' /*+ ui.widgets.get(new Integer(id))*/ + "\tType: " + type + "\tArgs: ");
+//                    if (args != null)
+//                        for (int i = 0; i < args.length; i++)
+//                            CustomConsole.log("|" + i + "| " + args[i] + '\t');
+//                }
+                    synchronized (uimsgs) {
+                        uimsgs.add(msg);
+                    }
+                } else if (msg.type == Message.RMSG_DSTWDG) {
+                    //	Message Logging
+//                if (CustomConfig.logServerMessages)
+//                    CustomConsole.log("DESTROY" + '\t' + id + ' ' /*+ ui.widgets.get(new Integer(id))*/);
+                    synchronized (uimsgs) {
+                        uimsgs.add(msg);
+                    }
+                } else if (msg.type == Message.RMSG_MAPIV) {
+                    glob.map.invalblob(msg);
+                } else if (msg.type == Message.RMSG_GLOBLOB) {
+                    //Message Logging
+//                if (CustomConfig.logServerMessages) {
+//                    CustomConsole.log("\nGLOBLOB\tID: " + id + ' ' /*+ ui.widgets.get(new Integer(id))*/ + "\tType: " + type + "\tArgs: ");
+//                    if (args != null)
+//                        for (int i = 0; i < args.length; i++)
+//                            CustomConsole.log("|" + i + "| " + args[i] + '\t');
+//                }
+                    glob.blob(msg);
+                } else if (msg.type == Message.RMSG_PAGINAE) {
+                    glob.paginae(msg);
+                } else if (msg.type == Message.RMSG_RESID) {
+//                if (CustomConfig.logServerMessages)
+//                    CustomConsole.log("\nRESID\tID: " + id + "\tName: " + type + "\tVer: " + parent);
+                    int resid = msg.uint16();
+                    String resname = msg.string();
+                    int resver = msg.uint16();
+                    synchronized (rescache) {
+                        getres(resid).set(Resource.load(resname, resver, -5));
+                    }
+                } else if (msg.type == Message.RMSG_PARTY) {
+                    glob.party.msg(msg);
+                } else if (msg.type == Message.RMSG_SFX) {
+                    if (!CustomConfig.isSoundOn) return;        //	Sound effects disabled
+                    Indir<Resource> res = getres(msg.uint16());
+                    double vol = ((double) msg.uint16()) / 256.0;
+                    double spd = ((double) msg.uint16()) / 256.0;
+                    Audio.play(res);
+                } else if (msg.type == Message.RMSG_CATTR) {
+                    glob.cattr(msg);
+                } else if (msg.type == Message.RMSG_MUSIC) {
+//                if (CustomConfig.logServerMessages) {
+//                    CustomConsole.log("\nMUSIC\tName: " + type + "\tVer: " + id);
+//                }
+                    String resnm = msg.string();
+                    int resver = msg.uint16();
+                    boolean loop = !msg.eom() && (msg.uint8() != 0);
+                    if (Music.enabled) {
+                        if (resnm.length() == 0)
+                            Music.stop();
+                        else
+                            Music.play(Resource.load(resnm, resver), loop);
+                    }
+                } else if (msg.type == Message.RMSG_TILES) {
+                    glob.map.tilemap(msg);
+                } else if (msg.type == Message.RMSG_BUFF) {
+                    glob.buffmsg(msg);
+                } else {
+                    throw (new MessageException("Unknown rmsg type: " + msg.type, msg));
                 }
-                synchronized (uimsgs) {
-                    uimsgs.add(msg);
-                }
-            } else if (msg.type == Message.RMSG_WDGMSG) {
-                //	Message Logging
-                if (CustomConfig.logServerMessages) {
-                    CustomConsole.log("\nMSG\tID: " + id + ' ' /*+ ui.widgets.get(new Integer(id))*/ + "\tType: " + type + "\tArgs: ");
-                    if (args != null)
-                        for (int i = 0; i < args.length; i++)
-                            CustomConsole.log("|" + i + "| " + args[i] + '\t');
-                }
-                synchronized (uimsgs) {
-                    uimsgs.add(msg);
-                }
-            } else if (msg.type == Message.RMSG_DSTWDG) {
-                //	Message Logging
-                if (CustomConfig.logServerMessages)
-                    CustomConsole.log("DESTROY" + '\t' + id + ' ' /*+ ui.widgets.get(new Integer(id))*/);
-                synchronized (uimsgs) {
-                    uimsgs.add(msg);
-                }
-            } else if (msg.type == Message.RMSG_MAPIV) {
-                glob.map.invalblob(msg);
-            } else if (msg.type == Message.RMSG_GLOBLOB) {
-                //Message Logging
-                if (CustomConfig.logServerMessages) {
-                    CustomConsole.log("\nGLOBLOB\tID: " + id + ' ' /*+ ui.widgets.get(new Integer(id))*/ + "\tType: " + type + "\tArgs: ");
-                    if (args != null)
-                        for (int i = 0; i < args.length; i++)
-                            CustomConsole.log("|" + i + "| " + args[i] + '\t');
-                }
-                glob.blob(msg);
-            } else if (msg.type == Message.RMSG_PAGINAE) {
-                glob.paginae(msg);
-            } else if (msg.type == Message.RMSG_RESID) {
-                if (CustomConfig.logServerMessages)
-                    CustomConsole.log("\nRESID\tID: " + id + "\tName: " + type + "\tVer: " + parent);
-                int resid = msg.uint16();
-                String resname = msg.string();
-                int resver = msg.uint16();
-                synchronized (rescache) {
-                    getres(resid).set(Resource.load(resname, resver, -5));
-                }
-            } else if (msg.type == Message.RMSG_PARTY) {
-                glob.party.msg(msg);
-            } else if (msg.type == Message.RMSG_SFX) {
-                if (!CustomConfig.isSoundOn) return;        //	Sound effects disabled
-                Indir<Resource> res = getres(msg.uint16());
-                double vol = ((double) msg.uint16()) / 256.0;
-                double spd = ((double) msg.uint16()) / 256.0;
-                Audio.play(res);
-            } else if (msg.type == Message.RMSG_CATTR) {
-                glob.cattr(msg);
-            } else if (msg.type == Message.RMSG_MUSIC) {
-                if (CustomConfig.logServerMessages) {
-                    CustomConsole.log("\nMUSIC\tName: " + type + "\tVer: " + id);
-                }
-                String resnm = msg.string();
-                int resver = msg.uint16();
-                boolean loop = !msg.eom() && (msg.uint8() != 0);
-                if (Music.enabled) {
-                    if (resnm.length() == 0)
-                        Music.stop();
-                    else
-                        Music.play(Resource.load(resnm, resver), loop);
-                }
-            } else if (msg.type == Message.RMSG_TILES) {
-                glob.map.tilemap(msg);
-            } else if (msg.type == Message.RMSG_BUFF) {
-                glob.buffmsg(msg);
-            } else {
-                throw (new MessageException("Unknown rmsg type: " + msg.type, msg));
-            }
         }
 
         private void getrel(int seq, Message msg) {
@@ -465,71 +476,78 @@ public class Session {
                     throw (new RuntimeException(e));
                 }
                 while (alive) {
-                    DatagramPacket p = new DatagramPacket(new byte[65536], 65536);
                     try {
-                        sk.receive(p);
-                    } catch (java.nio.channels.ClosedByInterruptException e) {
-                        /* Except apparently Sun's J2SE doesn't throw this when interrupted :P*/
-                        break;
-                    } catch (SocketTimeoutException e) {
-                        continue;
-                    } catch (IOException e) {
-                        throw (new RuntimeException(e));
-                    }
-                    if (!p.getAddress().equals(server))
-                        continue;
-                    Message msg = new Message(p.getData()[0], p.getData(), 1, p.getLength() - 1);
-                    if (msg.type == MSG_SESS) {
-                        if (state.equals("conn")) {
-                            int error = msg.uint8();
-                            synchronized (Session.this) {
-                                if (error == 0) {
-                                    state = "";
-                                } else {
-                                    connfailed = error;
-                                    Session.this.close();
-                                }
-                                Session.this.notifyAll();
-                            }
+                        DatagramPacket p = new DatagramPacket(new byte[65536], 65536);
+                        try {
+                            sk.receive(p);
+                        } catch (java.nio.channels.ClosedByInterruptException e) {
+                            /* Except apparently Sun's J2SE doesn't throw this when interrupted :P*/
+                            break;
+                        } catch (SocketTimeoutException e) {
+                            continue;
+                        } catch (IOException e) {
+                            throw (new RuntimeException(e));
                         }
-                    }
-                    if (!state.equals("conn")) {
-                        if (msg.type == MSG_SESS) {
-                        } else if (msg.type == MSG_REL) {
-                            int seq = msg.uint16();
-                            while (!msg.eom()) {
-                                int type = msg.uint8();
-                                int len;
-                                if ((type & 0x80) != 0) {
-                                    type &= 0x7f;
-                                    len = msg.uint16();
-                                } else {
-                                    len = msg.blob.length - msg.off;
+                        if (!p.getAddress().equals(server))
+                            continue;
+                        Message msg = new Message(p.getData()[0], p.getData(), 1, p.getLength() - 1);
+                        if (state == Session.State.CONN) {
+                            if (msg.type == MSG_SESS) {
+                                int error = msg.uint8();
+                                synchronized (Session.this) {
+                                    if (error == 0) {
+                                        state = Session.State.ERROR;
+                                    } else {
+                                        connfailed = error;
+                                        Session.this.close();
+                                    }
+                                    Session.this.notifyAll();
                                 }
-                                getrel(seq, new Message(type, msg.blob, msg.off, len));
-                                msg.off += len;
-                                seq++;
                             }
-                        } else if (msg.type == MSG_ACK) {
-                            gotack(msg.uint16());
-                        } else if (msg.type == MSG_MAPDATA) {
-                            glob.map.mapdata(msg);
-                        } else if (msg.type == MSG_OBJDATA) {
-                            getobjdata(msg);
-                        } else if (msg.type == MSG_CLOSE) {
-                            synchronized (Session.this) {
-                                state = "fin";
-                                Session.this.notifyAll();
-                            }
-                            Session.this.close();
                         } else {
-                            throw (new MessageException("Unknown message type: " + msg.type, msg));
+                            if (msg.type == MSG_SESS) {
+                            } else if (msg.type == MSG_REL) {
+                                int seq = msg.uint16();
+                                while (!msg.eom()) {
+                                    int type = msg.uint8();
+                                    int len;
+                                    if ((type & 0x80) != 0) {
+                                        type &= 0x7f;
+                                        len = msg.uint16();
+                                    } else {
+                                        len = msg.blob.length - msg.off;
+                                    }
+                                    //noinspection ObjectAllocationInLoop
+                                    getrel(seq, new Message(type, msg.blob, msg.off, len));
+                                    msg.off += len;
+                                    seq++;
+                                }
+                            } else if (msg.type == MSG_ACK) {
+                                gotack(msg.uint16());
+                            } else if (msg.type == MSG_MAPDATA) {
+                                glob.map.mapdata(msg);
+                            } else if (msg.type == MSG_OBJDATA) {
+                                getobjdata(msg);
+                            } else if (msg.type == MSG_CLOSE) {
+                                synchronized (Session.this) {
+                                    state = Session.State.FIN;
+//                                    state = "fin";
+                                    Session.this.notifyAll();
+                                }
+                                Session.this.close();
+                            } else {
+//                                throw (new MessageException("Unknown message type: " + msg.type, msg));
+                                CustomConfig.logger.error("Unknown message type: " + msg.type);
+                            }
                         }
+                    } catch (Exception e) {
+                        CustomConfig.logger.fatal("Error in Session reader", e);
                     }
                 }
             } finally {
                 synchronized (Session.this) {
-                    state = "dead";
+                    state = Session.State.DEAD;
+//                    state = "dead";
                     Session.this.notifyAll();
                 }
             }
@@ -554,7 +572,7 @@ public class Session {
                 while (true) {
 
                     long now = System.currentTimeMillis();
-                    if (state.equals("conn")) {
+                    if (state == Session.State.CONN) {
                         if (now - last > 2000) {
                             if (++retries > 5) {
                                 synchronized (Session.this) {
@@ -629,7 +647,7 @@ public class Session {
                         }
                         synchronized (objacks) {
                             Message msg = null;
-                            for (Iterator<ObjAck> i = objacks.values().iterator(); i.hasNext();) {
+                            for (Iterator<ObjAck> i = objacks.values().iterator(); i.hasNext(); ) {
                                 ObjAck a = i.next();
                                 boolean send = false, del = false;
                                 if (now - a.sent > 200)
@@ -674,9 +692,12 @@ public class Session {
                     long f = System.currentTimeMillis();
                     while (true) {
                         synchronized (Session.this) {
-                            if ((state.equals("conn")) || (state.equals("fin")) || (state.equals("dead")))
+                            if (state == Session.State.CONN || state == Session.State.FIN || state == Session.State.DEAD) {
+//                            if ((state.equals("conn")) || (state.equals("fin")) || (state.equals("dead")))
                                 break;
-                            state = "close";
+                            }
+                            state = Session.State.CLOSE;
+//                            state = "close";
                             long now = System.currentTimeMillis();
                             if (now - f > 500)
                                 break;
@@ -730,7 +751,7 @@ public class Session {
     }
 
     public synchronized boolean alive() {
-        return (!state.equals("dead"));
+        return (state != State.DEAD);
     }
 
     public void queuemsg(Message msg) {

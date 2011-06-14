@@ -28,20 +28,23 @@ package haven;
 
 import java.awt.*;
 import java.awt.font.TextAttribute;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Collection;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Textlog extends Widget {
     static final Tex texpap = Resource.loadtex("gfx/hud/texpap");
     static final Tex schain = Resource.loadtex("gfx/hud/schain");
     static final Tex sflarp = Resource.loadtex("gfx/hud/sflarp");
     static final RichText.Foundry fnd = new RichText.Foundry(TextAttribute.FAMILY, "SansSerif", TextAttribute.SIZE, 9, TextAttribute.FOREGROUND, Color.BLACK);
-    final List<Text> lines;
-    int maxy, cury;
-    final int margin = 3;
-    boolean sdrag = false;
-    public boolean drawbg = true;
-    public Color defcolor = Color.BLACK;
+    private static final int textpapWidth = texpap.sz().x();
+    private static final int textpapHeight = texpap.sz().y();
+    public static final Color DEFAULT_COLOR = Color.BLACK;
+    static final int margin = 3;
+
+    private final boolean background;
+    final Collection<Text> lines = new ConcurrentLinkedQueue<Text>();
+    int maxy = 0, cury = 0;
+    private boolean sdrag = false;
 
     static {
         Widget.addtype("log", new WidgetFactory() {
@@ -52,61 +55,75 @@ public class Textlog extends Widget {
     }
 
     public void draw(GOut g) {
-        Coord dc = new Coord();
-        if (drawbg)
-            for (dc.setY(0); dc.y() < sz.y(); dc.setY(dc.y() + texpap.sz().y())) {
-                for (dc.setX(0); dc.x() < sz.x(); dc.setX(dc.x() + texpap.sz().x())) {
-                    g.image(texpap, dc);
+        int height = sz.y();
+        int width = sz.x();
+
+        // Draw background
+        if (background) {
+            for (int dcY = 0; dcY < height; dcY += textpapHeight) {
+                for (int dcX = 0; dcX < width; dcX += textpapWidth) {
+                    g.image(texpap, dcX, dcY);
                 }
             }
+        }
+
+        // Draw text
         g.chcolor();
         int y = -cury;
-        synchronized (lines) {
-            for (Text line : lines) {
-                int dy1 = sz.y() + y;
-                int dy2 = dy1 + line.sz().y();
-                if ((dy2 > 0) && (dy1 < sz.y()))
-                    g.image(line.tex(), new Coord(margin, dy1));
-                y += line.sz().y();
+        for (Text line : lines) {
+            int lineHeight = line.sz().y();
+            int dy1 = y + y;
+            int dy2 = dy1 + lineHeight;
+            if ((dy2 > 0) && (dy1 < y)) {
+                g.image(line.tex(), margin, dy1);
             }
+            y += lineHeight;
         }
-        if (maxy > sz.y()) {
-            int fx = sz.x() - sflarp.sz().x();
+
+        // Draw scroller
+        if (maxy > y) {
+            int fx = width - sflarp.sz().x();
             int cx = fx + (sflarp.sz().x() / 2) - (schain.sz().x() / 2);
-            for (y = 0; y < sz.y(); y += schain.sz().y() - 1)
-                g.image(schain, new Coord(cx, y));
-            double a = (double) (cury - sz.y()) / (double) (maxy - sz.y());
-            int fy = (int) ((sz.y() - sflarp.sz().y()) * a);
+            for (y = 0; y < y; y += schain.sz().y() - 1) {
+                g.image(schain, cx, y);
+            }
+            double a = (double) (cury - y) / (double) (maxy - y);
+            int fy = (int) ((y - sflarp.sz().y()) * a);
             g.image(sflarp, new Coord(fx, fy));
         }
     }
 
     public Textlog(Coord c, Coord sz, Widget parent) {
         super(c, sz, parent);
-        lines = new LinkedList<Text>();
-        maxy = cury = 0;
+        this.background = true;
+    }
+
+    public Textlog(Coord c, Coord sz, Widget parent, boolean background) {
+        super(c, sz, parent);
+        this.background = background;
     }
 
     public void append(String line, Color col) {
-        Text rl;
-        if (col == null)
-            col = defcolor;
+        if (col == null) {
+            col = DEFAULT_COLOR;
+        }
 
         line = RichText.Parser.quote(line);
         if (Config.use_smileys) {
             line = Config.mksmiley(line);
         }
-        rl = fnd.render(line, sz.x() - (margin * 2) - sflarp.sz().x(), TextAttribute.FOREGROUND, col, TextAttribute.SIZE, 12);
-        synchronized (lines) {
-            lines.add(rl);
-        }
+        int lineWidth = sz.x() - ((margin * 2) + sflarp.sz().x());
+
+        Text renderedLine = fnd.render(line, lineWidth, TextAttribute.FOREGROUND, col, TextAttribute.SIZE, 12);
+        lines.add(renderedLine);
+
         if (cury == maxy)
-            cury += rl.sz().y();
-        maxy += rl.sz().y();
+            cury += renderedLine.sz().y();
+        maxy += renderedLine.sz().y();
     }
 
     public void append(String line) {
-        append(line, null);
+        append(line, DEFAULT_COLOR);
     }
 
     public void uimsg(String msg, Object... args) {
@@ -117,10 +134,12 @@ public class Textlog extends Widget {
 
     public boolean mousewheel(Coord c, int amount) {
         cury += amount * 20;
-        if (cury < sz.y())
+        if (cury < sz.y()) {
             cury = sz.y();
-        if (cury > maxy)
+        }
+        if (cury > maxy) {
             cury = maxy;
+        }
         return (true);
     }
 

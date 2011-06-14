@@ -28,9 +28,9 @@ public class CustomConfig {
         logger = Logger.getLogger("Main log");
         try {
             logger.addAppender(new FileAppender(new SimpleLayout(), "main.log"));
-        } catch (IOException e) {
-            logger.addAppender(new ConsoleAppender(new SimpleLayout()));
+        } catch (IOException ignored) {
         }
+        logger.addAppender(new ConsoleAppender(new SimpleLayout()));
         logger.setLevel(Level.DEBUG);
     }
 
@@ -127,7 +127,7 @@ public class CustomConfig {
     public static String ircDefNick = "";
     public static String ircAltNick = "";
     public static CharData activeCharacter;
-    private static AtomicInteger wdgtID = new AtomicInteger(-10); // for Userspace widgets
+    private static AtomicInteger customWidgetIdGenerator = new AtomicInteger(-10); // for Userspace widgets
     public static boolean isMusicOn = true;
     public static boolean isSoundOn = true;
     public static boolean isIRCOn = true;
@@ -161,7 +161,7 @@ public class CustomConfig {
     }
 
     public static int getNextCustomWidgetId() {
-        return wdgtID.decrementAndGet();
+        return customWidgetIdGenerator.decrementAndGet();
     }
 
     private static Coord windowSize = new Coord(800, 600);

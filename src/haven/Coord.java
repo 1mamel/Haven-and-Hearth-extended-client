@@ -34,17 +34,7 @@ import static java.lang.Math.PI;
 
 public class Coord implements Comparable<Coord>, java.io.Serializable, Cloneable {
     public static final Pattern parsePattern = Pattern.compile("\\((-?\\d+), (-?\\d+)\\)");
-    public static final Coord z = new Coord(0, 0) {
-        @Override
-        public void setX(int x) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public void setY(int y) {
-            throw new UnsupportedOperationException();
-        }
-    };
+    public static final Coord z = new Coord.U(0, 0);
 
     private int x;
     private int y;

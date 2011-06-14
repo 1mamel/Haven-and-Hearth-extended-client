@@ -1,10 +1,9 @@
 package haven.scriptengine.providers;
 
+import haven.Coord;
 import haven.CustomConfig;
 import haven.CustomConfigProcessor;
 import haven.CustomConsole;
-
-import java.awt.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -19,81 +18,38 @@ public class Config {
         CustomConfig.hasNightVision = nightvision;
     }
 
-//    public void setNightvision(String arg0) {
-//        arg0 = arg0.toUpperCase();
-//        if (arg0.equals("ON") || arg0.equals("TRUE"))
-//            CustomConfig.hasNightVision = true;
-//        else if (arg0.equals("OFF") || arg0.equals("FALSE"))
-//            CustomConfig.hasNightVision = false;
-//        else throw new RuntimeException("setNightvision(ON|OFF) " + arg0);
-//    }
-
     public static void setIrc(boolean irc) {
         CustomConfig.isIRCOn = irc;
     }
 
-//    public void setIrc(String arg0) {
-//        arg0 = arg0.toUpperCase();
-//        if (arg0.equals("ON") || arg0.equals("TRUE"))
-//            CustomConfig.isIRCOn = true;
-//        else if (arg0.equals("OFF") || arg0.equals("FALSE"))
-//            CustomConfig.isIRCOn = false;
-//        else throw new RuntimeException("setIrc(ON|OFF)");
-//    }
-
-    public static void setDebugMsgs(String arg0) {
-        arg0 = arg0.toUpperCase();
-        if (arg0.equals("ON") || arg0.equals("TRUE"))
-            CustomConfig.setDebugLogging(true);
-        else if (arg0.equals("OFF") || arg0.equals("FALSE"))
-            CustomConfig.setDebugLogging(false);
-        else throw new RuntimeException("setDebugMsgs(ON|OFF)");
+    public static void setDebugLogging(boolean dm) {
+        CustomConfig.setDebugLogging(dm);
     }
 
     public static void setScreenSize(int width, int height) {
-        try {
-            CustomConfig.setWindowSize(Math.max(width, 800), Math.max(height, 600));
-            CustomConfigProcessor.saveSettings();
-            CustomConsole.append("Client must be restarted for new settings to take effect.", Color.RED.darker());
-        } catch (NumberFormatException e) {
-            throw new RuntimeException("setScreenSize(int width, int height);");
-        }
+        CustomConfig.setWindowSize(Math.max(width, 800), Math.max(height, 600));
+        CustomConfigProcessor.saveSettings();
+        CustomConsole.logger.warn("Client must be restarted for new settings to take effect.");
     }
 
-    public static void setSound(int sound) {
-        setSound(String.valueOf(sound));
+    public static void setSoundV(int vol) {
+        if (vol < 0) vol = 0;
+        if (vol > 100) vol = 100;
+        CustomConfig.sfxVol = vol;
     }
 
-    public static void setSound(String arg0) {
-        arg0 = arg0.toUpperCase();
-        int vol;
-        try {
-            if (arg0.equals("ON") || arg0.equals("TRUE")) {
-                CustomConfig.isSoundOn = true;
-            } else if (arg0.equals("OFF") || arg0.equals("FALSE")) {
-                CustomConfig.isSoundOn = false;
-            } else if ((vol = Integer.parseInt(arg0)) >= 0 && vol <= 100) {
-                CustomConfig.sfxVol = vol;
-            } else throw new RuntimeException("setSound([ON|OFF]|[0-100])");
-        } catch (NumberFormatException e) {
-            throw new RuntimeException("setSound([ON|OFF]|[0-100])");
-        }
+    public static void setSound(boolean state) {
+        CustomConfig.isSoundOn = state;
     }
 
-    public static void setMusic(String arg0) {
-        arg0 = arg0.toUpperCase();
-        int vol;
-        try {
-            if (arg0.equals("ON") || arg0.equals("TRUE")) {
-                CustomConfig.isMusicOn = true;
-            } else if (arg0.equals("OFF") || arg0.equals("FALSE")) {
-                CustomConfig.isMusicOn = false;
-            } else if ((vol = Integer.parseInt(arg0)) >= 0 && vol <= 100) {
-                CustomConfig.musicVol = vol;
-            } else throw new RuntimeException("setMusic([ON|OFF]|[0-100])");
-        } catch (NumberFormatException e) {
-            throw new RuntimeException("setMusic([ON|OFF]|[0-100])");
-        }
+    public static void setMusicV(int vol) {
+        if (vol < 0) vol = 0;
+        if (vol > 100) vol = 100;
+        CustomConfig.musicVol = vol;
+    }
+
+    public static void setMusic(boolean state) {
+        CustomConfig.isMusicOn = state;
     }
 
     public static void save() {
@@ -113,39 +69,47 @@ public class Config {
         return CustomConfig.isIRCOn;
     }
 
-    public static int getScreenWidth() {
+    public static Coord getWindowSize() {
+        return CustomConfig.getWindowSize();
+    }
+
+    public static int getWindowWidth() {
         return CustomConfig.getWindowWidth();
     }
 
-    public static int getScreenHeight() {
+    public static int getWindowHeight() {
         return CustomConfig.getWindowHeight();
     }
 
-    public static int getScreenCenterX() {
+    public static Coord getWindowCenter() {
+        return CustomConfig.getWindowCenter();
+    }
+
+    public static int getWindowCenterX() {
         return CustomConfig.getWindowCenter().x();
     }
 
-    public static int getScreenXenterY() {
+    public static int getWindowCenterY() {
         return CustomConfig.getWindowCenter().y();
     }
 
-    public static boolean isSoundOn() {
+    public static boolean getSound() {
         return CustomConfig.isSoundOn;
     }
 
-    public static int getSoundVolume() {
+    public static int getSoundV() {
         return CustomConfig.sfxVol;
     }
 
-    public static boolean isMusicOn() {
+    public static boolean getMusic() {
         return CustomConfig.isMusicOn;
     }
 
-    public static int getMusicVolume() {
+    public static int getMusicV() {
         return CustomConfig.musicVol;
     }
 
-    public static boolean isDebugLogging() {
+    public static boolean getDebugLogging() {
         return CustomConfig.isDebugLogging();
     }
 

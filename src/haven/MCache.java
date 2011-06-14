@@ -35,15 +35,15 @@ import java.util.*;
 import java.util.zip.Inflater;
 
 public class MCache {
-    Tileset[] sets = null;
+    final Tileset[] sets = new Tileset[256];
     Grid last = null;
     final java.util.Map<Coord, Grid> req = new TreeMap<Coord, Grid>();
     final java.util.Map<Coord, Grid> grids = new TreeMap<Coord, Grid>();
     final Session sess;
     final Set<Overlay> ols = new HashSet<Overlay>();
-    public static final Coord tilesz = new Coord(11, 11);
-    public static final Coord cmaps = new Coord(100, 100);
-    final Random gen;
+    public static final Coord tilesz = new Coord.U(11, 11);
+    public static final Coord cmaps = new Coord.U(100, 100);
+    final Random gen = new Random();
     final java.util.Map<Integer, Defrag> fragbufs = new TreeMap<Integer, Defrag>();
     public static final Map<Integer, Color> colors = new TreeMap<Integer, Color>();
 
@@ -165,16 +165,24 @@ public class MCache {
 
         public void makeflavor() {
             fo.clear();
-            Coord c = new Coord(0, 0);
             Coord tc = gc.mul(cmaps);
-            for (c.setY(0); c.y() < cmaps.x(); c.setY(c.y() + 1)) {
-                for (c.setX(0); c.x() < cmaps.y(); c.setX(c.x() + 1)) {
-                    Tileset set = sets[tiles[c.x()][c.y()]];
-                    if (set.getFlavobjs().size() > 0) {
-                        Random rnd = mkrandoom(c);
+            for (int cy = 0; cy < cmaps.x(); ++cy) {
+                for (int cx = 0; cx < cmaps.y(); ++cx) {
+                    Tileset set = sets[tiles[cx][cy]];
+                    if (set == null) {
+//                        System.err.println("set[tiles[x][y]] are null with x,y=" + cx + ',' + cy);
+                        continue;
+                    }
+                    WeightList<Resource> flavobjs = set.getFlavobjs();
+                    if (flavobjs == null) {
+                        System.err.println("Nulled flavobjs");
+                        continue;
+                    }
+                    if (!flavobjs.isEmpty()) {
+                        Random rnd = mkrandoom(cx, cy);
                         if (rnd.nextInt(set.getFlavprob()) == 0) {
-                            Resource r = set.getFlavobjs().pick(rnd);
-                            Gob g = new Gob(sess.glob, c.add(tc).mul(tilesz), -1, 0);
+                            Resource r = flavobjs.pick(rnd);
+                            Gob g = new Gob(sess.glob, tc.add(cx, cy).mul(tilesz), -1, 0);
                             g.setattr(new ResDrawable(g, r));
                             fo.add(g);
                         }
@@ -191,6 +199,10 @@ public class MCache {
             return (MCache.this.randoom(c.add(gc.mul(cmaps)), r));
         }
 
+        public Random mkrandoom(int x, int y) {
+            return (MCache.mkrandoom((gc.mul(cmaps)).add(x, y)));
+        }
+
         public Random mkrandoom(Coord c) {
             return (MCache.mkrandoom(c.add(gc.mul(cmaps))));
         }
@@ -199,13 +211,13 @@ public class MCache {
     private Tileset loadset(String name, int ver) {
         Resource res = Resource.load(name, ver);
         res.loadwait();
-        return (res.layer(Resource.tileset));
+        Tileset layer = res.layer(Resource.tileset);
+        System.err.println("loadset returning "+ layer);
+        return layer;
     }
 
     public MCache(Session sess) {
         this.sess = sess;
-        sets = new Tileset[256];
-        gen = new Random();
     }
 
     private static void initrandoom(Random r, Coord c) {
@@ -329,7 +341,9 @@ public class MCache {
         Coord gtc = tc.mod(cmaps);
         if (g.gcache[gtc.x()][gtc.y()] == null) {
             Tileset ts = sets[g.gettile(gtc)];
-            g.gcache[gtc.x()][gtc.y()] = ts.getGround().pick(randoom(tc));
+            if (ts != null) {
+                g.gcache[gtc.x()][gtc.y()] = ts.getGround().pick(randoom(tc));
+            }
         }
         return (g.gcache[gtc.x()][gtc.y()]);
     }

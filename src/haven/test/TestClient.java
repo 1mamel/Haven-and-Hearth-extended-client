@@ -66,7 +66,8 @@ public class TestClient implements Runnable {
     public void connect() throws InterruptedException {
         sess = new Session(addr, user, cookie);
         synchronized (sess) {
-            while (sess.state.length() != 0) {
+            while (sess.state != Session.State.ERROR) {
+//            while (sess.state.length() != 0) {
                 if (sess.connfailed != 0)
                     throw (new RuntimeException("Connection failure for " + user + " (" + sess.connfailed + ')'));
                 sess.wait();

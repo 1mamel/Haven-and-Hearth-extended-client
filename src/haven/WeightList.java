@@ -64,4 +64,8 @@ public class WeightList<T> implements java.io.Serializable {
     public int size() {
         return (c.size());
     }
+
+    public boolean isEmpty() {
+        return c.isEmpty();
+    }
 }
