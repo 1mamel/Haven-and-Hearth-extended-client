@@ -371,40 +371,45 @@ public class HavenPanel extends GLCanvas implements Runnable {
             fthen = System.currentTimeMillis();
             //noinspection InfiniteLoopStatement
             while (true) {
-                then = System.currentTimeMillis();
-                if (Config.profile)
-                    curf = prof.new Frame();
-                synchronized (ui) {
-                    if (ui.sess != null)
-                        ui.sess.glob.oc.ctick();
-                    dispatch();
-                }
-                if (curf != null)
-                    curf.tick("dsp");
-                uglyjoglhack();
-                if (curf != null)
-                    curf.tick("aux");
-                frames++;
-                now = System.currentTimeMillis();
-                if (now - then < fd) {
-                    synchronized (this) {
-                        wait(fd - (now - then));
+                try {
+                    then = System.currentTimeMillis();
+                    if (Config.profile)
+                        curf = prof.new Frame();
+                    synchronized (ui) {
+                        if (ui.sess != null)
+                            ui.sess.glob.oc.ctick();
+                        dispatch();
                     }
+                    if (curf != null)
+                        curf.tick("dsp");
+                    uglyjoglhack();
+                    if (curf != null)
+                        curf.tick("aux");
+                    frames++;
+                    now = System.currentTimeMillis();
+                    if (now - then < fd) {
+                        synchronized (this) {
+                            wait(fd - (now - then));
+                        }
+                    }
+                    if (curf != null)
+                        curf.tick("wait");
+                    if (now - fthen > 1000) {
+                        fps = frames;
+                        frames = 0;
+                        dth = texhit;
+                        dtm = texmiss;
+                        texhit = texmiss = 0;
+                        fthen = now;
+                    }
+                    if (curf != null)
+                        curf.fin();
+                    if (Thread.interrupted())
+                        throw (new InterruptedException());
+                } catch (NullPointerException e) {
+                    System.err.println("NPE in main cycle");
+                    e.printStackTrace(System.err);
                 }
-                if (curf != null)
-                    curf.tick("wait");
-                if (now - fthen > 1000) {
-                    fps = frames;
-                    frames = 0;
-                    dth = texhit;
-                    dtm = texmiss;
-                    texhit = texmiss = 0;
-                    fthen = now;
-                }
-                if (curf != null)
-                    curf.fin();
-                if (Thread.interrupted())
-                    throw (new InterruptedException());
             }
         } catch (InterruptedException ignored) {
         }

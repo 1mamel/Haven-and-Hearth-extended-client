@@ -50,6 +50,9 @@ public class Glob {
         this.sess = sess;
         map = new MCache(sess);
         party = new Party(this);
+
+        CustomConfig.glob = this;
+
         //adding extended commands
         paginae.add(Resource.load("paginae/act/add"));
         paginae.add(Resource.load("paginae/add/rad"));

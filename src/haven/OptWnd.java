@@ -66,8 +66,6 @@ public class OptWnd extends Window {
     final TextEntry defNick;
     final TextEntry altNick;
     final CheckBox ircToggle;
-    Button okBtn;
-    Button cancelBtn;
 
     @SuppressWarnings({"UnusedAssignment"})
     public OptWnd(Coord c, Widget parent) {
@@ -87,12 +85,28 @@ public class OptWnd extends Window {
 
             new Button(new Coord(10, 40), 125, tab, "Quit") {
                 public void click() {
-                    HackThread.tg().interrupt();
+                    new MessageBox(MessageBox.DC, MessageBox.DS, ui.root, "Confirmation", "Are you sure want to exit?", MessageBox.BUTTONS_YESNO, new Callback<Integer>() {
+                        @Override
+                        public void result(Integer result) {
+                            if (MessageBox.BUTTON_YES == result) {
+                                HackThread.tg().interrupt();
+                            }
+                        }
+                    });
+//                    HackThread.tg().interrupt();
                 }
             };
             new Button(new Coord(10, 70), 125, tab, "Log out") {
                 public void click() {
-                    ui.sess.close();
+                    new MessageBox(MessageBox.DC, MessageBox.DS, ui.root, "Confirmation", "Are you sure want to log out?", MessageBox.BUTTON_YES | MessageBox.BUTTON_NO, new Callback<Integer>() {
+                        @Override
+                        public void result(Integer result) {
+                            if (MessageBox.BUTTON_YES == result) {
+                                ui.sess.close();
+                            }
+                        }
+                    });
+//                    ui.sess.close();
                 }
             };
             new Button(new Coord(10, 100), 125, tab, "Toggle fullscreen") {

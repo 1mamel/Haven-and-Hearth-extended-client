@@ -81,6 +81,7 @@ public class Inventory extends Widget implements DTarget {
         isz = sz;
         if (parent.canhastrash) {
             trashButton = new IButton(Coord.z, this, trashButtonImages);
+            trashButton.visible = true;
         } else {
             trashButton = null;
         }
@@ -186,7 +187,7 @@ public class Inventory extends Widget implements DTarget {
      */
     private void recalculateSize() {
         sz = invSqSizeSubOne.mul(isz).add(1, 1);
-        if (trashButton.visible) {
+        if (trashButton != null && trashButton.visible) {
             trashButton.c = sz.sub(0, invSqSize.y);
             hsz = sz.add(16, 0);
             if (isSmall()) {

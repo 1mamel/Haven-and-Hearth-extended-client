@@ -23,6 +23,7 @@ public class CustomConfig {
     private static boolean hide = false;
 
     public static Logger logger;
+    public static Glob glob = null;
 
     static {
         logger = Logger.getLogger("Main log");
@@ -118,6 +119,7 @@ public class CustomConfig {
         }
     }
 
+    public static int playerId;
     public static Coord invCoord = Coord.z;
     public static int sfxVol = 100;
     public static int musicVol = 100;

@@ -98,8 +98,12 @@ public class MapView extends Widget implements DTarget, Console.Directory {
                 Coord sz = CustomConfig.getWindowSize().clone(); //(Coord)args[0];
                 Coord mc = (Coord) args[1];
                 int pgob = -1;
-                if (args.length > 2)
+                if (args.length > 2) {
                     pgob = (Integer) args[2];
+                } else {
+                    System.err.println("Creating MapView without specified player object");
+                }
+                CustomConfig.playerId = pgob;
                 return (new MapView(c, sz, parent, mc, pgob));
             }
         });

@@ -29,9 +29,16 @@ public class ScriptsManager {
     static PythonInterpreter interpreter;
     static Logger logger;
 
-    public static void exec(String line) {
+    public static void exec(final String line) {
         try {
-            interpreter.exec(line);
+            Thread thread = new Thread(tg, new Runnable() {
+                @Override
+                public void run() {
+                    interpreter.exec(line);
+                }
+            });
+            thread.setDaemon(true);
+            thread.start();
         } catch (PyException e) {
             logger.error("Executing line\"" + line + "\" failed", e);
         }

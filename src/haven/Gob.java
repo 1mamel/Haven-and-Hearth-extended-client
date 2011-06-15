@@ -84,7 +84,7 @@ public class Gob implements Sprite.Owner {
             else
                 a.ctick(dt);
         }
-        for (Iterator<Overlay> i = ols.iterator(); i.hasNext();) {
+        for (Iterator<Overlay> i = ols.iterator(); i.hasNext(); ) {
             Overlay ol = i.next();
             if (ol.spr == null) {
                 if (((getattr(Drawable.class) == null) || (getneg() != null)) && (ol.res.get() != null))
@@ -230,5 +230,20 @@ public class Gob implements Sprite.Owner {
             return (r.layer(Resource.negc));
         }
         return (null);
+    }
+
+
+    /**
+     * Returns resource name.
+     *
+     * @return resource name
+     */
+    public String getResName() {
+        Drawable d = getattr(Drawable.class);
+        ResDrawable dw = getattr(ResDrawable.class);
+        if (d != null && dw != null && dw.res.get() != null) {
+            return dw.res.get().name;
+        }
+        return "";
     }
 }

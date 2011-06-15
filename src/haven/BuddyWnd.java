@@ -356,6 +356,7 @@ public class BuddyWnd extends Window {
 
     public BuddyWnd(Coord c, Widget parent) {
         super(c, new Coord(400, 370), parent, "Kin");
+        instance = this;
         bl = new BuddyList(new Coord(10, 5), new Coord(180, 280), this) {
             public void changed(Buddy b) {
                 if (b != null)

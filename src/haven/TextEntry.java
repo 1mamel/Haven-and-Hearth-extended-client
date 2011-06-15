@@ -71,6 +71,10 @@ public class TextEntry extends Widget {
         }
     }
 
+    public String getText() {
+        return buf.line;
+    }
+
     public void draw(GOut g) {
         super.draw(g);
         String dtext;

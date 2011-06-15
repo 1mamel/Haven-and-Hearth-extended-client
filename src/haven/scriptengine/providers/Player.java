@@ -1,7 +1,6 @@
 package haven.scriptengine.providers;
 
-import haven.IMeter;
-import haven.Speedget;
+import haven.*;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -15,8 +14,14 @@ import java.util.regex.Pattern;
 @SuppressWarnings({"UnusedDeclaration"})
 public class Player {
 
-    public static int getEnergy() {
-        return energy;
+    private static Coord position;
+
+    public static int getId() {
+        return CustomConfig.playerId;
+    }
+
+    public static int getStamina() {
+        return stamina;
     }
 
     public static int getAuthority() {
@@ -35,8 +40,8 @@ public class Player {
         return hpSoft;
     }
 
-    public static int getHPCurrent() {
-        return hpNow;
+    public static int getHP() {
+        return hp;
     }
 
     public static int getHappy() {
@@ -128,14 +133,14 @@ public class Player {
     private static void updateEnergy(String tooltip) {
         Matcher makeMatch = intsOnly.matcher(tooltip);
         makeMatch.find();
-        energy = Integer.parseInt(makeMatch.group());
+        stamina = Integer.parseInt(makeMatch.group());
     }
 
 
     public static void updateHp(String tooltip) {
         Matcher makeMatch = intsOnly.matcher(tooltip);
         makeMatch.find();
-        hpNow = Integer.parseInt(makeMatch.group());
+        hp = Integer.parseInt(makeMatch.group());
         makeMatch.find();
         hpSoft = Integer.parseInt(makeMatch.group());
         makeMatch.find();
@@ -148,8 +153,9 @@ public class Player {
     static private IMeter hungryMeter;
     static private IMeter authorityMeter;
 
-    static private int energy = -1;
-    static private int hpNow = -1;
+    static private int id = -1;
+    static private int stamina = -1;
+    static private int hp = -1;
     static private int hpSoft = -1;
     static private int hpHard = -1;
     static private int hungry = -1;
@@ -182,5 +188,14 @@ public class Player {
         speedCurrent = cur;
         speedMax = max;
         speedGet = sg;
+    }
+
+    public static Coord getPosition() {
+        Gob pl;
+        if ( ((pl = CustomConfig.glob.oc.getgob(getId())) != null) ) {
+            return pl.getc();
+        } else {
+            return new Coord(0, 0);
+        }
     }
 }

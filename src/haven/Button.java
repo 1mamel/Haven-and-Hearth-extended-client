@@ -102,7 +102,20 @@ public class Button extends Widget {
      * @param text   text to show
      */
     public Button(Coord c, Integer width, Widget parent, String text) {
-        this(c, width, parent, tf.render(text));
+        this(c, width, parent, text, false);
+    }
+
+    /**
+     * Creates text-based button.
+     *
+     * @param c      relative coordinates in parent
+     * @param width  width
+     * @param parent parent widget
+     * @param text   text to show
+     * @param wrapped is text must be wrapped
+     */
+    public Button(Coord c, Integer width, Widget parent, String text, boolean wrapped) {
+        this(c, width, parent, wrapped ? tf.renderwrap(text, width - 10) : tf.render(text));
     }
 
     /**

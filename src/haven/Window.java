@@ -57,7 +57,7 @@ public class Window extends Widget implements DTarget {
     protected final IButton foldButton;
 
     public boolean folded;
-    ArrayList<Widget> wfolded;
+    private final ArrayList<Widget> wfolded = new ArrayList<Widget>();
     protected Coord ssz;
 
     final Text cap;
@@ -84,8 +84,16 @@ public class Window extends Widget implements DTarget {
     }
 
     protected void placecbtn() {
-        closeButton.c = new Coord(wsz.x - 3 - closeButtonImages[0].getWidth(), 3).sub(mrgn).sub(wbox.tloff());
-        foldButton.c = new Coord(closeButton.c.x - 1 - foldButtonImages[0].getWidth(), closeButton.c.y);
+        if (closeButton != null) {
+            closeButton.c = new Coord(wsz.x - 3 - closeButtonImages[0].getWidth(), 3).sub(mrgn).sub(wbox.tloff());
+            if (foldButton != null) {
+                foldButton.c = new Coord(closeButton.c.x - 1 - foldButtonImages[0].getWidth(), closeButton.c.y);
+            }
+        } else {
+            if (foldButton != null) {
+                foldButton.c = new Coord(wsz.x - 3 - foldButtonImages[0].getWidth(), 3).sub(mrgn).sub(wbox.tloff());
+            }
+        }
     }
 
     @SuppressWarnings({"WeakerAccess", "WeakerAccess"})
@@ -105,11 +113,11 @@ public class Window extends Widget implements DTarget {
         asz = new Coord(wsz.x - wbox.bl.sz().x - wbox.br.sz().x - mrgn.x, wsz.y - wbox.bt.sz().y - wbox.bb.sz().y - mrgn.y);
         if (closable) {
             closeButton = new IButton(Coord.z, this, closeButtonImages);
-            placecbtn();
         } else {
             closeButton = null;
         }
         foldButton = new IButton(Coord.z, this, foldButtonImages);
+        placecbtn();
         setfocustab(true);
         parent.setfocus(this);
     }
@@ -123,7 +131,6 @@ public class Window extends Widget implements DTarget {
         foldButton = new IButton(Coord.z, this, foldButtonImages);
         foldButton.hide();
         folded = false;
-        wfolded = new ArrayList<Widget>();
         if (cap != null) {
             this.cap = cf.render(cap, cc);
         } else {
@@ -157,7 +164,7 @@ public class Window extends Widget implements DTarget {
 
     public void draw(GOut og) {
         GOut g = og.reclip(tlo, wsz);
-        Coord bgc = new Coord(3,3);
+        Coord bgc = new Coord(3, 3);
         for (bgc.setY(3); bgc.y < wsz.y - 6; bgc.setY(bgc.y + bg.sz().y)) {
             for (bgc.setX(3); bgc.x < wsz.x - 6; bgc.setX(bgc.x + bg.sz().x))
                 g.image(bg, bgc, coord3x3, wsz.add(-6, -6));
