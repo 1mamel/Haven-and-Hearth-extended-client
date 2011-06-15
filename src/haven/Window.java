@@ -31,6 +31,10 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class Window extends Widget implements DTarget {
+    public static final int FLAG_NOFLAG = 0x0;
+    public static final int FLAG_CLOSABLE = 0x1;
+    public static final int FLAG_FOLDABLE = 0x2;
+
     // Resources
     private static final Tex bg = Resource.loadtex("gfx/hud/bgtex");
     private static final Tex cl = Resource.loadtex("gfx/hud/cleft");
@@ -68,6 +72,7 @@ public class Window extends Widget implements DTarget {
     protected Coord wsz;
     protected Coord doff;
     private boolean dt = false;
+    private int flags;
 
     static {
         Widget.addtype("wnd", new WidgetFactory() {
@@ -96,27 +101,41 @@ public class Window extends Widget implements DTarget {
         }
     }
 
-    @SuppressWarnings({"WeakerAccess", "WeakerAccess"})
-    public Window(Coord c, Coord sz, Widget parent, String cap, Coord tlo, Coord rbo, boolean closable) {
+    /**
+     * @param c
+     * @param size
+     * @param parent
+     * @param capture
+     * @param tlo     top left offset
+     * @param rbo     right bottom offset
+     * @param flags   Window flags
+     */
+    public Window(Coord c, Coord size, Widget parent, String capture, Coord tlo, Coord rbo, int flags) {
         super(c, new Coord(0, 0), parent);
         this.tlo = tlo;
         this.rbo = rbo;
-        if (cap != null) {
-            this.cap = cf.render(cap, cc);
+        if (capture != null) {
+            this.cap = cf.render(capture, cc);
         } else {
             this.cap = null;
         }
-        sz = sz.add(tlo).add(rbo).add(wbox.bisz()).add(mrgn.mul(2));
-        this.sz = sz;
+        size = size.add(tlo).add(rbo).add(wbox.bisz()).add(mrgn.mul(2));
+        this.sz = size;
 //        atl = new Coord(wbox.bl.sz().x, wbox.bt.sz().y).add(tlo);
-        wsz = sz.sub(tlo).sub(rbo);
+        wsz = size.sub(tlo).sub(rbo);
         asz = new Coord(wsz.x - wbox.bl.sz().x - wbox.br.sz().x - mrgn.x, wsz.y - wbox.bt.sz().y - wbox.bb.sz().y - mrgn.y);
-        if (closable) {
+
+        this.flags = flags;
+        if ((flags & FLAG_CLOSABLE) != 0) {
             closeButton = new IButton(Coord.z, this, closeButtonImages);
         } else {
             closeButton = null;
         }
-        foldButton = new IButton(Coord.z, this, foldButtonImages);
+        if ((flags & FLAG_FOLDABLE) != 0) {
+            foldButton = new IButton(Coord.z, this, foldButtonImages);
+        } else {
+            foldButton = null;
+        }
         placecbtn();
         setfocustab(true);
         parent.setfocus(this);
@@ -153,8 +172,8 @@ public class Window extends Widget implements DTarget {
         this(c, sz, parent, cap, new Coord(0, 0), new Coord(0, 0));
     }
 
-    public Window(Coord c, Coord sz, Widget parent, String cap, boolean closable) {
-        this(c, sz, parent, cap, new Coord(0, 0), new Coord(0, 0), closable);
+    public Window(Coord c, Coord sz, Widget parent, String cap, boolean closable, boolean foldable) {
+        this(c, sz, parent, cap, new Coord(0, 0), new Coord(0, 0), (closable ? FLAG_CLOSABLE : FLAG_NOFLAG) | (foldable ? FLAG_FOLDABLE : FLAG_NOFLAG));
     }
 
     public void cdraw(GOut g) {
@@ -301,6 +320,14 @@ public class Window extends Widget implements DTarget {
         } else {
             super.wdgmsg(sender, msg, args);
         }
+    }
+
+    protected void fold() {
+        folded = true;
+    }
+
+    protected void unfold() {
+        folded = false;
     }
 
     public boolean type(char key, java.awt.event.KeyEvent ev) {

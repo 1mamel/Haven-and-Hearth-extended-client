@@ -3,14 +3,14 @@ package wikilib;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class WikiLib extends Thread {
 
-    private List<Request> requests;
+    private final Queue<Request> requests;
     private Pattern removeHtml = Pattern.compile("\\<.*?\\>");
     private Pattern findKeywords = Pattern.compile("\\[\\[([\\sa-zA-Z0-9]+)(\\|\\s*([\\sa-zA-Z0-9]+))?\\]\\]");
     private Pattern findSpaces = Pattern.compile("\\s");
@@ -18,7 +18,7 @@ public class WikiLib extends Thread {
 
     public WikiLib() {
         super("WikiLib Thread");
-        requests = new ArrayList<Request>();
+        requests = new ConcurrentLinkedQueue<Request>();
         start();
     }
 
@@ -26,33 +26,21 @@ public class WikiLib extends Thread {
     @Override
     public void run() {
         while (true) {
-            boolean b;
-            synchronized (requests) {
-                b = !requests.isEmpty();
-                ;
-            }
             Request req;
-            while (b) {
-                synchronized (requests) {
-                    req = requests.remove(0);
-                }
+            while ((req = requests.peek()) != null) {
                 searchPage(req);
-                synchronized (requests) {
-                    b = !requests.isEmpty();
-                }
             }
 
             try {
                 sleep(250);
             } catch (InterruptedException e) {
+                return;
             }
         }
     }
 
     public void search(Request req) {
-        synchronized (requests) {
-            requests.add(req);
-        }
+        requests.add(req);
     }
 
     private void searchPage(Request req) {

@@ -36,7 +36,7 @@ public class WikiBrowser extends Window implements DTarget, DropTarget, IHWindow
         ui.wiki = this;
         mrgn = Coord.z;
         btnc = Coord.z.add(0, addrh);
-        search = new TextEntry(new Coord(5, 15), new Coord(sz.x, 20), this, "");
+        search = new TextEntry(new Coord(5, 15), new Coord(sz.x - 5, 20), this, "");
         sub = new Button(new Coord(300, 260), sbtnw, this,
                 Resource.loadimg("gfx/hud/slen/sau")) {
             public void click() {
@@ -131,8 +131,8 @@ public class WikiBrowser extends Window implements DTarget, DropTarget, IHWindow
 
     public boolean type(char key, java.awt.event.KeyEvent ev) {
         if (key == 27) {
-            wdgmsg(foldButton, "click");
-            return (true);
+            fold();
+            return true;
         }
         if ((key == 10) && (focused == search)) {
             open(search.text);
@@ -142,7 +142,7 @@ public class WikiBrowser extends Window implements DTarget, DropTarget, IHWindow
     }
 
     private void open(String request) {
-        new WikiPage(this, request, true);
+        new WikiPage(this, request);
     }
 
     public void wdgmsg(Widget sender, String msg, Object... args) {
@@ -193,7 +193,7 @@ public class WikiBrowser extends Window implements DTarget, DropTarget, IHWindow
         wnd.sz = ssz.sub(0, btnh + gzsz.y + addrh);
         wnd.c = new Coord(0, btnh + gzsz.y + addrh);
         wnds.add(wnd);
-        Button btn = new Button(new Coord(), maxbtnw + 1, this, wnd.title) {
+        Button btn = new Button(new Coord(0, 0), maxbtnw + 1, this, wnd.title) {
             public void click() {
                 setawnd(wnd, true);
             }
@@ -288,7 +288,7 @@ public class WikiBrowser extends Window implements DTarget, DropTarget, IHWindow
             b.change(w.title, w.visible ? Color.WHITE : null);
             b.visible = true;
             b.sz = new Coord(bw, b.sz.y);
-            b.c = btnc.add(bw * (i % k), ((int) i / k) * 20);
+            b.c = btnc.add(bw * (i % k), (i / k) * 20);
         }
     }
 }

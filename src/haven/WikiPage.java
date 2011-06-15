@@ -7,23 +7,25 @@ import wikilib.WikiLib;
 
 import java.awt.*;
 import java.awt.font.TextAttribute;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.regex.Pattern;
 
 public class WikiPage extends HWindow {
     private static final Foundry fnd = new Foundry(TextAttribute.FOREGROUND, Color.BLACK, TextAttribute.SIZE, 12);
     private static final Color busycolor = new Color(255, 255, 255, 128);
-    private RichTextBox content;
-    private WikiLib reader;
-    private RequestCallback callback;
-    private Boolean busy;
+    private static final Pattern WIKIREPLACER = Pattern.compile("/wiki/");
+    private final RichTextBox content;
+    private final WikiLib reader;
+    private final RequestCallback callback;
+    private final AtomicBoolean busy = new AtomicBoolean(false);
 
-    public WikiPage(Widget parent, String request, boolean closable) {
-        super(parent, request, closable);
+    public WikiPage(Widget parent, String request) {
+        super(parent, request, true);
         content = new RichTextBox(Coord.z, sz, this, "", fnd);
         content.bg = new Color(255, 255, 255, 128);
         content.registerclicks = true;
 
         final HWindow wnd = this;
-        busy = false;
         callback = new RequestCallback() {
             public void run(Request req) {
                 synchronized (content) {
@@ -32,9 +34,7 @@ public class WikiPage extends HWindow {
                         title = req.title;
                         ui.wiki.updurgency(wnd, 0);
                     }
-                    synchronized (busy) {
-                        busy = false;
-                    }
+                    busy.set(false);
                 }
             }
         };
@@ -53,7 +53,7 @@ public class WikiPage extends HWindow {
 
     public void draw(GOut g) {
         super.draw(g);
-        if (busy) {
+        if (busy.get()) {
             g.chcolor(busycolor);
             g.frect(Coord.z, sz);
             g.chcolor();
@@ -61,7 +61,7 @@ public class WikiPage extends HWindow {
     }
 
     public void wdgmsg(Widget sender, String msg, Object... args) {
-        if (busy) {
+        if (busy.get()) {
             return;
         }
         if (sender == content) {
@@ -69,7 +69,7 @@ public class WikiPage extends HWindow {
             if ((Integer) args[1] == 1) {
                 open(request);
             } else {
-                new WikiPage(ui.wiki, request, true);
+                new WikiPage(parent, request);
             }
         } else if (sender == cbtn) {
             ui.destroy(this);
@@ -80,20 +80,12 @@ public class WikiPage extends HWindow {
 
     private void open(String request) {
         Request req = new Request(request, callback);
-        if (request.indexOf("/wiki/") >= 0) {
-            request = request.replaceAll("/wiki/", "");
+        if (request.contains("/wiki/")) {
+            request = WIKIREPLACER.matcher(request).replaceAll("");
             req.initPage(request);
         }
-        synchronized (busy) {
-            busy = true;
-        }
+        busy.set(true);
         reader.search(req);
     }
 
-    public void destroy() {
-        super.destroy();
-        callback = null;
-        reader = null;
-        ;
-    }
 }

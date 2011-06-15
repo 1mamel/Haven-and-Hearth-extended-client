@@ -31,7 +31,7 @@ public class MessageBox extends Window {
     }
 
     public MessageBox(Coord position, Coord size, Widget parent, String capture, String message, int buttons, final Callback<Integer> callback) {
-        super(position, new Coord(size), parent, capture, true);
+        super(position, new Coord(size), parent, capture, true, false);
         this.justclose = true;
         this.callback = callback;
         Label message1 = new Label(new Coord(10, 6), this, message);

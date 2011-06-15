@@ -15,7 +15,7 @@ public class TextInputBox extends Window {
     private final TextEntry input;
 
     public TextInputBox(Coord position, Coord size, Widget parent, String capture, String message, final Callback<String> callback) {
-        super(position, size, parent, capture, true);
+        super(position, size, parent, capture, true, false);
         this.justclose = true;
         this.callback = callback;
         Label message1 = new Label(new Coord(10, 6), this, message);

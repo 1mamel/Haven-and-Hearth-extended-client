@@ -37,7 +37,7 @@ public class CustomConsole extends Window {
     }
 
     CustomConsole(Coord c, Coord sz, Widget parent, String title) {
-        super(c, sz, parent, title, false);
+        super(c, sz, parent, title, false, false);
         ui.bind(this, CustomConfig.getNextCustomWidgetId());
 
         out = new Textlog(Coord.z, sz.add(0, -20), this);
