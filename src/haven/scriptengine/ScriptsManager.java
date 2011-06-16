@@ -9,6 +9,7 @@ package haven.scriptengine;
 
 import haven.scriptengine.providers.Config;
 import haven.scriptengine.providers.Player;
+import haven.scriptengine.providers.UIProvider;
 import haven.scriptengine.providers.Util;
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.FileAppender;
@@ -55,6 +56,7 @@ public class ScriptsManager {
         interpreter.setOut(java.lang.System.out);
         interpreter.setErr(java.lang.System.err);
         interpreter.exec("import includes");
+        interpreter.set("ui", UIProvider.class);
         interpreter.set("util", Util.class);
         interpreter.set("player", Player.class);
         interpreter.set("config", Config.class);

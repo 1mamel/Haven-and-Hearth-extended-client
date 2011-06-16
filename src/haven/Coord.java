@@ -212,6 +212,12 @@ public class Coord implements Comparable<Coord>, java.io.Serializable, Cloneable
         return (Math.sqrt((dx * dx) + (dy * dy)));
     }
 
+    public double distSq(Coord o) {
+        long dx = o.x - x;
+        long dy = o.y - y;
+        return dx * dx + dy * dy;
+    }
+
     @Override
     protected Coord clone() {
         try {
