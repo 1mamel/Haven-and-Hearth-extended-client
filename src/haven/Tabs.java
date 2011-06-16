@@ -26,14 +26,14 @@
 
 package haven;
 
-import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 
 public class Tabs {
     private final Coord c, sz;
     private final Widget parent;
     public Tab curtab = null;
-    public final Collection<Tab> tabs = new LinkedList<Tab>();
+    public final List<Tab> tabs = new LinkedList<Tab>();
 
     public Tabs(Coord c, Coord sz, Widget parent) {
         this.c = c;
@@ -41,21 +41,45 @@ public class Tabs {
         this.parent = parent;
     }
 
+    void add(Tab t) {
+        if (curtab == null) {
+            curtab = t;
+        } else {
+            t.hide();
+        }
+        tabs.add(t);
+    }
+
+    void remove(Tab t) {
+        tabs.remove(t);
+        if (curtab == t) {
+            if (tabs.isEmpty()) {
+                curtab = null;
+            } else {
+                curtab = tabs.get(0);
+            }
+        } else {
+            t.hide();
+        }
+    }
+
     public class Tab extends Widget {
         public TabButton btn;
 
         public Tab() {
             super(Tabs.this.c, Tabs.this.sz, Tabs.this.parent);
-            if (curtab == null)
-                curtab = this;
-            else
-                hide();
-            tabs.add(this);
+            add(this);
         }
 
         public Tab(Coord bc, int bw, String text) {
             this();
             this.btn = new TabButton(bc, bw, text, this);
+        }
+
+        @Override
+        public void destroy() {
+            remove(this);
+            super.destroy();
         }
     }
 

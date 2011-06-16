@@ -73,9 +73,9 @@ public class OptWnd extends Window {
 
         body = new Tabs(Coord.z, new Coord(400, 430), this) {
             public void changed(Tab from, Tab to) {
-                Utils.setpref("optwndtab", to.btn.getText());
-                from.btn.c.setY(0);
-                to.btn.c.setY(-2);
+                if (to != null) Utils.setpref("optwndtab", to.btn.getText());
+                if (from != null) from.btn.c.setY(0);
+                if (to != null) to.btn.c.setY(-2);
             }
         };
         Widget tab;
@@ -93,7 +93,6 @@ public class OptWnd extends Window {
                             }
                         }
                     });
-//                    HackThread.tg().interrupt();
                 }
             };
             new Button(new Coord(10, 70), 125, tab, "Log out") {
@@ -106,7 +105,6 @@ public class OptWnd extends Window {
                             }
                         }
                     });
-//                    ui.sess.close();
                 }
             };
             new Button(new Coord(10, 100), 125, tab, "Toggle fullscreen") {

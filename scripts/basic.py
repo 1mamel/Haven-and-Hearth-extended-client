@@ -311,6 +311,18 @@ def build_click():
 #    int CraftReady - 0 или 1 готово ли окно крафта к приему команды
 #    int BuildReady - есть ли окно билда чего либо. 0 или 1
 
+# boolean HourGlass == PPlayer.isInProgress
+# int Hungry == PPlayet.hungry (read-only)
+# int HP == PPlayer.hp
+# int SoftHP == PPlayer.hpSoft
+# int HardHP == PPlayer.hpHard
+# int Stamina == PPlayer.stamina
+# int PlayerID == PPlayer.id
+#    int Moving - 0 или 1 двигается ли мой персонаж
+#    int ContextMenuReady - 0 или 1 готово ли контекстное меню к работе (полностью раскрыто и готово к приему команды)
+#    int DraggingItem - 0 или 1 есть ли вещь в руках. перетаскиваем ли чего нибудь. НЕ над чаром. а в руках. то что бегает за курсором.
+#    int CraftReady - 0 или 1 готово ли окно крафта к приему команды
+#    int BuildReady - есть ли окно билда чего либо. 0 или 1
 
 
 

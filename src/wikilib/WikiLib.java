@@ -27,7 +27,7 @@ public class WikiLib extends Thread {
     public void run() {
         while (true) {
             Request req;
-            while ((req = requests.peek()) != null) {
+            while ((req = requests.poll()) != null) {
                 searchPage(req);
             }
 
