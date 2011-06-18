@@ -25,11 +25,11 @@ public abstract class Bot implements Runnable {
 
     public abstract void run();
 
-    public void onExit() {
+    public void onKill() {
     }
 
     public final void kill() {
-        onExit();
+        onKill();
         ScriptsManager.kill(this);
     }
 }

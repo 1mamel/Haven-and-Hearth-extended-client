@@ -52,7 +52,8 @@ public class ScriptsManager {
 
     @SuppressWarnings({"UnusedDeclaration"})
     public static boolean registerBot(String name, Class<? extends Bot> clazz) {
-        return !botsMap.containsKey(name) && botsMap.put(name, clazz) == null;
+        botsMap.put(name, clazz);
+        return true;
     }
 
     private static void relinkInterpreterScope() {

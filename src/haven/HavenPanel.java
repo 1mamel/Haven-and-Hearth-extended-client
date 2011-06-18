@@ -73,9 +73,9 @@ public class HavenPanel extends GLCanvas implements Runnable {
         last_tick = System.currentTimeMillis();
         setSize(size);
         initgl();
-        if (Toolkit.getDefaultToolkit().getMaximumCursorColors() >= 256) {
-            cursmode = CursorMode.AWT;
-        }
+//        if (Toolkit.getDefaultToolkit().getMaximumCursorColors() >= 256) {
+        cursmode = CursorMode.AWT;
+//        }
         setCursor(Toolkit.getDefaultToolkit().createCustomCursor(TexI.mkbuf(new Coord(1, 1)), new java.awt.Point(), ""));
     }
 
@@ -305,8 +305,11 @@ public class HavenPanel extends GLCanvas implements Runnable {
                     try {
                         setCursor(makeawtcurs(curs.layer(Resource.imgc).img, curs.layer(Resource.negc).cc));
                         UI.setCursorName(curs.name);
+                        System.err.println("setting cursor " + curs.name);
                         lastcursor = curs;
                     } catch (Exception e) {
+                        System.err.println("Fallback using texture cursor");
+                        e.printStackTrace();
                         cursmode = CursorMode.TEXTURE;
                     }
                     break;

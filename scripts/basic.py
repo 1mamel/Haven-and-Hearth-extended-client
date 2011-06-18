@@ -1,5 +1,7 @@
 # coding=UTF-8
 
+__author__ = 'Vladislav Rassokhin <vladrassokhin@gmail.com>'
+
 # Basic functions
 # Thanks to ark.su for simple basic functions
 
@@ -94,12 +96,12 @@ def select_context_menu(option_name):
 # послать действие из меню внизу справа, с одним параметром. параметр видно при щелчке на кнопку в логе по ф12
 # laystone - укладка камней. асфальтирование
 # carry - перетаскивание объектов (lift)
-def send_action(name):
-    return PUI.sendAction(name)
+#def send_action(name):
+#    return PUI.sendAction(name)
 
 
 # послать действие из меню внизу справа, если нужно указывать 2 параметра
-def send_action(name, name2):
+def send_action(name, name2=""):
     return PUI.sendAction(name, name2)
 
 
@@ -252,11 +254,11 @@ def item_drop(x, y):
 # iact - фактически правый щелчек по вещи. для вызова контекстного меню
 # drop - дропнуть вещь на землю. щелчек лкм с зажатым контролом
 
-def inventory(name, x, y, action):
-    return PUI.doInventoryAction(name, x, y, action, 0)
+#def inventory(name, x, y, action):
+#    return PUI.doInventoryAction(name, x, y, action, 0)
 
 # тоже самое но с модификатором клавиатуры
-def inventory(name, x, y, action, mode):
+def inventory(name, x, y, action, mode=0):
     return PUI.doInventoryAction(name, x, y, action, mode)
 
 

@@ -145,6 +145,10 @@ public class UIProvider {
 
     // послать действие на сервер из меню действий внизу справа
     public static void sendAction(String name1, String name2) {
+        if (name2.isEmpty()) {
+            sendAction(name1);
+            return;
+        }
         if (UI.menuGrid == null) {
             return;
         }
@@ -207,14 +211,13 @@ public class UIProvider {
     public static int setInventory(String name) {
         Widget root = UI.instance.root;
         for (Widget wdg = root.child; wdg != null; wdg = wdg.next) {
-            if (wdg instanceof Window)
-                if (((Window) wdg).cap.text.equals(name))
-                    for (Widget inv = wdg.child; inv != null; inv = inv.next)
-                        if (inv instanceof Inventory) {
-                            CurrentInventory = (Inventory) inv;
-                            resetInventoryIter();
-                            return 1;
-                        }
+            if (wdg instanceof Window && ((Window) wdg).getCaption() != null && ((Window) wdg).getCaption().equals(name))
+                for (Widget inv = wdg.child; inv != null; inv = inv.next)
+                    if (inv instanceof Inventory) {
+                        CurrentInventory = (Inventory) inv;
+                        resetInventoryIter();
+                        return 1;
+                    }
         }
         CurrentInventory = null;
         return 0;
@@ -396,7 +399,7 @@ public class UIProvider {
     }
 
     public static boolean isCursorNameContains(String str) {
-        return UI.cursorName.contains(str);
+        return UI.cursorName != null && UI.cursorName.contains(str);
     }
 
     // дать команду вещи в инвентаре с указаныым именем. по указанным координатам вещи в этом инвентаре
