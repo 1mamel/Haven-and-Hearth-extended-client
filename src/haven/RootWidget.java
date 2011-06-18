@@ -67,6 +67,10 @@ public class RootWidget extends ConsoleHost {
                 CustomConfig.toggleXray();
             } else if ((code == KeyEvent.VK_H) && ctrl) {
                 CustomConfig.toggleHideObjects();
+            } else if ((code == KeyEvent.VK_Y) && ctrl) {
+                Config.render_enable = !Config.render_enable;
+//                Config.saveOptions();
+                // 12.12.2010
             } else if ((code == KeyEvent.VK_Q) && alt) {
                 ui.spd.wdgmsg("set", 0);
             } else if ((code == KeyEvent.VK_W) && alt) {
@@ -106,7 +110,7 @@ public class RootWidget extends ConsoleHost {
         }
         super.draw(g);
         drawcmd(g, new Coord(20, 580));
-	if(screenshot && (!Config.sshot_nonames || names_ready)){
+        if (screenshot && (!Config.sshot_nonames || names_ready)) {
             visible = true;
             screenshot = false;
             try {

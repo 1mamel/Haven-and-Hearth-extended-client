@@ -29,7 +29,6 @@ package haven;
 import haven.resources.layers.AButton;
 import haven.resources.layers.Pagina;
 
-import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.font.TextAttribute;
 import java.util.*;
@@ -104,6 +103,15 @@ public class MenuGrid extends Widget {
         ToolbarWnd.loadBelts();
         new ToolbarWnd(new Coord(0, 300), ui.root, "toolbar1");
         new ToolbarWnd(new Coord(50, 300), ui.root, "toolbar2", 2, 12, new Coord(4, 10), KeyEvent.VK_F1);
+        UI.menuGrid = this;
+    }
+
+    @Override
+    public void destroy() {
+        if (UI.menuGrid == this) {
+            UI.menuGrid = null;
+        }
+        super.destroy();
     }
 
     private static final Comparator<Resource> sorter = new Comparator<Resource>() {
@@ -166,14 +174,14 @@ public class MenuGrid extends Widget {
         updlayout();
         for (int y = 0; y < gsz.y; y++) {
             for (int x = 0; x < gsz.x; x++) {
-                Coord p = bgsz.mul(new Coord(x, y));
+                Coord p = bgsz.mul(x, y);
                 g.image(bg, p);
                 Resource btn = layout[x][y];
                 if (btn != null) {
                     Tex btex = btn.layer(Resource.imgc).tex();
                     g.image(btex, p.add(1, 1));
                     if (btn == pressed) {
-                        g.chcolor(new Color(0, 0, 0, 128));
+                        g.chcolor(0, 0, 0, 128);
                         g.frect(p.add(1, 1), btex.sz());
                         g.chcolor();
                     }
@@ -279,6 +287,7 @@ public class MenuGrid extends Widget {
                         }
                     }
                 }
+                CustomConfig.logger.info("Sending menu grid action " + Arrays.toString(ad));
                 wdgmsg("act", (Object[]) ad);
             }
         }

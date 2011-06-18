@@ -43,13 +43,13 @@ public class Item extends Widget implements DTarget {
     static Map<Integer, Tex> qmap;
     private static final Resource missing = Resource.load("gfx/invobjs/missing");
     static Color outcol = new Color(0, 0, 0, 255);
-    private boolean dm = false;
+    public boolean dm = false;
     private int quality; // quality
     private int innerLiquidQuality;
     private boolean isHighQuality; // Hide big qualities values
     private Coord doff;
-    protected String tooltip;
-    private int num = -1;
+    public String tooltip;
+    private int quantity = -1;
     private Indir<Resource> res;
     private Tex sh;
     private Color olcol = null;
@@ -131,10 +131,10 @@ public class Item extends Widget implements DTarget {
             } else {
                 g.image(tex, Coord.z);
             }
-            if (num >= 0) {
+            if (quantity >= 0) {
 //                g.chcolor(Color.WHITE);
 //                g.atext(Integer.toString(num), new Coord(0, 30), 0, 1);
-                g.aimage(getqtex(num), Coord.z, 0, 0);
+                g.aimage(getqtex(quantity), Coord.z, 0, 0);
             }
             if (completedPercents > 0) {
                 double a = ((double) completedPercents) / 100.0;
@@ -278,12 +278,12 @@ public class Item extends Widget implements DTarget {
         }
     }
 
-    public Item(Coord c, Indir<Resource> res, int quality, Widget parent, Coord drag, int num) {
+    public Item(Coord c, Indir<Resource> res, int quality, Widget parent, Coord drag, int quantity) {
         super(c, Coord.z, parent);
         this.res = res;
         decodeQuality(quality);
         fixsize();
-        this.num = num;
+        this.quantity = quantity;
         if (drag == null) {
             dm = false;
         } else {
@@ -294,8 +294,8 @@ public class Item extends Widget implements DTarget {
         }
     }
 
-    public Item(Coord c, int res, int quality, Widget parent, Coord drag, int num) {
-        this(c, parent.ui.sess.getres(res), quality, parent, drag, num);
+    public Item(Coord c, int res, int quality, Widget parent, Coord drag, int quantity) {
+        this(c, parent.ui.sess.getres(res), quality, parent, drag, quantity);
     }
 
     private Item(Coord c, Indir<Resource> res, int quality, Widget parent, Coord drag) {
@@ -348,7 +348,7 @@ public class Item extends Widget implements DTarget {
 
     public void uimsg(String name, Object... args) {
         if (name.equals("num")) { // Change quantity
-            num = (Integer) args[0];
+            quantity = (Integer) args[0];
         } else if (name.equals("chres")) { // Change resource (by id) and quality
             chres(ui.sess.getres((Integer) args[0]), (Integer) args[1]);
             resetToolTip();
@@ -402,5 +402,42 @@ public class Item extends Widget implements DTarget {
     public boolean iteminteract(Coord cc, Coord ul) {
         wdgmsg("itemact", ui.modflags());
         return (true);
+    }
+
+    // arksu:
+    public String getResName() {
+        if (res.get() != null)
+            return res.get().name;
+        else
+            return "";
+    }
+
+    // arksu: съедобная ли вещь
+    public boolean isEatable() {
+        String s = getResName();
+        if (s.contains("gfx/invobjs/bread")) return true;
+        if (s.contains("gfx/invobjs/meat")) return true;
+        if (s.contains("gfx/invobjs/mussel-boiled")) return true;
+        return false;
+    }
+
+    public String getTooltip() {
+        return tooltip;
+    }
+
+    public int getQuality() {
+        return quality;
+    }
+
+    public Coord getCoord() {
+        return c;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public int getCompletedPercent() {
+        return completedPercents;
     }
 }

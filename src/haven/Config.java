@@ -84,6 +84,17 @@ public class Config {
     public static boolean showq;
     public static GoogleTranslator translator = new GoogleTranslator();
 
+    public static boolean render_enable = true;
+
+
+    public static boolean quick_login = false; // быстрый логин дефолт чаром
+    public static boolean ark_state_activate_char = false; // стадия аткивации чара
+    public static int ark_button_activate_char = 0; // ид кнопки которую надо нажать
+    public static String auto_start_script = ""; // имя скрипта запускаемого после логина
+    public static boolean FirstLogin = true; // первый ли запуск клиента
+    public static boolean inactive_exit = false; // закрывать клиент при неактивности (нет новых виджетов)
+    public static boolean keep_connect = false; // подерживать ли подключение. (реконнекты)
+
     static {
         try {
             String p;
@@ -136,7 +147,7 @@ public class Config {
     }
 
     public static void cmdline(String[] args) {
-        PosixArgs opt = PosixArgs.getopt(args, "hdPU:fr:A:u:C:");
+        PosixArgs opt = PosixArgs.getopt(args, "hqdPU:fr:A:m:u:b:k:C:");
         if (opt == null) {
             usage(System.err);
             System.exit(1);
@@ -162,6 +173,19 @@ public class Config {
                 case 'A':
                     authserv = opt.arg;
                     break;
+                case 'q':
+                    quick_login = true;
+                    break;
+//                case 'm':
+//                    mapdir = opt.arg;
+//                    break;
+                case 'k':
+                    keep_connect = true;
+                    break;
+                case 'b':
+                    auto_start_script = opt.arg;
+                    break;
+
                 case 'U':
                     try {
                         resurl = new URL(opt.arg);
@@ -270,12 +294,12 @@ public class Config {
     }
 
     public static synchronized void setWindowOpt(String key, String value) {
-	synchronized (window_props) {
-        String prev_val = window_props.getProperty(key);
-        if ((prev_val != null) && prev_val.equals(value))
-            return;
-        window_props.setProperty(key, value);
-	}
+        synchronized (window_props) {
+            String prev_val = window_props.getProperty(key);
+            if ((prev_val != null) && prev_val.equals(value))
+                return;
+            window_props.setProperty(key, value);
+        }
         saveWindowOpt();
     }
 
@@ -284,13 +308,13 @@ public class Config {
     }
 
     public static void saveWindowOpt() {
-	synchronized (window_props) {
-        try {
-            window_props.store(new FileOutputStream("windows.conf"), "Window config options");
-        } catch (IOException e) {
-            System.out.println(e);
+        synchronized (window_props) {
+            try {
+                window_props.store(new FileOutputStream("windows.conf"), "Window config options");
+            } catch (IOException e) {
+                System.out.println(e);
+            }
         }
-    }
     }
 
     public static void saveOptions() {

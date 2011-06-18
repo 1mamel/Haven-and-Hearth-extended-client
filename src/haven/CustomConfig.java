@@ -24,6 +24,7 @@ public class CustomConfig {
 
     public static Logger logger;
     public static Glob glob = null;
+    public static boolean highlightObjectAtMouse = false;
 
     static {
         logger = Logger.getLogger("Main log");

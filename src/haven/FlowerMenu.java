@@ -195,6 +195,7 @@ public class FlowerMenu extends Widget {
         ui.grabmouse(this);
         ui.grabkeys(this);
         anim = new Opening();
+        UI.flowerMenu = this;
     }
 
     public boolean mousedown(Coord c, int button) {
@@ -218,9 +219,16 @@ public class FlowerMenu extends Widget {
     }
 
     public void draw(GOut g) {
-        if (anim != null)
-            anim.tick();
         super.draw(g);
+    }
+
+    public void select(String name) {
+        for (Petal opt : opts) {
+            if (opt.name.equals(name)) {
+                wdgmsg(this, "cl", opt.num);
+                break;
+            }
+        }
     }
 
     public boolean type(char key, java.awt.event.KeyEvent ev) {
@@ -237,4 +245,18 @@ public class FlowerMenu extends Widget {
         }
         return (false);
     }
+
+    @Override
+    public void destroy() {
+        if (UI.flowerMenu == this) {
+            UI.flowerMenu = null;
+        }
+        super.destroy();
+    }
+
+    public void update(long dt) {
+        if (anim != null)
+            anim.tick();
+    }
+
 }

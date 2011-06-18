@@ -246,4 +246,14 @@ public class Gob implements Sprite.Owner {
         }
         return "";
     }
+
+    // получить байт из мессаги
+    public byte getBlob(int index) {
+        Drawable d = getattr(Drawable.class);
+        ResDrawable dw = getattr(ResDrawable.class);
+        if (dw != null && d != null && index < dw.sdt.blob.length && index >= 0) {
+            return dw.sdt.blob[index];
+        }
+        return -1;
+    }
 }

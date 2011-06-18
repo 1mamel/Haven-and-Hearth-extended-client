@@ -61,7 +61,7 @@ public class OCache implements Iterable<Gob> {
         if (lastctick == 0)
             dt = 0;
         else
-            dt = (int) (System.currentTimeMillis() - lastctick);
+            dt = (int) (System.currentTimeMillis() - lastctick); // TODO: see what may be changed if replace .curr...() with 'now' variable
         synchronized (this) {
             for (Gob g : objs.values())
                 g.ctick(dt);

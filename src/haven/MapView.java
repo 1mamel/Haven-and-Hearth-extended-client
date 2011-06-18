@@ -30,12 +30,15 @@ import haven.MCache.Grid;
 import haven.MCache.Overlay;
 import haven.resources.layers.Neg;
 import haven.resources.layers.Tile;
+import haven.scriptengine.ScriptsManager;
+import haven.scriptengine.providers.Player;
 
 import java.awt.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static haven.MCache.cmaps;
 import static haven.MCache.tilesz;
@@ -55,7 +58,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
     ILM mask;
     final MCache map;
     final Glob glob;
-    Collection<Gob> plob = null;
+    public Collection<Gob> plob = null;
     boolean plontile;
     int plrad = 0;
     int playergob = -1;
@@ -75,6 +78,21 @@ public class MapView extends Widget implements DTarget, Console.Directory {
     double scales[] = {0.5, 0.66, 0.8, 0.9, 1, 1.25, 1.5, 1.75};
     Map<String, Integer> radiuses;
     int beast_check_delay = 0;
+
+
+    // arksu ------------------------------------------------------------------
+    public volatile boolean show_selected_tile = false; // показывать тайл под мышью
+    public volatile boolean player_moving = false; // arksu : движемся ли мы
+    public final AtomicBoolean modeSelectObject = new AtomicBoolean(false); // нужно выбрать объект.
+    public Coord last_my_coord; // последние координаты моего чара. нужно для слежения
+
+    long time_to_start;
+    boolean started = false;
+    long AUTO_START_TIME = 15000;
+    long last_tick = 0;
+    private static final Color TRANSPARENT_GREEN = new Color(0, 255, 0, 32);
+    private Coord mouse_tile;
+    // arksu ------------------------------------------------------------------
 
     public double getScale() {
         return Config.zoom ? _scale : 1;
@@ -555,6 +573,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
 
     public MapView(Coord c, Coord sz, Widget parent, Coord mc, int playergob) {
         super(c, sz, parent);
+        time_to_start = AUTO_START_TIME;
         isui = false;
         this.mc = mc;
         this.playergob = playergob;
@@ -612,15 +631,25 @@ public class MapView extends Widget implements DTarget, Console.Directory {
         return (null);
     }
 
-    public boolean mousedown(Coord c, int button) {
+    public boolean mousedown(final Coord c, int button) {
         setfocus(this);
-        Coord c0 = c;
-        c = new Coord((int) (c.x / getScale()), (int) (c.y / getScale()));
-        Gob hit = gobatpos(c);
-        Coord mc = s2m(c.sub(viewoffset(sz, this.mc)));
+        Coord cScaled = new Coord((int) (c.x / getScale()), (int) (c.y / getScale()));
+        Gob hit = gobatpos(cScaled);
+
+        // arksu: если мы в режиме выбора объекта - возвращаем его и выходим
+        if (modeSelectObject.get()) {
+            synchronized (modeSelectObject) {
+                onmouse = hit;
+                modeSelectObject.set(false);
+                modeSelectObject.notifyAll();
+            }
+            return true;
+        }
+
+        Coord mc = s2m(cScaled.sub(viewoffset(sz, this.mc)));
         if (grab != null) {
             grab.mmousedown(mc, button);
-        } else if ((cam != null) && cam.click(this, c, mc, button)) {
+        } else if ((cam != null) && cam.click(this, cScaled, mc, button)) {
             /* Nothing */
         } else if (plob != null) {
             Gob gob = null;
@@ -630,9 +659,9 @@ public class MapView extends Widget implements DTarget, Console.Directory {
             wdgmsg("place", gob.rc, button, ui.modflags());
         } else {
             if (hit == null)
-                wdgmsg("click", c0, mc, button, ui.modflags());
+                wdgmsg("click", c, mc, button, ui.modflags());
             else
-                wdgmsg("click", c0, mc, button, ui.modflags(), hit.id, hit.getc());
+                wdgmsg("click", c, mc, button, ui.modflags(), hit.id, hit.getc());
         }
         return (true);
     }
@@ -655,6 +684,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
         this.pmousepos = c;
         Coord mc = s2m(c.sub(viewoffset(sz, this.mc)));
         this.mousepos = mc;
+        this.mouse_tile = tilify(mousepos);
         Collection<Gob> plob = this.plob;
         if (cam != null)
             cam.move(this, c, mc);
@@ -667,6 +697,13 @@ public class MapView extends Widget implements DTarget, Console.Directory {
             boolean plontile = this.plontile ^ ui.modshift;
             //noinspection ConstantConditions
             gob.move(plontile ? tilify(mc) : mc);
+        }
+
+        //arksu: вычисляем объект под мышью
+        if (pmousepos != null) {
+            onmouse = gobatpos(pmousepos);
+        } else {
+            onmouse = null;
         }
     }
 
@@ -682,7 +719,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
         this.mc = mc;
     }
 
-    private static Coord tilify(Coord c) {
+    public static Coord tilify(Coord c) {
         c = c.div(tilesz);
         c = c.mul(tilesz);
         c = c.add(tilesz.div(2));
@@ -955,14 +992,14 @@ public class MapView extends Widget implements DTarget, Console.Directory {
 
     private void drawols(GOut g, Coord sc) {
         synchronized (map.grids) {
-            for (Coord gc : map.grids.keySet()) {
-                Grid grid = map.grids.get(gc);
+            for (Map.Entry<Coord, Grid> coordGridEntry : map.grids.entrySet()) {
+                Grid grid = coordGridEntry.getValue();
                 for (Overlay lol : grid.ols) {
                     int id = getolid(lol.mask);
                     if (visol[id] < 1) {
                         continue;
                     }
-                    Coord c0 = gc.mul(cmaps);
+                    Coord c0 = coordGridEntry.getKey().mul(cmaps);
                     drawol2(g, id, c0.add(lol.c1), c0.add(lol.c2), sc);
                 }
             }
@@ -1039,10 +1076,34 @@ public class MapView extends Widget implements DTarget, Console.Directory {
         }
     }
 
+    private static void draw_tile_select(GOut g, Coord tc, Coord sc) {
+        Coord c2 = sc.add(m2s(new Coord(0, tilesz.y)));
+        Coord c3 = sc.add(m2s(new Coord(tilesz.x, tilesz.y)));
+        Coord c4 = sc.add(m2s(new Coord(tilesz.x, 0)));
+
+        g.chcolor(TRANSPARENT_GREEN);
+        g.frect(sc, c2, c3, c4);
+        g.chcolor(Color.GREEN);
+        g.line(c2, sc, 1.5);
+        g.line(sc.add(1, 0), c4.add(1, 0), 1.5);
+        g.line(c4.add(1, 0), c3.add(1, 0), 1.5);
+        g.line(c3, c2, 1.5);
+
+    }
+
     public void drawmap(GOut g) {
         int x, y, i;
         int stw, sth;
         Coord oc, tc, ctc, sc;
+
+
+        ///arksu
+        Coord mp = null;
+//        if (mousepos != null && (show_selected_tile || Config.assign_to_tile))
+        if (mousepos != null && show_selected_tile) {
+            mp = mouse_tile.div(tilesz);
+        }
+
 
         if (Config.profile)
             curf = prof.new Frame();
@@ -1057,15 +1118,21 @@ public class MapView extends Widget implements DTarget, Console.Directory {
                 for (i = 0; i < 2; i++) {
                     ctc = tc.add(new Coord(x + y, -x + y + i));
                     sc = m2s(ctc.mul(tilesz)).add(oc);
-                    sc.setX(sc.x - tilesz.x * 2);
+                    sc.x -= tilesz.x * 2;
                     drawtile(g, ctc, sc);
-                    sc.setX(sc.x + tilesz.x * 2);
+                    sc.x += tilesz.x * 2;
                     if (!Config.newclaim) {
                         drawol(g, ctc, sc);
+                    }
+                    // arksu : выводим тайл под мышью
+//                    if (mousepos != null && (show_selected_tile || Config.assign_to_tile)) {
+                    if (mp != null && mp.y == ctc.y && mp.x == ctc.x) {
+                        draw_tile_select(g, ctc, sc);
                     }
                 }
             }
         }
+
         if (Config.newclaim) {
             drawols(g, oc);
         }
@@ -1205,6 +1272,13 @@ public class MapView extends Widget implements DTarget, Console.Directory {
             }
             if (curf != null)
                 curf.tick("sort");
+
+
+            if (pmousepos != null) {
+                onmouse = gobatpos(pmousepos);
+            } else {
+                onmouse = null;
+            }
             onmouse = null;
             if (pmousepos != null)
                 onmouse = gobatpos(pmousepos);
@@ -1413,8 +1487,50 @@ public class MapView extends Widget implements DTarget, Console.Directory {
         drawmap(g);
         drawarrows(g);
         g.chcolor(Color.WHITE);
-        if (Config.dbtext)
-            g.atext(mc.div(11).toString(), new Coord(10, 560), 0, 1);
+        g.chcolor(Color.WHITE);
+
+        if (Config.dbtext) {
+            int ay = 120;
+            int margin = 15;
+            if (onmouse != null) {
+                g.atext("gob at mouse: id=" + onmouse.id +
+                        " coord=" + onmouse.getc() +
+                        " res=" + onmouse.getResName() +
+                        " msg=" + onmouse.getBlob(0),
+                        new Coord(10, ay), 0, 1);
+                ay = ay + margin;
+            } else {
+                g.atext("gob at mouse: <<< NULL >>>", new Coord(10, ay), 0, 1);
+                ay = ay + margin;
+            }
+            if (mousepos != null) {
+                g.atext("mouse map pos: " + mousepos.toString(), new Coord(10, ay), 0, 1);
+                ay = ay + margin;
+                g.atext("tile coord: " + mouse_tile.toString(), new Coord(10, ay), 0, 1);
+                ay = ay + margin;
+            }
+            g.atext("cursor name: " + UI.cursorName, new Coord(10, ay), 0, 1);
+            ay = ay + margin;
+            g.atext("player=" + playergob, new Coord(10, ay), 0, 1);
+            ay = ay + margin;
+            g.atext("time_to_start: " + time_to_start, new Coord(10, ay), 0, 1);
+//            ay = ay + margin;
+//            if (hhl_main.symbols != null && Config.debug_flag) {
+//                synchronized (hhl_main.symbols.ShowNames) {
+//                    for (String s : hhl_main.symbols.ShowNames) {
+//                        Variable v = (Variable) hhl_main.symbols.globals.get(s);
+//                        if (v != null) {
+//                            g.atext("VARIABLE '" + s + "' = " + v.value, new Coord(10, ay), 0, 1);
+//                            ay = ay + margin;
+//                        }
+//                    }
+//                }
+//            }
+
+        }
+//        if (Config.dbtext) {
+//            g.atext(mc.div(11).toString(), new Coord(10, 560), 0, 1);
+//        }
 //        } catch (Loading l) {
 //            String text = "Loading...";
 //            g.chcolor(Color.BLACK);
@@ -1497,4 +1613,44 @@ public class MapView extends Widget implements DTarget, Console.Directory {
     public Map<String, Console.Command> findcmds() {
         return (cmdmap);
     }
+
+    public void update(long dt) {
+        Coord new_my_coord = Player.getPosition();
+        if ((new_my_coord != null) && (last_my_coord != null))
+            if ((new_my_coord.dist(last_my_coord) > 20 * 11) && (cam != null))
+                cam.reset();
+        last_my_coord = new_my_coord;
+        time_to_start = time_to_start - dt;
+
+        if (!Config.auto_start_script.isEmpty() && time_to_start <= 0) {
+            if (time_to_start <= 0 && !started) {
+                try {
+                    started = true;
+                    time_to_start = 0;
+                    ScriptsManager.run(Config.auto_start_script);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        Coord requl = mc.add(-500, -500).div(tilesz).div(cmaps);
+        Coord reqbr = mc.add(500, 500).div(tilesz).div(cmaps);
+        Coord cgc = new Coord(0, 0);
+        for (cgc.y = requl.y; cgc.y <= reqbr.y; cgc.y++) {
+            for (cgc.x = requl.x; cgc.x <= reqbr.x; cgc.x++) {
+                if (map.grids.get(cgc) == null)
+                    map.request(new Coord(cgc));
+            }
+        }
+        long now = System.currentTimeMillis();
+        if ((olftimer != 0) && (olftimer < now))
+            unflashol();
+        map.sendreqs();
+        checkplmove();
+        sz = CustomConfig.getWindowSize();
+//        mask.UpdateSize(sz);
+        checkmappos();
+    }
+
+
 }

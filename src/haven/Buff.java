@@ -26,6 +26,8 @@
 
 package haven;
 
+import haven.resources.layers.Tooltip;
+
 import java.awt.*;
 
 public class Buff {
@@ -33,10 +35,11 @@ public class Buff {
     final int id;
     Indir<Resource> res;
     String tt = null;
-    int ameter = -1;
-    int nmeter = -1;
-    int cmeter = -1;
-    int cticks = -1;
+    public int ameter = -1; // полоска под бафом от 0 до 100
+    int nmeter = -1; // некий счетчик хз???
+    int cmeter = -1; // прогресс бафа. круглешок от 0 до 100
+    int cticks = -1; // количество тиков для полного круглешка определяет время за которое спадет круглешок. некий кеш на клиенте
+    // чтобы постоянно не опрашивать сервер о прогрессе круглешка
     long gettime;
     Tex ntext = null;
     boolean major = false;
@@ -50,5 +53,31 @@ public class Buff {
         if (ntext == null)
             ntext = new TexI(Utils.outline2(nfnd.render(Integer.toString(nmeter), Color.WHITE).img, Color.BLACK));
         return (ntext);
+    }
+
+    // arksu 19.12.2010 lets rock it!
+    // получить тул тип в виде текста
+    public String getName() {
+        Tooltip tt;
+        if ((res.get() != null) && ((tt = res.get().layer(Resource.tooltip)) != null)) {
+            return tt.t;
+        } else {
+            return "";
+        }
+    }
+
+    // получить время до конца бафа от 0 до 100
+    public int getTimeLeft() {
+        if (cmeter >= 0) {
+            long now = System.currentTimeMillis();
+            double m = cmeter / 100.0;
+            if (cticks >= 0) {
+                double ot = cticks * 0.06;
+                double pt = ((double) (now - gettime)) / 1000.0;
+                m *= (ot - pt) / ot;
+            }
+            return (int) Math.round(m * 100);
+        }
+        return 0;
     }
 }

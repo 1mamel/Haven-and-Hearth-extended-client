@@ -61,6 +61,10 @@ public class ILM extends TexRT {
         ljusboll = lb;
     }
 
+//    public void UpdateSize(Coord sz) {
+//        dim = sz;
+//    }
+
     public ILM(Coord sz, OCache oc) {
         super(sz);
         this.oc = oc;

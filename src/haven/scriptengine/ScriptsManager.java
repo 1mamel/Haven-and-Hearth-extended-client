@@ -20,6 +20,8 @@ import org.python.core.PyException;
 import org.python.core.PySystemState;
 import org.python.util.PythonInterpreter;
 
+import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.HashMap;
@@ -36,6 +38,7 @@ public class ScriptsManager {
                 @Override
                 public void run() {
                     interpreter.exec(line);
+                    haven.Config.render_enable = true;
                 }
             });
             thread.setDaemon(true);
@@ -87,6 +90,11 @@ public class ScriptsManager {
         } catch (PyException e) {
             logger.error("Cannot relink interpreter scope", e);
         }
+        try {
+            scanDirectory();
+        } catch (PyException e) {
+            logger.error("Preloading scripts failed", e);
+        }
     }
 
     private static Class<? extends Bot> getBotClass(String name) {
@@ -119,6 +127,7 @@ public class ScriptsManager {
     public static void killBot(Bot bot) {
         if (!runningBots.containsKey(bot)) return;
         runningBots.get(bot).interrupt();
+        haven.Config.render_enable = true;
     }
 
     static Bot createBot(String name) {
@@ -147,5 +156,18 @@ public class ScriptsManager {
 
     public static void registerErr(Writer w) {
         interpreter.setErr(w);
+    }
+
+    public static void scanDirectory() {
+        File dir = new File("scripts");
+        if (!dir.isDirectory()) return;
+        for (String file : dir.list(new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                return name.endsWith("bot.py");
+            }
+        })) {
+            exec("import " + file);
+        }
     }
 }

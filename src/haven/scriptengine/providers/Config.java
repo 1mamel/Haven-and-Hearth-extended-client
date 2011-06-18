@@ -14,6 +14,9 @@ import haven.CustomConsole;
 @SuppressWarnings({"UnusedDeclaration"})
 public class Config {
 
+    private static String bot1;
+    private static String bot2;
+
     public static void setNightvision(boolean nightvision) {
         CustomConfig.hasNightVision = nightvision;
     }
@@ -113,6 +116,23 @@ public class Config {
         return CustomConfig.isDebugLogging();
     }
 
+
     private Config() {
+    }
+
+    public static String getBot1() {
+        return bot1;
+    }
+
+    public static void setBot1(String bot1) {
+        Config.bot1 = bot1;
+    }
+
+    public static String getBot2() {
+        return bot2;
+    }
+
+    public static void setBot2(String bot2) {
+        Config.bot2 = bot2;
     }
 }

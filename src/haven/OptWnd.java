@@ -31,6 +31,16 @@ import java.util.*;
 
 public class OptWnd extends Window {
     public static final RichText.Foundry foundry = new RichText.Foundry(TextAttribute.FAMILY, "SansSerif", TextAttribute.SIZE, 10);
+    private static final String[][] CHECKBOXES_LIST = {{"Walls", "gfx/arch/walls"},
+            {"Gates", "gfx/arch/gates"},
+            {"Wooden Houses", "gfx/arch/cabin"},
+            {"Stone Mansions", "gfx/arch/inn"},
+            {"Plants", "gfx/terobjs/plants"},
+            {"Trees", "gfx/terobjs/trees"},
+            {"Stones", "gfx/terobjs/bumlings"},
+            {"Flavor objects", "flavobjs"},
+            {"Bushes", "gfx/tiles/wald"},
+            {"Thicket", "gfx/tiles/dwald"}};
     private final Tabs body;
     private String curcam;
     private final Map<String, CamInfo> caminfomap = new HashMap<String, CamInfo>();
@@ -70,7 +80,7 @@ public class OptWnd extends Window {
     @SuppressWarnings({"UnusedAssignment"})
     public OptWnd(Coord c, Widget parent) {
         super(c, new Coord(400, 440), parent, "Options");
-
+        UI.options_wnd = this;
         body = new Tabs(Coord.z, new Coord(400, 430), this) {
             public void changed(Tab from, Tab to) {
                 if (to != null) Utils.setpref("optwndtab", to.btn.getText());
@@ -432,13 +442,12 @@ public class OptWnd extends Window {
             defIRCNickLabel = new Label(new Coord(firstCellXOffset, 80), tab, "IRC Nick:");
             altIRCNickLabel = new Label(new Coord(firstCellXOffset, 100), tab, "Alt Nick:");
 
-            // TetEntries (2nd column)
+            // TextEntries (2nd column)
             int secondCellXOffset = 15 + Math.max(serverLabel.sz.x, Math.max(chnlLabel.sz.x, Math.max(defIRCNickLabel.sz.x, altIRCNickLabel.sz.x)));
             final Coord textFieldSize = new Coord(180, 15);
 
             // Server entry
-            serverAddress = new TextEntry(new Coord(secondCellXOffset, 40), textFieldSize,
-                    tab, CustomConfig.ircServerAddress);
+            serverAddress = new TextEntry(new Coord(secondCellXOffset, 40), textFieldSize, tab, CustomConfig.ircServerAddress);
             serverAddress.badchars = " ";
 
             // Channel list entry
@@ -489,20 +498,10 @@ public class OptWnd extends Window {
         { /* HIDE OBJECTS TAB */
             tab = body.new Tab(new Coord(280, 0), 80, "Hide Objects");
 
-            String[][] checkboxesList = {{"Walls", "gfx/arch/walls"},
-                    {"Gates", "gfx/arch/gates"},
-                    {"Wooden Houses", "gfx/arch/cabin"},
-                    {"Stone Mansions", "gfx/arch/inn"},
-                    {"Plants", "gfx/terobjs/plants"},
-                    {"Trees", "gfx/terobjs/trees"},
-                    {"Stones", "gfx/terobjs/bumlings"},
-                    {"Flavor objects", "flavobjs"},
-                    {"Bushes", "gfx/tiles/wald"},
-                    {"Thicket", "gfx/tiles/dwald"}};
             int y = 0;
-            for (final String[] checkbox : checkboxesList) {
-                CheckBox chkbox = new CheckBox(new Coord(10, y += 30), tab,
-                        checkbox[0]) {
+            for (final String[] checkbox : CHECKBOXES_LIST) {
+                //noinspection ObjectAllocationInLoop
+                new CheckBox(new Coord(10, y += 30), tab, checkbox[0]) {
 
                     public void changed(boolean val) {
                         if (val) {
@@ -680,5 +679,13 @@ public class OptWnd extends Window {
             g.chcolor(150, 200, 125, 255);
             box.draw(g, Coord.z, sz);
         }
+    }
+
+    @Override
+    public void destroy() {
+        if (UI.options_wnd == this) {
+            UI.options_wnd = null;
+        }
+        super.destroy();
     }
 }

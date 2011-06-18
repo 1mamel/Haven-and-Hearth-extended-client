@@ -256,4 +256,7 @@ public class Coord implements Comparable<Coord>, java.io.Serializable, Cloneable
         this.y = y;
     }
 
+    public boolean equals(int x, int y) {
+        return this.x == x && this.y == y;
+    }
 }

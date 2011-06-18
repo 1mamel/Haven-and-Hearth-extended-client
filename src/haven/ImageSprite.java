@@ -57,6 +57,13 @@ public abstract class ImageSprite extends Sprite {
         }
 
         public void draw(GOut g) {
+            if (UI.instance.mainview.onmouse != null && owner != null &&
+                    (Config.highlight || UI.instance.mainview.modeSelectObject.get())
+                    && ((Gob) owner).id == UI.instance.mainview.onmouse.id) {
+                g.image(img.tex(), sc().add(img.o));
+                drawol(g, java.awt.Color.green);
+                return;
+            }
             if (CustomConfig.isXray()) {
                 drawol(g);
             } else {

@@ -36,6 +36,10 @@ public class LoginScreen extends Widget {
     final Tex bg = Resource.loadtex("gfx/loginscr");
     final Tex logo = Resource.loadtex("gfx/logo");
     Text progress = null;
+    boolean first = true;
+    private long time_to_reconnect = 0;
+    long RECONNECT_TIME = 15000;
+    boolean logging = false;
 
     static {
         textf = new Text.Foundry(new java.awt.Font("Sans", java.awt.Font.PLAIN, 16));
@@ -46,6 +50,8 @@ public class LoginScreen extends Widget {
         super(Coord.z, CustomConfig.getWindowSize(), parent);
         setfocustab(true);
         parent.setfocus(this);
+        logging = false;
+        time_to_reconnect = RECONNECT_TIME;
         new Img(CustomConfig.getWindowCenter().sub(bg.sz().div(2)), bg, this);
         new Img(CustomConfig.getWindowCenter().add(20, -85).sub(logo.sz().div(2)), logo, this);
     }
@@ -58,6 +64,8 @@ public class LoginScreen extends Widget {
         abstract Object[] data();
 
         abstract boolean enter();
+
+        abstract String get_username();
     }
 
     private class Pwbox extends Login {
@@ -84,6 +92,10 @@ public class LoginScreen extends Widget {
         public void wdgmsg(Widget sender, String name, Object... args) {
         }
 
+        public String get_username() {
+            return user.text;
+        }
+
         Object[] data() {
             return (new Object[]{user.text, pass.text, savepass.a});
         }
@@ -104,11 +116,18 @@ public class LoginScreen extends Widget {
     private class Tokenbox extends Login {
         final Text label;
         final Button btn;
+        private String acc;
 
         private Tokenbox(String username) {
             super(CustomConfig.getWindowCenter().add(-105, 10), new Coord(250, 100), LoginScreen.this);
+            acc = username;
             label = textfs.render("Identity is saved for " + username, java.awt.Color.WHITE);
             btn = new Button(new Coord(75, 30), 100, this, "Forget me");
+        }
+
+
+        public String get_username() {
+            return acc;
         }
 
         Object[] data() {
@@ -141,6 +160,8 @@ public class LoginScreen extends Widget {
     }
 
     private void error(String error) {
+        logging = false;
+        time_to_reconnect = RECONNECT_TIME;
         synchronized (ui) {
             if (this.error != null)
                 this.error = null;
@@ -198,11 +219,20 @@ public class LoginScreen extends Widget {
     }
 
     public void draw(GOut g) {
+        c = CustomConfig.getWindowCenter().sub(400, 300);
         super.draw(g);
-        if (error != null)
+
+        if (error != null) {
             g.image(error.tex(), new Coord(CustomConfig.getWindowCenter().x - (error.sz().x / 2), CustomConfig.getWindowCenter().y + 200));
-        if (progress != null)
+        }
+        if (progress != null) {
             g.image(progress.tex(), new Coord(CustomConfig.getWindowCenter().x + 20 - (progress.sz().x / 2), CustomConfig.getWindowCenter().y + 50));
+        }
+
+        g.text("keep connect=" + Config.keep_connect, new Coord(20, 200));
+        g.text("time=" + time_to_reconnect, new Coord(20, 220));
+        g.text("first login=" + Config.FirstLogin, new Coord(20, 240));
+        g.text("quick login=" + Config.quick_login, new Coord(20, 260));
     }
 
     public boolean type(char k, java.awt.event.KeyEvent ev) {
@@ -213,4 +243,35 @@ public class LoginScreen extends Widget {
         }
         return (super.type(k, ev));
     }
+
+    public void update(long dt) {
+        if (time_to_reconnect > 0)
+            time_to_reconnect = time_to_reconnect - dt;
+        if (time_to_reconnect < 0)
+            time_to_reconnect = 0;
+
+        if (Config.keep_connect && !Config.FirstLogin && !logging)
+            if (time_to_reconnect <= 0) {
+                logging = true;
+                super.wdgmsg("login", cur.data());
+            }
+
+        if ((first) && (cur != null)) {
+            first = false;
+            if (Config.quick_login && Config.FirstLogin) {
+                if (cur.enter()) {
+                    login();
+                }
+            }
+        }
+    }
+
+    static public String Account = "";
+
+    public void login() {
+        Config.FirstLogin = false;
+        Account = cur.get_username();
+        super.wdgmsg("login", cur.data());
+    }
+
 }

@@ -60,6 +60,20 @@ public class UI {
     public final Console cons = new WidgetConsole();
     private final Collection<AfterDraw> afterdraws = new ConcurrentLinkedQueue<AfterDraw>();
 
+
+    // Some references
+    public static FlowerMenu flowerMenu = null;
+    public static OptWnd options_wnd = null;
+    public static Makewindow make_window = null;
+    public static Equipory equip = null;
+    public static MenuGrid menuGrid = null;
+    public static String cursorName = null;
+    private long last_newwidget_time = 0;
+
+    public static void setCursorName(String name) {
+        cursorName = name.replace("gfx/hud/curs/", "");
+    }
+
     public interface Receiver {
         public void rcvmsg(int widget, String msg, Object... args);
     }
@@ -126,6 +140,7 @@ public class UI {
     }
 
     public UI(Coord size, Session sess) {
+        last_newwidget_time = System.currentTimeMillis();
         instance = this;
         root = new RootWidget(this, size);
         widgets.put(0, root);
@@ -156,6 +171,7 @@ public class UI {
 
     public void newwidget(int id, String type, Coord c, int parent, Object... args) throws InterruptedException {
         WidgetFactory f;
+        last_newwidget_time = System.currentTimeMillis();
         if (type.indexOf('/') >= 0) {
             int ver = -1, p;
             if ((p = type.indexOf(':')) > 0) {
@@ -355,5 +371,16 @@ public class UI {
         synchronized (this) {
             return rwidgets.get(wdg);
         }
+    }
+
+
+    public synchronized void update(long dt) {
+        if (mainview == null)
+            last_newwidget_time = System.currentTimeMillis();
+        // если прошло больше 60 сек с момента создания последнего виджета - то крашимся
+        if ((System.currentTimeMillis() - last_newwidget_time) > (5 * 60 * 1000))
+            if (Config.inactive_exit)
+                System.exit(0);
+        root.update(dt);
     }
 }

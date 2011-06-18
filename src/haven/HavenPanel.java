@@ -52,6 +52,7 @@ public class HavenPanel extends GLCanvas implements Runnable {
     private Profile.Frame curf = null;
     private SyncFSM fsm = null;
     private static final GLCapabilities caps;
+    private long last_tick;
 
     private static enum CursorMode {
         TEXTURE,
@@ -69,6 +70,7 @@ public class HavenPanel extends GLCanvas implements Runnable {
 
     public HavenPanel(Dimension size) {
         super(caps);
+        last_tick = System.currentTimeMillis();
         setSize(size);
         initgl();
         if (Toolkit.getDefaultToolkit().getMaximumCursorColors() >= 256) {
@@ -228,65 +230,72 @@ public class HavenPanel extends GLCanvas implements Runnable {
     }
 
     void redraw(GL gl) {
+
+        long dt = System.currentTimeMillis() - last_tick;
+        last_tick = System.currentTimeMillis();
+        ui.update(dt);
+
         GOut g = new GOut(gl, getContext(), CustomConfig.getWindowSize().clone());
+        if (Config.render_enable) {
 
-        gl.glMatrixMode(GL.GL_PROJECTION);
-        gl.glLoadIdentity();
-        gl.glOrtho(0, getWidth(), 0, getHeight(), -1, 1);
-        TexRT.renderall(g);
-        if (curf != null)
-            curf.tick("texrt");
+            gl.glMatrixMode(GL.GL_PROJECTION);
+            gl.glLoadIdentity();
+            gl.glOrtho(0, getWidth(), 0, getHeight(), -1, 1);
+            TexRT.renderall(g);
+            if (curf != null)
+                curf.tick("texrt");
 
-        gl.glMatrixMode(GL.GL_PROJECTION);
-        gl.glLoadIdentity();
-        gl.glOrtho(0, getWidth(), getHeight(), 0, -1, 1);
-        gl.glClearColor(0, 0, 0, 1);
-        gl.glClear(GL.GL_COLOR_BUFFER_BIT);
-        if (curf != null)
-            curf.tick("cls");
-        synchronized (ui) {
-            ui.draw(g);
-        }
-        if (curf != null)
-            curf.tick("draw");
-
-        if (Config.dbtext) {
-            g.atext("FPS: " + fps, new Coord(10, 545), 0, 1);
-            g.atext("Texhit: " + dth, new Coord(10, 530), 0, 1);
-            g.atext("Texmiss: " + dtm, new Coord(10, 515), 0, 1);
-            Runtime rt = Runtime.getRuntime();
-            long free = rt.freeMemory(), total = rt.totalMemory();
-            g.atext(String.format("Mem: %,011d/%,011d/%,011d/%,011d", free, total - free, total, rt.maxMemory()), new Coord(10, 500), 0, 1);
-            g.atext(String.format("LCache: %d/%d", Layered.cache.size(), Layered.cache.cached()), new Coord(10, 485), 0, 1);
-            g.atext(String.format("RT-current: %d", TexRT.current.get(gl).size()), new Coord(10, 470), 0, 1);
-            if (Resource.qdepth() > 0)
-                g.atext(String.format("RQ depth: %d (%d)", Resource.qdepth(), Resource.numloaded()), new Coord(10, 455), 0, 1);
-        }
-        Object tooltip = ui.root.tooltip(mousepos, true);
-        Tex tt = null;
-        if (tooltip != null) {
-            if (tooltip instanceof Text) {
-                tt = ((Text) tooltip).tex();
-            } else if (tooltip instanceof Tex) {
-                tt = (Tex) tooltip;
-            } else if (tooltip instanceof String) {
-                if (((String) tooltip).length() > 0)
-                    tt = Text.render((String) tooltip).tex();
+            gl.glMatrixMode(GL.GL_PROJECTION);
+            gl.glLoadIdentity();
+            gl.glOrtho(0, getWidth(), getHeight(), 0, -1, 1);
+            gl.glClearColor(0, 0, 0, 1);
+            gl.glClear(GL.GL_COLOR_BUFFER_BIT);
+            if (curf != null)
+                curf.tick("cls");
+            synchronized (ui) {
+                ui.draw(g);
             }
-        }
-        if (tt != null) {
-            Coord sz = tt.sz();
-            Coord pos = mousepos.sub(sz);
-            if (pos.x < 0)
-                pos.setX(0);
-            if (pos.y < 0)
-                pos.setY(0);
-            g.chcolor(244, 247, 21, 192);
-            g.rect(pos.add(-3, -3), sz.add(6, 6));
-            g.chcolor(35, 35, 35, 192);
-            g.frect(pos.add(-2, -2), sz.add(4, 4));
-            g.chcolor();
-            g.image(tt, pos);
+            if (curf != null)
+                curf.tick("draw");
+
+            if (Config.dbtext) {
+                g.atext("FPS: " + fps, new Coord(10, 545), 0, 1);
+                g.atext("Texhit: " + dth, new Coord(10, 530), 0, 1);
+                g.atext("Texmiss: " + dtm, new Coord(10, 515), 0, 1);
+                Runtime rt = Runtime.getRuntime();
+                long free = rt.freeMemory(), total = rt.totalMemory();
+                g.atext(String.format("Mem: %,011d/%,011d/%,011d/%,011d", free, total - free, total, rt.maxMemory()), new Coord(10, 500), 0, 1);
+                g.atext(String.format("LCache: %d/%d", Layered.cache.size(), Layered.cache.cached()), new Coord(10, 485), 0, 1);
+                g.atext(String.format("RT-current: %d", TexRT.current.get(gl).size()), new Coord(10, 470), 0, 1);
+                if (Resource.qdepth() > 0)
+                    g.atext(String.format("RQ depth: %d (%d)", Resource.qdepth(), Resource.numloaded()), new Coord(10, 455), 0, 1);
+            }
+            Object tooltip = ui.root.tooltip(mousepos, true);
+            Tex tt = null;
+            if (tooltip != null) {
+                if (tooltip instanceof Text) {
+                    tt = ((Text) tooltip).tex();
+                } else if (tooltip instanceof Tex) {
+                    tt = (Tex) tooltip;
+                } else if (tooltip instanceof String) {
+                    if (((String) tooltip).length() > 0)
+                        tt = Text.render((String) tooltip).tex();
+                }
+            }
+            if (tt != null) {
+                Coord sz = tt.sz();
+                Coord pos = mousepos.sub(sz);
+                if (pos.x < 0)
+                    pos.setX(0);
+                if (pos.y < 0)
+                    pos.setY(0);
+                g.chcolor(244, 247, 21, 192);
+                g.rect(pos.add(-3, -3), sz.add(6, 6));
+                g.chcolor(35, 35, 35, 192);
+                g.frect(pos.add(-2, -2), sz.add(4, 4));
+                g.chcolor();
+                g.image(tt, pos);
+            }
         }
         Resource curs = ui.root.getcurs(mousepos);
         if (!curs.loading.get()) {
@@ -295,6 +304,7 @@ public class HavenPanel extends GLCanvas implements Runnable {
                     if (curs == lastcursor) break;
                     try {
                         setCursor(makeawtcurs(curs.layer(Resource.imgc).img, curs.layer(Resource.negc).cc));
+                        UI.setCursorName(curs.name);
                         lastcursor = curs;
                     } catch (Exception e) {
                         cursmode = CursorMode.TEXTURE;

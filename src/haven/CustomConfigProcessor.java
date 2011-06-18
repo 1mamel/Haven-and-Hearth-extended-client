@@ -34,8 +34,36 @@ public class CustomConfigProcessor {
         CustomConfig.setHideObjects(false);
     }
 
-    public static boolean loadSettings2(){
-        // TODO create json formatted config loader
+    public static boolean loadSettings2() {
+        // TODO: create json formatted config loader
+//        try {
+//            Object obj = JSONValue.parseWithException(new FileReader(new File("config.json")));
+//            if (!(obj instanceof JSONObject)) {
+//                System.err.println("Invalif config.json format");
+//                return false;
+//            }
+//            JSONObject jo = (JSONObject) obj;
+//            Properties props = new Properties();
+//            for (Object key : jo.keySet()) {
+//                Object value = jo.get(key);
+//                if (value instanceof JSONArray) {
+//                    JSONArray a = (JSONArray) value;
+//                    for (Object o : a) {
+//
+//                    }
+//
+//                } else if (value instanceof JSONObject) {
+//
+//                } else {props.put(key, value);}
+//            }
+//
+//        } catch (IOException e) {
+//            System.err.println("Cannot parse settings");
+//            e.printStackTrace();
+//        } catch (ParseException e) {
+//            System.err.println("Cannot parse settings");
+//            e.printStackTrace();
+//        }
         return false;
     }
 

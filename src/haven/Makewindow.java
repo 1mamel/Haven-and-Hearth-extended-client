@@ -31,6 +31,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Makewindow extends HWindow {
+    private boolean ready = false; // arksu: готово ли окно
+    public final String receiptName;
     final Widget obtn, cbtn;
     List<Widget> inputs;
     List<Widget> outputs;
@@ -48,15 +50,26 @@ public class Makewindow extends HWindow {
     public Makewindow(Widget parent, String rcpnm) {
         super(parent, "Crafting", true);
         Label nm = new Label(new Coord(10, 10), this, rcpnm, nmf);
+        receiptName = rcpnm;
         nm.c = new Coord(sz.x - 10 - nm.sz.x, 10);
         new Label(new Coord(10, 18), this, "Input:");
         new Label(new Coord(10, 73), this, "Result:");
         obtn = new Button(new Coord(290, 71), 60, this, "Craft");
         cbtn = new Button(new Coord(360, 71), 60, this, "Craft All");
+        UI.make_window = this;
+    }
+
+    @Override
+    public void destroy() {
+        if (UI.make_window == this) {
+            UI.make_window = null;
+        }
+        super.destroy();
     }
 
     public void uimsg(String msg, Object... args) {
         if (msg.equals("pop")) {
+            ready = true;
             final int xoff = 50;
             if (inputs != null) {
                 for (Widget w : inputs)
@@ -108,5 +121,9 @@ public class Makewindow extends HWindow {
             return (true);
         }
         return (super.globtype(ch, ev));
+    }
+
+    public boolean isReady() {
+        return ready;
     }
 }

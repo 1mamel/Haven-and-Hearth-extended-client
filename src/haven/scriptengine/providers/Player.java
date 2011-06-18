@@ -5,6 +5,8 @@ import haven.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static haven.MCache.tilesz;
+
 /**
  * Created by IntelliJ IDEA.
  * Player: Vlad.Rassokhin@gmail.com
@@ -15,6 +17,12 @@ import java.util.regex.Pattern;
 public class Player {
 
     private static Coord position;
+
+    public static Gob getGob() {
+        synchronized (CustomConfig.glob.oc) {
+            return CustomConfig.glob.oc.getgob(Player.getId());
+        }
+    }
 
     public static int getId() {
         return CustomConfig.playerId;
@@ -191,11 +199,46 @@ public class Player {
     }
 
     public static Coord getPosition() {
-        Gob pl;
-        if ( ((pl = CustomConfig.glob.oc.getgob(getId())) != null) ) {
+        Gob pl = getGob();
+        if (pl != null) {
             return pl.getc();
         } else {
-            return new Coord(0, 0);
+            return null;
         }
     }
+
+    public static void sayAreaChat(String message) {
+        // TODO: say something into area chat
+    }
+
+
+    // для начала двигаться к указанному объекту с оффсетом
+    public static void move(int obj_id, int offX, int offY) {
+        Coord oc = getPosition();
+        if (oc == null) {
+            return;
+        }
+        int btn = 1; // левой кнопкой щелкаем
+        int modflags = 0; // никаких клавиш не держим
+        oc = oc.add(offX, offY);
+        MapProvider.getMV().wdgmsg("click", MapProvider.getCenterR(), oc, btn, modflags, obj_id, oc);
+    }
+
+    public static void moveStep(int x, int y) {
+        Coord pos = getPosition();
+        if (pos == null) {
+            return;
+        }
+        int button = 1; // левой кнопкой щелкаем
+        int modflags = 0; // никаких клавиш не держим
+        Coord mc = MapView.tilify(pos);
+        Coord offset = tilesz.mul(x, y);
+        mc = mc.add(offset);
+        MapProvider.getMV().wdgmsg("click", MapProvider.getCenterR(), mc, button, modflags);
+    }
+
+    public static boolean isMoving() {
+        return MapProvider.getMV().player_moving;
+    }
+
 }

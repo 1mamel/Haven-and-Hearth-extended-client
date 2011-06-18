@@ -124,4 +124,7 @@ public class MessageBox extends Window {
         }
     }
 
+    public void close() {
+        closeButton.click();
+    }
 }

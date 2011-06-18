@@ -522,4 +522,13 @@ public class Widget {
             show();
         return visible;
     }
+
+    public void update(long dt) {
+        Widget next;
+
+        for (Widget wdg = child; wdg != null; wdg = next) {
+            next = wdg.next;
+            wdg.update(dt);
+        }
+    }
 }

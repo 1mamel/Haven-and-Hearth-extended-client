@@ -64,7 +64,7 @@ public class Window extends Widget implements DTarget {
     private final ArrayList<Widget> wfolded = new ArrayList<Widget>();
     protected Coord ssz;
 
-    final Text cap;
+    public final Text cap;
 
     boolean dm = false;
     //    private final Coord atl;
@@ -367,5 +367,9 @@ public class Window extends Widget implements DTarget {
 
     protected boolean checkIsFoldButton(Widget w) {
         return foldButton != null && w == foldButton;
+    }
+
+    public String getCaption() {
+        return cap != null ? cap.text : "";
     }
 }

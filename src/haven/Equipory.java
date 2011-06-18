@@ -31,7 +31,7 @@ import java.util.List;
 
 public class Equipory extends Window implements DTarget {
     final List<Inventory> epoints;
-    final List<Item> equed;
+    public final List<Item> equed;
     static final Tex bg = Resource.loadtex("gfx/hud/equip/bg");
     int avagob = -1;
 
@@ -73,6 +73,7 @@ public class Equipory extends Window implements DTarget {
             equed.add(null);
         }
         pack();
+        UI.equip = this;
     }
 
     public void uimsg(String msg, Object... args) {
@@ -154,5 +155,13 @@ public class Equipory extends Window implements DTarget {
                     g.image(ava.rend, avac);
             }
         }
+    }
+
+    @Override
+    public void destroy() {
+        if (UI.equip == this) {
+            UI.equip = null;
+        }
+        super.destroy();
     }
 }

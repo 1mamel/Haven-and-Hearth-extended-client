@@ -36,7 +36,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 public class MainFrame extends Frame implements Runnable, FSMan {
-    private static final String DEFAULT_TITLE = "Haven and Hearth (modified by VladP53 with some code from Ender, Gilbertus, Pacho clients)";
+    private static final String DEFAULT_TITLE = "Haven and Hearth (modified by VladP53 with some code from Ender, Ark.SU, Gilbertus, Pacho clients)";
     private static MainFrame ourInstance;
     final HavenPanel panel;
     final ThreadGroup g;
