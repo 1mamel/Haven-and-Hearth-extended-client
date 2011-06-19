@@ -224,7 +224,7 @@ public class MapProvider {
         getMV().wdgmsg("itemact", getCenterR(), mc, mode);
     }
 
-    public static void interactClick(int id, int mode) {
+    public static void interactClickObj(int id, int mode) {
         Gob pgob = Player.getGob();
         Gob gob = getGob(id);
         if (pgob == null || gob == null) {

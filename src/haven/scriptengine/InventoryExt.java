@@ -104,7 +104,7 @@ public class InventoryExt extends Inventory {
             }
         }
         System.err.println("Inv " + getName() + " new item loc = " + loc + " size = "
-                + item.getSizeInCells() + " fc = " + getFreeCount() + " meter="+ item.getCompletedPercent());
+                + item.getSizeInCells() + " fc = " + getFreeCellsCount() + " meter="+ item.getCompletedPercent());
     }
 
     private synchronized void deleteItem(InvItem item) {
@@ -120,7 +120,7 @@ public class InventoryExt extends Inventory {
                 }
             }
         }
-        System.err.println("Inv " + getName() + " remove item loc = " + item.getCoord().div(31) + " size = " + item.getSizeInCells() + " fc = " + getFreeCount());
+        System.err.println("Inv " + getName() + " remove item loc = " + item.getCoord().div(31) + " size = " + item.getSizeInCells() + " fc = " + getFreeCellsCount());
     }
 
     public InvItem getItem(Coord position) {
@@ -148,7 +148,7 @@ public class InventoryExt extends Inventory {
         super.uimsg(msg, args);
     }
 
-    public static void registerInventory(InventoryExt inv) {
+    private static void registerInventory(InventoryExt inv) {
         System.err.println("Registering Inventory. name = " + inv.getName() + " parent type is " + inv.parent.getClass().getSimpleName());
         if (inv instanceof CuriositiesInventory) {
             CuriositiesInventory.instance.set(inv);
@@ -157,7 +157,7 @@ public class InventoryExt extends Inventory {
         }
     }
 
-    public static void unregisterInventory(InventoryExt inv) {
+    private static void unregisterInventory(InventoryExt inv) {
         System.err.println("Unregistering Inventory. name = " + inv.getName() + " parent type is " + inv.parent.getClass().getSimpleName());
         if (inv instanceof CuriositiesInventory) {
             openedInventories.remove(inv);
@@ -251,11 +251,15 @@ public class InventoryExt extends Inventory {
     }
 
     public boolean isFull() {
-        return getFreeCount() != 0;
+        return getFreeCellsCount() != 0;
     }
 
-    private int getFreeCount() {
+    private int getFreeCellsCount() {
         return freeCount;
+    }
+
+    private int getItemsCount() {
+        return items.size();
     }
 
     static List<InventoryExt> openedInventories = new ArrayList<InventoryExt>();

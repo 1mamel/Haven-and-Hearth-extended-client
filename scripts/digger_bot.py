@@ -1,5 +1,4 @@
-from apiv1 import *
-from basic2 import *
+from apiv1e import *
 
 __author__ = 'vlad'
 

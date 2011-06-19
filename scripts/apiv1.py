@@ -8,6 +8,11 @@ __author__ = 'Vladislav Rassokhin <vladrassokhin@gmail.com>'
 #noinspection PyUnresolvedReferences
 import time
 
+
+#noinspection PyUnresolvedReferences
+import haven.scriptengine.Bot as Bot
+#noinspection PyUnresolvedReferences
+import haven.scriptengine.ScriptsManager as Manager
 import haven.scriptengine.providers.Config as PConfig
 import haven.scriptengine.providers.Player as PPlayer
 import haven.scriptengine.providers.Util as PUtil
@@ -16,6 +21,7 @@ import haven.scriptengine.providers.MapProvider as PMap
 import haven.scriptengine.providers.InventoriesProvider as PInv
 import haven.scriptengine.providers.CraftProvider as PCraft
 import haven.scriptengine.providers.BuffsProvider as PBuffs
+#noinspection PyUnresolvedReferences
 import haven.scriptengine.providers.CharStatsProvider as PStat
 
 def set_bot1(name):
@@ -70,7 +76,7 @@ def my_coord_x():
 
 
 def my_coord_y():
-    return PPlayer.getPosition().x
+    return PPlayer.getPosition().y
 
 
 # кликнуть по карте (взаимодействие, чтото держим в руках) координаты указываются в тайлах от текущей позиции игрока
@@ -84,7 +90,7 @@ def map_abs_interact_click(x, y, mode):
 
 
 def map_interact_click(objid, mode):
-    return PMap.interactClick(objid, mode)
+    return PMap.interactClickObj(objid, mode)
 
 
 # поставить объект который хотим построить в указанные координаты относительно игрока. координаты задаем в тайлах
@@ -209,13 +215,8 @@ def item_quality():
     return PInv.getCurrentItemQuality()
 
 
-# - щелчок по вещи
-def item_click(action):
-    return PInv.clickItem(action, 0)
-
-
 # - щелчок по вещи, с модификатором клавиатуры
-def item_click(action, mod):
+def item_click(action, mod = 0):
     return PInv.clickItem(action, mod)
 
 #  команды (action):

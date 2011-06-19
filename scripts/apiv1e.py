@@ -2,7 +2,7 @@
 
 __author__ = 'Vladislav Rassokhin <vladrassokhin@gmail.com>'
 
-from basic import *
+from apiv1 import *
 
 def wait_context_menu():
     while not isContextMenuReady():
@@ -19,11 +19,12 @@ def wait_end_move():
 
 def wait_move():
     while True:
-        wait_begin_move()
-    wait_end_move()
-    sleep(500)
-    if not isMoving():
-        return
+        #wait_begin_move()
+        sleep(500)
+        wait_end_move()
+        sleep(500)
+        if not isMoving():
+            return
 
 
 def wait_chi_cursor():
