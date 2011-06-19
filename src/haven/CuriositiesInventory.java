@@ -19,11 +19,22 @@ public class CuriositiesInventory extends InventoryExt {
         super(c, sz, parent);
     }
 
-    int timeToNextFree() {
-//        for (InvItem item : items.values()) {
-//            if (item.getCompletedPercent())
-//        }
-        return Integer.MAX_VALUE;
+    /**
+     * Returns time to next free's in milliseconds.
+     * @return time in millisenconds
+     */
+    long timeToNextFree() {
+        long ret = Long.MAX_VALUE;
+        for (InvItem item : items.values()) {
+            long ttc = item.getTimeToComplete();
+            if (ttc == 0){ // %) it cannot be true =)
+                continue;
+            }
+            if (ttc < ret) {
+                ret = ttc;
+            }
+        }
+        return ret;
     }
 
 }

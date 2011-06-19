@@ -59,10 +59,6 @@ public class InventoryExt extends Inventory {
             }
         }
 
-        public boolean isCompleted() {
-            return completedPercents == 0;
-        }
-
         public Coord getSizeInCells() {
             return sz.div(30);
         }

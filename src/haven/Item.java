@@ -54,6 +54,9 @@ public class Item extends Widget implements DTarget {
     private Color olcol = null;
     private Tex mask = null;
     protected int completedPercents = 0;
+    protected long lastCPUpdateTime = 0;
+    private long timeToComplete = 0;
+    private long approximateDelta = -1;
 
     static {
         Widget.addtype("item", new WidgetFactory() {
@@ -374,7 +377,20 @@ public class Item extends Widget implements DTarget {
                 tooltip = null;
             resetToolTip();
         } else if (name.equals("meter")) { // may be completion indicator on dying fur, etc.
-            completedPercents = (Integer) args[0];
+            int ncp = (Integer) args[0];
+            int deltaCP = Math.abs(ncp - completedPercents);
+            completedPercents = ncp;
+
+            long nowTime = System.currentTimeMillis();
+            long deltaTime = lastCPUpdateTime - nowTime;
+            // Reapproximates deltaTime
+            if (approximateDelta != -1) {
+                approximateDelta = (approximateDelta + 3 * deltaTime) / 4;
+            } else {
+                approximateDelta = deltaTime;
+            }
+            timeToComplete = (completedPercents * approximateDelta) / deltaCP;
+            lastCPUpdateTime = nowTime;
         }
     }
 
@@ -459,5 +475,13 @@ public class Item extends Widget implements DTarget {
     public void destroy() {
         UI.draggingItem.compareAndSet(this, null);
         super.destroy();
+    }
+
+    public boolean isCompleted() {
+        return completedPercents == 0;
+    }
+
+    public long getTimeToComplete() {
+        return timeToComplete;
     }
 }

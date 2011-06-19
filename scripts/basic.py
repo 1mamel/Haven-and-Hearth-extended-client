@@ -13,6 +13,9 @@ import haven.scriptengine.providers.Player as PPlayer
 import haven.scriptengine.providers.Util as PUtil
 import haven.scriptengine.providers.UIProvider as PUI
 import haven.scriptengine.providers.MapProvider as PMap
+import haven.scriptengine.providers.InventoriesProvider as PInv
+import haven.scriptengine.providers.CraftProvider as PCraft
+import haven.scriptengine.providers.BuffsProvider as PBuffs
 
 def set_bot1(name):
     PConfig.bot1 = name
@@ -109,7 +112,7 @@ def send_action(name, name2=""):
 # dig - лопата
 # chi - курсор пипетка. появляется когда хотим чето перетаскивать(lift). и надо указать объект
 def is_cursor(cursor_name):
-    return PUI.isCursorNameContains(cursor_name)
+    return PInv.isCursorNameContains(cursor_name)
 
 
 # дропнуть вещь в руках на землю
@@ -143,76 +146,76 @@ def find_object_by_type(type, radius):
 
 # проверить наличие инвентаря по имени
 def have_inventory(name):
-    return PUI.haveInventory(name)
+    return PInv.haveInventory(name)
 
 
 #открыть мой инвентарь
 def open_inventory():
-    return PUI.toggleUserInventory()
+    return PInv.toggleUserInventory()
 
 
 #поставить текущий инвентарь, после автоматически сбрасывается итератор
 def set_inventory(name):
-    return PUI.setInventory(name)
+    return PInv.setInventory(name)
 
 
 #сбросить итератор итемов в инвентаре
 def reset_inventory():
-    return PUI.resetInventoryIter()
+    return PInv.resetInventoryIter()
 
 
 #вызывать итератор для установки итема
 #0 - если вещи нет (прошли весь список). 1 если есть
 def next_item():
-    return PUI.nextInventoryItem()
+    return PInv.nextInventoryItem()
 
 
 # получить количество вещей в списке
 # -1 если не установлен инвентарь
 def get_items_count():
-    return PUI.getInventoryItemsCount()
+    return PInv.getInventoryItemsCount()
 
 
 # установить текущую вещь по индексу в списке
 def set_item_index(index):
-    return PUI.useInventoryItem(index)
+    return PInv.useInventoryItem(index)
 
 
 # установить текущей вещью - то что держим в руках если оно есть. (чтобы получить ее параметры)
 def set_item_drag():
-    return PUI.useDraggingItem()
+    return PInv.useDraggingItem()
 
 
 # установить текущей вещью - вещь из инвентаря. указываем индекс (чтобы получить ее параметры)
 def set_item_equip(index):
-    return PUI.useEquipItem(index)
+    return PInv.useEquipItem(index)
 
 
 # получаем параметры текущей вещи установленной итератором
 
 # - boolean совпадает ли имя вещи
 def is_item_name(name):
-    return PUI.isCurrentItemNameContains(name)
+    return PInv.isCurrentItemNameContains(name)
 
 
 # - boolean совпадает ли тултип (всплывающая подсказка на вещи)
 def is_item_tooltip(name):
-    return PUI.isCurrentItemTooltipContains(name)
+    return PInv.isCurrentItemTooltipContains(name)
 
 
 # - возвращает качество
 def item_quality():
-    return PUI.getCurrentItemQuality()
+    return PInv.getCurrentItemQuality()
 
 
 # - щелчок по вещи
 def item_click(action):
-    return PUI.clickItem(action, 0)
+    return PInv.clickItem(action, 0)
 
 
 # - щелчок по вещи, с модификатором клавиатуры
 def item_click(action, mod):
-    return PUI.clickItem(action, mod)
+    return PInv.clickItem(action, mod)
 
 #  команды (action):
 #    take - взять вещь
@@ -223,28 +226,28 @@ def item_click(action, mod):
 
 # координаты вещи в инвентаре
 def item_coord():
-    return PUI.getInventoryItemCoord() # return Coord class
+    return PInv.getInventoryItemCoord() # return Coord class
 
 
 def item_coord_x():
-    return PUI.getInventoryItemCoord().x # integer
+    return PInv.getInventoryItemCoord().x # integer
 
 
 def item_coord_y():
-    return PUI.getInventoryItemCoord().y # integer
+    return PInv.getInventoryItemCoord().y # integer
 
 
 #  - получить цифру возле итема. пример: стадия червяков шелкопрядов. рисуетя вверху слева у вещи.
 def item_num():
-    return PUI.getItemQuantity() #integer
+    return PInv.getItemQuantity() #integer
 
 # - получить прогресс итема. пример: сушка. круглешок на шкуре. принимаем значения от 0 до 100.
 def item_meter():
-    return PUI.getItemMeter() #integer
+    return PInv.getItemMeter() #integer
 
 #  - положить вещь которую держим в руках в текущий инвентарь установленный set_inventory. в указанные координаты. нумерация клеток с нуля
 def item_drop(x, y):
-    return PUI.dropItemIntoCurrentInventory(x, y)
+    return PInv.dropItemIntoCurrentInventory(x, y)
 
 
 # дать команду вещи в инвентаре с указаныым именем. по указанным координатам вещи в этом инвентаре.
@@ -255,36 +258,36 @@ def item_drop(x, y):
 # drop - дропнуть вещь на землю. щелчек лкм с зажатым контролом
 
 #def inventory(name, x, y, action):
-#    return PUI.doInventoryAction(name, x, y, action, 0)
+#    return PInv.doInventoryAction(name, x, y, action, 0)
 
 # тоже самое но с модификатором клавиатуры
 def inventory(name, x, y, action, mode=0):
-    return PUI.doInventoryAction(name, x, y, action, mode)
+    return PInv.doInventoryAction(name, x, y, action, mode)
 
 
 # дропнуть вещь в указанный инвентарь, допустим когда надо из моего инвентаря не закрывая его дропнуть в шкаф или ящик
 def item_drop_to_inventory(name, x, y):
-    return PUI.dropItemIntoInventory(name, x, y)
+    return PInv.dropItemIntoInventory(name, x, y)
 
 
 # проверить есть ли окно крафта с указанным заголовком
 def check_craft(wnd):
-    return PUI.hasCraftWindow(wnd)
+    return PCraft.isOpened(wnd)
 
 # подождать появления и готовности окна с указанным заголовком
 def wait_craft(wnd):
-    while not PUI.hasCraftWindow(wnd):
+    while not PCraft.isOpened(wnd):
         time.sleep(0.2)
 
 
 # скрафтить вещь. all - True или False. если True - то крафтим все. False только одну вещь. перед крафтом надо каким то образом открыть окно крафта
 def craft(all):
-    return PUI.craft(all)
+    return PCraft.craft(all)
 
 
 # скрафтить все. False только одну вещь. перед крафтом надо каким то образом открыть окно крафта
 def craftAll():
-    return PUI.craft(True)
+    return PCraft.craft(True)
 
 
 #дать команду в эквип (одевалку), указываем какому слоту даем команду и саму команду
@@ -311,27 +314,27 @@ def get_object_blob(id, index):
 
 # сбросить итератор бафов
 def reset_buff():
-    return PUI.resetBuffsIterator()
+    return PBuffs.resetBuffsIterator()
 
 
 # перейти на следующий элемент баф листа. вернет либо 0 если уже конец. либо 1 если перешли на след бафф
 def next_buff():
-    return PUI.nextBuff()
+    return PBuffs.nextBuff()
 
 
 # вернет показатель шкалы под баффом (от 0 до 100)
 def buff_meter():
-    return PUI.getBuffMeter()
+    return PBuffs.getBuffMeter()
 
 
 # вернет оставшееся время до истечения баффа (от 0 до 100), чем ближе к 0 тем меньше времени осталось
 def buff_time_meter():
-    return PUI.getBuffTimeMeter()
+    return PBuffs.getBuffTimeMeter()
 
 
 # проверить имя баффа на вхождение строки. вернет 0 или 1
 def is_buff_name(name):
-    return PUI.isBuffNameContains(name)
+    return PBuffs.isBuffNameContains(name)
 
 
 # нажать кнопку строительства в окошке билда
@@ -384,11 +387,11 @@ def isContextMenuReady():
 
 
 def isDraggingItem():
-    return PUI.haveDragItem()
+    return PInv.haveDragItem()
 
 
 def isCraftReady():
-    return PUI.isCraftWindowReady()
+    return PCraft.isReady()
 
 
 def isBuildReady():
