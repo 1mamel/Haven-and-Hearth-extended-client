@@ -12,8 +12,8 @@ import java.util.concurrent.atomic.AtomicReference;
 public class StudyWidget extends Widget {
     public static AtomicReference<StudyWidget> instance = new AtomicReference<StudyWidget>(null);
 
-    private int used;
-    private int max;
+    private int attention;
+    private int attentionLimit;
     private final Label maxLabel;
     private final Label usedLabel;
 
@@ -34,21 +34,21 @@ public class StudyWidget extends Widget {
         super.destroy();
     }
 
-    public void setUsed(int used) {
-        this.used = used;
+    public void setAttention(int used) {
+        this.attention = used;
         usedLabel.settext(Integer.toString(used));
     }
 
-    public void setMax(int max) {
-        this.max = max;
-        maxLabel.settext(Integer.toString(max));
+    public void setAttentionLimit(int limit) {
+        this.attentionLimit = limit;
+        maxLabel.settext(Integer.toString(limit));
     }
 
-    public int getMax() {
-        return max;
+    public int getAttentionLimit() {
+        return attentionLimit;
     }
 
-    public int getUsed() {
-        return used;
+    public int getAttention() {
+        return attention;
     }
 }

@@ -34,29 +34,35 @@ import java.awt.font.TextAttribute;
 import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class CharWnd extends Window {
-    final Widget cattr, skill, belief;
-    final StudyWidget study;
-    final Worship ancw;
-    final Label cost;
-    Label skcost;
-    final Label explbl;
-    int exp;
-    int btime = 0;
-    SkillList psk, nsk;
-    final SkillInfo ski;
-    final FoodMeter foodm;
-    final Map<String, Attr> attrs = new TreeMap<String, Attr>();
-    public static final Tex missing = Resource.loadtex("gfx/invobjs/missing");
-    public static final Tex foodmimg = Resource.loadtex("gfx/hud/charsh/foodm");
-    public static final Color debuff = new Color(255, 128, 128);
-    public static final Color buff = new Color(128, 255, 128);
-    public static final RichText.Foundry skbodfnd = new RichText.Foundry(TextAttribute.FAMILY, "SansSerif", TextAttribute.SIZE, 9);
-    public static final Tex btimeoff = Resource.loadtex("gfx/hud/charsh/shieldgray");
-    public static final Tex btimeon = Resource.loadtex("gfx/hud/charsh/shield");
-    public static final Tex nmeter = Resource.loadtex("gfx/hud/charsh/numenmeter");
-    public static final Tex ancestors = Resource.loadtex("gfx/hud/charsh/ancestors");
+    private final Widget cattr;
+    private final Widget skill;
+    private final Widget belief;
+    private final StudyWidget study;
+    private final Worship ancw;
+    private final Label cost;
+    private Label skcost;
+    private final Label explbl;
+    private int exp;
+    private int btime = 0;
+    private SkillList psk;
+    private SkillList nsk;
+    private final SkillInfo ski;
+    private final FoodMeter foodm;
+    private final Map<String, Attr> attrs = new TreeMap<String, Attr>();
+    private static final Tex missing = Resource.loadtex("gfx/invobjs/missing");
+    private static final Tex foodmimg = Resource.loadtex("gfx/hud/charsh/foodm");
+    private static final Color debuff = new Color(255, 128, 128);
+    private static final Color buff = new Color(128, 255, 128);
+    private static final RichText.Foundry skbodfnd = new RichText.Foundry(TextAttribute.FAMILY, "SansSerif", TextAttribute.SIZE, 9);
+    private static final Tex btimeoff = Resource.loadtex("gfx/hud/charsh/shieldgray");
+    private static final Tex btimeon = Resource.loadtex("gfx/hud/charsh/shield");
+    private static final Tex nmeter = Resource.loadtex("gfx/hud/charsh/numenmeter");
+    private static final Tex ancestors = Resource.loadtex("gfx/hud/charsh/ancestors");
+
+    public static final AtomicReference<CharWnd> instance = new AtomicReference<CharWnd>(null);
 
     static {
         Widget.addtype("chr", new WidgetFactory() {
@@ -70,13 +76,13 @@ public class CharWnd extends Window {
     }
 
     class Attr implements Observer {
-        final String nm;
+        final String name;
         final Glob.CAttr attr;
 
-        Attr(String nm) {
-            this.nm = nm;
-            attr = ui.sess.glob.cattr.get(nm);
-            attrs.put(nm, this);
+        Attr(String name) {
+            this.name = name;
+            attr = ui.sess.glob.cattr.get(name);
+            attrs.put(name, this);
             attr.addObserver(this);
         }
 
@@ -106,8 +112,8 @@ public class CharWnd extends Window {
         final BufferedImage rbd = Resource.loadimg("gfx/hud/charsh/rightdown");
         final BufferedImage rbg = Resource.loadimg("gfx/hud/charsh/rightgrey");
 
-        Belief(String nm, String left, String right, boolean inv, int x, int y) {
-            super(nm);
+        Belief(String name, String left, String right, boolean inv, int x, int y) {
+            super(name);
             this.inv = inv;
             lx = x;
             Label lbl = new Label(new Coord(x, y), belief, String.format("%s / %s", Utils.titlecase(left), Utils.titlecase(right)));
@@ -133,7 +139,7 @@ public class CharWnd extends Window {
         public void buy(int ch) {
             if (inv)
                 ch = -ch;
-            CharWnd.this.wdgmsg("believe", nm, ch);
+            CharWnd.this.wdgmsg("believe", name, ch);
         }
 
         public void update() {
@@ -160,21 +166,21 @@ public class CharWnd extends Window {
     class NAttr extends Attr {
         final Label lbl;
 
-        NAttr(String nm, int x, int y) {
-            super(nm);
+        NAttr(String name, int x, int y) {
+            super(name);
             this.lbl = new Label(new Coord(x, y), cattr, "0");
             update();
         }
 
         public void update() {
             lbl.settext(Integer.toString(attr.comp));
-            if (nm.equals("intel") && study != null) {
+            if (name.equals("intel") && study != null) {
                 try {
-                    study.setMax(Integer.parseInt(lbl.texts));
+                    study.setAttentionLimit(Integer.parseInt(lbl.texts));
                 } catch (Exception e) {
                     System.err.println("Failed to parse integer at parsing intellegense");
                     e.printStackTrace();
-                    study.setMax(-1);
+                    study.setAttentionLimit(-1);
                 }
             }
             if (attr.comp < attr.base) {
@@ -205,7 +211,6 @@ public class CharWnd extends Window {
     }
 
     class SAttr extends NAttr {
-        final IButton minus, plus;
         int tvalb, tvalc;
         int cost;
 
@@ -213,7 +218,7 @@ public class CharWnd extends Window {
             super(nm, x, y);
             tvalb = attr.base;
             tvalc = attr.comp;
-            minus = new IButton(new Coord(x + 30, y), cattr, Resource.loadimg("gfx/hud/charsh/minusup"), Resource.loadimg("gfx/hud/charsh/minusdown")) {
+            new IButton(new Coord(x + 30, y), cattr, Resource.loadimg("gfx/hud/charsh/minusup"), Resource.loadimg("gfx/hud/charsh/minusdown")) {
                 public void click() {
                     dec();
                     upd();
@@ -228,7 +233,7 @@ public class CharWnd extends Window {
                     return (true);
                 }
             };
-            plus = new IButton(new Coord(x + 45, y), cattr, Resource.loadimg("gfx/hud/charsh/plusup"), Resource.loadimg("gfx/hud/charsh/plusdown")) {
+            new IButton(new Coord(x + 45, y), cattr, Resource.loadimg("gfx/hud/charsh/plusup"), Resource.loadimg("gfx/hud/charsh/plusdown")) {
                 public void click() {
                     inc();
                     upd();
@@ -431,7 +436,10 @@ public class CharWnd extends Window {
         }
 
         public void wish(int i, Indir<Resource> res, int amount) {
-            wishes.getItem(Coord.z.add(i, 0)).destroy();
+            InventoryExt.InvItem item = wishes.getItem(Coord.z.add(i, 0));
+            if (item != null) {
+                item.destroy();
+            }
             wishes.new InvItem(Coord.z.add(1 + i * 31, 1), res, -1, wishes, null, amount);
         }
 
@@ -549,7 +557,7 @@ public class CharWnd extends Window {
         for (Attr attr : attrs.values()) {
             if (attr instanceof SAttr) {
                 SAttr sa = (SAttr) attr;
-                args.add(sa.nm);
+                args.add(sa.name);
                 args.add(sa.tvalb);
             }
         }
@@ -573,9 +581,9 @@ public class CharWnd extends Window {
         new SAttr(id, 320, y);
     }
 
-    public CharWnd(Coord c, Widget parent, int studyid) {
-        super(c, new Coord(400, 340), parent, "Character Sheet", true, true);
-
+    private CharWnd(Coord c, Widget parent, int studyid) {
+        super(c, new Coord(400, 340), parent, "Character Sheet", false, true);
+        instance.set(this);
         int y;
         cattr = new Widget(Coord.z, new Coord(400, 300), this);
         new Label(new Coord(10, 10), cattr, "Base Attributes:");
@@ -668,8 +676,8 @@ public class CharWnd extends Window {
         belief.visible = false;
 
         study = new StudyWidget(Coord.z, new Coord(400, 275), this);
-        study.setUsed(-1);
-        study.setMax(ui.sess.glob.cattr.get("intel").comp);
+        study.setAttention(-1);
+        study.setAttentionLimit(ui.sess.glob.cattr.get("intel").comp);
         if (studyid >= 0) {
             ui.bind(study, studyid);
         }
@@ -716,7 +724,7 @@ public class CharWnd extends Window {
             exp = (Integer) args[0];
             updexp();
         } else if (msg.equals("studynum")) {
-            study.setUsed((Integer) args[0]);
+            study.setAttention((Integer) args[0]);
         } else if (msg.equals("reset")) {
             updexp();
         } else if (msg.equals("nsk")) {
@@ -764,6 +772,10 @@ public class CharWnd extends Window {
     }
 
     public void wdgmsg(Widget sender, String msg, Object... args) {
+        if (checkIsCloseButton(sender)) {
+            hide();
+            return;
+        }
         if (ui.rwidgets.containsKey(sender)) {
             super.wdgmsg(sender, msg, args);
             return;
@@ -776,6 +788,7 @@ public class CharWnd extends Window {
     }
 
     public void destroy() {
+        instance.compareAndSet(this, null);
         for (Attr attr : attrs.values())
             attr.destroy();
         super.destroy();

@@ -6,7 +6,6 @@ import haven.UI;
 import haven.Widget;
 import haven.scriptengine.InventoryExt;
 
-import java.awt.event.KeyEvent;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -51,7 +50,8 @@ public class InventoriesProvider {
      * Sends message to server, you wants to wait some time for appear.
      */
     public static void toggleUserInventory() {
-        UI.instance.root.wdgmsg("gk", KeyEvent.VK_TAB);
+        UI.instance.slen.wdgmsg("inv");
+//        UI.instance.root.wdgmsg("gk", KeyEvent.VK_TAB);
     }
 
     // поставить текущий инвентарь, после автоматически сбрасывается итератор

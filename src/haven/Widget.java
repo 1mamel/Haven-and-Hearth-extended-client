@@ -440,18 +440,18 @@ public class Widget {
     }
 
     public boolean keyup(KeyEvent ev) {
-        if ((ev.getKeyCode() == KeyEvent.VK_X) && ((ev.getModifiers() & InputEvent.CTRL_MASK) != 0)) {
-            CustomConfig.setXray(!CustomConfig.isXray());
-            return (true);
-        }
-        if ((ev.getKeyCode() == KeyEvent.VK_N) && ((ev.getModifiers() & InputEvent.CTRL_MASK) != 0)) {
-            CustomConfig.hasNightVision = !CustomConfig.hasNightVision;
-            return (true);
-        }
-        if ((ev.getKeyCode() == KeyEvent.VK_H) && ((ev.getModifiers() & InputEvent.CTRL_MASK) != 0)) {
-            CustomConfig.setHideObjects(!CustomConfig.isHideObjects());
-            return (true);
-        }
+//        if ((ev.getKeyCode() == KeyEvent.VK_X) && ((ev.getModifiers() & InputEvent.CTRL_MASK) != 0)) {
+//            CustomConfig.toggleXray();
+//            return (true);
+//        }
+//        if ((ev.getKeyCode() == KeyEvent.VK_N) && ((ev.getModifiers() & InputEvent.CTRL_MASK) != 0)) {
+//            CustomConfig.hasNightVision = !CustomConfig.hasNightVision;
+//            return (true);
+//        }
+//        if ((ev.getKeyCode() == KeyEvent.VK_H) && ((ev.getModifiers() & InputEvent.CTRL_MASK) != 0)) {
+//            CustomConfig.setHideObjects(!CustomConfig.isHideObjects());
+//            return (true);
+//        }
 
         if (focusctl) {
             if (focused != null) {

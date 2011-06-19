@@ -119,6 +119,23 @@ public class CustomConfig {
         render = flag;
     }
 
+    public static void toggleConsole() {
+        if (UI.console == null) {
+            UI.console = new CustomConsole(Coord.z, new Coord(CustomConfig.getWindowWidth() - 30, 220), UI.instance.root, "Console");
+        } else {
+            UI.console.toggle();
+            UI.console.raise();
+        }
+    }
+
+    public static void toggleNightvision() {
+        hasNightVision = !hasNightVision;
+    }
+
+    public static void toggleMapGrid() {
+        Config.grid = !Config.grid;
+    }
+
     static class CharData {
         String name;
         int hudActiveBelt = 1;
@@ -150,7 +167,6 @@ public class CustomConfig {
     public static boolean hasNightVision = false;
     public static boolean isSaveable = false;
     public static boolean noChars = true;
-    public static CustomConsole console;
 
     public static boolean logLoad = false;
     public static boolean logSave = false;

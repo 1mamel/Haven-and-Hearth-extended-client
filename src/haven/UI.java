@@ -45,7 +45,6 @@ public class UI {
     public SlenConsole slenConsole;
     public SlenHud slen;
     public MenuGrid mnu;
-    public Speedget spd;
     public WikiBrowser wiki;
     private Widget keygrab, mousegrab;
     public final Map<Integer, Widget> widgets = new TreeMap<Integer, Widget>();
@@ -68,6 +67,10 @@ public class UI {
     public static AtomicReference<Equipory> equipory = new AtomicReference<Equipory>(null);
     public static AtomicReference<MenuGrid> menuGrid = new AtomicReference<MenuGrid>(null);
     public static AtomicReference<Item> draggingItem = new AtomicReference<Item>(null);
+    public static AtomicReference<Speedget> speedget = new AtomicReference<Speedget>();
+
+    public static CustomConsole console;
+
     public static String cursorName = null;
     private long last_newwidget_time = 0;
 

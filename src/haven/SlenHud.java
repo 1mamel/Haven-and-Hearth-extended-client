@@ -371,10 +371,10 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
             wdgmsg("equ");
             return;
         } else if (sender == chrb) {
-            wdgmsg("chr");
+            CharWnd.instance.get().toggle();
             return;
         } else if (sender == budb) {
-            BuddyWnd.instance.visible = !BuddyWnd.instance.visible;
+            BuddyWnd.instance.toggle();
             return;
         } else if (sender == optb) {
             toggleopts();
@@ -384,7 +384,9 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
     }
 
     public void binded() {
-        wdgmsg("bud");
+        wdgmsg("bud"); // Opening Buddies Window
+        wdgmsg("chr"); // Opening Char characteristics window
+        wdgmsg("inv"); // Opening Inventory
     }
 
     public void uimsg(String msg, Object... args) {

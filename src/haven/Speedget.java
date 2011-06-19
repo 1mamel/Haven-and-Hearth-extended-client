@@ -26,20 +26,18 @@
 
 package haven;
 
-import haven.scriptengine.providers.Player;
-
 public class Speedget extends Widget {
     public static final Tex imgs[][];
     public static final Coord tsz;
     private int cur, max;
 
     static {
-        imgs = new Tex[4][3];
         String[] names = {"crawl", "walk", "run", "sprint"};
         String[] vars = {"dis", "off", "on"};
+        imgs = new Tex[names.length][vars.length];
         int w = 0;
-        for (int i = 0; i < 4; i++) {
-            for (int o = 0; o < 3; o++)
+        for (int i = 0; i < names.length; i++) {
+            for (int o = 0; o < vars.length; o++)
                 imgs[i][o] = Resource.loadtex("gfx/hud/meter/rmeter/" + names[i] + '-' + vars[o]);
             w += imgs[i][0].sz().x;
         }
@@ -58,8 +56,7 @@ public class Speedget extends Widget {
         super(c, tsz, parent);
         this.cur = cur;
         this.max = max;
-        ui.spd = this;
-        updateUserInfo();
+        UI.speedget.set(this);
     }
 
     public void draw(GOut g) {
@@ -80,15 +77,17 @@ public class Speedget extends Widget {
     public void uimsg(String msg, Object... args) {
         if (msg.equals("cur")) {
             cur = (Integer) args[0];
-            updateUserInfo();
         } else if (msg.equals("max")) {
             max = (Integer) args[0];
-            updateUserInfo();
         }
     }
 
-    private void updateUserInfo() {
-        Player.updateSpeed(cur, max, this);
+    public int getCurrent() {
+        return cur;
+    }
+
+    public int getMax() {
+        return max;
     }
 
     public boolean changeSpeed(int speed) {
@@ -99,7 +98,7 @@ public class Speedget extends Widget {
 
     public boolean mousedown(Coord c, int button) {
         int x = 0;
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < imgs.length; i++) {
             x += imgs[i][0].sz().x;
             if (c.x < x) {
                 wdgmsg("set", i);
@@ -110,15 +109,15 @@ public class Speedget extends Widget {
     }
 
     public boolean mousewheel(Coord c, int amount) {
-        if (max >= 0)
+        if (max >= 0) {
             wdgmsg("set", (cur + max + 1 + amount) % (max + 1));
+        }
         return (true);
     }
 
     @Override
     public void destroy() {
-        ui.spd = null;
-        Player.updateSpeed(0, 0, null);
+        UI.speedget.compareAndSet(this, null);
         super.destroy();
     }
 }

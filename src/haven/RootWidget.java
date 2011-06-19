@@ -55,51 +55,50 @@ public class RootWidget extends ConsoleHost {
             boolean ctrl = ev.isControlDown();
             boolean alt = ev.isAltDown();
 
-            if (Config.profile && (key == '`')) {
+            if (Config.profile && key == '`') {
                 new Profwnd(ui.slen, ui.mainview.prof, "MV prof");
-            } else if (Config.profile && (key == '~')) {
+            } else if (Config.profile && key == '~') {
                 new Profwnd(ui.slen, gprof, "Glob prof");
-            } else if (Config.profile && (key == '!')) {
+            } else if (Config.profile && key == '!') {
                 new Profwnd(ui.slen, ui.mainview.mask.prof, "ILM prof");
-            } else if ((code == KeyEvent.VK_N) && ctrl) {
-                CustomConfig.hasNightVision = !CustomConfig.hasNightVision;
-            } else if ((code == KeyEvent.VK_X) && ctrl) {
+            } else if (code == KeyEvent.VK_N && ctrl) {
+                CustomConfig.toggleNightvision();
+            } else if (code == KeyEvent.VK_X && ctrl) {
                 CustomConfig.toggleXray();
-            } else if ((code == KeyEvent.VK_H) && ctrl) {
+            } else if (code == KeyEvent.VK_H && ctrl) {
                 CustomConfig.toggleHideObjects();
-            } else if ((code == KeyEvent.VK_Y) && ctrl) {
+            } else if (code == KeyEvent.VK_Y && ctrl) {
                 CustomConfig.toggleRender();
-            } else if ((code == KeyEvent.VK_Q) && alt) {
-                ui.spd.wdgmsg("set", 0);
-            } else if ((code == KeyEvent.VK_W) && alt) {
-                ui.spd.wdgmsg("set", 1);
-            } else if ((code == KeyEvent.VK_E) && alt) {
-                ui.spd.wdgmsg("set", 2);
-            } else if ((code == KeyEvent.VK_R) && alt) {
-                ui.spd.wdgmsg("set", 3);
-            } else if ((code == KeyEvent.VK_G) && ctrl) {
-                Config.grid = !Config.grid;
-            } else if (((int) key == 2) & ctrl) {//CTRL-B have code of 02
-                BuddyWnd.instance.visible = !BuddyWnd.instance.visible;
+            } else if (code == KeyEvent.VK_Q && alt) {
+                UI.speedget.get().wdgmsg("set", 0);
+            } else if (code == KeyEvent.VK_W && alt) {
+                UI.speedget.get().wdgmsg("set", 1);
+            } else if (code == KeyEvent.VK_E && alt) {
+                UI.speedget.get().wdgmsg("set", 2);
+            } else if (code == KeyEvent.VK_R && alt) {
+                UI.speedget.get().wdgmsg("set", 3);
+            } else if (code == KeyEvent.VK_G && ctrl) {
+                CustomConfig.toggleMapGrid();
+            } else if (key == 2 & ctrl) { // CTRL - B
+                BuddyWnd.instance.toggle();
+            } else if (key == 20 & ctrl) {  // CTRL - T
+                CharWnd.instance.get().toggle();
             } else if (code == KeyEvent.VK_HOME) {
                 ui.mainview.resetcam();
             } else if (code == KeyEvent.VK_END) {
                 screenshot = true;
-            } else if (key == ':') {
+            } else if (code == KeyEvent.VK_COLON) {
                 entercmd();
-            } else if (key == '`') {
-                if (CustomConfig.console == null) {
-                    CustomConfig.console = new CustomConsole(Coord.z, new Coord(CustomConfig.getWindowWidth() - 30, 220), this,
-                            "Console");
-                } else {
-                    CustomConfig.console.toggle();
-                    CustomConfig.console.raise();
-                }
+            } else if (key == '`' || key == '~') {
+                CustomConfig.toggleConsole();
             } else if (key != 0) {
-                wdgmsg("gk", (int) key);
+//                System.err.println("gk" + (int) key + " ctrl:" + ctrl + " alt:" + alt);
+                if (key != 20 && key != 2) {
+                    wdgmsg("gk", (int) key);
+                }
             }
         }
-        return (true);
+        return true;
     }
 
     public void draw(GOut g) {
@@ -140,7 +139,7 @@ public class RootWidget extends ConsoleHost {
 
     @Override
     public void destroy() {
-        CustomConfig.console = null;
+        UI.console = null;
         super.destroy();
     }
 }

@@ -1,5 +1,5 @@
-from basic import open_inventory, have_inventory, sleep, set_inventory, getHungry, inventory, set_item_drag, is_item_name, map_interact_click, find_object_by_name, item_drop, select_context_menu, send_action, map_click
-from basic2 import wait_drag, wait_hourglass, wait_dig_cursor, wait_context_menu, wait_drop
+from apiv1 import *
+from basic2 import *
 
 __author__ = 'vlad'
 

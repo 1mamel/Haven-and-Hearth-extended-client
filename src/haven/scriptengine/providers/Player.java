@@ -65,15 +65,15 @@ public class Player {
     }
 
     public static int getSpeed() {
-        return speedCurrent;
+        return UI.speedget.get().getMax();
     }
 
     public static int getMaxSpeed() {
-        return speedMax;
+        return UI.speedget.get().getMax();
     }
 
     public static boolean setSpeed(int speed) {
-        return speedGet != null && speedGet.changeSpeed(speed);
+        return UI.speedget.get().changeSpeed(speed);
     }
 
     public static void iMeterGenerated(IMeter meter, String resName) {
@@ -174,10 +174,6 @@ public class Player {
 
     static private int progress = -1; // [0-100] or -1 if not in progress
 
-    static private Speedget speedGet;
-    static private int speedCurrent = -1; // [0-3]
-    static private int speedMax = -1; // [0-3]
-
     static final Pattern intsOnly = Pattern.compile("[-]?\\d+");
 
     public static void updateProgress(int p) {
@@ -190,12 +186,6 @@ public class Player {
 
     public static boolean isInProgress() {
         return progress > 0;
-    }
-
-    public static void updateSpeed(int cur, int max, Speedget sg) {
-        speedCurrent = cur;
-        speedMax = max;
-        speedGet = sg;
     }
 
     public static Coord getPosition() {
