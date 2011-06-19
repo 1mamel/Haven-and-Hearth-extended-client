@@ -26,6 +26,9 @@
 
 package haven;
 
+/**
+ * Target with support for drop items and interact items
+ */
 public interface DTarget {
     public boolean drop(Coord cc, Coord ul, Item item);
     

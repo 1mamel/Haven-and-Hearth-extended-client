@@ -213,15 +213,19 @@ public class Player {
 
 
     // для начала двигаться к указанному объекту с оффсетом
-    public static void move(int obj_id, int offX, int offY) {
-        Coord oc = getPosition();
+    public static void move(int objectId, int offX, int offY) {
+        Gob gob = MapProvider.getGob(objectId);
+        if (gob == null) {
+            return;
+        }
+        Coord oc = gob.getc();
         if (oc == null) {
             return;
         }
         int btn = 1; // левой кнопкой щелкаем
         int modflags = 0; // никаких клавиш не держим
         oc = oc.add(offX, offY);
-        MapProvider.getMV().wdgmsg("click", MapProvider.getCenterR(), oc, btn, modflags, obj_id, oc);
+        MapProvider.getMV().wdgmsg("click", MapProvider.getCenterR(), oc, btn, modflags, objectId, oc);
     }
 
     public static void moveStep(int x, int y) {

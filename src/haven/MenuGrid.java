@@ -103,14 +103,12 @@ public class MenuGrid extends Widget {
         ToolbarWnd.loadBelts();
         new ToolbarWnd(new Coord(0, 300), ui.root, "toolbar1");
         new ToolbarWnd(new Coord(50, 300), ui.root, "toolbar2", 2, 12, new Coord(4, 10), KeyEvent.VK_F1);
-        UI.menuGrid = this;
+        UI.menuGrid.set(this);
     }
 
     @Override
     public void destroy() {
-        if (UI.menuGrid == this) {
-            UI.menuGrid = null;
-        }
+        UI.menuGrid.compareAndSet(this, null);
         super.destroy();
     }
 

@@ -27,7 +27,7 @@
 package haven;
 
 import haven.resources.layers.Pagina;
-import haven.scriptengine.InventoryExp;
+import haven.scriptengine.InventoryExt;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -40,14 +40,14 @@ import java.util.regex.Pattern;
 public class Item extends Widget implements DTarget {
     static Coord shoff = new Coord(1, 3);
     static Pattern patt = Pattern.compile("quality (\\d+) ");
-    static Map<Integer, Tex> qmap;
+    static final Map<Integer, Tex> numbersMap = new HashMap<Integer, Tex>();
     private static final Resource missing = Resource.load("gfx/invobjs/missing");
     static Color outcol = new Color(0, 0, 0, 255);
-    public boolean dm = false;
+    public final boolean dm; // Dragging mode (at cursor)
     private int quality; // quality
     private int innerLiquidQuality;
     private boolean isHighQuality; // Hide big qualities values
-    private Coord doff;
+    private final Coord doff; // Dragging offset
     public String tooltip;
     private int quantity = -1;
     private Indir<Resource> res;
@@ -75,8 +75,8 @@ public class Item extends Widget implements DTarget {
                     //noinspection UnusedAssignment
                     num = (Integer) args[ca++];
                 Item item;
-                if (parent instanceof InventoryExp) // Item in inventory
-                    item = ((InventoryExp) parent).new InvItem(c, res, q, parent, drag, num);
+                if (parent instanceof InventoryExt) // Item in inventory
+                    item = ((InventoryExt) parent).new InvItem(c, res, q, parent, drag, num);
                 else if (parent instanceof RootWidget) // Item at cursor
                     item = new Item(c, res, q, parent, drag, num);
                 else {
@@ -102,7 +102,6 @@ public class Item extends Widget implements DTarget {
             }
         });
         missing.loadwait();
-        qmap = new HashMap<Integer, Tex>();
     }
 
     private void fixsize() {
@@ -134,7 +133,7 @@ public class Item extends Widget implements DTarget {
             if (quantity >= 0) {
 //                g.chcolor(Color.WHITE);
 //                g.atext(Integer.toString(num), new Coord(0, 30), 0, 1);
-                g.aimage(getqtex(quantity), Coord.z, 0, 0);
+                g.aimage(getNumberTex(quantity), Coord.z, 0, 0);
             }
             if (completedPercents > 0) {
                 double a = ((double) completedPercents) / 100.0;
@@ -148,7 +147,7 @@ public class Item extends Widget implements DTarget {
             }
             int tq = (innerLiquidQuality > 0) ? innerLiquidQuality : quality;
             if (Config.showq && (tq > 0)) {
-                tex = getqtex(tq);
+                tex = getNumberTex(tq);
                 g.aimage(tex, sz.sub(1, 1), 1, 1);
             }
             ttres = res.get();
@@ -166,17 +165,19 @@ public class Item extends Widget implements DTarget {
         }
     }
 
-    static Tex getqtex(int q) {
-        synchronized (qmap) {
-            if (qmap.containsKey(q)) {
-                return qmap.get(q);
-            } else {
-                BufferedImage img = Text.render(Integer.toString(q)).img;
-                img = Utils.outline2(img, outcol);
-                Tex tex = new TexI(img);
-                qmap.put(q, tex);
-                return tex;
+    static Tex getNumberTex(int num) {
+        if (numbersMap.containsKey(num)) {
+            return numbersMap.get(num);
+        }
+        synchronized (numbersMap) {
+            if (numbersMap.containsKey(num)) {
+                return numbersMap.get(num);
             }
+            BufferedImage img = Text.render(Integer.toString(num)).img;
+            img = Utils.outline2(img, outcol);
+            Tex tex = new TexI(img);
+            numbersMap.put(num, tex);
+            return tex;
         }
     }
 
@@ -284,11 +285,13 @@ public class Item extends Widget implements DTarget {
         decodeQuality(quality);
         fixsize();
         this.quantity = quantity;
-        if (drag == null) {
+
+        doff = drag;
+        if (doff == null) {
             dm = false;
         } else {
             dm = true;
-            doff = drag;
+            UI.draggingItem.set(this);
             ui.grabmouse(this);
             this.c = ui.mc.sub(doff);
         }
@@ -307,35 +310,47 @@ public class Item extends Widget implements DTarget {
     }
 
     boolean dropon(Widget w, Coord c) {
+//        if (w != UI.instance.root) {
+//            System.err.println("Item dropon. w is not root, " + w.getClass().getSimpleName());
+//        }
         for (Widget wdg = w.lchild; wdg != null; wdg = wdg.prev) {
-            if (wdg == this)
+            if (wdg == this) {
                 continue;
+            }
             Coord cc = w.xlate(wdg.c, true);
             if (c.isect(cc, (wdg.hsz == null) ? wdg.sz : wdg.hsz)) {
-                if (dropon(wdg, c.sub(cc)))
+                if (dropon(wdg, c.sub(cc))) {
                     return (true);
+                }
             }
         }
         if (w instanceof DTarget) {
-            if (((DTarget) w).drop(c, c.sub(doff), this))
+            if (((DTarget) w).drop(c, c.sub(doff), this)) {
                 return (true);
+            }
         }
         return (false);
     }
 
     boolean interact(Widget w, Coord c) {
+//        if (w != UI.instance.root) {
+//            System.err.println("Item interact. w is not root, " + w.getClass().getSimpleName());
+//        }
         for (Widget wdg = w.lchild; wdg != null; wdg = wdg.prev) {
-            if (wdg == this)
+            if (wdg == this) {
                 continue;
+            }
             Coord cc = w.xlate(wdg.c, true);
             if (c.isect(cc, (wdg.hsz == null) ? wdg.sz : wdg.hsz)) {
-                if (interact(wdg, c.sub(cc)))
+                if (interact(wdg, c.sub(cc))) {
                     return (true);
+                }
             }
         }
         if (w instanceof DTarget) {
-            if (((DTarget) w).iteminteract(c, c.sub(doff)))
+            if (((DTarget) w).iteminteract(c, c.sub(doff))) {
                 return (true);
+            }
         }
         return (false);
     }
@@ -391,8 +406,9 @@ public class Item extends Widget implements DTarget {
     }
 
     public void mousemove(Coord c) {
-        if (dm)
+        if (dm) {
             this.c = this.c.add(c.sub(doff));
+        }
     }
 
     public boolean drop(Coord cc, Coord ul, Item item) {
@@ -439,5 +455,11 @@ public class Item extends Widget implements DTarget {
 
     public int getCompletedPercent() {
         return completedPercents;
+    }
+
+    @Override
+    public void destroy() {
+        UI.draggingItem.compareAndSet(this, null);
+        super.destroy();
     }
 }

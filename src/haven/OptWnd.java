@@ -80,7 +80,7 @@ public class OptWnd extends Window {
     @SuppressWarnings({"UnusedAssignment"})
     public OptWnd(Coord c, Widget parent) {
         super(c, new Coord(400, 440), parent, "Options");
-        UI.options_wnd = this;
+        UI.optionsWindow.set(this);
         body = new Tabs(Coord.z, new Coord(400, 430), this) {
             public void changed(Tab from, Tab to) {
                 if (to != null) Utils.setpref("optwndtab", to.btn.getText());
@@ -683,9 +683,7 @@ public class OptWnd extends Window {
 
     @Override
     public void destroy() {
-        if (UI.options_wnd == this) {
-            UI.options_wnd = null;
-        }
+        UI.optionsWindow.compareAndSet(this, null);
         super.destroy();
     }
 }

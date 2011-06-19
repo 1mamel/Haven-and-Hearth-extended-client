@@ -7,6 +7,7 @@ package haven.scriptengine;
  * Time: 21:41
  */
 
+import haven.CustomConfig;
 import haven.scriptengine.providers.Config;
 import haven.scriptengine.providers.Player;
 import haven.scriptengine.providers.UIProvider;
@@ -38,7 +39,7 @@ public class ScriptsManager {
                 @Override
                 public void run() {
                     interpreter.exec(line);
-                    haven.Config.render_enable = true;
+                    CustomConfig.setRender(true);
                 }
             });
             thread.setDaemon(true);
@@ -128,7 +129,7 @@ public class ScriptsManager {
     public static void killBot(Bot bot) {
         if (!runningBots.containsKey(bot)) return;
         runningBots.get(bot).interrupt();
-        haven.Config.render_enable = true;
+        CustomConfig.setRender(true);
     }
 
     static Bot createBot(String name) {

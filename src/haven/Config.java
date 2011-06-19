@@ -84,9 +84,6 @@ public class Config {
     public static boolean showq;
     public static GoogleTranslator translator = new GoogleTranslator();
 
-    public static boolean render_enable = true;
-
-
     public static boolean quick_login = false; // быстрый логин дефолт чаром
     public static boolean ark_state_activate_char = false; // стадия аткивации чара
     public static int ark_button_activate_char = 0; // ид кнопки которую надо нажать

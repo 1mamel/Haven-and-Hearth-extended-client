@@ -747,7 +747,7 @@ public class Session {
         if (IRC != null) {
             IRC.close();
         }
-        Config.render_enable = true;
+        CustomConfig.setRender(true);
         CustomConfigProcessor.saveSettings();
         sworker.interrupt();
     }

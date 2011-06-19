@@ -56,14 +56,12 @@ public class Makewindow extends HWindow {
         new Label(new Coord(10, 73), this, "Result:");
         obtn = new Button(new Coord(290, 71), 60, this, "Craft");
         cbtn = new Button(new Coord(360, 71), 60, this, "Craft All");
-        UI.make_window = this;
+        UI.makeWindow.set(this);
     }
 
     @Override
     public void destroy() {
-        if (UI.make_window == this) {
-            UI.make_window = null;
-        }
+        UI.makeWindow.compareAndSet(this, null);
         super.destroy();
     }
 

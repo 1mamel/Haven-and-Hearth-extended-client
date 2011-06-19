@@ -195,7 +195,7 @@ public class FlowerMenu extends Widget {
         ui.grabmouse(this);
         ui.grabkeys(this);
         anim = new Opening();
-        UI.flowerMenu = this;
+        UI.flowerMenu.set(this);
     }
 
     public boolean mousedown(Coord c, int button) {
@@ -248,9 +248,7 @@ public class FlowerMenu extends Widget {
 
     @Override
     public void destroy() {
-        if (UI.flowerMenu == this) {
-            UI.flowerMenu = null;
-        }
+        UI.flowerMenu.compareAndSet(this, null);
         super.destroy();
     }
 

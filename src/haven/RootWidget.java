@@ -68,9 +68,7 @@ public class RootWidget extends ConsoleHost {
             } else if ((code == KeyEvent.VK_H) && ctrl) {
                 CustomConfig.toggleHideObjects();
             } else if ((code == KeyEvent.VK_Y) && ctrl) {
-                Config.render_enable = !Config.render_enable;
-//                Config.saveOptions();
-                // 12.12.2010
+                CustomConfig.toggleRender();
             } else if ((code == KeyEvent.VK_Q) && alt) {
                 ui.spd.wdgmsg("set", 0);
             } else if ((code == KeyEvent.VK_W) && alt) {

@@ -29,7 +29,6 @@ package haven;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Console {
@@ -58,7 +57,7 @@ public class Console {
     }
 
     public Map<String, Command> findcmds() {
-        Map<String, Command> ret = new TreeMap<String, Command>();
+        Map<String, Command> ret = new ConcurrentHashMap<String, Command>();
         ret.putAll(scommands);
         ret.putAll(commands);
         return ret;

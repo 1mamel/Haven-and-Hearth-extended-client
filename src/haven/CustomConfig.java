@@ -25,6 +25,7 @@ public class CustomConfig {
     public static Logger logger;
     public static Glob glob = null;
     public static boolean highlightObjectAtMouse = false;
+    private static boolean render = true;
 
     static {
         logger = Logger.getLogger("Main log");
@@ -104,6 +105,18 @@ public class CustomConfig {
 
     public static void updateWindowSize(int width, int height) {
         windowSize = new Coord(width, height);
+    }
+
+    public static void toggleRender() {
+        render = !render;
+    }
+
+    public static boolean isRender() {
+        return render;
+    }
+
+    public static void setRender(boolean flag) {
+        render = flag;
     }
 
     static class CharData {

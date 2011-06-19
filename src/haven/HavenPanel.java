@@ -236,7 +236,7 @@ public class HavenPanel extends GLCanvas implements Runnable {
         ui.update(dt);
 
         GOut g = new GOut(gl, getContext(), CustomConfig.getWindowSize().clone());
-        if (Config.render_enable) {
+        if (CustomConfig.isRender()) {
 
             gl.glMatrixMode(GL.GL_PROJECTION);
             gl.glLoadIdentity();

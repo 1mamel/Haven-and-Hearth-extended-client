@@ -656,15 +656,12 @@ public class CharWnd extends Window {
 
         belief.visible = false;
 
-        study = new Widget(Coord.z, new Coord(400, 275), this);
-        study.canhastrash = false;
-        new Label(new Coord(138, 210), study, "Used attention:");
-        new Label(new Coord(138, 225), study, "Attention limit:");
+        study = new StudyWidget(Coord.z, new Coord(400, 275), this);
         snlbl = new Label(new Coord(240, 210), study, "");
         sllbl = new Label(new Coord(240, 225), study, Integer.toString(ui.sess.glob.cattr.get("intel").comp));
-        study.visible = false;
-        if (studyid >= 0)
+        if (studyid >= 0) {
             ui.bind(study, studyid);
+        }
 
         int bx = 10;
         new IButton(new Coord(bx, 310), this, Resource.loadimg("gfx/hud/charsh/attribup"), Resource.loadimg("gfx/hud/charsh/attribdown")) {

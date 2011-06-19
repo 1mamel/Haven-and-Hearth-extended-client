@@ -26,7 +26,7 @@
 
 package haven;
 
-import haven.scriptengine.InventoryExp;
+import haven.scriptengine.InventoryExt;
 
 import java.awt.image.BufferedImage;
 import java.util.HashSet;
@@ -50,21 +50,21 @@ public class Inventory extends Widget implements DTarget {
         invSqSizeSubOne = Inventory.invSqSize.sub(1, 1);
     }
 
-    Coord isz; // size of inventory in cells
+    protected Coord isz; // size of inventory in cells
 
     static {
         Widget.addtype("inv", new WidgetFactory() {
             public Widget create(Coord c, Widget parent, Object[] args) {
-                return (new InventoryExp(c, (Coord) args[0], parent)); // Changed for processing inv features
+                return (new InventoryExt(c, (Coord) args[0], parent)); // Changed for processing inv features
             }
         });
     }
 
     public void draw(GOut g) {
-        Coord c = new Coord();
+        Coord c = new Coord(0,0);
         Coord sz = invSqSizeSubOne;
-        for (c.setY(0); c.y < isz.y; c.setY(c.y + 1)) {
-            for (c.setX(0); c.x < isz.x; c.setX(c.x + 1)) {
+        for (c.y=0; c.y < isz.y; ++c.y) {
+            for (c.x=0; c.x < isz.x; ++c.x) {
                 g.image(invsq, c.mul(sz));
             }
         }

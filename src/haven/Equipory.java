@@ -26,12 +26,14 @@
 
 package haven;
 
+import haven.scriptengine.InventoryExt;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Equipory extends Window implements DTarget {
-    final List<Inventory> epoints;
-    public final List<Item> equed;
+    final List<Inventory> epoints = new ArrayList<Inventory>();
+    public final List<Item> equed = new ArrayList<Item>(ecoords.length);
     static final Tex bg = Resource.loadtex("gfx/hud/equip/bg");
     int avagob = -1;
 
@@ -65,15 +67,14 @@ public class Equipory extends Window implements DTarget {
     public Equipory(Coord c, Widget parent) {
         super(c, new Coord(0, 0), parent, "Equipment");
         canhastrash = false;
-        epoints = new ArrayList<Inventory>();
-        equed = new ArrayList<Item>(ecoords.length);
         //new Img(new Coord(32, 0), bg, this);
+        Coord singleItem = new Coord(1, 1);
         for (Coord ecoord : ecoords) {
-            epoints.add(new Inventory(ecoord, new Coord(1, 1), this));
+            epoints.add(new InventoryExt(ecoord, singleItem, this));
             equed.add(null);
         }
         pack();
-        UI.equip = this;
+        UI.equipory.set(this);
     }
 
     public void uimsg(String msg, Object... args) {
@@ -159,9 +160,7 @@ public class Equipory extends Window implements DTarget {
 
     @Override
     public void destroy() {
-        if (UI.equip == this) {
-            UI.equip = null;
-        }
+        UI.equipory.compareAndSet(this, null);
         super.destroy();
     }
 }

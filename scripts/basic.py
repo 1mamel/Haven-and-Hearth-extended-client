@@ -1,4 +1,4 @@
-# coding=UTF-8
+    # coding=UTF-8
 
 __author__ = 'Vladislav Rassokhin <vladrassokhin@gmail.com>'
 
@@ -148,7 +148,7 @@ def have_inventory(name):
 
 #открыть мой инвентарь
 def open_inventory():
-    return PUI.toggleInventory()
+    return PUI.toggleUserInventory()
 
 
 #поставить текущий инвентарь, после автоматически сбрасывается итератор
@@ -175,17 +175,17 @@ def get_items_count():
 
 # установить текущую вещь по индексу в списке
 def set_item_index(index):
-    return PUI.setInventoryItemIndex(index)
+    return PUI.useInventoryItem(index)
 
 
 # установить текущей вещью - то что держим в руках если оно есть. (чтобы получить ее параметры)
 def set_item_drag():
-    return PUI.setInventoryItemDrag()
+    return PUI.useDraggingItem()
 
 
 # установить текущей вещью - вещь из инвентаря. указываем индекс (чтобы получить ее параметры)
 def set_item_equip(index):
-    return PUI.setInventoryItemEquip(index)
+    return PUI.useEquipItem(index)
 
 
 # получаем параметры текущей вещи установленной итератором

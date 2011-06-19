@@ -37,6 +37,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class UI {
     static public UI instance;
@@ -55,18 +56,18 @@ public class UI {
     public MapView mainview;
     public boolean modshift, modctrl, modmeta, modsuper;
     long lastevent = System.currentTimeMillis();
-    public Widget mouseon;
     public FSMan fsm;
     public final Console cons = new WidgetConsole();
     private final Collection<AfterDraw> afterdraws = new ConcurrentLinkedQueue<AfterDraw>();
 
 
     // Some references
-    public static FlowerMenu flowerMenu = null;
-    public static OptWnd options_wnd = null;
-    public static Makewindow make_window = null;
-    public static Equipory equip = null;
-    public static MenuGrid menuGrid = null;
+    public static AtomicReference<FlowerMenu> flowerMenu = new AtomicReference<FlowerMenu>(null);
+    public static AtomicReference<OptWnd> optionsWindow = new AtomicReference<OptWnd>(null);
+    public static AtomicReference<Makewindow> makeWindow = new AtomicReference<Makewindow>(null);
+    public static AtomicReference<Equipory> equipory = new AtomicReference<Equipory>(null);
+    public static AtomicReference<MenuGrid> menuGrid = new AtomicReference<MenuGrid>(null);
+    public static AtomicReference<Item> draggingItem = new AtomicReference<Item>(null);
     public static String cursorName = null;
     private long last_newwidget_time = 0;
 
@@ -108,13 +109,11 @@ public class UI {
 
         private void findcmds(Map<String, Command> map, Widget wdg) {
             if (wdg instanceof Directory) {
-                Map<String, Command> cmds = ((Directory) wdg).findcmds();
-                synchronized (cmds) {
-                    map.putAll(cmds);
-                }
+                map.putAll(((Directory) wdg).findcmds());
             }
-            for (Widget ch = wdg.child; ch != null; ch = ch.next)
+            for (Widget ch = wdg.child; ch != null; ch = ch.next) {
                 findcmds(map, ch);
+            }
         }
 
         public Map<String, Command> findcmds() {
@@ -361,16 +360,14 @@ public class UI {
                 (modsuper ? 8 : 0));
     }
 
-    public Widget getWidgetById(int id) {
-        synchronized (this) {
-            return widgets.get(id);
-        }
+    @SuppressWarnings({"UnusedDeclaration"})
+    public synchronized Widget getWidgetById(int id) {
+        return widgets.get(id);
     }
 
-    public int getIdByWidget(Widget wdg) {
-        synchronized (this) {
-            return rwidgets.get(wdg);
-        }
+    @SuppressWarnings({"UnusedDeclaration"})
+    public synchronized int getIdByWidget(Widget wdg) {
+        return rwidgets.get(wdg);
     }
 
 
