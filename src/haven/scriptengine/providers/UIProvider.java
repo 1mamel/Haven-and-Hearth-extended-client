@@ -554,12 +554,13 @@ public class UIProvider {
 
     public static void buildClick() {
         ISBox b = UI.instance.root.findchild(ISBox.class);
-        if (b != null) {
-            Widget w = b.parent;
-            Button btn = w.findchild(Button.class);
-            if (btn != null) {
-                btn.click();
-            }
+        if (b == null) {
+            return;
+        }
+        Widget w = b.parent;
+        Button btn = w.findchild(Button.class);
+        if (btn != null) {
+            btn.click();
         }
     }
 

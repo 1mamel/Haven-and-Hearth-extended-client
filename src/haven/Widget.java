@@ -28,9 +28,13 @@ package haven;
 
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
+/**
+ *
+ * Used left child-right sibling tree.
+ */
 public class Widget {
     public final UI ui;
     public Coord c, sz, hsz;
@@ -44,7 +48,8 @@ public class Widget {
     public boolean canhastrash = true;
     private Widget prevtt;
     public boolean isui = true;
-    static final Map<String, WidgetFactory> types = new TreeMap<String, WidgetFactory>();
+
+    static final Map<String, WidgetFactory> types = new HashMap<String, WidgetFactory>(); // HashMap are really faster!
     static final Class<?>[] barda = {Img.class, TextEntry.class, SlenConsole.class, MapView.class, FlowerMenu.class,
             Window.class, Button.class, Inventory.class, Item.class, Listbox.class,
             Makewindow.class, Chatwindow.class, Textlog.class, Equipory.class, IButton.class,
@@ -152,8 +157,9 @@ public class Widget {
     }
 
     public void destroy() {
-        if (canfocus)
+        if (canfocus) {
             setcanfocus(false);
+        }
     }
 
     public void lostfocus() {
@@ -168,19 +174,29 @@ public class Widget {
             if (w != focused) {
                 Widget last = focused;
                 focused = w;
-                if (last != null)
+                if (last != null) {
                     last.hasfocus = false;
-                if (w != null) w.hasfocus = true;
-                if (last != null)
+                }
+                if (w != null) {
+                    w.hasfocus = true;
+                }
+                if (last != null) {
                     last.lostfocus();
-                if (w != null) w.gotfocus();
-                if ((ui != null) && ui.rwidgets.containsKey(w))
+                }
+                if (w != null) {
+                    w.gotfocus();
+                }
+                if ((ui != null) && ui.rwidgets.containsKey(w)) {
                     wdgmsg("focus", ui.rwidgets.get(w));
+                }
             }
-            if (parent != null)
+            if (parent != null) {
                 parent.setfocus(this);
+            }
         } else {
-            parent.setfocus(w);
+            if (parent != null) {
+                parent.setfocus(w);
+            }
         }
     }
 
@@ -197,8 +213,9 @@ public class Widget {
 
     public void newfocusable(Widget w) {
         if (focusctl) {
-            if (focused == null)
+            if (focused == null) {
                 setfocus(w);
+            }
         } else {
             parent.newfocusable(w);
         }
@@ -206,8 +223,9 @@ public class Widget {
 
     public void delfocusable(Widget w) {
         if (focusctl) {
-            if (focused == w)
+            if (focused == w) {
                 findfocus();
+            }
         } else {
             parent.delfocusable(w);
         }
@@ -234,8 +252,9 @@ public class Widget {
     }
 
     public void setfocustab(boolean focustab) {
-        if (focustab && !focusctl)
+        if (focustab && !focusctl) {
             setfocusctl(true);
+        }
         this.focustab = focustab;
     }
 
@@ -251,8 +270,9 @@ public class Widget {
         } else if (msg.equals("focus")) {
             Widget w = ui.widgets.get(args[0]);
             if (w != null) {
-                if (w.canfocus)
+                if (w.canfocus) {
                     setfocus(w);
+                }
             }
         } else if (msg.equals("curs")) {
             if (args.length == 0)
@@ -458,6 +478,14 @@ public class Widget {
         }
     }
 
+    /**
+     * Recursive finding widget with cpecified type.
+     * Using DFS.
+     * @param cl
+     * @param <T>
+     * @return
+     * @deprecated this function is very slow, and may finds not expected widget (because DFS)
+     */
     @Deprecated
     public <T extends Widget> T findchild(Class<T> cl) {
         for (Widget wdg = child; wdg != null; wdg = wdg.next) {
@@ -515,20 +543,36 @@ public class Widget {
         return (null);
     }
 
+    /**
+     * Toggle visibility
+     *
+     * @return result visible status
+     */
     public boolean toggle() {
-        if (visible)
+        if (visible) {
             hide();
-        else
+        } else {
             show();
+        }
         return visible;
     }
 
+    /**
+     * Recursive updates all widgets
+     *
+     * @param dt time delta in milliseconds
+     */
     public void update(long dt) {
-        Widget next;
-
-        for (Widget wdg = child; wdg != null; wdg = next) {
-            next = wdg.next;
+        for (Widget wdg = child; wdg != null; wdg = wdg.next) {
             wdg.update(dt);
         }
+    }
+
+    public Coord getSize() {
+        return sz;
+    }
+
+    public boolean isVisible() {
+        return visible;
     }
 }
