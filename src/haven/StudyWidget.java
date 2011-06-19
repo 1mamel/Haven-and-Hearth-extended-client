@@ -1,7 +1,5 @@
 package haven;
 
-import haven.scriptengine.InventoryExt;
-
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -12,7 +10,6 @@ import java.util.concurrent.atomic.AtomicReference;
  * @author Vlad.Rassokhin@gmail.com
  */
 public class StudyWidget extends Widget {
-    public static AtomicReference<InventoryExt> curiositiesInventory = new AtomicReference<InventoryExt>(null);
     public static AtomicReference<StudyWidget> instance = new AtomicReference<StudyWidget>(null);
 
     private int used;

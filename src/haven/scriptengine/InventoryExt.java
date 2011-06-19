@@ -92,7 +92,7 @@ public class InventoryExt extends Inventory {
         }
     }
 
-    TreeMap<Coord, InvItem> items = new TreeMap<Coord, InvItem>();
+    protected TreeMap<Coord, InvItem> items = new TreeMap<Coord, InvItem>();
 
     private synchronized void addItem(InvItem item) {
         Coord loc = item.getInInvLocation();
@@ -107,7 +107,8 @@ public class InventoryExt extends Inventory {
                 }
             }
         }
-        System.err.println("Inv " + getName() + " new item loc = " + loc + " size = " + item.getSizeInCells() + " fc = " + getFreeCount());
+        System.err.println("Inv " + getName() + " new item loc = " + loc + " size = "
+                + item.getSizeInCells() + " fc = " + getFreeCount() + " meter="+ item.getCompletedPercent());
     }
 
     private synchronized void deleteItem(InvItem item) {
@@ -153,8 +154,8 @@ public class InventoryExt extends Inventory {
 
     public static void registerInventory(InventoryExt inv) {
         System.err.println("Registering Inventory. name = " + inv.getName() + " parent type is " + inv.parent.getClass().getSimpleName());
-        if (inv.parent instanceof StudyWidget) {
-            StudyWidget.curiositiesInventory.set(inv);
+        if (inv instanceof CuriositiesInventory) {
+            CuriositiesInventory.instance.set(inv);
         } else if (inv.parent instanceof Window) {
             openedInventories.add(inv);
         }
@@ -162,10 +163,10 @@ public class InventoryExt extends Inventory {
 
     public static void unregisterInventory(InventoryExt inv) {
         System.err.println("Unregistering Inventory. name = " + inv.getName() + " parent type is " + inv.parent.getClass().getSimpleName());
-        if (inv.parent instanceof Window) {
+        if (inv instanceof CuriositiesInventory) {
             openedInventories.remove(inv);
         } else if (inv.parent instanceof StudyWidget) {
-            StudyWidget.curiositiesInventory.compareAndSet(inv, null);
+            CuriositiesInventory.instance.compareAndSet(inv, null);
         }
     }
 

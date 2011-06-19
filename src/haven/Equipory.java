@@ -26,8 +26,6 @@
 
 package haven;
 
-import haven.scriptengine.InventoryExt;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,7 +68,7 @@ public class Equipory extends Window implements DTarget {
         //new Img(new Coord(32, 0), bg, this);
         Coord singleItem = new Coord(1, 1);
         for (Coord ecoord : ecoords) {
-            epoints.add(new InventoryExt(ecoord, singleItem, this));
+            epoints.add(new Inventory(ecoord, singleItem, this));
             equed.add(null);
         }
         pack();
