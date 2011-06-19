@@ -40,7 +40,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class HavenPanel extends GLCanvas implements Runnable {
     UI ui;
     boolean inited = false, rdr = false;
-    final long fd = 20;
+    static final long fd = 20;
     long fps = 0;
     int dth = 0, dtm = 0;
     public static int texhit = 0, texmiss = 0;
@@ -73,9 +73,9 @@ public class HavenPanel extends GLCanvas implements Runnable {
         last_tick = System.currentTimeMillis();
         setSize(size);
         initgl();
-//        if (Toolkit.getDefaultToolkit().getMaximumCursorColors() >= 256) {
-        cursmode = CursorMode.AWT;
-//        }
+        if (Toolkit.getDefaultToolkit().getMaximumCursorColors() >= 256) {
+            cursmode = CursorMode.AWT;
+        }
         setCursor(Toolkit.getDefaultToolkit().createCustomCursor(TexI.mkbuf(new Coord(1, 1)), new java.awt.Point(), ""));
     }
 
@@ -315,6 +315,11 @@ public class HavenPanel extends GLCanvas implements Runnable {
                     break;
                 case TEXTURE:
                     Coord dc = mousepos.sub(curs.layer(Resource.negc).cc);
+                    if (curs != lastcursor) {
+                        UI.setCursorName(curs.name);
+                        System.err.println("setting cursor " + curs.name);
+                        lastcursor = curs;
+                    }
                     g.image(curs.layer(Resource.imgc), dc);
                     break;
             }
@@ -326,7 +331,7 @@ public class HavenPanel extends GLCanvas implements Runnable {
         while ((e = events.poll()) != null) {
             if (e instanceof MouseEvent) {
                 MouseEvent me = (MouseEvent) e;
-                Coord mouseCoord = new Coord(me.getX(), me.getY());
+                @SuppressWarnings({"ObjectAllocationInLoop"}) Coord mouseCoord = new Coord(me.getX(), me.getY());
                 switch (me.getID()) {
                     case MouseEvent.MOUSE_PRESSED:
                         ui.mousedown(me, mouseCoord, me.getButton());
@@ -386,8 +391,10 @@ public class HavenPanel extends GLCanvas implements Runnable {
             while (true) {
                 try {
                     then = System.currentTimeMillis();
-                    if (Config.profile)
+                    if (Config.profile) {
+                        //noinspection ObjectAllocationInLoop
                         curf = prof.new Frame();
+                    }
                     synchronized (ui) {
                         if (ui.sess != null)
                             ui.sess.glob.oc.ctick();
