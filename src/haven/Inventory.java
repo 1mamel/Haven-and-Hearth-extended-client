@@ -29,6 +29,8 @@ package haven;
 import haven.scriptengine.InventoryExp;
 
 import java.awt.image.BufferedImage;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Inventory extends Widget implements DTarget {
@@ -164,6 +166,15 @@ public class Inventory extends Widget implements DTarget {
         }
     }
 
+    private static Set<String> smallInventoriesNames;
+
+    static {
+        smallInventoriesNames = new HashSet<String>();
+        smallInventoriesNames.add("Oven");
+        smallInventoriesNames.add("Finery Forge");
+        smallInventoriesNames.add("Steel Crucible");
+    }
+
     /**
      * Chechs of inventory is small (Finery forge, Oven, Crucible).
      *
@@ -174,7 +185,7 @@ public class Inventory extends Widget implements DTarget {
             Window wnd = (Window) parent;
             if (wnd.cap != null) {
                 String str = wnd.cap.text;
-                if (str.equals("Oven") || str.equals("Finery Forge") || str.equals("Steel Crucible")) {
+                if (smallInventoriesNames.contains(str)) {
                     return true;
                 }
             }
