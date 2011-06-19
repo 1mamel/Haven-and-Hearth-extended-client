@@ -26,6 +26,9 @@
 
 package haven;
 
+import haven.scriptengine.InventoryExt;
+import haven.scriptengine.providers.UIProvider;
+
 import java.awt.*;
 import java.awt.font.TextAttribute;
 import java.awt.image.BufferedImage;
@@ -289,8 +292,7 @@ public class CharWnd extends Window {
         public void draw(GOut g) {
             if (btime > 0) {
                 g.image(btimeoff, Coord.z);
-            }
-            else {
+            } else {
                 g.image(btimeon, Coord.z);
             }
         }
@@ -298,12 +300,10 @@ public class CharWnd extends Window {
         public Object tooltip(Coord c, boolean again) {
             if (btime == 0) {
                 return "It's time to choose!";
-            }
-            else if (btime < 3600) {
+            } else if (btime < 3600) {
                 return String.format("%d minutes left", (btime % 3600) / 60);
-            }
-            else {
-                return String.format("%d hours %d minutes left", ((btime - 1) / 3600) + 1, (btime % 3600) / 60 );
+            } else {
+                return String.format("%d hours %d minutes left", ((btime - 1) / 3600) + 1, (btime % 3600) / 60);
             }
         }
     }
@@ -401,7 +401,8 @@ public class CharWnd extends Window {
     }
 
     private class Worship extends Widget {
-        final Inventory[] wishes = new Inventory[3];
+        private static final int WISHES_COUNT = 3;
+        final InventoryExt wishes;
         final Text title;
         Text numen;
         final Tex img;
@@ -412,8 +413,7 @@ public class CharWnd extends Window {
             this.title = Text.render(title);
             this.img = img;
             this.numen = Text.render("0");
-            for (int i = 0; i < wishes.length; i++)
-                wishes[i] = new Inventory(new Coord(i * 31, 119), new Coord(1, 1), this);
+            this.wishes = new InventoryExt(new Coord(0, 119), new Coord(WISHES_COUNT, 1), this);
             new Button(new Coord(10, 160), 80, this, "Forfeit") {
                 public void click() {
                     CharWnd.this.wdgmsg("forfeit", 0);
@@ -431,9 +431,8 @@ public class CharWnd extends Window {
         }
 
         public void wish(int i, Indir<Resource> res, int amount) {
-            wishes[i].unlink();
-            wishes[i] = new Inventory(new Coord(i * 31, 119), new Coord(1, 1), this);
-            new Item(Coord.z, res, -1, wishes[i], null, amount);
+            wishes.getItem(Coord.z.add(i, 0)).destroy();
+            wishes.new InvItem(Coord.z.add(1 + i * 31, 1), res, -1, wishes, null, amount);
         }
 
         public void numen(int n) {
@@ -483,7 +482,7 @@ public class CharWnd extends Window {
                 Resource sk = skills.get(i + sb.val);
                 if (i + sb.val == sel) {
                     g.chcolor(255, 255, 0, 128);
-                    g.frect(new Coord(0, i * 20), new Coord(sz.x, 20));
+                    g.frect(0, i * 20, sz.x, 20);
                     g.chcolor();
                 }
                 if (getcost(sk) > exp)
@@ -742,9 +741,6 @@ public class CharWnd extends Window {
             foodm.update(args);
         } else if (msg.equals("btime")) {
             btime = (Integer) args[0];
-            if (btime < 3600) {
-                System.err.println("Beliefs time " + (Integer) args[0]);
-            }
             if (btime == 0) {
                 onBeliefsAvaliable();
             }
@@ -763,8 +759,8 @@ public class CharWnd extends Window {
         }
     }
 
-    private void onBeliefsAvaliable() {
-        // TODO: notify user that beliefs avaliable
+    private static void onBeliefsAvaliable() {
+        UIProvider.inform("Beliefs", "You can change your beliefs right now!");
     }
 
     public void wdgmsg(Widget sender, String msg, Object... args) {
