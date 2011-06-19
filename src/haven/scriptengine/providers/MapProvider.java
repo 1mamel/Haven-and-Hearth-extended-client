@@ -15,7 +15,11 @@ import static haven.MCache.tilesz;
 @SuppressWarnings({"UnusedDeclaration"})
 public class MapProvider {
 
-
+    /**
+     * Return current MapView
+     *
+     * @return current MapView
+     */
     public static MapView getMV() {
         return UI.instance.mainview;
     }
@@ -51,18 +55,31 @@ public class MapProvider {
     public static int findObjectByType(String type, int radius) {
         Coord my = Player.getPosition();
         double foundedDistance = radius * 11;
-        foundedDistance *= foundedDistance;
+        foundedDistance *= foundedDistance; // Used suqare becase sqrt are slow operation
         Gob foundedObject = null;
 
+        // Creting rectangle.
+        int left = Math.abs(my.x) - radius;
+        int right = Math.abs(my.x) + radius;
+        int top = Math.abs(my.y) - radius;
+        int bottom = Math.abs(my.y) + radius;
 
-        synchronized (CustomConfig.glob.oc) {
-            for (Gob gob : CustomConfig.glob.oc) {
-                // TODO: Сначала отсекать по прямоугольнику
-                double len = gob.getc().distSq(my);
+        synchronized (glob().oc) {
+            for (Gob gob : glob().oc) {
+                Coord gobPos = gob.getc();
+                // First. Check that the rectangle contains the gobPos
+                int x = Math.abs(gobPos.x);
+                int y = Math.abs(gobPos.y);
+                if (x < left || x > right || y > top || y < bottom) {
+                    continue;
+                }
+                // First check faster than second.
+                // Second. Check is gobPos in circle.
+                double len = gobPos.distSq(my);
                 if (len > foundedDistance) {
                     continue;
                 }
-
+                // Thrid. Checking type
                 boolean matched;
                 if (type.equals("tree")) {
                     // searching for trees with growth stage 0
@@ -108,13 +125,29 @@ public class MapProvider {
         foundedDistance *= foundedDistance;
         Gob foundedObject = null;
 
+
+        // Creting rectangle.
+        int left = Math.abs(start.x) - radius;
+        int right = Math.abs(start.x) + radius;
+        int top = Math.abs(start.y) - radius;
+        int bottom = Math.abs(start.y) + radius;
+
         synchronized (glob().oc) {
             for (Gob gob : glob().oc) {
-                // TODO: Сначала отсекать по прямоугольнику
-                double len = gob.getc().distSq(start);
+                Coord gobPos = gob.getc();
+                // First. Check that the rectangle contains the gobPos
+                int x = Math.abs(gobPos.x);
+                int y = Math.abs(gobPos.y);
+                if (x < left || x > right || y > top || y < bottom) {
+                    continue;
+                }
+                // First check faster than second.
+                // Second. Check is gobPos in circle.
+                double len = gobPos.distSq(start);
                 if (len > foundedDistance) {
                     continue;
                 }
+                // Thrid. Checking name
                 if (name.length() == 0 || gob.getResName().contains(name)) {
                     foundedDistance = len;
                     foundedObject = gob;
@@ -128,13 +161,20 @@ public class MapProvider {
         }
     }
 
-    public static void click(int objId, int buttons, int mode) {
-        Gob o = getGob(objId);
+    /**
+     * Click on map object.
+     *
+     * @param objectId object id
+     * @param buttons
+     * @param mode
+     */
+    public static void click(int objectId, int buttons, int mode) {
+        Gob o = getGob(objectId);
         if (o == null) {
             return;
         }
         Coord oc = o.getc();
-        getMV().wdgmsg("click", getCenterR(), oc, buttons, mode, objId, oc);
+        getMV().wdgmsg("click", getCenterR(), oc, buttons, mode, objectId, oc);
     }
 
     /**
@@ -161,7 +201,7 @@ public class MapProvider {
     /**
      * Click on map.
      * Coordinates are absolute.
-     * Note: coordinates in tiles.
+     * Note: coordinates in pixels.
      *
      * @param x
      * @param y
@@ -201,19 +241,19 @@ public class MapProvider {
 
     /**
      * Placing building object.
-     * Relative coordinates
+     * Relative coordinates in TILES.
      *
-     * @param x
-     * @param y
+     * @param dx
+     * @param dy
      * @param button
      * @param mode
      */
-    public static void place(int x, int y, int button, int mode) {
+    public static void place(int dx, int dy, int button, int mode) {
         Coord mc = Player.getPosition();
         if (getMV().plob == null || mc == null) {
             return;
         }
-        Coord offset = new Coord(x, y).mul(tilesz);
+        Coord offset = new Coord(dx, dy).mul(tilesz);
         mc = MapView.tilify(mc).add(offset);
         getMV().wdgmsg("place", mc, button, mode);
     }
