@@ -12,4 +12,6 @@ import haven.scriptengine.providers.MapProvider as PMap
 import haven.scriptengine.providers.InventoriesProvider as PInv
 import haven.scriptengine.providers.CraftProvider as PCraft
 import haven.scriptengine.providers.BuffsProvider as PBuffs
+import haven.scriptengine.providers.CharStatsProvider as PStat
+
 

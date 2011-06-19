@@ -582,7 +582,7 @@ public class CharWnd extends Window {
     }
 
     private CharWnd(Coord c, Widget parent, int studyid) {
-        super(c, new Coord(400, 340), parent, "Character Sheet", false, true);
+        super(c, new Coord(400, 340), parent, "Character Sheet", true, false);
         instance.set(this);
         int y;
         cattr = new Widget(Coord.z, new Coord(400, 300), this);
