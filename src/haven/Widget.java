@@ -32,7 +32,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- *
  * Used left child-right sibling tree.
  */
 public class Widget {
@@ -481,6 +480,7 @@ public class Widget {
     /**
      * Recursive finding widget with cpecified type.
      * Using DFS.
+     *
      * @param cl
      * @param <T>
      * @return

@@ -33,11 +33,12 @@ import java.util.*;
 import java.util.List;
 
 public class CharWnd extends Window {
-    final Widget cattr, skill, belief, study;
+    final Widget cattr, skill, belief;
+    final StudyWidget study;
     final Worship ancw;
     final Label cost;
     Label skcost;
-    final Label explbl, snlbl, sllbl;
+    final Label explbl;
     int exp;
     int btime = 0;
     SkillList psk, nsk;
@@ -164,8 +165,14 @@ public class CharWnd extends Window {
 
         public void update() {
             lbl.settext(Integer.toString(attr.comp));
-            if (nm.equals("intel") && sllbl != null) {
-                sllbl.settext(lbl.texts);
+            if (nm.equals("intel")) {
+                try {
+                    study.setMax(Integer.parseInt(lbl.texts));
+                } catch (NumberFormatException e) {
+                    System.err.println("Failed to parse integer at parsing intellegense");
+                    e.printStackTrace();
+                    study.setMax(-1);
+                }
             }
             if (attr.comp < attr.base) {
                 lbl.setcolor(debuff);
@@ -657,8 +664,8 @@ public class CharWnd extends Window {
         belief.visible = false;
 
         study = new StudyWidget(Coord.z, new Coord(400, 275), this);
-        snlbl = new Label(new Coord(240, 210), study, "");
-        sllbl = new Label(new Coord(240, 225), study, Integer.toString(ui.sess.glob.cattr.get("intel").comp));
+        study.setUsed(-1);
+        study.setMax(ui.sess.glob.cattr.get("intel").comp);
         if (studyid >= 0) {
             ui.bind(study, studyid);
         }
@@ -705,7 +712,7 @@ public class CharWnd extends Window {
             exp = (Integer) args[0];
             updexp();
         } else if (msg.equals("studynum")) {
-            snlbl.settext(Integer.toString((Integer) args[0]));
+            study.setUsed((Integer) args[0]);
         } else if (msg.equals("reset")) {
             updexp();
         } else if (msg.equals("nsk")) {
