@@ -165,10 +165,10 @@ public class CharWnd extends Window {
 
         public void update() {
             lbl.settext(Integer.toString(attr.comp));
-            if (nm.equals("intel")) {
+            if (nm.equals("intel") && study != null) {
                 try {
                     study.setMax(Integer.parseInt(lbl.texts));
-                } catch (NumberFormatException e) {
+                } catch (Exception e) {
                     System.err.println("Failed to parse integer at parsing intellegense");
                     e.printStackTrace();
                     study.setMax(-1);
@@ -287,19 +287,24 @@ public class CharWnd extends Window {
         }
 
         public void draw(GOut g) {
-            if (btime > 0)
+            if (btime > 0) {
                 g.image(btimeoff, Coord.z);
-            else
+            }
+            else {
                 g.image(btimeon, Coord.z);
+            }
         }
 
         public Object tooltip(Coord c, boolean again) {
-            if (btime == 0)
-                return (null);
-            else if (btime < 3600)
-                return ("Less than one hour left");
-            else
-                return (String.format("%d hours left", ((btime - 1) / 3600) + 1));
+            if (btime == 0) {
+                return "It's time to choose!";
+            }
+            else if (btime < 3600) {
+                return String.format("%d minutes left", (btime % 3600) / 60);
+            }
+            else {
+                return String.format("%d hours %d minutes left", ((btime - 1) / 3600) + 1, (btime % 3600) / 60 );
+            }
         }
     }
 
@@ -334,7 +339,7 @@ public class CharWnd extends Window {
                 for (El el : els) {
                     int w = (174 * el.amount) / cap;
                     g.chcolor(el.col);
-                    g.frect(new Coord(x, 4), new Coord(w, 24));
+                    g.frect(x, 4, w, 24);
                     x += w;
                 }
                 g.chcolor();
@@ -570,7 +575,7 @@ public class CharWnd extends Window {
     }
 
     public CharWnd(Coord c, Widget parent, int studyid) {
-        super(c, new Coord(400, 340), parent, "Character Sheet");
+        super(c, new Coord(400, 340), parent, "Character Sheet", true, true);
 
         int y;
         cattr = new Widget(Coord.z, new Coord(400, 300), this);
@@ -737,6 +742,12 @@ public class CharWnd extends Window {
             foodm.update(args);
         } else if (msg.equals("btime")) {
             btime = (Integer) args[0];
+            if (btime < 3600) {
+                System.err.println("Beliefs time " + (Integer) args[0]);
+            }
+            if (btime == 0) {
+                onBeliefsAvaliable();
+            }
         } else if (msg.equals("wish")) {
             int ent = (Integer) args[0];
             int wish = (Integer) args[1];
@@ -750,6 +761,10 @@ public class CharWnd extends Window {
             if (ent == 0)
                 ancw.numen(numen);
         }
+    }
+
+    private void onBeliefsAvaliable() {
+        // TODO: notify user that beliefs avaliable
     }
 
     public void wdgmsg(Widget sender, String msg, Object... args) {

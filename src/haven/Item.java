@@ -51,7 +51,6 @@ public class Item extends Widget implements DTarget {
     public String tooltip;
     private int quantity = -1;
     private Indir<Resource> res;
-    private Tex sh;
     private Color olcol = null;
     private Tex mask = null;
     protected int completedPercents = 0;
@@ -116,7 +115,6 @@ public class Item extends Widget implements DTarget {
     public void draw(GOut g) {
         final Resource ttres;
         if (res.get() == null) {
-            sh = null;
             sz = new Coord(30, 30);
             g.image(missing.layer(Resource.imgc).tex(), Coord.z, sz);
             ttres = missing;
@@ -142,7 +140,8 @@ public class Item extends Widget implements DTarget {
                 int b = 0;
                 g.chcolor(r, gr, b, 255);
                 //g.fellipse(sz.div(2), new Coord(15, 15), 90, (int)(90 + (360 * a)));
-                g.frect(new Coord(sz.x - 5, (int) ((1 - a) * sz.y)), new Coord(5, (int) (a * sz.y)));
+                int h = (int) Math.floor(a * sz.y);
+                g.frect(new Coord(sz.x - 5, sz.y - h), new Coord(5, h));
                 g.chcolor();
             }
             int tq = (innerLiquidQuality > 0) ? innerLiquidQuality : quality;
@@ -357,7 +356,6 @@ public class Item extends Widget implements DTarget {
 
     public void chres(Indir<Resource> res, int q) {
         this.res = res;
-        sh = null;
         decodeQuality(q);
     }
 
