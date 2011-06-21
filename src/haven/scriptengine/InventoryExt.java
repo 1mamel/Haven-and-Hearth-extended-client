@@ -264,4 +264,13 @@ public class InventoryExt extends Inventory {
 
     static List<InventoryExt> openedInventories = new ArrayList<InventoryExt>();
 
+    public InvItem getItemByName(String str) {
+        for (InvItem item : items.values()) {
+            if (item.getResName().contains(str)) {
+                return item;
+            }
+        }
+        return null;
+    }
+
 }

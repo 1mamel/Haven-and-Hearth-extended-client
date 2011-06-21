@@ -380,7 +380,7 @@ public class Item extends Widget implements DTarget {
             int ncp = (Integer) args[0];
             int deltaCP = Math.abs(ncp - completedPercents);
             completedPercents = ncp;
-
+            try {
             long nowTime = System.currentTimeMillis();
             long deltaTime = lastCPUpdateTime - nowTime;
             // Reapproximates deltaTime
@@ -389,8 +389,13 @@ public class Item extends Widget implements DTarget {
             } else {
                 approximateDelta = deltaTime;
             }
-            timeToComplete = (completedPercents * approximateDelta) / deltaCP;
+            if (deltaCP != 0){
+                timeToComplete = (completedPercents * approximateDelta) / deltaCP;
+            }
             lastCPUpdateTime = nowTime;
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

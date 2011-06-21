@@ -24,11 +24,11 @@ public class UIProvider {
         return new TextInputBox(MessageBox.DC, MessageBox.DS, UI.instance.root, capture, question, callback);
     }
 
-    public static String ask(final String question) {
-        return ask("Question", question);
+    public static String askWait(final String question) {
+        return askWait("Question", question);
     }
 
-    public static String ask(final String capture, final String question) {
+    public static String askWait(final String capture, final String question) {
         final AtomicReference<String> ars = new AtomicReference<String>();
         final AtomicBoolean ab = new AtomicBoolean(false);
         ars.set(null);

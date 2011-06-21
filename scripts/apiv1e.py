@@ -67,3 +67,11 @@ def wait_drop():
 
 def wait_drag():
     while not isDraggingItem(): sleep(100)
+
+
+
+# сбросить курсор в дефолтовый
+def reset_cursor():
+    if not is_cursor("arw"):
+        map_click(0, 0, 3, 0)
+        wait_arw_cursor()

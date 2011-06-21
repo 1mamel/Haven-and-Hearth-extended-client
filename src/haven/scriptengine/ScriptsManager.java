@@ -45,11 +45,15 @@ public class ScriptsManager {
             thread.setDaemon(true);
             thread.start();
         } catch (PyException e) {
+            System.err.println("Executing line\"" + line + "\" failed");
+            e.printStackTrace();
             logger.error("Executing line\"" + line + "\" failed", e);
         }
     }
 
     static final HashMap<String, Class<? extends Bot>> botsMap = new HashMap<String, Class<? extends Bot>>();
+
+    private static HashMap<String, String> commands = new HashMap<String, String>();
 
     @SuppressWarnings({"UnusedDeclaration"})
     public static boolean registerBot(String name, Class<? extends Bot> clazz) {
@@ -105,6 +109,20 @@ public class ScriptsManager {
 
     static final Map<Bot, Thread> runningBots = new ConcurrentHashMap<Bot, Thread>();
     static final ThreadGroup tg = new ThreadGroup("Scripts thread groop");
+
+    static boolean runWait(String name) {
+        Bot bot = createBot(name);
+        if (bot == null) return false;
+
+        runningBots.put(bot, Thread.currentThread());
+        bot.run();
+        return true;
+    }
+
+    public static void alias(String command, String botName) {
+        commands.put(command, botName);
+        interpreter.exec("def " + command + "(): manager.run(" + botName + ");");
+    }
 
     public static boolean runBot(String name) {
         Bot bot = createBot(name);
