@@ -717,6 +717,8 @@ public class CharWnd extends Window {
                 study.visible = false;
             }
         }.tooltip = "Personal Beliefs";
+	
+	hide();
     }
 
     public void uimsg(String msg, Object... args) {
@@ -771,6 +773,15 @@ public class CharWnd extends Window {
         UIProvider.inform("Beliefs", "You can change your beliefs right now!");
     }
 
+    
+    public boolean type(char key, java.awt.event.KeyEvent ev) {
+	if(key == 27) {
+	    toggle();
+	    return(true);
+	}
+	return(super.type(key, ev));
+    }
+    
     public void wdgmsg(Widget sender, String msg, Object... args) {
         if (checkIsCloseButton(sender)) {
             hide();
