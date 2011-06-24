@@ -7,6 +7,8 @@ lib/jogg.jar
 lib/jogl.jar
 lib/jorbis.jar
 
+scripts/*.class
+scripts/*.pyc
 /dist
 /.settings
 /.externalToolBuilders
