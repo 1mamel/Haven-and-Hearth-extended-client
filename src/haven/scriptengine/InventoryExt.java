@@ -1,6 +1,7 @@
 package haven.scriptengine;
 
 import haven.*;
+import haven.scriptengine.providers.MapProvider;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -86,6 +87,14 @@ public class InventoryExt extends Inventory {
             InventoryExt.this.deleteItem(this);
             super.destroy();
         }
+
+        public InventoryExt getInventory() {
+            return InventoryExt.this;
+        }
+
+        public void take() {
+            wdgmsg("take", MapProvider.getCenterR());
+        }
     }
 
     protected TreeMap<Coord, InvItem> items = new TreeMap<Coord, InvItem>();
@@ -103,8 +112,7 @@ public class InventoryExt extends Inventory {
                 }
             }
         }
-        System.err.println("Inv " + getName() + " new item loc = " + loc + " size = "
-                + item.getSizeInCells() + " fc = " + getFreeCellsCount() + " meter="+ item.getCompletedPercent());
+//        System.err.println("Inv " + getName() + " new item loc = " + loc + " size = " + item.getSizeInCells() + " fc = " + getFreeCellsCount() + " meter="+ item.getCompletedPercent());
     }
 
     private synchronized void deleteItem(InvItem item) {
@@ -120,7 +128,7 @@ public class InventoryExt extends Inventory {
                 }
             }
         }
-        System.err.println("Inv " + getName() + " remove item loc = " + item.getCoord().div(31) + " size = " + item.getSizeInCells() + " fc = " + getFreeCellsCount());
+//        System.err.println("Inv " + getName() + " remove item loc = " + item.getCoord().div(31) + " size = " + item.getSizeInCells() + " fc = " + getFreeCellsCount());
     }
 
     public InvItem getItem(Coord position) {
@@ -149,21 +157,20 @@ public class InventoryExt extends Inventory {
     }
 
     private static void registerInventory(InventoryExt inv) {
-        System.err.println("Registering Inventory. name = " + inv.getName() + " parent type is " + inv.parent.getClass().getSimpleName());
+//        System.err.println("Registering Inventory. name = " + inv.getName() + " parent type is " + inv.parent.getClass().getSimpleName());
         if (inv instanceof CuriositiesInventory) {
-            CuriositiesInventory.instance.set(inv);
+            CuriositiesInventory.instance.set((CuriositiesInventory) inv);
         } else if (inv.parent instanceof Window) {
             openedInventories.add(inv);
         }
     }
 
     private static void unregisterInventory(InventoryExt inv) {
-        System.err.println("Unregistering Inventory. name = " + inv.getName() + " parent type is " + inv.parent.getClass().getSimpleName());
+//        System.err.println("Unregistering Inventory. name = " + inv.getName() + " parent type is " + inv.parent.getClass().getSimpleName());
         if (inv instanceof CuriositiesInventory) {
-            openedInventories.remove(inv);
-        } else if (inv.parent instanceof StudyWidget) {
-            CuriositiesInventory.instance.compareAndSet(inv, null);
+            CuriositiesInventory.instance.compareAndSet((CuriositiesInventory) inv, null);
         }
+        openedInventories.remove(inv);
     }
 
 
@@ -271,6 +278,34 @@ public class InventoryExt extends Inventory {
             }
         }
         return null;
+    }
+
+    public void drop(int x, int y) {
+        wdgmsg("drop", new Coord(x, y));
+    }
+
+    public Coord getPositionForItem(int sizeX, int sizeY) {
+        if (sizeX * sizeY > freeCount) return null;
+
+        for (int i = 0; i < busy.length - (sizeX - 1); ++i) {
+            for (int j = 0; j < busy[i].length - (sizeY - 1); ++j) {
+                if (busy[i][j]) continue;
+                int countF = 0;
+                for (int x = 0; x < sizeX; ++x) {
+                    for (int y = 0; y < sizeY; ++y) {
+                        if (!busy[i + x][j + y]) countF++;
+                    }
+                }
+                if (countF == sizeX * sizeY) {
+                    return new Coord(i, j);
+                }
+            }
+        }
+        return null;
+    }
+
+    public Coord getPositionForItem(Coord size) {
+        return getPositionForItem(size.x, size.y);
     }
 
 }

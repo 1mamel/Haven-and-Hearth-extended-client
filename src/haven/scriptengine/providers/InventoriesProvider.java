@@ -51,7 +51,6 @@ public class InventoriesProvider {
      */
     public static void toggleUserInventory() {
         UI.instance.slen.wdgmsg("inv");
-//        UI.instance.root.wdgmsg("gk", KeyEvent.VK_TAB);
     }
 
     // поставить текущий инвентарь, после автоматически сбрасывается итератор
@@ -63,18 +62,6 @@ public class InventoriesProvider {
         } else {
             return 0;
         }
-//        Widget root = UI.instance.root;
-//        for (Widget wdg = root.child; wdg != null; wdg = wdg.next) {
-//            if (wdg instanceof Window && ((Window) wdg).getCaption() != null && ((Window) wdg).getCaption().equals(name))
-//                for (Widget inv = wdg.child; inv != null; inv = inv.next)
-//                    if (inv instanceof InventoryExt) {
-//                        currentInventory = (InventoryExt) inv;
-//                        resetInventoryIter();
-//                        return 1;
-//                    }
-//        }
-//        currentInventory = null;
-//        return 0;
     }
 
     // сбросить итератор итемов в инвентаре
@@ -89,15 +76,6 @@ public class InventoriesProvider {
         } else {
             inventoryIter.reset();
         }
-//        if (CurrentInventory == null) return;
-//        List<Item> tmp = inventory_list;
-//        inventory_list = null;
-//        inventory_list = new ArrayList<Item>();
-//        for (Widget i = CurrentInventory.child; i != null; i = i.next) {
-//            inventory_list.add((Item) i);
-//        }
-//        current_item_index = -1;
-//        currentItemMode = 0;
     }
 
     //вызывать итератор для установки итема
@@ -108,14 +86,6 @@ public class InventoriesProvider {
         currentItemMode = UIProvider.ItemMode.INVENTORY;
         inventoryIter.next();
         return true;
-//        if (inventory_list == null) {
-//            return 0;
-//        }
-//        current_item_index++;
-//        if (current_item_index >= inventory_list.size()) {
-//            return 0;
-//        }
-//        return 1;
     }
 
     // получить количество вещей в списке
@@ -124,10 +94,6 @@ public class InventoriesProvider {
             return -1;
         }
         return inventoryIter.count();
-//        if (inventory_list == null) {
-//            return -1;
-//        }
-//        return inventory_list.size();
     }
 
     // установить текущую вещь по индексу в списке
@@ -137,8 +103,6 @@ public class InventoriesProvider {
         }
         inventoryIter.set(index);
         currentItemMode = UIProvider.ItemMode.INVENTORY;
-//        current_item_index = index;
-//        currentItemMode = 0;
     }
 
     public static void useDraggingItem() {
@@ -154,19 +118,8 @@ public class InventoriesProvider {
         switch (currentItemMode) {
             case INVENTORY:
                 return inventoryIter.current();
-//                if (current_item_index >= 0 && current_item_index < getInventoryItemsCount()) {
-//                    return inventory_list.get(current_item_index);
-//                }
-//                break;
             case DRAGGING:
-                // Seaching for draging item
                 return UI.draggingItem.get();
-//                for (Widget wdg = UI.instance.root.child; wdg != null; wdg = wdg.next) {
-//                    if (wdg instanceof Item && ((Item) wdg).dm) {
-//                        return (Item) wdg;
-//                    }
-//                }
-//                break;
             case EQUIPORY:
                 if (UI.equipory.get() != null) {
                     return UI.equipory.get().equed.get(UIProvider.current_equip_index);
@@ -277,27 +230,6 @@ public class InventoriesProvider {
         } else {
             item.wdgmsg(action, MapProvider.getCenterR());
         }
-//        Widget root = UI.instance.root;
-//        for (Widget wdg = root.child; wdg != null; wdg = wdg.next) {
-//            if (wdg instanceof Window && ((Window) wdg).cap.text.equals(name)) {
-//                for (Widget inv = wdg.child; inv != null; inv = inv.next) {
-//                    if (inv instanceof Inventory) {
-//                        for (Widget i = inv.child; i != null; i = i.next) {
-//                            if (i instanceof Item) {
-//                                Item it = (Item) i;
-//                                if (it.getCoord().div(31).equals(x, y)) {
-//                                    if (action.equals("itemact")) {
-//                                        it.wdgmsg("itemact", mod);
-//                                    } else {
-//                                        it.wdgmsg(action, MapProvider.getCenterR());
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
     }
 
     // дропнуть вещь в текущий инвентарь
@@ -315,16 +247,5 @@ public class InventoriesProvider {
             return; //TODO: say that no such inventory
         }
         inventory.wdgmsg("drop", new Coord(x, y));
-//        for (Widget wdg = UI.instance.root.child; wdg != null; wdg = wdg.next) {
-//            if (wdg instanceof Window && ((Window) wdg).cap.text.equals(name)) {
-//                for (Widget inv = wdg.child; inv != null; inv = inv.next) {
-//                    if (inv instanceof Inventory) {
-//                        Inventory invn = (Inventory) inv;
-//                        invn.wdgmsg("drop", new Coord(x, y));
-//                        return;
-//                    }
-//                }
-//            }
-//        }
     }
 }
