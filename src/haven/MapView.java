@@ -524,7 +524,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
         }
 
         public void reset() {
-            off = new Coord();
+            off = new Coord(0, 0);
         }
     }
 

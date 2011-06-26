@@ -41,10 +41,9 @@ public class ExtTextlog extends Widget implements ClipboardOwner {
     }
 
     public void draw(GOut g) {
-        Coord dc = new Coord();
-        for (dc.setY(0); dc.y < sz.y; dc.setY(dc.y + texpap.sz().y)) {
-            for (dc.setX(0); dc.x < sz.x; dc.setX(dc.x + texpap.sz().x)) {
-                g.image(texpap, dc);
+        for (int y = 0; y < sz.y; y += texpap.sz().y) {
+            for (int x = 0;x < sz.x; x += texpap.sz().x) {
+                g.image(texpap, x, y);
             }
         }
         if (scrollBar != null)

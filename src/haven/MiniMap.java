@@ -344,18 +344,18 @@ public class MiniMap extends Widget {
         if (grid && !hidden) {
             g.chcolor(200, 32, 64, 255);
             Coord c1, c2;
-            c1 = new Coord();
+            c1 = new Coord(0, 0);
             c2 = new Coord(hsz.x, 0);
             for (int y = ulg.y + 1; (y * cmaps.y) - tc.y + (hsz.y / 2) < hsz.y; y++) {
-                c1.setY((y * cmaps.y) - tc.y + (hsz.y / 2));
-                c2.setY(c1.y);
+                c1.y = ((y * cmaps.y) - tc.y + (hsz.y / 2));
+                c2.y = (c1.y);
                 g.line(c1, c2, 1);
             }
-            c1 = new Coord();
+            c1 = new Coord(0, 0);
             c2 = new Coord(0, hsz.y);
             for (int x = ulg.x + 1; (x * cmaps.x) - tc.x + (hsz.x / 2) < hsz.x; x++) {
-                c1.setX((x * cmaps.x) - tc.x + (hsz.x / 2));
-                c2.setX(c1.x);
+                c1.x = ((x * cmaps.x) - tc.x + (hsz.x / 2));
+                c2.x = (c1.x);
                 g.line(c1, c2, 1);
             }
             g.chcolor();

@@ -140,18 +140,17 @@ public class MCache {
         public void render() {
             img = TexI.mkbuf(cmaps);
             Graphics2D g = img.createGraphics();
-            Coord c = new Coord();
 
-            for (c.setY(0); c.y < cmaps.x; c.setY(c.y + 1)) {
-                for (c.setX(0); c.x < cmaps.y; c.setX(c.x + 1)) {
-                    int id = tiles[c.x][c.y];
+            for (int y = 0; y < cmaps.x; ++y) {
+                for (int x = 0; x < cmaps.y; ++x) {
+                    int id = tiles[x][y];
                     Color col = colors.get(id);
                     if (col == null) {
                         col = new Color(255, 0, 255);
                         System.out.println(id);
                     }
                     g.setColor(col);
-                    g.fillRect(c.x, c.y, 1, 1);
+                    g.fillRect(x, y, 1, 1);
                 }
             }
         }
