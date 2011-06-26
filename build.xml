@@ -56,6 +56,33 @@
     </patternset>
 
 
+    <!-- Haven and Hearth Client properties -->
+
+    <dirname property="haven.basedir" file="${ant.file}"/>
+
+    <property name="haven.src.resources.custom.dir" value="${haven.basedir}/resources/src"/>
+    <property name="haven.resources.custom.dir" value="${haven.basedir}/resources/res"/>
+
+    <property name="compiler.args.haven" value="${compiler.args}"/>
+
+    <property name="haven.src.java.dir" value="${haven.basedir}/src"/>
+    <property name="haven.src.scripts.dir" value="${haven.basedir}/scripts/"/>
+
+
+    <property name="haven.output.dir" value="${haven.basedir}/build/production"/>
+    <property name="haven.testoutput.dir" value="${haven.basedir}/build/test"/>
+
+
+    <property name="haven.dist.dir" value="${haven.basedir}/dist"/>
+    <property name="haven.archives.dir" value="${haven.dist.dir}/archives"/>
+
+    <property name="haven.dist.files"
+              value="haven.jar,haven-res.jar,cr.jar"/>
+    <property name="haven.dist.files.windows" value="${haven.dist.files},run.bat"/>
+    <property name="haven.dist.files.mac" value="${haven.dist.files},run.bat"/>
+    <property name="haven.dist.files.linux" value="${haven.dist.files},run.sh"/>
+
+
     <!-- Project Libraries -->
 
 
@@ -88,32 +115,6 @@
     <path id="library.resources.classpath">
         <pathelement location="${haven.dist.files}/haven-res.jar"/>
     </path>
-
-    <!-- Module Haven and Hearth Client -->
-
-    <dirname property="haven.basedir" file="${ant.file}"/>
-
-    <property name="haven.src.resources.custom.dir" value="${haven.basedir}/resources/src"/>
-    <property name="haven.resources.custom.dir" value="${haven.basedir}/resources/res"/>
-
-    <property name="compiler.args.haven" value="${compiler.args}"/>
-
-    <property name="haven.src.java.dir" value="${haven.basedir}/src"/>
-    <property name="haven.src.scripts.dir" value="${haven.basedir}/scripts/"/>
-
-
-    <property name="haven.output.dir" value="${haven.basedir}/build/production"/>
-    <property name="haven.testoutput.dir" value="${haven.basedir}/build/test"/>
-
-
-    <property name="haven.dist.dir" value="${haven.basedir}/dist"/>
-    <property name="haven.archives.dir" value="${haven.dist.dir}/archives"/>
-
-    <property name="haven.dist.files"
-              value="haven.jar,haven-res.jar,cr.jar"/>
-    <property name="haven.dist.files.windows" value="${haven.dist.files},run.bat"/>
-    <property name="haven.dist.files.mac" value="${haven.dist.files},run.bat"/>
-    <property name="haven.dist.files.linux" value="${haven.dist.files},run.sh"/>
 
 
     <path id="haven.module.bootclasspath">
@@ -298,6 +299,8 @@
     <!--<fileset dir="resources/res"/>-->
     <!--</copy>-->
     <!--</target>-->
+
+    <!-- TODO: add resource making from files -->
 
     <target name="appletview" depends="build-env">
         <copy file="etc/applet.html" todir="${haven.basedir}/build"/>
