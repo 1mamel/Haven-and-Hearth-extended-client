@@ -230,7 +230,7 @@
     </target>
 
 
-    <target name="build.haven" depends="init, clean, compile.haven" description="build all modules"/>
+    <target name="build.haven" depends="init, compile.haven" description="build all modules"/>
 
 
     <target name="compile.haven"
@@ -337,6 +337,7 @@
         <jar destfile="${temp.jar.path.haven.jar}" duplicate="preserve" filesetmanifest="mergewithoutmain">
             <zipfileset file="${haven.src.java.dir}/META-INF/MANIFEST.MF" prefix="META-INF"/>
             <zipfileset dir="${haven.output.dir}" prefix="classes"/>
+            <zipfileset dir="${haven.src.scripts.dir}" prefix="scripts" includes="*.py"/>
         </jar>
         <chmod file="${temp.jar.path.haven.jar}" perm="a+x"/>
         <copy file="${temp.jar.path.haven.jar}" tofile="${artifact.temp.output.haven.jar}/haven.jar"/>
