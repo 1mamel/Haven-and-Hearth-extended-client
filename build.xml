@@ -1,166 +1,447 @@
 <?xml version="1.0" ?>
 
-<project name="haven" default="deftgt">
-  <tstamp prefix="tstamp">
-  	<format property="date" pattern="yy.MM.dd"/>
-  </tstamp>
-  <target name="build-env">
-    <mkdir dir="build" />
-    <mkdir dir="build/classes" />
-    <mkdir dir="build/map" />
-    <available property="has-res-jar" file="build/haven-res.jar" />
-    <available property="has-sign-key" file="etc\IRCEKEYS"/>
-    <available property="has-buildinfo" file="build/classes/buildinfo" />
-    <available property="unpacked-lib" file="build/classes-lib" />
-  </target>
-  
-  <target name="buildinfo" depends="build-env" unless="has-buildinfo">
-    <exec executable="git" outputproperty="gitrev" failifexecutionfails="false">
-      <arg line="rev-parse HEAD" />
-    </exec>
-    <echo file="build/classes/buildinfo" xml:space="default">
-      git-rev = ${gitrev}
-    </echo>
-    <copy todir="dist" file="lib/haven-res.jar" />
-  </target>
+<project name="haven" default="all">
 
-  <target name="haven-client" depends="build-env">
-    <javac srcdir="src" destdir="build/classes" debug="on"
-	   source="1.5" target="1.5" includeantruntime="no">
-      <classpath>
-	<pathelement path="lib/jogl.jar" />
-	<pathelement path="lib/gluegen-rt.jar" />
-	<pathelement path="lib/jnlp.jar" />
-	<pathelement path="lib/jorbis.jar" />
-	<pathelement path="lib/jogg.jar" />
-      </classpath>
-      <compilerarg value="-Xlint:unchecked" />
-      <!-- <compilerarg value="-Xbarda" /> -->
-    </javac>
-    <copy todir="build/classes/haven" file="etc/ressrv.crt" />
-    <copy todir="build/classes/haven" file="etc/authsrv.crt" />
-    <copy todir="build/classes/haven" file="etc/res-preload" />
-    <copy todir="build/classes/haven" file="etc/res-bgload" />
-    <copy todir="build/classes/haven" file="etc/icon.png" />
-    <mkdir dir="build/res" />
-    <copy todir="build/res" >
-	<fileset dir="resources/res"/>
-    </copy>
-  </target>
+    <!--Uncomment the following property if no tests compilation is needed -->
+    <property name="skip.tests" value="true"/>
 
-  <target name="copy-crt">
-    <copy todir="build/haven" file="etc/ressrv.crt" />
-    <copy todir="build/haven" file="etc/authsrv.crt" />
-    <copy todir="build/haven" file="etc/res-preload" />
-    <copy todir="build/haven" file="etc/res-bgload" />
-    <copy todir="build/haven" file="etc/icon.png" />
-  </target>
 
-  <target name="appletview" depends="build-env">
-    <copy file="etc/applet.html" todir="build" />
-  </target>
-  
-  <target name="map" depends="build-env">
-    <copy file="src/gilbertus/map.html" todir="build/map" />
-  </target>
+    <!-- Compiler options -->
 
-  <target name="lib-classes" depends="build-env" unless="unpacked-lib">
-    <mkdir dir="build/classes-lib" />
-    <unjar src="lib/jogg.jar" dest="build/classes-lib">
-      <patternset excludes="META-INF/**" />
-    </unjar>
-    <unjar src="lib/jorbis.jar" dest="build/classes-lib">
-      <patternset excludes="META-INF/**" />
-    </unjar>
-  </target>
+    <property name="compiler.debug" value="on"/>
+    <property name="compiler.generate.no.warnings" value="off"/>
+    <property name="compiler.args" value="-Xlint:unchecked"/>
+    <property name="compiler.max.memory" value="128m"/>
+    <patternset id="ignored.files">
+        <exclude name="**/CVS/**"/>
+        <exclude name="**/SCCS/**"/>
+        <exclude name="**/RCS/**"/>
+        <exclude name="**/rcs/**"/>
+        <exclude name="**/.DS_Store/**"/>
+        <exclude name="**/.svn/**"/>
+        <exclude name="**/.pyc/**"/>
+        <exclude name="**/.pyo/**"/>
+        <exclude name="**/*.pyc/**"/>
+        <exclude name="**/*.pyo/**"/>
+        <exclude name="**/.git/**"/>
+        <exclude name="**/*.hprof/**"/>
+        <exclude name="**/_svn/**"/>
+        <exclude name="**/.hg/**"/>
+        <exclude name="**/*.lib/**"/>
+        <exclude name="**/*~/**"/>
+        <exclude name="**/vssver.scc/**"/>
+        <exclude name="**/vssver2.scc/**"/>
+        <exclude name="**/__pycache__/**"/>
+        <exclude name="**/.bundle/**"/>
+    </patternset>
+    <patternset id="library.patterns">
+        <include name="*.zip"/>
+        <include name="*.war"/>
+        <include name="*.egg"/>
+        <include name="*.ear"/>
+        <include name="*.swc"/>
+        <include name="*.jar"/>
+    </patternset>
+    <patternset id="compiler.resources">
+        <include name="**/?*.properties"/>
+        <include name="**/?*.xml"/>
+        <include name="**/?*.gif"/>
+        <include name="**/?*.png"/>
+        <include name="**/?*.jpeg"/>
+        <include name="**/?*.jpg"/>
+        <include name="**/?*.html"/>
+        <include name="**/?*.dtd"/>
+        <include name="**/?*.tld"/>
+        <include name="**/?*.ftl"/>
+    </patternset>
 
-  <target name="jar" depends="haven-client,buildinfo,lib-classes">
-    <jar destfile="build/haven.jar" update="true">
-      <fileset dir="build/classes" />
-      <fileset dir="build/classes-lib" />
-      <manifest>
-	<attribute name="Main-Class" value="haven.CustomConfig" />
-	<attribute name="Class-Path" value="jogl.jar gluegen-rt.jar haven-res.jar" />
-      </manifest>
-    </jar>
-    <chmod file="build/haven.jar" perm="a+x" />
-  </target>
-  
-  <target name="res-jar" depends="build-env" unless="has-res-jar">
-    <get src="http://www.havenandhearth.com/java/haven-res.jar" dest="lib/haven-res.jar"
-	 usetimestamp="true" />
-  </target>
-  
-  <target name="jars" depends="build-env, jar, res-jar">
-    <copy todir="build">
-      <fileset dir="lib">
-	<include name="jogl.jar" />
-	<include name="gluegen-rt.jar" />
-	<include name="haven-res.jar" />
-      </fileset>
-    </copy>
-  </target>
-  
-  <target name="deftgt" depends="jars, appletview, map" />
 
-  <target name="run" depends="jars">
-    <java jar="build/haven.jar" fork="true"/>
-  </target>
-  
-  <target name="clean">
-    <delete dir="build/classes" />
-    <delete dir="build/classes-lib" />
-  </target>
-  
-  <target name="profile" depends="jars">
-    <nbprofiledirect>
-    </nbprofiledirect>
-      <java fork="true" jar="build/haven.jar">
-        <jvmarg value="${profiler.info.jvmargs.agent}" />
-        <sysproperty key="haven.dbtext" value="on" />
-        <sysproperty key="haven.defserv" value="sh.seatribe.se" />
-        <sysproperty key="haven.resdir" value="/home/fredrik/src/haven/res" />
-      </java>
-  </target>
-  
-  <target name="make-key" unless="has-sign-key">
-  	<exec executable="etc\genkey.bat"/>
-  </target>
-  
-  <target name="signer" depends="jars, make-key">
-  	<copy file="build\haven.jar" todir="dist"/>
-  	<exec executable="dist\signer.bat"/>
-  </target>
-  
-  <target name="update-zips" depends="signer">
-  	<copy file="lib\haven-res.jar" todir="dist"/>
-  	<zip destfile="dist\update-patch-current.zip" basedir="dist" includes="haven.jar"
-  		update="true" whenempty="create"/>
-  	<zip destfile="dist\update-patch-${tstamp.date}.zip" basedir="dist" includes="haven.jar"
-  		update="true" whenempty="create"/>
-  	<zip destfile="dist\haven-32bit-windows-full.zip" filesonly="true" update="true" whenempty="create">
-  		<zipfileset dir="dist\32bit-jogl-windows" excludes="*.jar" prefix=""/>
-  		<zipfileset dir="dist" includes="haven.jar,haven-res.jar,jorbis.jar,jogg.jar,gluegen-rt.jar,jogl.jar,run.bat"/>
-  	</zip>
-  	<zip destfile="dist\haven-64bit-windows-full.zip" filesonly="true" update="true" whenempty="create">
-  		<zipfileset dir="dist\64bit-jogl-windows" excludes="*.jar" prefix=""/>
-  		<zipfileset dir="dist" includes="haven.jar,haven-res.jar,jorbis.jar,jogg.jar,gluegen-rt.jar,jogl.jar,run.bat"/>
-  	</zip>
-  	<zip destfile="dist\haven-32bit-linux-full.zip" filesonly="true" update="true" whenempty="create">
-  		<zipfileset dir="dist\32bit-jogl-linux" excludes="*.jar" prefix=""/>
-  		<zipfileset dir="dist" includes="haven.jar,haven-res.jar,jorbis.jar,jogg.jar,gluegen-rt.jar,jogl.jar,run.bat"/>
-  	</zip>
-  	<zip destfile="dist\haven-64bit-linux-full.zip" filesonly="true" update="true" whenempty="create">
-  		<zipfileset dir="dist\64bit-jogl-linux" excludes="*.jar" prefix=""/>
-  		<zipfileset dir="dist" includes="haven.jar,haven-res.jar,jorbis.jar,jogg.jar,gluegen-rt.jar,jogl.jar,run.bat"/>
-  	</zip>
-  	<zip destfile="dist\haven-macosx-ppc-full.zip" filesonly="true" update="true" whenempty="create">
-  		<zipfileset dir="dist\ppc-jogl-macosx" excludes="*.jar" prefix=""/>
-  		<zipfileset dir="dist" includes="haven.jar,haven-res.jar,jorbis.jar,jogg.jar,gluegen-rt.jar,jogl.jar,run.bat"/>
-  	</zip>
-  	<zip destfile="dist\haven-macosx-universal-full.zip" filesonly="true" update="true" whenempty="create">
-  		<zipfileset dir="dist\universal-jogl-macosx" excludes="*.jar" prefix=""/>
-  		<zipfileset dir="dist" includes="haven.jar,haven-res.jar,jorbis.jar,jogg.jar,gluegen-rt.jar,jogl.jar,run.bat"/>
-  	</zip>
-  </target>
+    <!-- Project Libraries -->
+
+
+    <path id="library.jnlp.classpath">
+        <pathelement location="${basedir}/lib/jnlp.jar"/>
+    </path>
+
+    <path id="library.json-simple.classpath">
+        <pathelement location="${basedir}/lib/json-simple.jar"/>
+    </path>
+
+    <path id="library.junit.classpath">
+        <pathelement location="${basedir}/lib/junit-4.8.2.jar"/>
+    </path>
+
+    <path id="library.jython.classpath">
+        <pathelement location="${basedir}/lib/jython.jar"/>
+    </path>
+
+    <path id="library.log4j.classpath">
+        <pathelement location="${basedir}/lib/log4j.jar"/>
+    </path>
+
+    <path id="library.jogl.classpath">
+        <fileset dir="${basedir}/lib/jogl">
+            <patternset refid="library.patterns"/>
+        </fileset>
+    </path>
+
+    <path id="library.resources.classpath">
+        <pathelement location="${haven.dist.files}/haven-res.jar"/>
+    </path>
+
+    <!-- Module Haven and Hearth Client -->
+
+    <dirname property="haven.basedir" file="${ant.file}"/>
+
+    <property name="haven.src.resources.custom.dir" value="${haven.basedir}/resources/src"/>
+    <property name="haven.resources.custom.dir" value="${haven.basedir}/resources/res"/>
+
+    <property name="compiler.args.haven" value="${compiler.args}"/>
+
+    <property name="haven.src.java.dir" value="${haven.basedir}/src"/>
+    <property name="haven.src.scripts.dir" value="${haven.basedir}/scripts/"/>
+
+
+    <property name="haven.output.dir" value="${haven.basedir}/build/production"/>
+    <property name="haven.testoutput.dir" value="${haven.basedir}/build/test"/>
+
+
+    <property name="haven.dist.dir" value="${haven.basedir}/dist"/>
+    <property name="haven.archives.dir" value="${haven.dist.dir}/archives"/>
+
+    <property name="haven.dist.files"
+              value="haven.jar,haven-res.jar,cr.jar"/>
+    <property name="haven.dist.files.windows" value="${haven.dist.files},run.bat"/>
+    <property name="haven.dist.files.mac" value="${haven.dist.files},run.bat"/>
+    <property name="haven.dist.files.linux" value="${haven.dist.files},run.sh"/>
+
+
+    <path id="haven.module.bootclasspath">
+        <!-- Paths to be included in compilation bootclasspath -->
+    </path>
+
+    <path id="haven.module.production.classpath">
+        <path refid="library.log4j.classpath"/>
+        <path refid="library.jython.classpath"/>
+        <path refid="library.jogl.classpath"/>
+        <path refid="library.json-simple.classpath"/>
+        <path refid="library.jnlp.classpath"/>
+    </path>
+
+    <path id="haven.runtime.production.module.classpath">
+        <pathelement location="${haven.output.dir}"/>
+        <path refid="library.log4j.classpath"/>
+        <path refid="library.jython.classpath"/>
+        <path refid="library.jogl.classpath"/>
+        <path refid="library.json-simple.classpath"/>
+        <path refid="library.resources.classpath"/>
+        <path refid="library.jnlp.classpath"/>
+    </path>
+
+    <path id="haven.module.classpath">
+        <pathelement location="${haven.output.dir}"/>
+        <path refid="library.junit.classpath"/>
+        <path refid="library.log4j.classpath"/>
+        <path refid="library.jython.classpath"/>
+        <path refid="library.jogl.classpath"/>
+        <path refid="library.json-simple.classpath"/>
+        <path refid="library.jnlp.classpath"/>
+    </path>
+
+    <path id="haven.runtime.module.classpath">
+        <pathelement location="${haven.testoutput.dir}"/>
+        <pathelement location="${haven.output.dir}"/>
+        <path refid="library.junit.classpath"/>
+        <path refid="library.log4j.classpath"/>
+        <path refid="library.jython.classpath"/>
+        <path refid="library.jogl.classpath"/>
+        <path refid="library.json-simple.classpath"/>
+        <path refid="library.resources.classpath"/>
+        <path refid="library.jnlp.classpath"/>
+    </path>
+
+
+    <path id="haven.libs.path">
+            <path refid="library.log4j.classpath"/>
+            <path refid="library.jython.classpath"/>
+            <path refid="library.jogl.classpath"/>
+            <path refid="library.json-simple.classpath"/>
+            <path refid="library.resources.classpath"/>
+            <path refid="library.jnlp.classpath"/>
+    </path>
+
+
+    <patternset id="excluded.from.module.haven">
+        <patternset refid="ignored.files"/>
+    </patternset>
+
+    <patternset id="excluded.from.compilation.haven">
+        <patternset refid="excluded.from.module.haven"/>
+    </patternset>
+
+
+    <path id="haven.sourcepath">
+        <dirset dir="${haven.basedir}">
+            <include name="src"/>
+            <include name="scripts"/>
+        </dirset>
+    </path>
+
+    <path id="haven.test.sourcepath">
+        <dirset dir="${haven.basedir}">
+            <include name="test"/>
+        </dirset>
+    </path>
+
+
+    <!-- Targets -->
+
+
+    <tstamp>
+        <format property="update.date" pattern="yy.MM.dd"/>
+    </tstamp>
+
+    <target name="build-env">
+        <available property="has-res-jar" file="${haven.dist.dir}/haven-res.jar"/>
+        <available property="has-sign-key" file="etc/IRCEKEYS"/>
+        <available property="has-buildinfo" file="${haven.output.dir}/buildinfo"/>
+    </target>
+
+    <target name="buildinfo" depends="build-env" unless="has-buildinfo">
+        <exec executable="git" outputproperty="gitrev" failifexecutionfails="false">
+            <arg line="rev-parse HEAD"/>
+        </exec>
+        <echo file="${haven.output.dir}/buildinfo">git-rev = ${gitrev}</echo>
+        <!--<copy todir="${haven.dest.dir}" file="lib/haven-res.jar"/>-->
+    </target>
+
+
+    <target name="init" description="Build initialization">
+        <!-- Perform any build initialization in this target -->
+    </target>
+
+
+    <target name="clean" depends="clean.haven" description="cleanup all"/>
+
+    <target name="clean.haven" description="cleanup module">
+        <delete dir="${haven.output.dir}"/>
+        <delete dir="${haven.testoutput.dir}"/>
+    </target>
+
+
+    <target name="build.haven" depends="init, clean, compile.haven" description="build all modules"/>
+
+
+    <target name="compile.haven"
+            depends="compile.haven.production, compile.haven.tests"
+            description="Compile Haven and Hearth Client"/>
+
+    <target name="compile.haven.tests"
+            depends="compile.haven.production"
+            description="compile Haven and Hearth Client; test classes"
+            unless="skip.tests">
+        <mkdir dir="${haven.testoutput.dir}"/>
+        <javac destdir="${haven.testoutput.dir}" debug="${compiler.debug}"
+               nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true">
+            <compilerarg line="${compiler.args.haven}"/>
+            <bootclasspath refid="haven.module.bootclasspath"/>
+            <classpath refid="haven.module.classpath"/>
+            <src refid="haven.test.sourcepath"/>
+            <patternset refid="excluded.from.compilation.haven"/>
+        </javac>
+
+        <copy todir="${haven.testoutput.dir}">
+            <fileset dir="${haven.basedir}/test">
+                <patternset refid="compiler.resources"/>
+                <type type="file"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="compile.haven.production"
+            depends="build-env"
+            description="Compile Haven and Hearth Client; production classes">
+        <mkdir dir="${haven.output.dir}"/>
+        <javac destdir="${haven.output.dir}" debug="${compiler.debug}"
+               nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true">
+            <compilerarg line="${compiler.args.haven}"/>
+            <bootclasspath refid="haven.module.bootclasspath"/>
+            <classpath refid="haven.module.production.classpath"/>
+            <src refid="haven.sourcepath"/>
+            <patternset refid="excluded.from.compilation.haven"/>
+            <!-- <compilerarg value="-Xbarda" /> -->
+        </javac>
+
+        <copy todir="${haven.output.dir}">
+            <fileset dir="${haven.basedir}/src">
+                <patternset refid="compiler.resources"/>
+                <type type="file"/>
+            </fileset>
+            <fileset dir="${haven.basedir}/scripts">
+                <patternset refid="compiler.resources"/>
+                <type type="file"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="copy-additional">
+        <copy todir="${haven.output.dir}/haven" file="etc/ressrv.crt"/>
+        <copy todir="${haven.output.dir}/haven" file="etc/authsrv.crt"/>
+        <copy todir="${haven.output.dir}/haven" file="etc/res-preload"/>
+        <copy todir="${haven.output.dir}/haven" file="etc/res-bgload"/>
+        <copy todir="${haven.output.dir}/haven" file="etc/icon.png"/>
+    </target>
+
+    <!--<target name="copy-add-resources">-->
+    <!--<mkdir dir="build/custom_res"/>-->
+    <!--<copy todir="build/custom_res">-->
+    <!--<fileset dir="resources/res"/>-->
+    <!--</copy>-->
+    <!--</target>-->
+
+    <target name="appletview" depends="build-env">
+        <copy file="etc/applet.html" todir="${haven.basedir}/build"/>
+    </target>
+
+    <target name="map" depends="build-env">
+        <copy file="src/gilbertus/map.html" todir="build/map"/>
+    </target>
+
+    <target name="lib-classes" depends="build-env" unless="unpacked-lib">
+        <mkdir dir="build/classes-lib"/>
+        <unjar src="lib/jogg.jar" dest="build/classes-lib">
+            <patternset excludes="META-INF/**"/>
+        </unjar>
+        <unjar src="lib/jorbis.jar" dest="build/classes-lib">
+            <patternset excludes="META-INF/**"/>
+        </unjar>
+    </target>
+
+    <target name="init.artifacts">
+        <property name="artifacts.output" value="${basedir}/dist/"/>
+
+        <property name="artifacts.temp.dir" value="${basedir}/__artifacts_temp"/>
+        <mkdir dir="${artifacts.temp.dir}"/>
+        <property name="temp.jar.path.haven.jar" value="${artifacts.temp.dir}/haven.jar"/>
+        <property name="temp.jar.path.cr.jar" value="${artifacts.temp.dir}/cr.jar"/>
+    </target>
+
+
+    <target name="artifact.haven.jar" depends="init.artifacts, compile.haven, buildinfo, copy-additional"
+            description="Build &apos;Haven.jar&apos; artifact">
+        <property name="artifact.temp.output.haven.jar" value="${artifacts.temp.dir}/haven_jar"/>
+        <mkdir dir="${artifact.temp.output.haven.jar}"/>
+        <jar destfile="${temp.jar.path.haven.jar}" duplicate="preserve" filesetmanifest="mergewithoutmain">
+            <zipfileset file="${haven.src.java.dir}/META-INF/MANIFEST.MF" prefix="META-INF"/>
+            <zipfileset dir="${haven.output.dir}" prefix="classes"/>
+        </jar>
+        <chmod file="${temp.jar.path.haven.jar}" perm="a+x"/>
+        <copy file="${temp.jar.path.haven.jar}" tofile="${artifact.temp.output.haven.jar}/haven.jar"/>
+    </target>
+
+
+    <target name="artifact.cr.jar" depends="init.artifacts"
+            description="Build &apos;Custom Resources jar&apos; artifact">
+        <property name="artifact.temp.output.cr.jar" value="${artifacts.temp.dir}/cr_jar"/>
+        <mkdir dir="${artifact.temp.output.cr.jar}"/>
+        <jar destfile="${temp.jar.path.cr.jar}" duplicate="preserve" filesetmanifest="mergewithoutmain">
+            <zipfileset dir="${haven.resources.custom.dir}"/>
+        </jar>
+        <copy file="${temp.jar.path.cr.jar}" tofile="${artifact.temp.output.cr.jar}/cr.jar"/>
+    </target>
+
+    <target name="artifact.haven-res.jar" depends=""
+            description="Load &apos;Original Resources jar&apos; artifact" unless="has-res-jar">
+        <get src="http://www.havenandhearth.com/java/haven-res.jar" dest="${haven.dist.dir}/haven-res.jar" usetimestamp="true"/>
+    </target>
+
+    <target name="build.all.artifacts" depends="artifact.haven.jar, artifact.cr.jar, artifact.haven-res.jar"
+            description="Build all artifacts">
+        <mkdir dir="${artifacts.output}"/>
+        <copy todir="${artifacts.output}">
+            <fileset dir="${artifact.temp.output.haven.jar}"/>
+            <fileset dir="${artifact.temp.output.cr.jar}"/>
+        </copy>
+
+        <!-- Delete temporary files -->
+        <!--<delete dir="${artifacts.temp.dir}"/>-->
+    </target>
+
+    <target name="jars" depends="build-env, build.all.artifacts">
+    </target>
+
+    <target name="all" depends="build.haven, build.all.artifacts"/>
+    <!--jars, appletview, map-->
+
+    <!--<target name="run" depends="all">-->
+    <!--<java jar="build/haven.jar" fork="true"/>-->
+    <!--</target>-->
+
+    <!--<target name="profile" depends="jars">-->
+    <!--<java fork="true" jar="build/haven.jar">-->
+    <!--<jvmarg value="${profiler.info.jvmargs.agent}"/>-->
+    <!--<sysproperty key="haven.dbtext" value="on"/>-->
+    <!--<sysproperty key="haven.defserv" value="sh.seatribe.se"/>-->
+    <!--<sysproperty key="haven.resdir" value="/home/fredrik/src/haven/res"/>-->
+    <!--</java>-->
+    <!--</target>-->
+
+    <target name="make-key" unless="has-sign-key">
+        <!--<exec executable="${haven.basedir}/etc/genkey.bat"/>-->
+    </target>
+
+    <target name="signer" depends="jars, make-key">
+        <!--<copy file="build\haven.jar" todir="${haven.dist.dir}"/>-->
+        <!--<exec executable="${haven.dist.dir}/signer.sh"/>-->
+    </target>
+
+    <target name="update-zips" depends="signer">
+        <!--<copy todir="${haven.dist.dir}" flatten="true">-->
+            <!--<fileset dir="${haven.basedir}/lib"/>-->
+        <!--</copy>-->
+
+        <zip destfile="${haven.archives.dir}/update-patch-current.zip" basedir="${haven.dist.dir}"
+             includes="haven.jar,cr.jar" update="true" whenempty="create"/>
+        <zip destfile="${haven.archives.dir}/update-patch-${update.date}.zip" basedir="${haven.dist.dir}"
+             includes="haven.jar,cr.jar" update="true" whenempty="create"/>
+
+        <zip destfile="${haven.archives.dir}/haven-32bit-windows-full.zip" filesonly="true" update="true"
+             whenempty="create">
+            <zipfileset dir="${haven.dist.dir}/32bit-jogl-windows" excludes="*.jar" prefix=""/>
+            <zipfileset dir="${haven.dist.dir}" includes="${haven.dist.files.windows}"/>
+            <path refid="haven.libs.path"/>
+        </zip>
+        <zip destfile="${haven.archives.dir}/haven-64bit-windows-full.zip" filesonly="true" update="true"
+             whenempty="create">
+            <zipfileset dir="${haven.dist.dir}/64bit-jogl-windows" excludes="*.jar" prefix=""/>
+            <zipfileset dir="${haven.dist.dir}" includes="${haven.dist.files.windows}"/>
+            <path refid="haven.libs.path"/>
+        </zip>
+
+        <zip destfile="${haven.archives.dir}/haven-32bit-linux-full.zip" filesonly="true" update="true"
+             whenempty="create">
+            <zipfileset dir="${haven.dist.dir}/32bit-jogl-linux" excludes="*.jar" prefix=""/>
+            <zipfileset dir="${haven.dist.dir}" includes="${haven.dist.files.linux}"/>
+            <path refid="haven.libs.path"/>
+        </zip>
+        <zip destfile="${haven.archives.dir}/haven-64bit-linux-full.zip" filesonly="true" update="true"
+             whenempty="create">
+            <zipfileset dir="${haven.dist.dir}/64bit-jogl-linux" excludes="*.jar" prefix=""/>
+            <zipfileset dir="${haven.dist.dir}" includes="${haven.dist.files.linux}"/>
+            <path refid="haven.libs.path"/>
+        </zip>
+
+        <zip destfile="${haven.archives.dir}/haven-macosx-ppc-full.zip" filesonly="true" update="true"
+             whenempty="create">
+            <zipfileset dir="${haven.dist.dir}/ppc-jogl-macosx" excludes="*.jar" prefix=""/>
+            <zipfileset dir="${haven.dist.dir}" includes="${haven.dist.files.mac}"/>
+            <path refid="haven.libs.path"/>
+        </zip>
+        <zip destfile="${haven.archives.dir}/haven-macosx-universal-full.zip" filesonly="true" update="true"
+             whenempty="create">
+            <zipfileset dir="${haven.dist.dir}/universal-jogl-macosx" excludes="*.jar" prefix=""/>
+            <zipfileset dir="${haven.dist.dir}" includes="${haven.dist.files.mac}"/>
+            <path refid="haven.libs.path"/>
+        </zip>
+    </target>
 </project>

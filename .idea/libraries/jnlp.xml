@@ -1,7 +1,7 @@
 <component name="libraryTable">
-  <library name="log4j">
+  <library name="jnlp">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib/log4j.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jnlp.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

@@ -1,0 +1,30 @@
+<?xml version="1.0" ?>
+<jnlp spec="1.0+" codebase="https://github.com/downloads/VladRassohkin/Haven-and-Hearth-extended-client/">
+    <information>
+        <title>Haven and Hearth</title>
+        <vendor>Vladislav Rassokhin</vendor>
+        <homepage href="http://www.havenandhearth.com/"/>
+        <description>The Haven game</description>
+        <shortcut online="false">
+            <desktop/>
+            <menu submenu="Haven and Hearth"/>
+        </shortcut>
+    </information>
+    <security>
+        <all-permissions/>
+    </security>
+    <resources>
+        <j2se version="1.5+" max-heap-size="512M"/>
+        <jar href="haven.jar"/>
+        <jar href="log4j.jar"/>
+        <jar href="cr.jar"/>
+        <jar href="jython.jar"/>
+        <jar href="json-simple.jar"/>
+        <property name="haven.errorhandler" value="on"/>
+        <property name="haven.defserv" value="moltke.seatribe.se"/>
+        <property name="haven.fullscreen" value="off"/>
+        <extension name="jogl" href="http://www.havenandhearth.com/java/haven-res.jnlp"/>
+        <extension name="jogl" href="http://www.havenandhearth.com/java/jogl/jogl.jnlp"/>
+    </resources>
+    <application-desc/>
+</jnlp>

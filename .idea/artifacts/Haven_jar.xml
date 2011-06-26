@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Haven:jar">
+    <output-path>$PROJECT_DIR$/build/artifacts/</output-path>
+    <root id="archive" name="haven-extended.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="module-output" name="Haven and Hearth Client" />
+    </root>
+  </artifact>
+</component>

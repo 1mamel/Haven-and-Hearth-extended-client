@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Class-Path: lib/ lib/specific/
+Main-Class: haven.CutomConfig
+
