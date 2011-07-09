@@ -5,9 +5,9 @@ if [ $# -lt 1 ]; then
     exit 1
 fi
 set -e
-
+projectdir="$(pwd)"
 tempdir="$(mktemp -d /tmp/haven.build.XXXXXX)"
-cd "$tempdir"
+pushd "$tempdir"
 git-archive --format=tar --remote=/srv/git/client "$1" | tar x
 mkdir -p build/classes
 echo "git-rev = $1" >build/classes/buildinfo
@@ -16,6 +16,6 @@ cp build/haven.jar /tmp
 cd /tmp
 rm -rf "$tempdir"
 
-jarsigner -storepass autosign -keystore /srv/haven/lib/jarkeys /tmp/haven.jar haven
+jarsigner -storepass autosign -keystore $projectdir/lib/jarkeys /tmp/haven.jar haven
 
-mv -f /tmp/haven.jar /srv/haven/lib/haven.jar
+mv -f /tmp/haven.jar $projectdir/lib/haven.jar

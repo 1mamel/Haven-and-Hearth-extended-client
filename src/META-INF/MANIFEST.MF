@@ -1,4 +1,4 @@
 Manifest-Version: 1.0
-Class-Path: lib/ lib/specific/
-Main-Class: haven.CutomStarter
+Main-Class: haven.CustomStarter
+Class-Path: .
 

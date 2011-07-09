@@ -1,2 +1,2 @@
-jarsigner -verbose -keystore etc/IRCEKEYS -storepass autosign dist/haven.jar VladRassokhin
-jarsigner -verbose -keystore etc/IRCEKEYS -storepass autosign dist/log4j.jar VladRassokhin
+jarsigner -verbose -keystore etc/VRExtClientKS dist/haven.jar ExtClient
+jarsigner -verbose -keystore etc/VRExtClientKS dist/cr.jar ExtClient

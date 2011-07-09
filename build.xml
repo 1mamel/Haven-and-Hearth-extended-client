@@ -74,6 +74,7 @@
 
 
     <property name="haven.dist.dir" value="${haven.basedir}/dist"/>
+    <property name="haven.etc.dir" value="${haven.basedir}/etc"/>
     <property name="haven.archives.dir" value="${haven.dist.dir}/archives"/>
 
     <property name="haven.dist.files"
@@ -163,12 +164,12 @@
 
 
     <path id="haven.libs.path">
-            <path refid="library.log4j.classpath"/>
-            <path refid="library.jython.classpath"/>
-            <path refid="library.jogl.classpath"/>
-            <path refid="library.json-simple.classpath"/>
-            <path refid="library.resources.classpath"/>
-            <path refid="library.jnlp.classpath"/>
+        <path refid="library.log4j.classpath"/>
+        <path refid="library.jython.classpath"/>
+        <path refid="library.jogl.classpath"/>
+        <path refid="library.json-simple.classpath"/>
+        <path refid="library.resources.classpath"/>
+        <path refid="library.jnlp.classpath"/>
     </path>
 
 
@@ -204,7 +205,7 @@
 
     <target name="build-env">
         <available property="has-res-jar" file="${haven.dist.dir}/haven-res.jar"/>
-        <available property="has-sign-key" file="etc/IRCEKEYS"/>
+        <available property="has-sign-key" file="${haven.etc.dir}/AutoExtClient.ks"/>
         <available property="has-buildinfo" file="${haven.output.dir}/buildinfo"/>
     </target>
 
@@ -213,7 +214,6 @@
             <arg line="rev-parse HEAD"/>
         </exec>
         <echo file="${haven.output.dir}/buildinfo">git-rev = ${gitrev}</echo>
-        <!--<copy todir="${haven.dest.dir}" file="lib/haven-res.jar"/>-->
     </target>
 
 
@@ -227,6 +227,12 @@
     <target name="clean.haven" description="cleanup module">
         <delete dir="${haven.output.dir}"/>
         <delete dir="${haven.testoutput.dir}"/>
+    </target>
+
+    <target name="distclean" depends="clean" description="Clean dist directory">
+        <delete dir="${haven.archives.dir}"/>
+        <delete file="${haven.dist.dir}/haven.jar"/>
+        <delete file="${haven.dist.dir}/cr.jar"/>
     </target>
 
 
@@ -286,11 +292,11 @@
     </target>
 
     <target name="copy-additional">
-        <copy todir="${haven.output.dir}/haven" file="etc/ressrv.crt"/>
-        <copy todir="${haven.output.dir}/haven" file="etc/authsrv.crt"/>
-        <copy todir="${haven.output.dir}/haven" file="etc/res-preload"/>
-        <copy todir="${haven.output.dir}/haven" file="etc/res-bgload"/>
-        <copy todir="${haven.output.dir}/haven" file="etc/icon.png"/>
+        <copy todir="${haven.output.dir}/haven" file="${haven.etc.dir}/ressrv.crt"/>
+        <copy todir="${haven.output.dir}/haven" file="${haven.etc.dir}/authsrv.crt"/>
+        <copy todir="${haven.output.dir}/haven" file="${haven.etc.dir}/res-preload"/>
+        <copy todir="${haven.output.dir}/haven" file="${haven.etc.dir}/res-bgload"/>
+        <copy todir="${haven.output.dir}/haven" file="${haven.etc.dir}/icon.png"/>
     </target>
 
     <!--<target name="copy-add-resources">-->
@@ -303,7 +309,7 @@
     <!-- TODO: add resource making from files -->
 
     <target name="appletview" depends="build-env">
-        <copy file="etc/applet.html" todir="${haven.basedir}/build"/>
+        <copy file="${haven.etc.dir}/applet.html" todir="${haven.basedir}/build"/>
     </target>
 
     <target name="map" depends="build-env">
@@ -321,7 +327,7 @@
     </target>
 
     <target name="init.artifacts">
-        <property name="artifacts.output" value="${basedir}/dist/"/>
+        <property name="artifacts.output" value="${haven.dist.dir}"/>
 
         <property name="artifacts.temp.dir" value="${basedir}/__artifacts_temp"/>
         <mkdir dir="${artifacts.temp.dir}"/>
@@ -334,13 +340,13 @@
             description="Build &apos;Haven.jar&apos; artifact">
         <property name="artifact.temp.output.haven.jar" value="${artifacts.temp.dir}/haven_jar"/>
         <mkdir dir="${artifact.temp.output.haven.jar}"/>
-        <jar destfile="${temp.jar.path.haven.jar}" duplicate="preserve" filesetmanifest="mergewithoutmain">
+        <zip destfile="${temp.jar.path.haven.jar}" duplicate="preserve">
             <zipfileset file="${haven.src.java.dir}/META-INF/MANIFEST.MF" prefix="META-INF"/>
-            <zipfileset dir="${haven.output.dir}" prefix="classes"/>
+            <zipfileset dir="${haven.output.dir}" prefix=""/>
             <zipfileset dir="${haven.src.scripts.dir}" prefix="scripts" includes="*.py"/>
-        </jar>
+        </zip>
         <chmod file="${temp.jar.path.haven.jar}" perm="a+x"/>
-        <copy file="${temp.jar.path.haven.jar}" tofile="${artifact.temp.output.haven.jar}/haven.jar"/>
+        <copy file="${temp.jar.path.haven.jar}" tofile="${haven.dist.dir}/haven.jar"/>
     </target>
 
 
@@ -349,32 +355,30 @@
         <property name="artifact.temp.output.cr.jar" value="${artifacts.temp.dir}/cr_jar"/>
         <mkdir dir="${artifact.temp.output.cr.jar}"/>
         <jar destfile="${temp.jar.path.cr.jar}" duplicate="preserve" filesetmanifest="mergewithoutmain">
-            <zipfileset dir="${haven.resources.custom.dir}"/>
+            <zipfileset dir="${haven.resources.custom.dir}" prefix="res"/>
         </jar>
-        <copy file="${temp.jar.path.cr.jar}" tofile="${artifact.temp.output.cr.jar}/cr.jar"/>
+        <copy file="${temp.jar.path.cr.jar}" tofile="${haven.dist.dir}/cr.jar"/>
     </target>
 
     <target name="artifact.haven-res.jar" depends=""
             description="Load &apos;Original Resources jar&apos; artifact" unless="has-res-jar">
-        <get src="http://www.havenandhearth.com/java/haven-res.jar" dest="${haven.dist.dir}/haven-res.jar" usetimestamp="true"/>
+        <get src="http://www.havenandhearth.com/java/haven-res.jar" dest="${haven.dist.dir}/haven-res.jar"
+             usetimestamp="true"/>
     </target>
 
     <target name="build.all.artifacts" depends="artifact.haven.jar, artifact.cr.jar, artifact.haven-res.jar"
             description="Build all artifacts">
-        <mkdir dir="${artifacts.output}"/>
-        <copy todir="${artifacts.output}">
-            <fileset dir="${artifact.temp.output.haven.jar}"/>
-            <fileset dir="${artifact.temp.output.cr.jar}"/>
-        </copy>
+        <!--<mkdir dir="${artifacts.output}"/>-->
+        <!--<copy todir="${artifacts.output}">-->
+        <!--<fileset dir="${artifact.temp.output.haven.jar}"/>-->
+        <!--<fileset dir="${artifact.temp.output.cr.jar}"/>-->
+        <!--</copy>-->
 
         <!-- Delete temporary files -->
-        <!--<delete dir="${artifacts.temp.dir}"/>-->
+        <delete dir="${artifacts.temp.dir}"/>
     </target>
 
-    <target name="jars" depends="build-env, build.all.artifacts">
-    </target>
-
-    <target name="all" depends="build.haven, build.all.artifacts"/>
+    <target name="all" depends="build.all.artifacts"/>
     <!--jars, appletview, map-->
 
     <!--<target name="run" depends="all">-->
@@ -390,19 +394,17 @@
     <!--</java>-->
     <!--</target>-->
 
-    <target name="make-key" unless="has-sign-key">
-        <!--<exec executable="${haven.basedir}/etc/genkey.bat"/>-->
+    <target name="make-key" depends="build-env" unless="has-sign-key">
+        <exec executable="${haven.etc.dir}/genkey.auto.sh"/>
     </target>
 
-    <target name="signer" depends="jars, make-key">
-        <!--<copy file="build\haven.jar" todir="${haven.dist.dir}"/>-->
-        <!--<exec executable="${haven.dist.dir}/signer.sh"/>-->
+    <target name="signer" depends="build.all.artifacts, make-key">
+        <exec executable="${haven.etc.dir}/signer.auto.sh"/>
     </target>
 
-    <target name="update-zips" depends="signer">
-        <!--<copy todir="${haven.dist.dir}" flatten="true">-->
-            <!--<fileset dir="${haven.basedir}/lib"/>-->
-        <!--</copy>-->
+    <target name="update-zips" depends="signer, only-update-zips"/>
+
+    <target name="only-update-zips">
 
         <zip destfile="${haven.archives.dir}/update-patch-current.zip" basedir="${haven.dist.dir}"
              includes="haven.jar,cr.jar" update="true" whenempty="create"/>
