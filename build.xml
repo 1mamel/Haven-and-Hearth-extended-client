@@ -69,8 +69,9 @@
     <property name="haven.src.scripts.dir" value="${haven.basedir}/scripts/"/>
 
 
-    <property name="haven.output.dir" value="${haven.basedir}/build/production"/>
-    <property name="haven.testoutput.dir" value="${haven.basedir}/build/test"/>
+    <property name="haven.build.dir" value="${haven.basedir}/build"/>
+    <property name="haven.output.dir" value="${haven.build.dir}/production"/>
+    <property name="haven.testoutput.dir" value="${haven.build.dir}/test"/>
 
 
     <property name="haven.artifacts.temp.dir" value="${haven.basedir}/__artifacts_temp"/>
@@ -236,6 +237,7 @@
     </target>
 
     <target name="distclean" depends="clean" description="Clean all">
+        <delete dir="${haven.build.dir}"/>
         <delete dir="${haven.artifacts.temp.dir}"/>
         <delete dir="${haven.archives.dir}"/>
         <delete file="${haven.dist.dir}/haven.jar"/>
