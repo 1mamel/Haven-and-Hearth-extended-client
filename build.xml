@@ -73,12 +73,14 @@
     <property name="haven.testoutput.dir" value="${haven.basedir}/build/test"/>
 
 
+    <property name="haven.artifacts.temp.dir" value="${haven.basedir}/__artifacts_temp"/>
+
     <property name="haven.dist.dir" value="${haven.basedir}/dist"/>
     <property name="haven.etc.dir" value="${haven.basedir}/etc"/>
     <property name="haven.archives.dir" value="${haven.dist.dir}/archives"/>
 
     <property name="haven.dist.files"
-              value="haven.jar,haven-res.jar,cr.jar"/>
+              value="haven.jar,haven-res.jar,cr.jar,map/map.html"/>
     <property name="haven.dist.files.windows" value="${haven.dist.files},run.bat"/>
     <property name="haven.dist.files.mac" value="${haven.dist.files},run.bat"/>
     <property name="haven.dist.files.linux" value="${haven.dist.files},run.sh"/>
@@ -172,6 +174,10 @@
         <path refid="library.jnlp.classpath"/>
     </path>
 
+    <path id="haven.zips.other.include.path">
+        <!--<pathelement location="${haven.dist.files}/haven-res.jar"/>-->
+    </path>
+
 
     <patternset id="excluded.from.module.haven">
         <patternset refid="ignored.files"/>
@@ -229,7 +235,8 @@
         <delete dir="${haven.testoutput.dir}"/>
     </target>
 
-    <target name="distclean" depends="clean" description="Clean dist directory">
+    <target name="distclean" depends="clean" description="Clean all">
+        <delete dir="${haven.artifacts.temp.dir}"/>
         <delete dir="${haven.archives.dir}"/>
         <delete file="${haven.dist.dir}/haven.jar"/>
         <delete file="${haven.dist.dir}/cr.jar"/>
@@ -309,11 +316,11 @@
     <!-- TODO: add resource making from files -->
 
     <target name="appletview" depends="build-env">
-        <copy file="${haven.etc.dir}/applet.html" todir="${haven.basedir}/build"/>
+        <copy file="${haven.etc.dir}/applet.html" todir="${haven.output.dir}"/>
     </target>
 
     <target name="map" depends="build-env">
-        <copy file="src/gilbertus/map.html" todir="build/map"/>
+        <copy file="src/gilbertus/map.html" todir="${haven.dist.dir}/map/"/>
     </target>
 
     <target name="lib-classes" depends="build-env" unless="unpacked-lib">
@@ -329,16 +336,15 @@
     <target name="init.artifacts">
         <property name="artifacts.output" value="${haven.dist.dir}"/>
 
-        <property name="artifacts.temp.dir" value="${basedir}/__artifacts_temp"/>
-        <mkdir dir="${artifacts.temp.dir}"/>
-        <property name="temp.jar.path.haven.jar" value="${artifacts.temp.dir}/haven.jar"/>
-        <property name="temp.jar.path.cr.jar" value="${artifacts.temp.dir}/cr.jar"/>
+        <mkdir dir="${haven.artifacts.temp.dir}"/>
+        <property name="temp.jar.path.haven.jar" value="${haven.artifacts.temp.dir}/haven.jar"/>
+        <property name="temp.jar.path.cr.jar" value="${haven.artifacts.temp.dir}/cr.jar"/>
     </target>
 
 
     <target name="artifact.haven.jar" depends="init.artifacts, compile.haven, buildinfo, copy-additional"
             description="Build &apos;Haven.jar&apos; artifact">
-        <property name="artifact.temp.output.haven.jar" value="${artifacts.temp.dir}/haven_jar"/>
+        <property name="artifact.temp.output.haven.jar" value="${haven.artifacts.temp.dir}/haven_jar"/>
         <mkdir dir="${artifact.temp.output.haven.jar}"/>
         <zip destfile="${temp.jar.path.haven.jar}" duplicate="preserve">
             <zipfileset file="${haven.src.java.dir}/META-INF/MANIFEST.MF" prefix="META-INF"/>
@@ -352,7 +358,7 @@
 
     <target name="artifact.cr.jar" depends="init.artifacts"
             description="Build &apos;Custom Resources jar&apos; artifact">
-        <property name="artifact.temp.output.cr.jar" value="${artifacts.temp.dir}/cr_jar"/>
+        <property name="artifact.temp.output.cr.jar" value="${haven.artifacts.temp.dir}/cr_jar"/>
         <mkdir dir="${artifact.temp.output.cr.jar}"/>
         <jar destfile="${temp.jar.path.cr.jar}" duplicate="preserve" filesetmanifest="mergewithoutmain">
             <zipfileset dir="${haven.resources.custom.dir}" prefix="res"/>
@@ -375,10 +381,10 @@
         <!--</copy>-->
 
         <!-- Delete temporary files -->
-        <delete dir="${artifacts.temp.dir}"/>
+        <!--<delete dir="${artifacts.temp.dir}"/>-->
     </target>
 
-    <target name="all" depends="build.all.artifacts"/>
+    <target name="all" depends="build.all.artifacts, map"/>
     <!--jars, appletview, map-->
 
     <!--<target name="run" depends="all">-->
@@ -402,28 +408,18 @@
         <exec executable="${haven.etc.dir}/signer.auto.sh"/>
     </target>
 
-    <target name="update-zips" depends="signer, only-update-zips"/>
+    <target name="update-zips" depends="signer, update-zips-all"/>
 
-    <target name="only-update-zips">
+    <target name="update-zips-all"
+                depends="update-zips-patch, update-zips-linux, update-zips-windows, update-zips-macosx"/>
 
+    <target name="update-zips-patch">
         <zip destfile="${haven.archives.dir}/update-patch-current.zip" basedir="${haven.dist.dir}"
              includes="haven.jar,cr.jar" update="true" whenempty="create"/>
         <zip destfile="${haven.archives.dir}/update-patch-${update.date}.zip" basedir="${haven.dist.dir}"
              includes="haven.jar,cr.jar" update="true" whenempty="create"/>
-
-        <zip destfile="${haven.archives.dir}/haven-32bit-windows-full.zip" filesonly="true" update="true"
-             whenempty="create">
-            <zipfileset dir="${haven.dist.dir}/32bit-jogl-windows" excludes="*.jar" prefix=""/>
-            <zipfileset dir="${haven.dist.dir}" includes="${haven.dist.files.windows}"/>
-            <path refid="haven.libs.path"/>
-        </zip>
-        <zip destfile="${haven.archives.dir}/haven-64bit-windows-full.zip" filesonly="true" update="true"
-             whenempty="create">
-            <zipfileset dir="${haven.dist.dir}/64bit-jogl-windows" excludes="*.jar" prefix=""/>
-            <zipfileset dir="${haven.dist.dir}" includes="${haven.dist.files.windows}"/>
-            <path refid="haven.libs.path"/>
-        </zip>
-
+    </target>
+    <target name="update-zips-linux">
         <zip destfile="${haven.archives.dir}/haven-32bit-linux-full.zip" filesonly="true" update="true"
              whenempty="create">
             <zipfileset dir="${haven.dist.dir}/32bit-jogl-linux" excludes="*.jar" prefix=""/>
@@ -436,7 +432,22 @@
             <zipfileset dir="${haven.dist.dir}" includes="${haven.dist.files.linux}"/>
             <path refid="haven.libs.path"/>
         </zip>
-
+    </target>
+    <target name="update-zips-windows">
+        <zip destfile="${haven.archives.dir}/haven-32bit-windows-full.zip" filesonly="true" update="true"
+             whenempty="create">
+            <zipfileset dir="${haven.dist.dir}/32bit-jogl-windows" excludes="*.jar" prefix=""/>
+            <zipfileset dir="${haven.dist.dir}" includes="${haven.dist.files.windows}"/>
+            <path refid="haven.libs.path"/>
+        </zip>
+        <zip destfile="${haven.archives.dir}/haven-64bit-windows-full.zip" filesonly="true" update="true"
+             whenempty="create">
+            <zipfileset dir="${haven.dist.dir}/64bit-jogl-windows" excludes="*.jar" prefix=""/>
+            <zipfileset dir="${haven.dist.dir}" includes="${haven.dist.files.windows}"/>
+            <path refid="haven.libs.path"/>
+        </zip>
+    </target>
+    <target name="update-zips-macosx">
         <zip destfile="${haven.archives.dir}/haven-macosx-ppc-full.zip" filesonly="true" update="true"
              whenempty="create">
             <zipfileset dir="${haven.dist.dir}/ppc-jogl-macosx" excludes="*.jar" prefix=""/>
@@ -450,4 +461,5 @@
             <path refid="haven.libs.path"/>
         </zip>
     </target>
+
 </project>

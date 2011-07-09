@@ -1,4 +1,4 @@
 Manifest-Version: 1.0
 Main-Class: haven.CustomStarter
-Class-Path: gluegen-rt.jar jnlp.jar jogg.jar jogl.jar jorbis.jar json-simple.jar jython.jar log4j.jar
+Class-Path: haven-res.jar cr.jar gluegen-rt.jar jnlp.jar jogg.jar jogl.jar jorbis.jar json-simple.jar jython.jar log4j.jar
 
