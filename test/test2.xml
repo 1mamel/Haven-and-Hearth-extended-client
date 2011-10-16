@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8" />
+<title>FEP - Ring of Brodgar</title>
+<meta name="generator" content="MediaWiki 1.17.0" />
+<link rel="shortcut icon" href="/favicon.ico" />
+<link rel="search" type="application/opensearchdescription+xml" href="/w/opensearch_desc.php" title="Ring of Brodgar (en)" />
+<link rel="EditURI" type="application/rsd+xml" href="http://ringofbrodgar.com/w/api.php?action=rsd" />
+<link rel="alternate" type="application/atom+xml" title="Ring of Brodgar Atom feed" href="/w/index.php?title=Special:RecentChanges&amp;feed=atom" />
+<link rel="stylesheet" href="/w/load.php?debug=false&amp;lang=en&amp;modules=mediawiki.legacy.commonPrint%2Cshared&amp;only=styles&amp;skin=monobook&amp;*" />
+<link rel="stylesheet" href="/w/skins/monobook/main.css?301" media="screen" />
+<!--[if lt IE 5.5000]><link rel="stylesheet" href="/w/skins/monobook/IE50Fixes.css?301" media="screen" /><![endif]-->
+<!--[if IE 5.5000]><link rel="stylesheet" href="/w/skins/monobook/IE55Fixes.css?301" media="screen" /><![endif]-->
+<!--[if IE 6]><link rel="stylesheet" href="/w/skins/monobook/IE60Fixes.css?301" media="screen" /><![endif]-->
+<!--[if IE 7]><link rel="stylesheet" href="/w/skins/monobook/IE70Fixes.css?301" media="screen" /><![endif]--><meta name="ResourceLoaderDynamicStyles" content="" /><link rel="stylesheet" href="/w/load.php?debug=false&amp;lang=en&amp;modules=site&amp;only=styles&amp;skin=monobook&amp;*" />
+<link rel="stylesheet" href="/w/load.php?debug=false&amp;lang=en&amp;modules=site&amp;only=styles&amp;skin=monobook&amp;*" />
+<link rel="stylesheet" href="/w/load.php?debug=false&amp;lang=en&amp;modules=site&amp;only=styles&amp;skin=monobook&amp;*" />
+
+		<link rel="alternate" type="application/rdf+xml" title="FEP" href="/w/index.php?title=Special:ExportRDF/FEP&amp;xmlmime=rdf" />
+</head>
+<body class="mediawiki ltr ns-0 ns-subject page-FEP skin-monobook">
+<div id="globalWrapper">
+<div id="column-content"><div id="content">
+	<a id="top"></a>
+
+	<h1 id="firstHeading" class="firstHeading">FEP</h1>
+	<div id="bodyContent">
+		<div id="siteSub">From Ring of Brodgar</div>
+		<div id="contentSub"></div>
+		<div id="jump-to-nav">Jump to: <a href="#column-one">navigation</a>, <a href="#searchInput">search</a></div>
+		<!-- start content -->
+<dl><dd><i>See the <a href="/wiki/FEP_Table" title="FEP Table">FEP Table</a> for information on the FEP values of specific foods.</i>
+</dd><dd><i>See the <a href="/wiki/Survivalist%27s_Quick-Reference" title="Survivalist's Quick-Reference">Survivalist's Quick-Reference</a> for a list of convenient, low-tech FEP foods.</i>
+</dd></dl>
+<p><b>Food Event Points</b> (<b>FEPs</b>) are obtained by eating most kinds of food. Once you have enough points, one of your <a href="/wiki/Attributes" title="Attributes">Attributes</a> (Strength, Agility, etc.) will be increased by one point.
+</p><p>By placing the cursor over the bar below the statistics on the character sheet, you can see a Bar showing how many FEPs you currently have, in total and by attribute, and how many you need. To increase a stat, you must initially accumulate a number of FEPs equal to your highest attribute (ignoring modifiers). Eating a unique food lowers the total number of FEPs needed to gain an attribute point. This applies the each time you eat a unique food for every fresh FEP bar. Example: Eating two blueberries, a blueberry pie, and a roasted perch counts as 3 unique foods. If you get an attribute point, you can eat the same four foods again for another attempt at an Intelligence point and get the same bonus for three unique foods.
+</p><p>Which attribute is increased is probabilistically determined by how many FEPs you have towards each attribute. For example, if you only eat <a href="/wiki/Bear_Salami" title="Bear Salami">Bear Salami</a>, then upon accumulating enough FEPs to increase a stat, you will have a 57.14% chance of Strength increasing by one, and a 42.86% chance of Charisma increasing by one. After an attribute is increased, your current FEPs are reset to zero, so any overflow is lost (though it still affects the determination of which attribute increases before the current FEPs are reset).
+</p>
+<table id="toc" class="toc"><tr><td><div id="toctitle"><h2>Contents</h2></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="#FEP_Requirement_Reduction"><span class="tocnumber">1</span> <span class="toctext">FEP Requirement Reduction</span></a></li>
+<li class="toclevel-1 tocsection-2"><a href="#The_Variety_Bonus"><span class="tocnumber">2</span> <span class="toctext">The Variety Bonus</span></a></li>
+<li class="toclevel-1 tocsection-3"><a href="#Example"><span class="tocnumber">3</span> <span class="toctext">Example</span></a></li>
+<li class="toclevel-1 tocsection-4"><a href="#Notes"><span class="tocnumber">4</span> <span class="toctext">Notes</span></a></li>
+</ul>
+</td></tr></table>
+<h2> <span class="mw-headline" id="FEP_Requirement_Reduction">FEP Requirement Reduction</span></h2>
+<p>FEPs that you need to fill a food bar are reduced for each and every unique food that you eat while filling that FEP bar. The FEPs given by the food do not matter, as long as the type of food if different. For example, if you eat <a href="/wiki/Roasted_Fox_Meat" title="Roasted Fox Meat">Roasted Fox Meat</a> and <a href="/wiki/Blueberries" title="Blueberries">Blueberries</a> (both give 1 INT), the bar will still be reduced.
+</p><p>According to Loftar, the forumula for the FEP reduction is:
+</p><p>(2 * sqrt(max stat * 10) ) / 10
+</p><p>or approximately 0.632 * sqrt(max)
+</p><p>where max = the highest unmodified attribute of the character.
+</p><p>Example: The highest attribute on a character is Con at 64. That means for each new food type eaten, the required FEP is lowered by 0.632 * sqrt(64) = 0.632 * 8 = 5.056 or rounded to 5.1
+</p><p><b>NOTE</b>: This is according to a post by Loftar here: <a href="http://www.havenandhearth.com/forum/viewtopic.php?f=2&amp;t=9383" class="external free" rel="nofollow">http://www.havenandhearth.com/forum/viewtopic.php?f=2&amp;t=9383</a>
+</p>
+<h2> <span class="mw-headline" id="The_Variety_Bonus">The Variety Bonus</span></h2>
+<p>Although new players start out having issues keeping their character full on food, it quite quickly reverses as a settlement gets set up. Eventually emptying the food bar becomes a chore that must be done in order to gain stats. Eating a variety of food makes this go much more quickly, but often involves introducing the possibility of gaining stats of a type you're not currently interested in. Obviously there's a balance of eating as many food types as possible and eating only the FEP types that you want. Better quality food helps too since it increases the quantity of FEPs a food gives without changing the amount of fullness you gain from it.
+</p><p><b>NOTE</b>: If you "overfill" the bar with FEPs, ie eating a food worth 10 FEPs when you only needed 1 to level, they will be included in the proportions that determine which stat is gained. However, any FEP's over the bars requirement weren't needed to gain a stat point. So the FEP's essentially get wasted.
+</p>
+<h2> <span class="mw-headline" id="Example">Example</span></h2>
+<p>Joe has 15 in all attributes. So he needs 15 FEPs to get his next attribute increase. He eats enough bear meat to give him 10.5 Strength FEPs, and his Strength goes up by one. Wait, he needed a total of 15 FEP's didn't he? This is an example of the "variety bonus" that's applied to eating. The first item he eats reduces his required FEP's by 30%, to 10.5 from 15. Because he ate only STR giving FEP's, his STR went up to 16.
+</p><p>Joe now has 16 STR, so he'll need 16 FEPs for his next attribute increase. He eats some bear meat, reducing his needed FEPs to 11.2 (30% reduction). Later that day he decided he'd like to eat blueberries. Upon eating blueberries his total FEPs required drops to 8.8 (21% reduction from 11.2). The variety bonus concerns food types, not the FEPs they give. Both cooked perch and blueberries give pure INT FEPs, but they are two items as far as the variety bonus is concerned.
+</p><p>At the end of the day, he's eaten only cooked bear meat and blueberries, giving him 4.0 STR FEPs and 4.8 INT FEPs. When the food bar is full, the proportion of the whole that an FEP type represents of the food bar becomes the chance that he will gain that stat. As a result, Joe has a 45.5% (4.0/8.8) chance of gaining STR and a 54.5% (4.8/8.8) chance of gaining INT. Despite having more chance of getting INT FEPs, Joe gets another STR point and his total STR goes up to 17.
+</p><p>If INT had gone up to 16 instead of STR getting another point, his total FEPs required to level would not have changed. Because his STR went up though, he'll have to eat more FEPs next time around to get another stat point. This of course could be compensated by the variety bonus if he has more food types around to eat instead.
+</p>
+<h2> <span class="mw-headline" id="Notes">Notes</span></h2>
+<p>As per the example, increasing FEPs is based on your highest attribute. This is why increasing your highest attribute is not recommended, since it will affect how many FEPs you require to raise every other attribute. Before letting one stat get completely out of hand, considering raising your other stats for a while so you'll have more of them when you want them. Raising a lvl 10 stat when you have 200 strength is just as difficult as raising strength from 200 to 201.
+</p>
+<!--
+NewPP limit report
+Preprocessor node count: 15/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key rob-mw_:pcache:idhash:2734-0!*!0!!en!*!edit=0 and timestamp 20110712061255 -->
+<div class="printfooter">
+Retrieved from "<a href="http://ringofbrodgar.com/wiki/FEP">http://ringofbrodgar.com/wiki/FEP</a>"</div>
+		<div id='catlinks' class='catlinks catlinks-allhidden'></div>		<!-- end content -->
+				<div class="visualClear"></div>
+	</div>
+</div></div>
+<div id="column-one">
+	<div id="p-cactions" class="portlet">
+		<h5>Views</h5>
+		<div class="pBody">
+			<ul>
+				 <li id="ca-nstab-main" class="selected"><a href="/wiki/FEP" title="View the content page [c]" accesskey="c">Page</a></li>
+				 <li id="ca-talk" class="new"><a href="/w/index.php?title=Talk:FEP&amp;action=edit&amp;redlink=1" title="Discussion about the content page [t]" accesskey="t">Discussion</a></li>
+				 <li id="ca-viewsource"><a href="/w/index.php?title=FEP&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li>
+				 <li id="ca-history"><a href="/w/index.php?title=FEP&amp;action=history" title="Past revisions of this page [h]" accesskey="h">History</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="portlet" id="p-personal">
+		<h5>Personal tools</h5>
+		<div class="pBody">
+			<ul>
+				<li id="pt-login"><a href="/w/index.php?title=Special:UserLogin&amp;returnto=FEP" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in / create account</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="portlet" id="p-logo">
+		<a style="background-image: url(/w/images/wglogo.png);" href="/wiki/Haven_and_Hearth_Wiki" title="Visit the main page"></a>
+	</div>
+	<script type="text/javascript"> if (window.isMSIE55) fixalpha(); </script>
+	<div class='generated-sidebar portlet' id='p-Content_Navigation'>
+		<h5>Content Navigation</h5>
+		<div class='pBody'>
+			<ul>
+				<li id="n-mainpage"><a href="/wiki/Haven_and_Hearth_Wiki" title="Visit the main page [z]" accesskey="z">Haven and Hearth Wiki</a></li>
+				<li id="n-FEP-Table"><a href="/wiki/FEP_Table">FEP Table</a></li>
+				<li id="n-Curiosity-Table"><a href="/wiki/Curiosity_Table">Curiosity Table</a></li>
+				<li id="n-Getting-Started"><a href="/wiki/Getting_Started">Getting Started</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class='generated-sidebar portlet' id='p-Community'>
+		<h5>Community</h5>
+		<div class='pBody'>
+			<ul>
+				<li id="n-portal"><a href="/wiki/Ring_of_Brodgar:Community_portal" title="About the project, what you can do, where to find things">Community portal</a></li>
+				<li id="n-recentchanges"><a href="/wiki/Special:RecentChanges" title="The list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li>
+				<li id="n-help"><a href="/wiki/Help:Contents" title="The place to find out">Help</a></li>
+			</ul>
+		</div>
+	</div>
+	<div id="p-search" class="portlet">
+		<h5><label for="searchInput">Search</label></h5>
+		<div id="searchBody" class="pBody">
+			<form action="/w/index.php" id="searchform">
+				<input type='hidden' name="title" value="Special:Search"/>
+				<input id="searchInput" title="Search Ring of Brodgar" accesskey="f" type="search" name="search" />
+				<input type='submit' name="go" class="searchButton" id="searchGoButton"	value="Go" title="Go to a page with this exact name if exists" />&#160;
+				<input type='submit' name="fulltext" class="searchButton" id="mw-searchButton" value="Search" title="Search the pages for this text" />
+			</form>
+		</div>
+	</div>
+	<div class="portlet" id="p-tb">
+		<h5>Toolbox</h5>
+		<div class="pBody">
+			<ul>
+				<li id="t-whatlinkshere"><a href="/wiki/Special:WhatLinksHere/FEP" title="List of all wiki pages that link here [j]" accesskey="j">What links here</a></li>
+				<li id="t-recentchangeslinked"><a href="/wiki/Special:RecentChangesLinked/FEP" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li>
+<li id="t-specialpages"><a href="/wiki/Special:SpecialPages" title="List of all special pages [q]" accesskey="q">Special pages</a></li>
+				<li id="t-print"><a href="/w/index.php?title=FEP&amp;printable=yes" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li>				<li id="t-permalink"><a href="/w/index.php?title=FEP&amp;oldid=22559" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-smwbrowselink"><a href="/wiki/Special:Browse/FEP" title="Special:Browse/FEP">Browse properties</a></li>			</ul>
+		</div>
+	</div>
+</div><!-- end of the left (by default at least) column -->
+<div class="visualClear"></div>
+<div id="footer">
+	<div id="f-poweredbyico">
+		<a href="http://www.mediawiki.org/"><img src="/w/skins/common/images/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" width="88" height="31" /></a>
+	</div>
+	<ul id="f-list">
+		<li id="lastmod"> This page was last modified on 6 June 2011, at 02:58.</li>
+		<li id="viewcount">This page has been accessed 8,563 times.</li>
+		<li id="privacy"><a href="/wiki/Ring_of_Brodgar:Privacy_policy" title="Ring of Brodgar:Privacy policy">Privacy policy</a></li>
+		<li id="about"><a href="/wiki/Ring_of_Brodgar:About" title="Ring of Brodgar:About">About Ring of Brodgar</a></li>
+		<li id="disclaimer"><a href="/wiki/Ring_of_Brodgar:General_disclaimer" title="Ring of Brodgar:General disclaimer">Disclaimers</a></li>
+	</ul>
+</div>
+</div>
+
+<script src="/w/load.php?debug=false&amp;lang=en&amp;modules=startup&amp;only=scripts&amp;skin=monobook&amp;*"></script>
+<script>if ( window.mediaWiki ) {
+	mediaWiki.config.set({"wgCanonicalNamespace": "", "wgCanonicalSpecialPageName": false, "wgNamespaceNumber": 0, "wgPageName": "FEP", "wgTitle": "FEP", "wgAction": "view", "wgArticleId": 2734, "wgIsArticle": true, "wgUserName": null, "wgUserGroups": ["*"], "wgCurRevisionId": 22559, "wgCategories": [], "wgBreakFrames": false, "wgRestrictionEdit": [], "wgRestrictionMove": []});
+}
+</script>
+<script>if ( window.mediaWiki ) {
+	mediaWiki.loader.load(["mediawiki.util", "mediawiki.legacy.wikibits", "mediawiki.legacy.ajax"]);
+	mediaWiki.loader.go();
+}
+</script>
+
+<script src="/w/load.php?debug=false&amp;lang=en&amp;modules=site&amp;only=scripts&amp;skin=monobook&amp;*"></script>
+<script>if ( window.mediaWiki ) {
+	mediaWiki.user.options.set({"ccmeonemails":0,"cols":80,"contextchars":50,"contextlines":5,"date":"default","diffonly":0,"disablemail":0,"disablesuggest":0,"editfont":"default","editondblclick":0,"editsection":1,"editsectiononrightclick":0,"enotifminoredits":0,"enotifrevealaddr":0,"enotifusertalkpages":1,"enotifwatchlistpages":0,"extendwatchlist":0,"externaldiff":0,"externaleditor":0,"fancysig":0,"forceeditsummary":0,"gender":"unknown","hideminor":0,"hidepatrolled":0,"highlightbroken":1,"imagesize":2,"justify":0,"math":1,"minordefault":0,"newpageshidepatrolled":0,"nocache":0,"noconvertlink":0,"norollbackdiff":0,"numberheadings":0,"previewonfirst":0,"previewontop":1,"quickbar":1,"rcdays":7,"rclimit":50,"rememberpassword":0,"rows":25,"searchlimit":20,"showhiddencats":0,"showjumplinks":1,"shownumberswatching":1,"showtoc":1,"showtoolbar":1,"skin":"monobook","stubthreshold":0,"thumbsize":2,"underline":2,"uselivepreview":0,"usenewrc":0,"watchcreations":0,"watchdefault":0,"watchdeletion":0,
+	"watchlistdays":3,"watchlisthideanons":0,"watchlisthidebots":0,"watchlisthideliu":0,"watchlisthideminor":0,"watchlisthideown":0,"watchlisthidepatrolled":0,"watchmoves":0,"wllimit":250,"variant":"en","language":"en","searchNs0":true,"searchNs1":false,"searchNs2":false,"searchNs3":false,"searchNs4":false,"searchNs5":false,"searchNs6":false,"searchNs7":false,"searchNs8":false,"searchNs9":false,"searchNs10":false,"searchNs11":false,"searchNs12":false,"searchNs13":false,"searchNs14":false,"searchNs15":false,"searchNs102":false,"searchNs103":false,"searchNs104":false,"searchNs105":false,"searchNs108":false,"searchNs109":false});;mediaWiki.loader.state({"user.options":"ready"});
+}
+</script><!-- Served in 0.154 secs. --></body><!-- Cached/compressed 20110712070310 -->
+</html>
