@@ -22,15 +22,15 @@ import java.util.Vector;
 public class QuickSort {
 
     //------------------------------------------------------------------
-    private static void swap(Vector v, int i, int j) {
-        Object tmp = v.elementAt(i);
+    private static void swap(final Vector v, final int i, final int j) {
+        final Object tmp = v.elementAt(i);
         v.setElementAt(v.elementAt(j), i);
         v.setElementAt(tmp, j);
     }
 
     //------------------------------------------------------------------
-    private static void swap(Object arr[], int i, int j) {
-        Object tmp = arr[i];
+    private static void swap(final Object[] arr, final int i, final int j) {
+        final Object tmp = arr[i];
         arr[i] = arr[j];
         arr[j] = tmp;
     }
@@ -44,7 +44,7 @@ public class QuickSort {
      * @param right - the last index.
      */
     private static void quicksort(
-            Vector v, int left, int right, boolean ascending) {
+            final Vector v, final int left, final int right, final boolean ascending) {
 
         int i, last;
 
@@ -54,8 +54,8 @@ public class QuickSort {
         swap(v, left, (left + right) / 2);
         last = left;
         for (i = left + 1; i <= right; i++) {
-            IComparable ic = (IComparable) v.elementAt(i);
-            IComparable icleft = (IComparable) v.elementAt(left);
+            final IComparable ic = (IComparable) v.elementAt(i);
+            final IComparable icleft = (IComparable) v.elementAt(left);
             if (ascending && ic.compareTo(icleft) < 0) {
                 swap(v, ++last, i);
             } else if (!ascending && ic.compareTo(icleft) > 0) {
@@ -76,7 +76,7 @@ public class QuickSort {
      * @param right - the last index.
      */
     private static void quicksort(
-            IComparable arr[], int left, int right, boolean ascending) {
+            final IComparable[] arr, final int left, final int right, final boolean ascending) {
 
         int i, last;
 
@@ -103,7 +103,7 @@ public class QuickSort {
      * Quicksort will rearrange elements when they are all equal. Make sure
      * at least two elements differ
      */
-    public static boolean needsSorting(Vector v) {
+    public static boolean needsSorting(final Vector v) {
         IComparable prev = null;
         IComparable curr;
         for (Enumeration e = v.elements(); e.hasMoreElements();) {
@@ -120,7 +120,7 @@ public class QuickSort {
     /*
      * Preform a sort using the specified comparitor object.
      */
-    public static void quicksort(IComparable arr[], boolean ascending) {
+    public static void quicksort(final IComparable[] arr, final boolean ascending) {
         quicksort(arr, 0, arr.length - 1, ascending);
     }
 
@@ -128,7 +128,7 @@ public class QuickSort {
     /*
      * Preform a sort using the specified comparitor object.
      */
-    public static void quicksort(Vector v, boolean ascending) {
+    public static void quicksort(final Vector v, final boolean ascending) {
         if (needsSorting(v))
             quicksort(v, 0, v.size() - 1, ascending);
     }

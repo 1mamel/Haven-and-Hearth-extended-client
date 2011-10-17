@@ -18,14 +18,14 @@ package org.relayirc.util;
 public class ComparableString implements IComparable {
     private String _str = null;
 
-    public ComparableString(String str) {
+    public ComparableString(final String str) {
         _str = str;
     }
 
-    public int compareTo(IComparable other) {
+    public int compareTo(final IComparable other) {
         if (other instanceof ComparableString) {
-            ComparableString compString = (ComparableString) other;
-            String otherString = compString.getString();
+            final ComparableString compString = (ComparableString) other;
+            final String otherString = compString.getString();
             return _str.compareTo(otherString);
         } else return -1;
     }
@@ -34,7 +34,7 @@ public class ComparableString implements IComparable {
         return _str;
     }
 
-    public void setString(String str) {
+    public void setString(final String str) {
         _str = str;
     }
 }

@@ -41,7 +41,7 @@ public class Party {
     public static final int PD_MEMBER = 2;
     private final Glob glob;
 
-    public Party(Glob glob) {
+    public Party(final Glob glob) {
         this.glob = glob;
     }
 
@@ -50,7 +50,7 @@ public class Party {
         private Coord c = null;
         Color col = Color.BLACK;
 
-        public Member(int gobid) {
+        public Member(final int gobid) {
             this.gobid = gobid;
         }
 
@@ -59,26 +59,26 @@ public class Party {
         }
 
         public Coord getc() {
-            Gob gob;
+            final Gob gob;
             if ((gob = getgob()) != null)
                 return (gob.getc());
             return (c);
         }
     }
 
-    public void msg(Message msg) {
-        Set<Integer> ids = new HashSet<Integer>();
+    public void msg(final Message msg) {
+        final Set<Integer> ids = new HashSet<Integer>();
         while (!msg.eom()) {
-            int type = msg.uint8();
+            final int type = msg.uint8();
             if (type == PD_LIST) {
                 ids.clear();
                 while (true) {
-                    int id = msg.int32();
+                    final int id = msg.int32();
                     if (id < 0) break;
                     ids.add(id);
                 }
                 memb.keySet().retainAll(ids);
-                for (int id : ids) {
+                for (final int id : ids) {
                     Member m = memb.get(id);
                     if (m == null) {
                         m = new Member(id);
@@ -86,17 +86,17 @@ public class Party {
                     memb.put(id, m);
                 }
                 membersMapChanged = true;
-                int lid = (leader == null) ? -1 : leader.gobid;
+                final int lid = (leader == null) ? -1 : leader.gobid;
                 leader = memb.get(lid);
             } else if (type == PD_LEADER) {
-                Member m = memb.get(msg.int32());
+                final Member m = memb.get(msg.int32());
                 if (m != null) leader = m;
             } else if (type == PD_MEMBER) {
-                Member m = memb.get(msg.int32());
+                final Member m = memb.get(msg.int32());
                 Coord c = null;
-                boolean visible = msg.uint8() == 1;
+                final boolean visible = msg.uint8() == 1;
                 if (visible) c = msg.coord();
-                Color col = msg.color();
+                final Color col = msg.color();
                 if (m != null) {
                     m.c = c;
                     m.col = col;

@@ -43,7 +43,7 @@ public class GOut {
         GOut root;
     }
 
-    protected GOut(GOut o) {
+    protected GOut(final GOut o) {
         this.gl = o.gl;
         this.ul = o.ul;
         this.sz = o.sz;
@@ -52,7 +52,7 @@ public class GOut {
         this.sh = o.sh;
     }
 
-    public GOut(GL gl, GLContext ctx, Coord sz) {
+    public GOut(final GL gl, final GLContext ctx, final Coord sz) {
         this.gl = gl;
         this.ul = Coord.z;
         this.sz = sz;
@@ -66,15 +66,15 @@ public class GOut {
         public final String str;
         private static final javax.media.opengl.glu.GLU glu = new javax.media.opengl.glu.GLU();
 
-        public GLException(int code) {
+        public GLException(final int code) {
             super("GL Error: " + code + " (" + glu.gluErrorString(code) + ')');
             this.code = code;
             this.str = glu.gluErrorString(code);
         }
     }
 
-    public static void checkerr(GL gl) {
-        int err = gl.glGetError();
+    public static void checkerr(final GL gl) {
+        final int err = gl.glGetError();
         if (err != 0)
             throw (new GLException(err));
     }
@@ -94,67 +94,67 @@ public class GOut {
         return (sh.root);
     }
 
-    public void image(final BufferedImage img, Coord c) {
+    public void image(final BufferedImage img, final Coord c) {
         if (img == null)
             return;
-        Tex tex = new TexI(img);
+        final Tex tex = new TexI(img);
         image(tex, c);
         tex.dispose();
     }
 
-    public void image(haven.resources.layers.Image img, Coord c) {
+    public void image(final haven.resources.layers.Image img, final Coord c) {
         if (img == null)
             return;
         image(img.tex(), c.add(img.o));
     }
 
-    public void image(Tex tex, Coord c) {
+    public void image(final Tex tex, final Coord c) {
         if (tex == null)
             return;
         tex.crender(this, c.add(ul), ul, sz);
         checkerr();
     }
 
-    public void image(Tex tex, int x, int y) {
+    public void image(final Tex tex, final int x, final int y) {
         if (tex == null)
             return;
         tex.crender(this, ul.add(x, y), ul, sz);
         checkerr();
     }
 
-    public void aimage(Tex tex, Coord c, double ax, double ay) {
-        Coord sz = tex.sz();
+    public void aimage(final Tex tex, final Coord c, final double ax, final double ay) {
+        final Coord sz = tex.sz();
         image(tex, c.add((int) ((double) sz.x * -ax), (int) ((double) sz.y * -ay)));
     }
 
-    public void aimage(Tex tex, int x, int y, double ax, double ay) {
-        Coord sz = tex.sz();
+    public void aimage(final Tex tex, final int x, final int y, final double ax, final double ay) {
+        final Coord sz = tex.sz();
         image(tex, x - (int) ((double) sz.x * ax), y - (int) ((double) sz.y * ay));
     }
 
-    public void image(Tex tex, Coord c, Coord sz) {
+    public void image(final Tex tex, final Coord c, final Coord sz) {
         if (tex == null)
             return;
         tex.crender(this, c.add(ul), ul, this.sz, sz);
         checkerr();
     }
 
-    public void image(Tex tex, Coord c, Coord ul, Coord sz) {
+    public void image(final Tex tex, final Coord c, final Coord ul, final Coord sz) {
         if (tex == null)
             return;
         tex.crender(this, c.add(this.ul), this.ul.add(ul), sz);
         checkerr();
     }
 
-    private void vertex(Coord c) {
+    private void vertex(final Coord c) {
         gl.glVertex2i(c.x + ul.x, c.y + ul.y);
     }
 
-    private void vertex(int x, int y) {
+    private void vertex(final int x, final int y) {
         gl.glVertex2i(x + ul.x, y + ul.y);
     }
 
-    void texsel(int id) {
+    void texsel(final int id) {
         if (id != sh.curtex) {
             HavenPanel.texmiss++;
             if (id == -1) {
@@ -169,7 +169,7 @@ public class GOut {
         }
     }
 
-    public void line(Coord c1, Coord c2, double w) {
+    public void line(final Coord c1, final Coord c2, final double w) {
         texsel(-1);
         gl.glLineWidth((float) w);
         gl.glBegin(GL.GL_LINES);
@@ -180,7 +180,7 @@ public class GOut {
         checkerr();
     }
 
-    public void line(int x1, int y1, int x2, int y2, double w) {
+    public void line(final int x1, final int y1, final int x2, final int y2, final double w) {
         texsel(-1);
         gl.glLineWidth((float) w);
         gl.glBegin(GL.GL_LINES);
@@ -191,28 +191,28 @@ public class GOut {
         checkerr();
     }
 
-    public void lineY(int x, int y1, int y2, double w) {
+    public void lineY(final int x, final int y1, final int y2, final double w) {
         line(x, y1, x, y2, w);
     }
 
-    public void lineX(int y, int x1, int x2, double w) {
+    public void lineX(final int y, final int x1, final int x2, final double w) {
         line(x1, y, x2, y, w);
     }
 
-    public void text(String text, Coord c) {
+    public void text(final String text, final Coord c) {
         atext(text, c, 0, 0);
     }
 
-    public void atext(String text, Coord c, double ax, double ay) {
-        Text t = Text.render(text, null);
-        Tex T = t.tex();
-        Coord sz = t.sz();
+    public void atext(final String text, final Coord c, final double ax, final double ay) {
+        final Text t = Text.render(text, null);
+        final Tex T = t.tex();
+        final Coord sz = t.sz();
         image(T, c.add((int) ((double) sz.x * -ax), (int) ((double) sz.y * -ay)));
         T.dispose();
         checkerr();
     }
 
-    public void frect(Coord ul, Coord sz) {
+    public void frect(final Coord ul, final Coord sz) {
         glcolor();
         texsel(-1);
         gl.glBegin(GL.GL_QUADS); // Because summ of ints faster than Coord.add
@@ -224,7 +224,7 @@ public class GOut {
         checkerr();
     }
 
-    public void frect(int ulX, int ulY, int lenX, int lenY) {
+    public void frect(final int ulX, final int ulY, final int lenX, final int lenY) {
         glcolor();
         texsel(-1);
         gl.glBegin(GL.GL_QUADS); // Because summ of ints faster than Coord.add
@@ -236,15 +236,15 @@ public class GOut {
         checkerr();
     }
 
-    public void frect(int ulX, int ulY, Coord size) {
+    public void frect(final int ulX, final int ulY, final Coord size) {
         frect(ulX, ulY, size.x, size.y);
     }
 
-    public void frect(Coord ul, int sizeX, int sizeY) {
+    public void frect(final Coord ul, final int sizeX, final int sizeY) {
         frect(ul.x, ul.y, sizeX, sizeY);
     }
 
-    public void frect(Coord c1, Coord c2, Coord c3, Coord c4) {
+    public void frect(final Coord c1, final Coord c2, final Coord c3, final Coord c4) {
         glcolor();
         texsel(-1);
         gl.glBegin(GL.GL_QUADS);
@@ -256,50 +256,53 @@ public class GOut {
         checkerr();
     }
 
-    public void fellipse(Coord c, Coord r, int a1, int a2) {
+    public void fellipse(final Coord c, final Coord r, final int a1, final int a2) {
         glcolor();
         texsel(-1);
         gl.glBegin(GL.GL_TRIANGLE_FAN);
         vertex(c);
         for (int i = a1; i < a2; i += 5) {
-            double a = (i * Math.PI * 2) / 360.0;
+            final double a = (i * Math.PI * 2) / 360.0;
             vertex(c.add((int) (Math.cos(a) * r.x), -(int) (Math.sin(a) * r.y)));
         }
-        double a = (a2 * Math.PI * 2) / 360.0;
+        final double a = (a2 * Math.PI * 2) / 360.0;
         vertex(c.add((int) (Math.cos(a) * r.x), -(int) (Math.sin(a) * r.y)));
         gl.glEnd();
         checkerr();
     }
 
-    public void fellipseInRectangle(int x1, int y1, int x2, int y2, int a1, int a2) {
+    public void fellipseInRectangle(final int x1, final int y1, final int x2, final int y2, final int a1, final int a2) {
         fellipse((x2 + x1) / 2, (y2 + y1) / 2, (x2 - x1) / 2, (y2 - y1) / 2, a1, a2);
     }
 
-    public void fellipse(int cx, int cy, int rx, int ry, int a1, int a2) {
+    public void fellipse(final int cx, final int cy, final int rx, final int ry, final int a1, final int a2) {
         glcolor();
         texsel(-1);
         gl.glBegin(GL.GL_TRIANGLE_FAN);
         vertex(cx, cy);
         for (int i = a1; i < a2; i += 5) {
-            double a = (i * Math.PI * 2) / 360.0;
+            final double a = (i * Math.PI * 2) / 360.0;
             vertex(cx + (int) (Math.cos(a) * rx), cy - (int) (Math.sin(a) * ry));
         }
-        double a = (a2 * Math.PI * 2) / 360.0;
+        final double a = (a2 * Math.PI * 2) / 360.0;
         vertex(cx + (int) (Math.cos(a) * rx), cx - (int) (Math.sin(a) * ry));
         gl.glEnd();
         checkerr();
     }
 
-    public void fellipse(int cx, int cy, int rx, int ry) {
+    public void fellipse(final int cx, final int cy, final int rx, final int ry) {
         fellipse(cx, cy, rx, ry, 0, 360);
     }
 
-    public void fellipse(Coord c, Coord r) {
+    public void fellipse(final Coord c, final Coord r) {
         fellipse(c.x, c.y, r.x, r.y, 0, 360);
     }
 
-    public void rect(Coord ul, Coord sz) {
-        int top, bottom, left, right;
+    public void rect(final Coord ul, final Coord sz) {
+        final int top;
+        final int bottom;
+        final int left;
+        final int right;
 
         top = ul.y;
         bottom = ul.y + sz.y - 1;
@@ -312,11 +315,11 @@ public class GOut {
         lineY(left, bottom, top, 1);
     }
 
-    public void chcolor(Color c) {
+    public void chcolor(final Color c) {
         this.color = c;
     }
 
-    public void chcolor(int r, int g, int b, int a) {
+    public void chcolor(final int r, final int g, final int b, final int a) {
         chcolor(Utils.clipcol(r, g, b, a));
     }
 
@@ -328,14 +331,14 @@ public class GOut {
         return (color);
     }
 
-    public GOut reclip(Coord ul, Coord sz) {
-        GOut g = new GOut(this);
+    public GOut reclip(final Coord ul, final Coord sz) {
+        final GOut g = new GOut(this);
         g.ul = this.ul.add(ul);
         g.sz = sz;
         return (g);
     }
 
-    public void scale(double d) {
+    public void scale(final double d) {
         gl.glScaled(d, d, d);
     }
 }

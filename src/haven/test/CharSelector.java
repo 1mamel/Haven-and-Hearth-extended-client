@@ -36,7 +36,7 @@ public class CharSelector extends Robot {
     Listbox chrlist;
     Button selbtn;
 
-    public CharSelector(TestClient c, String chr, Runnable cb) {
+    public CharSelector(final TestClient c, final String chr, final Runnable cb) {
         super(c);
         this.chr = chr;
         this.cb = cb;
@@ -52,7 +52,7 @@ public class CharSelector extends Robot {
             chr = chrlist.opts.get(0).name;
         } else {
             String nm = null;
-            for (Listbox.Option opt : chrlist.opts) {
+            for (final Listbox.Option opt : chrlist.opts) {
                 if (opt.disp.equals(chr)) {
                     nm = opt.name;
                     break;
@@ -66,7 +66,7 @@ public class CharSelector extends Robot {
         selbtn.wdgmsg("activate");
     }
 
-    public void newwdg(int id, Widget w, Object... args) {
+    public void newwdg(final int id, final Widget w, final Object... args) {
         if (w instanceof Listbox) {
             chrlist = (Listbox) w;
         } else if (w instanceof Button) {
@@ -76,14 +76,14 @@ public class CharSelector extends Robot {
         check();
     }
 
-    public void dstwdg(int id, Widget w) {
+    public void dstwdg(final int id, final Widget w) {
         if (w == chrlist) {
             destroy();
             succeed();
         }
     }
 
-    public void uimsg(int id, Widget w, String msg, Object... args) {
+    public void uimsg(final int id, final Widget w, final String msg, final Object... args) {
     }
 
     public void succeed() {

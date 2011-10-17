@@ -36,7 +36,7 @@ public class IBox {
     final Tex bt;
     final Tex bb;
 
-    public IBox(Tex ctl, Tex ctr, Tex cbl, Tex cbr, Tex bl, Tex br, Tex bt, Tex bb) {
+    public IBox(final Tex ctl, final Tex ctr, final Tex cbl, final Tex cbr, final Tex bl, final Tex br, final Tex bt, final Tex bb) {
         this.ctl = ctl;
         this.ctr = ctr;
         this.cbl = cbl;
@@ -47,7 +47,7 @@ public class IBox {
         this.bb = bb;
     }
 
-    public IBox(String base, String ctl, String ctr, String cbl, String cbr, String bl, String br, String bt, String bb) {
+    public IBox(final String base, final String ctl, final String ctr, final String cbl, final String cbr, final String bl, final String br, final String bt, final String bb) {
         this(Resource.loadtex(base + '/' + ctl),
                 Resource.loadtex(base + '/' + ctr),
                 Resource.loadtex(base + '/' + cbl),
@@ -74,7 +74,7 @@ public class IBox {
         return (ctl.sz().add(cbr.sz()));
     }
 
-    public void draw(GOut g, Coord tl, Coord sz) {
+    public void draw(final GOut g, final Coord tl, final Coord sz) {
         g.image(bt, tl.add(new Coord(ctl.sz().x, 0)), new Coord(sz.x - ctr.sz().x - ctl.sz().x, bt.sz().y));
         g.image(bb, tl.add(new Coord(cbl.sz().x, sz.y - bb.sz().y)), new Coord(sz.x - cbr.sz().x - cbl.sz().x, bb.sz().y));
         g.image(bl, tl.add(new Coord(0, ctl.sz().y)), new Coord(bl.sz().x, sz.y - cbl.sz().y - ctl.sz().y));

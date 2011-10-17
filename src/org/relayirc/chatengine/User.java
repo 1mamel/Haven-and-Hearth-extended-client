@@ -62,7 +62,7 @@ public class User implements IChatObject, Serializable {
     /**
      * Construct user object for user specified by nick.
      */
-    public User(String nick) {
+    public User(final String nick) {
         this(nick, "Unknown", "Unknown", "Unknown");
     }
 
@@ -72,7 +72,7 @@ public class User implements IChatObject, Serializable {
      * Construct user object for user specified by nick.
      */
     public User(
-            String nick, String altNick, String userName, String fullName) {
+            final String nick, final String altNick, final String userName, final String fullName) {
 
         _nick = nick;
         _altNick = altNick;
@@ -88,7 +88,7 @@ public class User implements IChatObject, Serializable {
     /**
      * Player objects are equal if they have the same nick name.
      */
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (obj instanceof User) {
             if (((User) obj).getNick().equals(getNick())) {
                 return true;
@@ -113,7 +113,7 @@ public class User implements IChatObject, Serializable {
     /**
      * Property change support.
      */
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
+    public void addPropertyChangeListener(final PropertyChangeListener listener) {
         _propChangeSupport.addPropertyChangeListener(listener);
     }
     //------------------------------------------------------------------
@@ -121,7 +121,7 @@ public class User implements IChatObject, Serializable {
     /**
      * Property change support.
      */
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
+    public void removePropertyChangeListener(final PropertyChangeListener listener) {
         _propChangeSupport.removePropertyChangeListener(listener);
     }
 
@@ -139,7 +139,7 @@ public class User implements IChatObject, Serializable {
     /**
      * Set current user's comments on this user.
      */
-    public void setDescription(String desc) {
+    public void setDescription(final String desc) {
         _desc = desc;
     }
 
@@ -153,7 +153,7 @@ public class User implements IChatObject, Serializable {
     /**
      * Set user's alternate nickname, only valid for current user.
      */
-    public void setAltNick(String altnick) {
+    public void setAltNick(final String altnick) {
         _altNick = altnick;
     }
 
@@ -167,7 +167,7 @@ public class User implements IChatObject, Serializable {
     /**
      * Set user's IRC handle.
      */
-    public void setNick(String nick) {
+    public void setNick(final String nick) {
         _nick = nick;
     }
 
@@ -181,7 +181,7 @@ public class User implements IChatObject, Serializable {
     /**
      * Set user's IRC handle (same as nick).
      */
-    public void setName(String nick) {
+    public void setName(final String nick) {
         _nick = nick;
     }
 
@@ -195,7 +195,7 @@ public class User implements IChatObject, Serializable {
     /**
      * Set login name reported to IRC by user's ident daemon.
      */
-    public void setUserName(String userName) {
+    public void setUserName(final String userName) {
         _userName = userName;
     }
 
@@ -209,7 +209,7 @@ public class User implements IChatObject, Serializable {
     /**
      * Set user's full-name.
      */
-    public void setFullName(String fullName) {
+    public void setFullName(final String fullName) {
         _fullName = fullName;
     }
 
@@ -223,7 +223,7 @@ public class User implements IChatObject, Serializable {
     /**
      * Set name of computer on which user's client is running.
      */
-    public void setHostName(String hostName) {
+    public void setHostName(final String hostName) {
         _hostName = hostName;
     }
 
@@ -237,7 +237,7 @@ public class User implements IChatObject, Serializable {
     /**
      * Set name of IRC server user is using.
      */
-    public void setServerName(String serverName) {
+    public void setServerName(final String serverName) {
         _serverName = serverName;
     }
 
@@ -251,7 +251,7 @@ public class User implements IChatObject, Serializable {
     /**
      * Set description of user's server as reported by last WHOIS reply.
      */
-    public void setServerDesc(String serverDesc) {
+    public void setServerDesc(final String serverDesc) {
         _serverDesc = serverDesc;
     }
 
@@ -265,7 +265,7 @@ public class User implements IChatObject, Serializable {
     /**
      * Set list of user's channels as reported by last WHOIS reply.
      */
-    public void setChannels(String channels) {
+    public void setChannels(final String channels) {
         _channels = channels;
     }
 
@@ -279,7 +279,7 @@ public class User implements IChatObject, Serializable {
     /**
      * Set user's online status (TODO!)
      */
-    public void setOnline(boolean isOnline) {
+    public void setOnline(final boolean isOnline) {
         _isOnline = isOnline;
     }
 
@@ -293,7 +293,7 @@ public class User implements IChatObject, Serializable {
     /**
      * Set user's idle time as reported by last WHOIS reply.
      */
-    public void setIdleTime(int idleTime) {
+    public void setIdleTime(final int idleTime) {
         _idleTime = idleTime;
     }
 
@@ -307,7 +307,7 @@ public class User implements IChatObject, Serializable {
     /**
      * Set user's signon time as reported by last WHOIS reply.
      */
-    public void setSignonTime(Date signonTime) {
+    public void setSignonTime(final Date signonTime) {
         _signonTime = signonTime;
     }
 
@@ -321,7 +321,7 @@ public class User implements IChatObject, Serializable {
     /**
      * Set time of last WHOIS reply.
      */
-    public void setUpdateTime(Date updateTime) {
+    public void setUpdateTime(final Date updateTime) {
         _updateTime = updateTime;
     }
 
@@ -342,7 +342,7 @@ public class User implements IChatObject, Serializable {
      */
     public String toDescription() {
 
-        StringBuffer sb = new StringBuffer(500);
+        final StringBuffer sb = new StringBuffer(500);
         sb.append("WHOIS Information for ").append(getNick()).append('\n');
         sb.append("As of ").append(getUpdateTime()).append('\n');
         sb.append("").append('\n');
@@ -363,7 +363,7 @@ public class User implements IChatObject, Serializable {
     }
 
     //-------------------------------------------------------------------
-    private void readObject(java.io.ObjectInputStream in)
+    private void readObject(final java.io.ObjectInputStream in)
             throws IOException, ClassNotFoundException {
 
         try {

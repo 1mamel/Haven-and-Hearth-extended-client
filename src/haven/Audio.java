@@ -48,7 +48,7 @@ public class Audio {
         volume = Double.parseDouble(Utils.getpref("sfxvol", "1.0"));
     }
 
-    public static void setvolume(double volume) {
+    public static void setvolume(final double volume) {
         Audio.volume = volume;
         Utils.setpref("sfxvol", Double.toString(volume));
     }
@@ -64,13 +64,13 @@ public class Audio {
         private final double[] ov = new double[2];
         public boolean eof;
 
-        public DataClip(InputStream clip, double vol, double sp) {
+        public DataClip(final InputStream clip, final double vol, final double sp) {
             this.clip = clip;
             this.vol = vol;
             this.sp = sp;
         }
 
-        public DataClip(InputStream clip) {
+        public DataClip(final InputStream clip) {
             this(clip, 1.0, 1.0);
         }
 
@@ -82,13 +82,13 @@ public class Audio {
             }
         }
 
-        public boolean get(double[] sm) {
+        public boolean get(final double[] sm) {
             try {
                 ack += 44100.0 * sp;
                 while (ack >= 44100) {
                     for (int i = 0; i < 2; i++) {
-                        int b1 = clip.read();
-                        int b2 = clip.read();
+                        final int b1 = clip.read();
+                        final int b2 = clip.read();
                         if ((b1 < 0) || (b2 < 0)) {
                             synchronized (this) {
                                 eof = true;
@@ -127,14 +127,14 @@ public class Audio {
             srate = (int) fmt.getSampleRate();
         }
 
-        private void fillbuf(byte[] buf, int off, int len) {
-            double[] val = new double[nch];
-            double[] sm = new double[nch];
+        private void fillbuf(final byte[] buf, int off, int len) {
+            final double[] val = new double[nch];
+            final double[] sm = new double[nch];
             while (len > 0) {
                 for (int i = 0; i < nch; i++)
                     val[i] = 0;
                 for (Iterator<CS> i = clips.iterator(); i.hasNext();) {
-                    CS cs = i.next();
+                    final CS cs = i.next();
                     if (!cs.get(sm)) {
                         i.remove();
                         continue;
@@ -170,19 +170,19 @@ public class Audio {
                     e.printStackTrace();
                     return;
                 }
-                byte[] buf = new byte[1024];
+                final byte[] buf = new byte[1024];
                 //noinspection InfiniteLoopStatement
                 while (true) {
                     if (Thread.interrupted())
                         throw (new InterruptedException());
                     synchronized (queuemon) {
-                        Collection<Runnable> queue = Audio.queue;
+                        final Collection<Runnable> queue = Audio.queue;
                         Audio.queue = new LinkedList<Runnable>();
-                        for (Runnable r : queue)
+                        for (final Runnable r : queue)
                             r.run();
                     }
                     synchronized (ncl) {
-                        for (CS cs : ncl)
+                        for (final CS cs : ncl)
                             clips.add(cs);
                         ncl.clear();
                     }
@@ -212,7 +212,7 @@ public class Audio {
         }
     }
 
-    public static void play(CS clip) {
+    public static void play(final CS clip) {
         synchronized (ncl) {
             ncl.add(clip);
         }
@@ -223,26 +223,26 @@ public class Audio {
         play(new DataClip(clip, vol, sp));
     }
 
-    public static void play(byte[] clip, double vol, double sp) {
+    public static void play(final byte[] clip, final double vol, final double sp) {
         play(new DataClip(new java.io.ByteArrayInputStream(clip), vol, sp));
     }
 
-    public static void play(byte[] clip) {
+    public static void play(final byte[] clip) {
         play(clip, CustomConfig.getSFXVolume(), 1.0);
     }
 
-    public static void queue(Runnable d) {
+    public static void queue(final Runnable d) {
         synchronized (queuemon) {
             queue.add(d);
         }
         ckpl();
     }
 
-    private static void playres(Resource res) {
-        Collection<AudioL> clips = res.layers(Resource.audio);
+    private static void playres(final Resource res) {
+        final Collection<AudioL> clips = res.layers(Resource.audio);
         int s = (int) (Math.random() * clips.size());
         AudioL clip = null;
-        for (AudioL cp : clips) {
+        for (final AudioL cp : clips) {
             clip = cp;
             if (--s < 0)
                 break;
@@ -266,7 +266,7 @@ public class Audio {
     public static void play(final Indir<Resource> clip) {
         queue(new Runnable() {
             public void run() {
-                Resource r = clip.get();
+                final Resource r = clip.get();
                 if (r == null)
                     queue.add(this);
                 else
@@ -275,17 +275,17 @@ public class Audio {
         });
     }
 
-    public static byte[] readclip(InputStream in) throws java.io.IOException {
-        AudioInputStream cs;
+    public static byte[] readclip(final InputStream in) throws java.io.IOException {
+        final AudioInputStream cs;
         try {
             cs = AudioSystem.getAudioInputStream(fmt, AudioSystem.getAudioInputStream(in));
         } catch (UnsupportedAudioFileException e) {
             throw (new java.io.IOException("Unsupported audio encoding"));
         }
-        java.io.ByteArrayOutputStream buf = new java.io.ByteArrayOutputStream();
-        byte[] bbuf = new byte[65536];
+        final java.io.ByteArrayOutputStream buf = new java.io.ByteArrayOutputStream();
+        final byte[] bbuf = new byte[65536];
         while (true) {
-            int rv = cs.read(bbuf);
+            final int rv = cs.read(bbuf);
             if (rv < 0)
                 break;
             buf.write(bbuf, 0, rv);
@@ -293,30 +293,30 @@ public class Audio {
         return (buf.toByteArray());
     }
 
-    public static void main(String[] args) throws Exception {
-        Collection<DataClip> clips = new LinkedList<DataClip>();
+    public static void main(final String[] args) throws Exception {
+        final Collection<DataClip> clips = new LinkedList<DataClip>();
         for (int i = 0; i < args.length; i++) {
             if (args[i].equals("-b")) {
                 bufsize = Integer.parseInt(args[++i]);
             } else {
-                DataClip c = new DataClip(new java.io.FileInputStream(args[i]));
+                final DataClip c = new DataClip(new java.io.FileInputStream(args[i]));
                 clips.add(c);
             }
         }
-        for (DataClip c : clips)
+        for (final DataClip c : clips)
             play(c);
-        for (DataClip c : clips)
+        for (final DataClip c : clips)
             c.finwait();
     }
 
     static {
         Console.setscmd("sfx", new Console.Command() {
-            public void run(Console cons, String[] args) {
+            public void run(final Console cons, final String[] args) {
                 play(Resource.load(args[1]));
             }
         });
         Console.setscmd("sfxvol", new Console.Command() {
-            public void run(Console cons, String[] args) {
+            public void run(final Console cons, final String[] args) {
                 setvolume(Double.parseDouble(args[1]));
             }
         });

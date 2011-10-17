@@ -26,49 +26,49 @@ package org.relayirc.chatengine;
  *          All Rights Reserved.
  */
 public class ChannelAdapter implements ChannelListener {
-    public void onActivation(ChannelEvent event) {
+    public void onActivation(final ChannelEvent event) {
     }
 
-    public void onAction(ChannelEvent event) {
+    public void onAction(final ChannelEvent event) {
     }
 
-    public void onConnect(ChannelEvent event) {
+    public void onConnect(final ChannelEvent event) {
     }
 
-    public void onDisconnect(ChannelEvent event) {
+    public void onDisconnect(final ChannelEvent event) {
     }
 
-    public void onMessage(ChannelEvent event) {
+    public void onMessage(final ChannelEvent event) {
     }
 
-    public void onJoin(ChannelEvent event) {
+    public void onJoin(final ChannelEvent event) {
     }
 
-    public void onJoins(ChannelEvent event) {
+    public void onJoins(final ChannelEvent event) {
     }
 
-    public void onPart(ChannelEvent event) {
+    public void onPart(final ChannelEvent event) {
     }
 
-    public void onBan(ChannelEvent event) {
+    public void onBan(final ChannelEvent event) {
     }
 
-    public void onKick(ChannelEvent event) {
+    public void onKick(final ChannelEvent event) {
     }
 
-    public void onNick(ChannelEvent event) {
+    public void onNick(final ChannelEvent event) {
     }
 
-    public void onOp(ChannelEvent event) {
+    public void onOp(final ChannelEvent event) {
     }
 
-    public void onDeOp(ChannelEvent event) {
+    public void onDeOp(final ChannelEvent event) {
     }
 
-    public void onQuit(ChannelEvent event) {
+    public void onQuit(final ChannelEvent event) {
     }
 
-    public void onTopicChange(ChannelEvent event) {
+    public void onTopicChange(final ChannelEvent event) {
     }
 }
 

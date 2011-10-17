@@ -74,7 +74,7 @@ public class UI {
     public static String cursorName = null;
     private long last_newwidget_time = 0;
 
-    public static void setCursorName(String name) {
+    public static void setCursorName(final String name) {
         cursorName = name.replace("gfx/hud/curs/", "");
     }
 
@@ -89,17 +89,17 @@ public class UI {
     private class WidgetConsole extends Console {
         {
             setcmd("q", new Command() {
-                public void run(Console cons, String[] args) {
+                public void run(final Console cons, final String[] args) {
                     HackThread.tg().interrupt();
                 }
             });
             setcmd("lo", new Command() {
-                public void run(Console cons, String[] args) {
+                public void run(final Console cons, final String[] args) {
                     sess.close();
                 }
             });
             setcmd("fs", new Command() {
-                public void run(Console cons, String[] args) {
+                public void run(final Console cons, final String[] args) {
                     if ((args.length >= 2) && (fsm != null)) {
                         if (Utils.atoi(args[1]) != 0)
                             fsm.setfs();
@@ -110,7 +110,7 @@ public class UI {
             });
         }
 
-        private void findcmds(Map<String, Command> map, Widget wdg) {
+        private void findcmds(final Map<String, Command> map, final Widget wdg) {
             if (wdg instanceof Directory) {
                 map.putAll(((Directory) wdg).findcmds());
             }
@@ -120,7 +120,7 @@ public class UI {
         }
 
         public Map<String, Command> findcmds() {
-            Map<String, Command> ret = super.findcmds();
+            final Map<String, Command> ret = super.findcmds();
             findcmds(ret, root);
             return (ret);
         }
@@ -130,18 +130,18 @@ public class UI {
         public final String mname;
         public final Object[] args;
 
-        public UIException(String message, String mname, Object... args) {
+        public UIException(final String message, final String mname, final Object... args) {
             super(message);
             this.mname = mname;
             this.args = args;
         }
     }
 
-    public UI(Dimension size, Session sess) {
+    public UI(final Dimension size, final Session sess) {
         this(new Coord(size), sess);
     }
 
-    public UI(Coord size, Session sess) {
+    public UI(final Coord size, final Session sess) {
         last_newwidget_time = System.currentTimeMillis();
         instance = this;
         root = new RootWidget(this, size);
@@ -150,47 +150,48 @@ public class UI {
         this.sess = sess;
     }
 
-    public void setreceiver(Receiver rcvr) {
+    public void setreceiver(final Receiver rcvr) {
         this.rcvr = rcvr;
     }
 
-    public void bind(Widget w, int id) {
+    public void bind(final Widget w, final int id) {
         widgets.put(id, w);
         rwidgets.put(w, id);
     }
 
-    public void drawafter(AfterDraw ad) {
+    public void drawafter(final AfterDraw ad) {
         afterdraws.add(ad);
     }
 
-    public void draw(GOut g) {
+    public void draw(final GOut g) {
         afterdraws.clear();
         root.draw(g);
-        for (AfterDraw ad : afterdraws) {
+        for (final AfterDraw ad : afterdraws) {
             ad.draw(g);
         }
     }
 
-    public void newwidget(int id, String type, Coord c, int parent, Object... args) throws InterruptedException {
-        WidgetFactory f;
+    public void newwidget(final int id, String type, final Coord c, final int parent, final Object... args) throws InterruptedException {
+        final WidgetFactory f;
         last_newwidget_time = System.currentTimeMillis();
         if (type.indexOf('/') >= 0) {
-            int ver = -1, p;
+            int ver = -1;
+            final int p;
             if ((p = type.indexOf(':')) > 0) {
                 ver = Integer.parseInt(type.substring(p + 1));
                 type = type.substring(0, p);
             }
-            Resource res = Resource.load(type, ver);
+            final Resource res = Resource.load(type, ver);
             res.loadwaitint();
             f = res.layer(CodeEntry.class).get(WidgetFactory.class);
         } else {
             f = Widget.gettype(type);
         }
         synchronized (this) {
-            Widget pwdg = widgets.get(parent);
+            final Widget pwdg = widgets.get(parent);
             if (pwdg == null)
                 throw (new UIException("Null parent widget " + parent + " for " + id, type, args));
-            Widget wdg = f.create(c, pwdg, args);
+            final Widget wdg = f.create(c, pwdg, args);
             bind(wdg, id);
             wdg.binded();
         }
@@ -204,17 +205,17 @@ public class UI {
         keygrab = null;
     }
 
-    public void grabmouse(Widget wdg) {
+    public void grabmouse(final Widget wdg) {
         mousegrab = wdg;
     }
 
-    public void grabkeys(Widget wdg) {
+    public void grabkeys(final Widget wdg) {
         keygrab = wdg;
     }
 
-    private void removeid(Widget wdg) {
+    private void removeid(final Widget wdg) {
         if (rwidgets.containsKey(wdg)) {
-            int id = rwidgets.get(wdg);
+            final int id = rwidgets.get(wdg);
             widgets.remove(id);
             rwidgets.remove(wdg);
         }
@@ -222,7 +223,7 @@ public class UI {
             removeid(child);
     }
 
-    public void destroy(Widget wdg) {
+    public void destroy(final Widget wdg) {
         if ((mousegrab != null) && mousegrab.hasparent(wdg))
             mousegrab = null;
         if ((keygrab != null) && keygrab.hasparent(wdg))
@@ -232,17 +233,17 @@ public class UI {
         wdg.unlink();
     }
 
-    public void destroy(int id) {
+    public void destroy(final int id) {
         synchronized (this) {
             if (widgets.containsKey(id)) {
-                Widget wdg = widgets.get(id);
+                final Widget wdg = widgets.get(id);
                 destroy(wdg);
             }
         }
     }
 
-    public void wdgmsg(Widget sender, String msg, Object... args) {
-        int id;
+    public void wdgmsg(final Widget sender, final String msg, final Object... args) {
+        final int id;
         synchronized (this) {
             if (!rwidgets.containsKey(sender))
                 throw (new UIException("Wdgmsg sender (" + sender.getClass().getName() + ") is not in rwidgets", msg, args));
@@ -253,8 +254,8 @@ public class UI {
             rcvr.rcvmsg(id, msg, args);
     }
 
-    public void uimsg(int id, String msg, Object... args) {
-        Widget wdg;
+    public void uimsg(final int id, final String msg, final Object... args) {
+        final Widget wdg;
         synchronized (this) {
             wdg = widgets.get(id);
         }
@@ -264,7 +265,7 @@ public class UI {
             throw (new UIException("Uimsg to non-existent widget " + id, msg, args));
     }
 
-    private void setmods(InputEvent ev) {
+    private void setmods(final InputEvent ev) {
         modshift = ev.isShiftDown();
         modctrl = ev.isControlDown();
         modmeta = ev.isMetaDown();
@@ -273,7 +274,7 @@ public class UI {
       */
     }
 
-    public void type(KeyEvent ev) {
+    public void type(final KeyEvent ev) {
         setmods(ev);
         if (keygrab == null) {
             if (!root.type(ev.getKeyChar(), ev))
@@ -283,7 +284,7 @@ public class UI {
         }
     }
 
-    public void keydown(KeyEvent ev) {
+    public void keydown(final KeyEvent ev) {
         setmods(ev);
         if (keygrab == null) {
             if (!root.keydown(ev))
@@ -293,7 +294,7 @@ public class UI {
         }
     }
 
-    public void keyup(KeyEvent ev) {
+    public void keyup(final KeyEvent ev) {
         setmods(ev);
         if (keygrab == null)
             root.keyup(ev);
@@ -301,17 +302,17 @@ public class UI {
             keygrab.keyup(ev);
     }
 
-    private static Coord wdgxlate(Coord c, Widget wdg) {
+    private static Coord wdgxlate(final Coord c, final Widget wdg) {
         return (c.sub(wdg.c).sub(wdg.parent.rootpos()));
     }
 
-    public static boolean dropthing(Widget w, Coord c, Object thing) {
+    public static boolean dropthing(final Widget w, final Coord c, final Object thing) {
         if (w instanceof DropTarget) {
             if (((DropTarget) w).dropthing(c, thing))
                 return (true);
         }
         for (Widget wdg = w.lchild; wdg != null; wdg = wdg.prev) {
-            Coord cc = w.xlate(wdg.c, true);
+            final Coord cc = w.xlate(wdg.c, true);
             if (c.isect(cc, wdg.sz)) {
                 if (dropthing(wdg, c.sub(cc), thing))
                     return (true);
@@ -320,7 +321,7 @@ public class UI {
         return (false);
     }
 
-    public void mousedown(MouseEvent ev, Coord c, int button) {
+    public void mousedown(final MouseEvent ev, final Coord c, final int button) {
         setmods(ev);
         lcc = mc = c;
         if (mousegrab == null)
@@ -329,7 +330,7 @@ public class UI {
             mousegrab.mousedown(wdgxlate(c, mousegrab), button);
     }
 
-    public void mouseup(MouseEvent ev, Coord c, int button) {
+    public void mouseup(final MouseEvent ev, final Coord c, final int button) {
         setmods(ev);
         mc = c;
         if (mousegrab == null)
@@ -338,7 +339,7 @@ public class UI {
             mousegrab.mouseup(wdgxlate(c, mousegrab), button);
     }
 
-    public void mousemove(MouseEvent ev, Coord c) {
+    public void mousemove(final MouseEvent ev, final Coord c) {
         setmods(ev);
         mc = c;
         if (mousegrab == null)
@@ -347,7 +348,7 @@ public class UI {
             mousegrab.mousemove(wdgxlate(c, mousegrab));
     }
 
-    public void mousewheel(MouseEvent ev, Coord c, int amount) {
+    public void mousewheel(final MouseEvent ev, final Coord c, final int amount) {
         setmods(ev);
         lcc = mc = c;
         if (mousegrab == null)
@@ -364,17 +365,17 @@ public class UI {
     }
 
     @SuppressWarnings({"UnusedDeclaration"})
-    public synchronized Widget getWidgetById(int id) {
+    public synchronized Widget getWidgetById(final int id) {
         return widgets.get(id);
     }
 
     @SuppressWarnings({"UnusedDeclaration"})
-    public synchronized int getIdByWidget(Widget wdg) {
+    public synchronized int getIdByWidget(final Widget wdg) {
         return rwidgets.get(wdg);
     }
 
 
-    public synchronized void update(long dt) {
+    public synchronized void update(final long dt) {
         if (mainview == null)
             last_newwidget_time = System.currentTimeMillis();
         // если прошло больше 60 сек с момента создания последнего виджета - то крашимся

@@ -2,7 +2,7 @@ package haven;
 
 public class DeclaimVerification extends Window {
 
-    public DeclaimVerification(Widget parent, final String[] ad) {
+    public DeclaimVerification(final Widget parent, final String[] ad) {
         super(new Coord(100, 100), Coord.z, parent, "Declaiming");
         new Label(Coord.z, this, "Are you sure you want to declaim your plot?");
         new Button(new Coord(0, 20), 90, this, "Declaim") {
@@ -22,7 +22,7 @@ public class DeclaimVerification extends Window {
         ui.destroy(this);
     }
 
-    public void wdgmsg(Widget sender, String msg, Object... args) {
+    public void wdgmsg(final Widget sender, final String msg, final Object... args) {
         if (checkIsCloseButton(sender)) {
             close();
             return;

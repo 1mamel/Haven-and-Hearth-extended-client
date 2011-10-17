@@ -59,7 +59,7 @@ public class OptWnd extends Window {
         final String desc;
         final Tabs.Tab args;
 
-        private CamInfo(String name, String desc, Tabs.Tab args) {
+        private CamInfo(final String name, final String desc, final Tabs.Tab args) {
             this.name = name;
             this.desc = desc;
             this.args = args;
@@ -78,11 +78,11 @@ public class OptWnd extends Window {
     final CheckBox ircToggle;
 
     @SuppressWarnings({"UnusedAssignment"})
-    public OptWnd(Coord c, Widget parent) {
+    public OptWnd(final Coord c, final Widget parent) {
         super(c, new Coord(400, 440), parent, "Options");
         UI.optionsWindow.set(this);
         body = new Tabs(Coord.z, new Coord(400, 430), this) {
-            public void changed(Tab from, Tab to) {
+            public void changed(final Tab from, final Tab to) {
                 if (to != null) Utils.setpref("optwndtab", to.btn.getText());
                 if (from != null) from.btn.c.setY(0);
                 if (to != null) to.btn.c.setY(-2);
@@ -97,7 +97,7 @@ public class OptWnd extends Window {
                 public void click() {
                     new MessageBox(MessageBox.DC, MessageBox.DS, ui.root, "Confirmation", "Are you sure want to exit?", MessageBox.BUTTONS_YESNO, new Callback<Integer>() {
                         @Override
-                        public void result(Integer result) {
+                        public void result(final Integer result) {
                             if (MessageBox.BUTTON_YES == result) {
                                 HackThread.tg().interrupt();
                             }
@@ -109,7 +109,7 @@ public class OptWnd extends Window {
                 public void click() {
                     new MessageBox(MessageBox.DC, MessageBox.DS, ui.root, "Confirmation", "Are you sure want to log out?", MessageBox.BUTTON_YES | MessageBox.BUTTON_NO, new Callback<Integer>() {
                         @Override
-                        public void result(Integer result) {
+                        public void result(final Integer result) {
                             if (MessageBox.BUTTON_YES == result) {
                                 ui.sess.close();
                             }
@@ -127,7 +127,7 @@ public class OptWnd extends Window {
             };
 
             new CheckBox(new Coord(10, 130), tab, "Use new minimap (restart required)") {
-                public void changed(boolean val) {
+                public void changed(final boolean val) {
                     Config.new_minimap = val;
                     Config.saveOptions();
                 }
@@ -138,7 +138,7 @@ public class OptWnd extends Window {
             };
 
             new CheckBox(new Coord(10, 165), tab, "Use new chat (restart required)") {
-                public void changed(boolean val) {
+                public void changed(final boolean val) {
                     Config.new_chat = val;
                     Config.saveOptions();
                 }
@@ -149,77 +149,77 @@ public class OptWnd extends Window {
             };
 
             (new CheckBox(new Coord(10, 200), tab, "Add timestamp in chat") {
-                public void changed(boolean val) {
+                public void changed(final boolean val) {
                     Config.timestamp = val;
                     Config.saveOptions();
                 }
             }).a = Config.timestamp;
 
             (new CheckBox(new Coord(10, 235), tab, "Show dowsing direcion") {
-                public void changed(boolean val) {
+                public void changed(final boolean val) {
                     Config.showDirection = val;
                     Config.saveOptions();
                 }
             }).a = Config.showDirection;
 
             (new CheckBox(new Coord(10, 270), tab, "Always show heartling names") {
-                public void changed(boolean val) {
+                public void changed(final boolean val) {
                     Config.showNames = val;
                     Config.saveOptions();
                 }
             }).a = Config.showNames;
 
             (new CheckBox(new Coord(10, 305), tab, "Always show other kin names") {
-                public void changed(boolean val) {
+                public void changed(final boolean val) {
                     Config.showOtherNames = val;
                     Config.saveOptions();
                 }
             }).a = Config.showOtherNames;
 
             (new CheckBox(new Coord(10, 340), tab, "Show smileys in chat") {
-                public void changed(boolean val) {
+                public void changed(final boolean val) {
                     Config.use_smileys = val;
                     Config.saveOptions();
                 }
             }).a = Config.use_smileys;
 
             (new CheckBox(new Coord(10, 375), tab, "Show item quality") {
-                public void changed(boolean val) {
+                public void changed(final boolean val) {
                     Config.showq = val;
                     Config.saveOptions();
                 }
             }).a = Config.showq;
 
             (new CheckBox(new Coord(220, 130), tab, "Fast menu") {
-                public void changed(boolean val) {
+                public void changed(final boolean val) {
                     Config.fastFlowerAnim = val;
                     Config.saveOptions();
                 }
             }).a = Config.fastFlowerAnim;
 
             (new CheckBox(new Coord(220, 165), tab, "Compress screenshots") {
-                public void changed(boolean val) {
+                public void changed(final boolean val) {
                     Config.sshot_compress = val;
                     Config.saveOptions();
                 }
             }).a = Config.sshot_compress;
 
             (new CheckBox(new Coord(220, 200), tab, "Exclude UI from screenshot") {
-                public void changed(boolean val) {
+                public void changed(final boolean val) {
                     Config.sshot_noui = val;
                     Config.saveOptions();
                 }
             }).a = Config.sshot_noui;
 
             (new CheckBox(new Coord(220, 235), tab, "Exclude names from screenshot") {
-                public void changed(boolean val) {
+                public void changed(final boolean val) {
                     Config.sshot_nonames = val;
                     Config.saveOptions();
                 }
             }).a = Config.sshot_nonames;
 
             (new CheckBox(new Coord(220, 270), tab, "Use optimized claim higlighting") {
-                public void changed(boolean val) {
+                public void changed(final boolean val) {
                     Config.newclaim = val;
                     Config.saveOptions();
                 }
@@ -246,10 +246,10 @@ public class OptWnd extends Window {
 //        }
 //        }).a = ui.mnu.numpadbar.visible;
 
-            Widget editbox = new Frame(new Coord(310, 30), new Coord(90, 100), tab);
+            final Widget editbox = new Frame(new Coord(310, 30), new Coord(90, 100), tab);
             new Label(new Coord(20, 10), editbox, "Edit mode:");
-            RadioGroup editmode = new RadioGroup(editbox) {
-                public void changed(int btn, String lbl) {
+            final RadioGroup editmode = new RadioGroup(editbox) {
+                public void changed(final int btn, final String lbl) {
                     Utils.setpref("editmode", lbl.toLowerCase());
                 }
             };
@@ -266,8 +266,8 @@ public class OptWnd extends Window {
             new Label(new Coord(10, 40), tab, "Camera type:");
             final RichTextBox caminfo = new RichTextBox(new Coord(180, 70), new Coord(210, 180), tab, "", foundry);
             caminfo.bg = new java.awt.Color(0, 0, 0, 64);
-            String dragcam = "\n\n$col[225,200,100,255]{You can drag and recenter with the middle mouse button.}";
-            String fscam = "\n\n$col[225,200,100,255]{Should be used in full-screen mode.}";
+            final String dragcam = "\n\n$col[225,200,100,255]{You can drag and recenter with the middle mouse button.}";
+            final String fscam = "\n\n$col[225,200,100,255]{Should be used in full-screen mode.}";
             addinfo("orig", "The Original", "The camera centers where you left-click.", null);
             addinfo("predict", "The Predictor", "The camera tries to predict where your character is heading - à la Super Mario World - and moves ahead of your character. Works unlike a charm." + dragcam, null);
             addinfo("border", "Freestyle", "You can move around freely within the larger area of the window; the camera only moves along to ensure the character does not reach the edge of the window. Boom chakalak!" + dragcam, null);
@@ -287,7 +287,7 @@ public class OptWnd extends Window {
                     setcamargs("clicktgt", calcarg());
                 }
 
-                public boolean mouseup(Coord c, int button) {
+                public boolean mouseup(final Coord c, final int button) {
                     if (super.mouseup(c, button)) {
                         setcamargs(curcam, calcarg());
                         setcamera(curcam);
@@ -312,7 +312,7 @@ public class OptWnd extends Window {
                     setcamargs("fixedcake", calcarg());
                 }
 
-                public boolean mouseup(Coord c, int button) {
+                public boolean mouseup(final Coord c, final int button) {
                     if (super.mouseup(c, button)) {
                         setcamargs(curcam, calcarg());
                         setcamera(curcam);
@@ -329,7 +329,7 @@ public class OptWnd extends Window {
             addinfo("fixedcake", "The Borderizer", "The camera is fixed, relative to your character unless you touch one of the screen's edges with the mouse, in which case the camera peeks in that direction." + dragcam + fscam, ctab);
 
             final RadioGroup cameras = new RadioGroup(tab) {
-                public void changed(int btn, String lbl) {
+                public void changed(final int btn, String lbl) {
                     if (camname2type.containsKey(lbl))
                         lbl = camname2type.get(lbl);
                     if (!lbl.equals(curcam)) {
@@ -337,7 +337,7 @@ public class OptWnd extends Window {
                             setcamargs(lbl, camargs.get(lbl));
                         setcamera(lbl);
                     }
-                    CamInfo inf = caminfomap.get(lbl);
+                    final CamInfo inf = caminfomap.get(lbl);
                     if (inf == null) {
                         cambox.showtab(null);
                         caminfo.settext("");
@@ -347,22 +347,22 @@ public class OptWnd extends Window {
                     }
                 }
             };
-            List<String> clist = new ArrayList<String>();
-            for (String camtype : MapView.camtypes.keySet())
+            final List<String> clist = new ArrayList<String>();
+            for (final String camtype : MapView.camtypes.keySet())
                 clist.add(caminfomap.containsKey(camtype) ? caminfomap.get(camtype).name : camtype);
             Collections.sort(clist, camcomp);
             int y = 25;
-            for (String camname : clist)
+            for (final String camname : clist)
                 cameras.add(camname, new Coord(10, y += 25));
             cameras.check(caminfomap.containsKey(curcam) ? caminfomap.get(curcam).name : curcam);
             (new CheckBox(new Coord(50, 270), tab, "Allow zooming with mouse wheel") {
-                public void changed(boolean val) {
+                public void changed(final boolean val) {
                     Config.zoom = val;
                     Config.saveOptions();
                 }
             }).a = Config.zoom;
             (new CheckBox(new Coord(50, 300), tab, "Disable camera borders") {
-                public void changed(boolean val) {
+                public void changed(final boolean val) {
                     Config.noborders = val;
                     Config.saveOptions();
                 }
@@ -386,7 +386,7 @@ public class OptWnd extends Window {
                     sfxvol.settext(String.valueOf(100 - val) + " %");
                 }
 
-                public boolean mousewheel(Coord c, int amount) {
+                public boolean mousewheel(final Coord c, final int amount) {
                     val = Utils.clip(val + amount, min, max);
                     changed();
                     return (true);
@@ -406,14 +406,14 @@ public class OptWnd extends Window {
                     musVol.settext(String.valueOf(100 - val) + " %");
                 }
 
-                public boolean mousewheel(Coord c, int amount) {
+                public boolean mousewheel(final Coord c, final int amount) {
                     val = Utils.clip(val + amount, min, max);
                     changed();
                     return true;
                 }
             };
             new CheckBox(new Coord(120, 40), tab, "Sound enabled") {
-                public void changed(boolean val) {
+                public void changed(final boolean val) {
                     CustomConfig.isSoundOn = val;
                 }
 
@@ -422,7 +422,7 @@ public class OptWnd extends Window {
                 }
             };
             new CheckBox(new Coord(120, 70), tab, "Music enabled") {
-                public void changed(boolean val) {
+                public void changed(final boolean val) {
                     CustomConfig.isMusicOn = val;
                 }
 
@@ -436,14 +436,14 @@ public class OptWnd extends Window {
             tab = body.new Tab(new Coord(210, 0), 60, "IRC");
 
             // Labels (1st column)
-            int firstCellXOffset = 10;
+            final int firstCellXOffset = 10;
             serverLabel = new Label(new Coord(firstCellXOffset, 40), tab, "Server:");
             chnlLabel = new Label(new Coord(firstCellXOffset, 60), tab, "Channels:");
             defIRCNickLabel = new Label(new Coord(firstCellXOffset, 80), tab, "IRC Nick:");
             altIRCNickLabel = new Label(new Coord(firstCellXOffset, 100), tab, "Alt Nick:");
 
             // TextEntries (2nd column)
-            int secondCellXOffset = 15 + Math.max(serverLabel.sz.x, Math.max(chnlLabel.sz.x, Math.max(defIRCNickLabel.sz.x, altIRCNickLabel.sz.x)));
+            final int secondCellXOffset = 15 + Math.max(serverLabel.sz.x, Math.max(chnlLabel.sz.x, Math.max(defIRCNickLabel.sz.x, altIRCNickLabel.sz.x)));
             final Coord textFieldSize = new Coord(180, 15);
 
             // Server entry
@@ -451,10 +451,10 @@ public class OptWnd extends Window {
             serverAddress.badchars = " ";
 
             // Channel list entry
-            StringBuilder builder = new StringBuilder();
-            for (Listbox.Option channel : CustomConfig.ircChannelList) {
-                String name = channel.name.trim();
-                String disp = channel.disp.trim();
+            final StringBuilder builder = new StringBuilder();
+            for (final Listbox.Option channel : CustomConfig.ircChannelList) {
+                final String name = channel.name.trim();
+                final String disp = channel.disp.trim();
                 if (!name.isEmpty()) {
                     builder.append(name).append(' ');
                 }
@@ -484,7 +484,7 @@ public class OptWnd extends Window {
 
             // IRC toggle
             ircToggle = new CheckBox(new Coord((firstCellXOffset + secondCellXOffset) / 2, 130), tab, "IRC On/Off") {
-                public void changed(boolean val) {
+                public void changed(final boolean val) {
                     CustomConfig.isIRCOn = val;
                 }
 
@@ -503,7 +503,7 @@ public class OptWnd extends Window {
                 //noinspection ObjectAllocationInLoop
                 new CheckBox(new Coord(10, y += 30), tab, checkbox[0]) {
 
-                    public void changed(boolean val) {
+                    public void changed(final boolean val) {
                         if (val) {
                             Config.hideObjectList.add(checkbox[1]);
                         } else {
@@ -519,7 +519,7 @@ public class OptWnd extends Window {
             }
             y = 0;
             new CheckBox(new Coord(150, y += 30), tab, "Hiding enabled") {
-                public void changed(boolean val) {
+                public void changed(final boolean val) {
                     CustomConfig.setHideObjects(val);
                     Config.saveOptions();
                 }
@@ -529,7 +529,7 @@ public class OptWnd extends Window {
                 }
             };
             new CheckBox(new Coord(150, y += 30), tab, "XRay enabled") {
-                public void changed(boolean val) {
+                public void changed(final boolean val) {
                     CustomConfig.setXray(val);
                     Config.saveOptions();
                 }
@@ -539,7 +539,7 @@ public class OptWnd extends Window {
                 }
             };
             new CheckBox(new Coord(150, y += 30), tab, "NightVision enabled") {
-                public void changed(boolean val) {
+                public void changed(final boolean val) {
                     CustomConfig.hasNightVision = val;
                 }
 
@@ -552,7 +552,7 @@ public class OptWnd extends Window {
         { /* TRANSLATE OPTIONS TAB */
             tab = body.new Tab(new Coord(300, 0), 80, "Translation");
             (new CheckBox(new Coord(10, 30), tab, "Turn on") {
-                public void changed(boolean val) {
+                public void changed(final boolean val) {
                     Config.translator.turn(val);
                 }
             }).a = Config.translator.isWorking();
@@ -560,7 +560,7 @@ public class OptWnd extends Window {
             new Label(new Coord(150, 35), tab, "Target Language:");
 
             final RadioGroup langs = new RadioGroup(tab) {
-                public void changed(int btn, String lbl) {
+                public void changed(final int btn, final String lbl) {
                     Config.translator.useLanguage(lbl);
                 }
             };
@@ -581,8 +581,8 @@ public class OptWnd extends Window {
         }
 
         new Frame(new Coord(-10, 20), new Coord(420, 330), this);
-        String last = Utils.getpref("optwndtab", "");
-        for (Tabs.Tab t : body.tabs) {
+        final String last = Utils.getpref("optwndtab", "");
+        for (final Tabs.Tab t : body.tabs) {
             if (t.btn.getText().equals(last))
                 body.showtab(t);
         }
@@ -593,7 +593,7 @@ public class OptWnd extends Window {
         CustomConfig.ircServerAddress = serverAddress.text;
         CustomConfig.ircDefNick = defNick.text;
         CustomConfig.ircAltNick = altNick.text;
-        String channelData[] = Utils.whitespacePattern.split(channelList.text);
+        final String[] channelData = Utils.whitespacePattern.split(channelList.text);
         CustomConfig.ircChannelList.clear();
         for (int i = 0; i < channelData.length; i++) {
             channelData[i] = channelData[i].trim();
@@ -625,13 +625,13 @@ public class OptWnd extends Window {
         if (CustomConfig.isSaveable) CustomConfigProcessor.saveSettings();
     }
 
-    private void setcamera(String camtype) {
+    private void setcamera(final String camtype) {
         curcam = camtype;
         Utils.setpref("defcam", curcam);
         String[] args = camargs.get(curcam);
         if (args == null) args = new String[0];
 
-        MapView mv = ui.mainview;
+        final MapView mv = ui.mainview;
         if (mv != null) {
             if (curcam.equals("clicktgt")) mv.cam = new MapView.OrigCam2(args);
             else if (curcam.equals("fixedcake")) mv.cam = new MapView.FixedCakeCam(args);
@@ -645,7 +645,7 @@ public class OptWnd extends Window {
         }
     }
 
-    private void setcamargs(String camtype, String... args) {
+    private void setcamargs(final String camtype, final String... args) {
         camargs.put(camtype, args);
         if (args.length > 0 && curcam.equals(camtype))
             Utils.setprefb("camargs", Utils.serialize(args));
@@ -655,12 +655,12 @@ public class OptWnd extends Window {
         return ((int) (100 - Double.parseDouble(Utils.getpref("sfxvol", "1.0")) * 100));
     }
 
-    private void addinfo(String camtype, String title, String text, Tabs.Tab args) {
+    private void addinfo(final String camtype, final String title, final String text, final Tabs.Tab args) {
         caminfomap.put(camtype, new CamInfo(title, text, args));
         camname2type.put(title, camtype);
     }
 
-    public void wdgmsg(Widget sender, String msg, Object... args) {
+    public void wdgmsg(final Widget sender, final String msg, final Object... args) {
         if (checkIsCloseButton(sender) || (sender == foldButton))
             super.wdgmsg(sender, msg, args);
     }
@@ -668,14 +668,14 @@ public class OptWnd extends Window {
     public static class Frame extends Widget {
         private final IBox box;
 
-        public Frame(Coord c, Coord sz, Widget parent) {
+        public Frame(final Coord c, final Coord sz, final Widget parent) {
             super(c, sz, parent);
             box = new IBox("gfx/hud", "tl", "tr", "bl", "br", "extvl", "extvr", "extht", "exthb");
         }
 
-        public void draw(GOut og) {
+        public void draw(final GOut og) {
             super.draw(og);
-            GOut g = og.reclip(Coord.z, sz);
+            final GOut g = og.reclip(Coord.z, sz);
             g.chcolor(150, 200, 125, 255);
             box.draw(g, Coord.z, sz);
         }

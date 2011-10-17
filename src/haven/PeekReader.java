@@ -34,7 +34,7 @@ public class PeekReader extends Reader {
     private boolean p = false;
     private int la;
 
-    public PeekReader(Reader back) {
+    public PeekReader(final Reader back) {
         this.back = back;
     }
 
@@ -51,10 +51,10 @@ public class PeekReader extends Reader {
         }
     }
 
-    public int read(char[] b, int off, int len) throws IOException {
+    public int read(final char[] b, final int off, final int len) throws IOException {
         int r = 0;
         while (r < len) {
-            int c = read();
+            final int c = read();
             if (c < 0)
                 return (r);
             b[off + r++] = (char) c;
@@ -68,11 +68,11 @@ public class PeekReader extends Reader {
         return (back.ready());
     }
 
-    protected static boolean whitespace(char c) {
+    protected static boolean whitespace(final char c) {
         return (Character.isWhitespace(c));
     }
 
-    public int peek(boolean skipws) throws IOException {
+    public int peek(final boolean skipws) throws IOException {
         while (!p || (skipws && (la >= 0) && whitespace((char) la))) {
             la = back.read();
             p = true;

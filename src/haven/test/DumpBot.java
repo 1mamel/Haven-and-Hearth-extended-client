@@ -29,19 +29,19 @@ package haven.test;
 import haven.Widget;
 
 public class DumpBot extends Robot {
-    public DumpBot(TestClient c) {
+    public DumpBot(final TestClient c) {
         super(c);
     }
 
-    public void newwdg(int id, Widget w, Object... args) {
+    public void newwdg(final int id, final Widget w, final Object... args) {
         System.out.println(c + ": new widget: " + w + " (" + id + ')');
     }
 
-    public void dstwdg(int id, Widget w) {
+    public void dstwdg(final int id, final Widget w) {
         System.out.println(c + ": destroyed: " + w + " (" + id + ')');
     }
 
-    public void uimsg(int id, Widget w, String msg, Object... args) {
+    public void uimsg(final int id, final Widget w, final String msg, final Object... args) {
         System.out.println(c + ": uimsg: " + w + " (" + id + "): " + msg);
     }
 }

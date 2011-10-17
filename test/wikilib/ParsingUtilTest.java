@@ -22,21 +22,21 @@ import java.io.IOException;
 public class ParsingUtilTest {
     @Test
     public void testParseSearchResultsPage() throws Exception {
-        Document document = getDocument("test1.xml");
-        Page page = new Page("AAA");
+        final Document document = getDocument("test1.xml");
+        final Page page = new Page("AAA");
         ParsingUtil.parseSearchResultsPage(page,document);
         System.out.println("page = \n" + page.toString());
     }
 
     @Test
     public void testParseWikiPage() throws Exception {
-        Document document = getDocument("test2.xml");
-        Page page = new Page("AAA");
+        final Document document = getDocument("test2.xml");
+        final Page page = new Page("AAA");
         ParsingUtil.parseWikiPage(page,document );
         System.out.println("page = \n" + page.toString());
     }
     
-    private static File getTestFile(String name) {
+    private static File getTestFile(final String name) {
         return new File(new File("test"),name);
     }
 

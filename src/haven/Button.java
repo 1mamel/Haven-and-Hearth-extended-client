@@ -26,6 +26,9 @@
 
 package haven;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -69,12 +72,12 @@ public class Button extends Widget {
 
     static {
         Widget.addtype("btn", new WidgetFactory() {
-            public Widget create(Coord c, Widget parent, Object[] args) {
+            public Widget create(final Coord c, final Widget parent, final Object[] args) {
                 return (new Button(c, (Integer) args[0], parent, (String) args[1]));
             }
         });
         Widget.addtype("ltbtn", new WidgetFactory() {
-            public Widget create(Coord c, Widget parent, Object[] args) {
+            public Widget create(final Coord c, final Widget parent, final Object[] args) {
                 return (wrapped(c, (Integer) args[0], parent, (String) args[1]));
             }
         });
@@ -88,8 +91,8 @@ public class Button extends Widget {
      * @param parent parent widget
      * @param text   text to show
      */
-    public static Button wrapped(Coord c, int width, Widget parent, String text) {
-        Button ret = new Button(c, width, parent, tf.renderwrap(text, width - 10));
+    public static Button wrapped(final Coord c, final int width, final Widget parent, final String text) {
+        final Button ret = new Button(c, width, parent, tf.renderwrap(text, width - 10));
         return (ret);
     }
 
@@ -101,20 +104,20 @@ public class Button extends Widget {
      * @param parent parent widget
      * @param text   text to show
      */
-    public Button(Coord c, Integer width, Widget parent, String text) {
+    public Button(final Coord c, final Integer width, final Widget parent, final String text) {
         this(c, width, parent, text, false);
     }
 
     /**
      * Creates text-based button.
      *
-     * @param c      relative coordinates in parent
-     * @param width  width
-     * @param parent parent widget
-     * @param text   text to show
+     * @param c       relative coordinates in parent
+     * @param width   width
+     * @param parent  parent widget
+     * @param text    text to show
      * @param wrapped is text must be wrapped
      */
-    public Button(Coord c, Integer width, Widget parent, String text, boolean wrapped) {
+    public Button(final Coord c, final Integer width, final Widget parent, final String text, final boolean wrapped) {
         this(c, width, parent, wrapped ? tf.renderwrap(text, width - 10) : tf.render(text));
     }
 
@@ -126,7 +129,7 @@ public class Button extends Widget {
      * @param parent parent widget
      * @param text   text to show
      */
-    private Button(Coord c, Integer width, Widget parent, Text text) {
+    private Button(final Coord c, final Integer width, final Widget parent, final Text text) {
         super(c, new Coord(width, 19), parent);
         this.text = text;
         this.contentImage = this.text.img;
@@ -140,16 +143,16 @@ public class Button extends Widget {
      * @param parent  parent widget
      * @param content image
      */
-    public Button(Coord c, Integer width, Widget parent, BufferedImage content) {
+    public Button(final Coord c, final Integer width, final Widget parent, final BufferedImage content) {
         super(c, new Coord(width, 19), parent);
         this.text = null;
         this.contentImage = content;
     }
 
-    public synchronized void draw(GOut g) {
+    public synchronized void draw(final GOut g) {
         //Graphics g = graphics();
-        int width = sz.x;
-        int height = sz.y;
+        final int width = sz.x;
+        final int height = sz.y;
 
         g.image(isMouseDown ? dt : ut, new Coord(bLeftWidth - 3, bTopHeight - 2), new Coord(width - (bLRWidth - 6), height - (bTBHeight - 4))); // Background
         g.image(bl, Coord.z, new Coord(bLeftWidth, height)); // Left Border
@@ -166,15 +169,16 @@ public class Button extends Widget {
         g.image(contentImage, new Coord(textX, textY));
     }
 
-    public void change(String text, Color col) {
+    public void change(@NotNull final String text, @Nullable final Color col) {
         if (col == null) {
-            col = DEFAULT_COLOR;
+            this.text = tf.render(text, DEFAULT_COLOR);
+        } else {
+            this.text = tf.render(text, col);
         }
-        this.text = tf.render(text, col);
         this.contentImage = this.text.img;
     }
 
-    public void change(String text) {
+    public void change(@NotNull final String text) {
         change(text, DEFAULT_COLOR);
     }
 
@@ -182,7 +186,7 @@ public class Button extends Widget {
         wdgmsg("activate");
     }
 
-    public void uimsg(String msg, Object... args) {
+    public void uimsg(@NotNull final String msg, final Object... args) {
         if (msg.equals("ch")) { // Change text & image
             if (args.length > 1)
                 change((String) args[0], (Color) args[1]);
@@ -193,11 +197,11 @@ public class Button extends Widget {
         }
     }
 
-    private void changeImage(BufferedImage arg) {
+    private void changeImage(@NotNull final BufferedImage arg) {
         this.contentImage = arg;
     }
 
-    public boolean mousedown(Coord c, int button) {
+    public boolean mousedown(final Coord c, final int button) {
         if (button != 1)
             return (false);
         isMouseDown = true;
@@ -205,7 +209,7 @@ public class Button extends Widget {
         return (true);
     }
 
-    public boolean mouseup(Coord c, int button) {
+    public boolean mouseup(final Coord c, final int button) {
         if (isMouseDown && button == 1) {
             isMouseDown = false;
             ui.ungrabmouse();

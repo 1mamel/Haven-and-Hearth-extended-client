@@ -48,43 +48,43 @@ public class Console {
         public Map<String, Command> findcmds();
     }
 
-    public static void setscmd(String name, Command cmd) {
+    public static void setscmd(final String name, final Command cmd) {
         scommands.put(name, cmd);
     }
 
-    public void setcmd(String name, Command cmd) {
+    public void setcmd(final String name, final Command cmd) {
         commands.put(name, cmd);
     }
 
     public Map<String, Command> findcmds() {
-        Map<String, Command> ret = new ConcurrentHashMap<String, Command>();
+        final Map<String, Command> ret = new ConcurrentHashMap<String, Command>();
         ret.putAll(scommands);
         ret.putAll(commands);
         return ret;
     }
 
-    public Command findcmd(String name) {
+    public Command findcmd(final String name) {
         Command ret = commands.get(name);
         if (ret == null) ret = scommands.get(name);
         return ret;
     }
 
-    public void run(String[] args) throws Exception {
+    public void run(final String[] args) throws Exception {
         if (args.length < 1)
             return;
-        Command cmd = findcmd(args[0]);
+        final Command cmd = findcmd(args[0]);
         if (cmd == null)
             throw (new Exception(args[0] + ": no such command"));
         cmd.run(this, args);
     }
 
-    public void run(String cmdl) throws Exception {
+    public void run(final String cmdl) throws Exception {
         run(Utils.splitwords(cmdl));
     }
 
     public void clearout() {
         out = new PrintWriter(new Writer() {
-            public void write(char[] b, int o, int c) {
+            public void write(final char[] b, final int o, final int c) {
             }
 
             public void close() {

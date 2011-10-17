@@ -17,7 +17,7 @@ public class TestTextureExtractor {
     static int msgCount = 0;
     private static final Pattern slashPattern = Pattern.compile("/");
 
-    public static void log(String msg) {
+    public static void log(final String msg) {
         sb.append(msg);
         sb.append('\n');
         msgCount++;
@@ -39,15 +39,15 @@ public class TestTextureExtractor {
      * @param args
      * @throws Exception
      */
-    public static void main(String[] args) throws Exception {
+    public static void main(final String[] args) throws Exception {
         final File outDir = new File("out");
         outDir.mkdir();
 
         final File inDir = new File("res");
 
 
-        Object[] options = {"extract", "encode"};
-        Object selection = JOptionPane.showInputDialog(null, "choose", "Input", JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+        final Object[] options = {"extract", "encode"};
+        final Object selection = JOptionPane.showInputDialog(null, "choose", "Input", JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
         makeConsole();
         try {
             if ("extract".equals(selection.toString())) {
@@ -69,7 +69,7 @@ public class TestTextureExtractor {
         frame = new JFrame("TheTrav's dodgy haven res tool");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         final JTextArea text = new JTextArea();
-        JScrollPane scroll = new JScrollPane(text);
+        final JScrollPane scroll = new JScrollPane(text);
         frame.getContentPane().add(scroll);
         frame.setSize(500, 600);
         frame.setVisible(true);
@@ -78,8 +78,8 @@ public class TestTextureExtractor {
         console = text;
     }
 
-    private static void extractFile(File outDir, File inDir) throws Exception {
-        for (File file : inDir.listFiles()) {
+    private static void extractFile(final File outDir, final File inDir) throws Exception {
+        for (final File file : inDir.listFiles()) {
             if (file.isDirectory()) {
                 extractFile(outDir, file);
             } else {
@@ -88,7 +88,7 @@ public class TestTextureExtractor {
         }
     }
 
-    private static void extractImage(File outDir, File imgFile) throws Exception {
+    private static void extractImage(final File outDir, final File imgFile) throws Exception {
         log("beginning extract for file:" + imgFile.getPath());
         final InputStream in = new FileInputStream(imgFile);
         final ResourceMetaData meta = new ResourceMetaData();
@@ -97,7 +97,7 @@ public class TestTextureExtractor {
         final String filePath = fix(outDir.getAbsolutePath() + File.separator + imgFile.getPath());
         final String imgFileName = imgFile.getName();
         log(loadedLayers.size() + " layers loaded from file " + imgFileName + " saving to:\n\t" + filePath);
-        File outputDir = new File(filePath);
+        final File outputDir = new File(filePath);
         outputDir.mkdirs();
         //save metadata
         final String fileNameBase = filePath + File.separator + imgFileName;
@@ -107,12 +107,12 @@ public class TestTextureExtractor {
         metaOut.println("ver_" + meta.ver);
         //save non img byte streams
         int i = 0;
-        for (byte[] byteArray : meta.nonImgLayers) {
+        for (final byte[] byteArray : meta.nonImgLayers) {
             final String layerName = fileNameBase + "_" + i + ".nonimageLayer";
             final File f = new File(layerName);
             metaOut.println(layerName);
             i++;
-            FileOutputStream layerOut = new FileOutputStream(f);
+            final FileOutputStream layerOut = new FileOutputStream(f);
             layerOut.write(byteArray);
             layerOut.close();
         }
@@ -132,8 +132,8 @@ public class TestTextureExtractor {
         in.close();
     }
 
-    private static void encodeResources(File srcDir, File destDir) throws Exception {
-        for (File srcFile : srcDir.listFiles()) {
+    private static void encodeResources(final File srcDir, final File destDir) throws Exception {
+        for (final File srcFile : srcDir.listFiles()) {
             if (srcFile.isDirectory()) {
                 encodeResources(srcFile, destDir);
             } else {
@@ -150,22 +150,22 @@ public class TestTextureExtractor {
         }
     }
 
-    private static void encodeFromMeta(BufferedReader in, File srcDir, File destDir) throws Exception {
+    private static void encodeFromMeta(final BufferedReader in, final File srcDir, final File destDir) throws Exception {
         final String namePre = in.readLine().split("_")[1];
         final String name = namePre.replace('\\', '/');
         createDir(name, destDir);
         final File of = new File(destDir,name);
 
-        FileOutputStream out = new FileOutputStream(of);
+        final FileOutputStream out = new FileOutputStream(of);
         try {
             final int ver = Integer.valueOf(in.readLine().split("_")[1]);
 
             //write haven signature
-            String sig = "Haven Resource 1";
+            final String sig = "Haven Resource 1";
             out.write(sig.getBytes());
 
             //write version
-            byte[] buf = new byte[2];
+            final byte[] buf = new byte[2];
             Utils.uint16e(ver, buf, 0);
             out.write(buf);
 
@@ -212,17 +212,17 @@ public class TestTextureExtractor {
         }
     }
 
-    private static void createDir(String fileName, File baseDir) {
-        String[] split = slashPattern.split(fileName);
+    private static void createDir(final String fileName, final File baseDir) {
+        final String[] split = slashPattern.split(fileName);
         File file = baseDir;
         for (int i = 0; i < split.length - 1; i++) {
-            String s = split[i];
+            final String s = split[i];
             file = new File(file, s);
             file.mkdirs();
         }
     }
 
-    private static String fix(String filePath) {
+    private static String fix(final String filePath) {
         return filePath.substring(0, filePath.lastIndexOf(File.separator)) + File.separator;
     }
 

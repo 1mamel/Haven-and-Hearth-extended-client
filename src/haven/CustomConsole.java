@@ -32,18 +32,18 @@ public class CustomConsole extends Window {
         mainAppender = mainAppender1;
     }
 
-    public void draw(GOut g) {
+    public void draw(final GOut g) {
         super.draw(g);
     }
 
-    CustomConsole(Coord c, Coord sz, Widget parent, String title) {
+    CustomConsole(final Coord c, final Coord sz, final Widget parent, final String title) {
         super(c, sz, parent, title, false, false);
         ui.bind(this, CustomConfig.getNextCustomWidgetId());
 
         out = new Textlog(Coord.z, sz.add(0, -20), this);
 
         in = new TextEntry(new Coord(0, sz.y - 20), new Coord(sz.x, 20), this, "") {
-            public boolean type(char c, KeyEvent ev) {
+            public boolean type(final char c, final KeyEvent ev) {
                 if (c == '`' && !(ev.isAltDown() || ev.isControlDown() || ev.isShiftDown())) {
                     ev.consume();
                     parent.toggle();
@@ -65,8 +65,8 @@ public class CustomConsole extends Window {
         };
         in.canactivate = true;
 
-        CustomWriter outWriter = new CustomWriter();
-        CustomWriter errWriter = new CustomWriter(Color.RED.darker());
+        final CustomWriter outWriter = new CustomWriter();
+        final CustomWriter errWriter = new CustomWriter(Color.RED.darker());
 
         logger.removeAllAppenders();
         logger.addAppender(mainAppender);
@@ -85,13 +85,13 @@ public class CustomConsole extends Window {
             this.color = DEFAULT_TEXT_COLOR;
         }
 
-        CustomWriter(Color color) {
+        CustomWriter(final Color color) {
             this.color = color;
         }
 
         @Override
-        public void write(char[] cbuf, int off, int len) throws IOException {
-            String line = new String(cbuf, off, len);
+        public void write(final char[] cbuf, final int off, final int len) throws IOException {
+            final String line = new String(cbuf, off, len);
             try {
                 System.out.println("console writer:" + line);
                 out.append(line, color);
@@ -108,7 +108,7 @@ public class CustomConsole extends Window {
         }
     }
 
-    public void wdgmsg(Widget sender, String msg, Object... args) {
+    public void wdgmsg(final Widget sender, final String msg, final Object... args) {
         if (sender != in) {
             super.wdgmsg(sender, msg, args);
             return;
@@ -119,7 +119,7 @@ public class CustomConsole extends Window {
             return;
         }
 
-        String command = (String) args[0];
+        final String command = (String) args[0];
         enteredCommands.add(command);
         lastCommand++;
 

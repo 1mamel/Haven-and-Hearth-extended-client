@@ -27,7 +27,7 @@ package org.relayirc.core;
  */
 public class IRCException extends Exception {
 
-    public IRCException(String message) {
+    public IRCException(final String message) {
         super(message);
     }
 }

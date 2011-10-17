@@ -73,7 +73,7 @@ public class Player {
         return UI.speedget.get().getMax();
     }
 
-    public static boolean setSpeed(int speed) {
+    public static boolean setSpeed(final int speed) {
         return UI.speedget.get().changeSpeed(speed);
     }
 
@@ -81,7 +81,7 @@ public class Player {
         newMeter(meter, resName);
     }
 
-    public static void meterUpdated(IMeter meter, String tooltip) {
+    public static void meterUpdated(final IMeter meter, final String tooltip) {
         meterUp(meter, tooltip);
     }
 
@@ -128,7 +128,7 @@ public class Player {
     }
 
     private static void updateHappy(@NotNull final String tooltip) {
-        Matcher makeMatch = intsOnly.matcher(tooltip);
+        final Matcher makeMatch = intsOnly.matcher(tooltip);
         makeMatch.find();
         happy = Integer.parseInt(makeMatch.group());
         happyTowards = (makeMatch.find()) ? Integer.parseInt(makeMatch.group()) : 0;
@@ -177,7 +177,7 @@ public class Player {
 
     static final Pattern intsOnly = Pattern.compile("[-]?\\d+");
 
-    public static void updateProgress(int p) {
+    public static void updateProgress(final int p) {
         progress = p;
     }
 
@@ -190,7 +190,7 @@ public class Player {
     }
 
     public static Coord getPosition() {
-        Gob pl = getGob();
+        final Gob pl = getGob();
         if (pl != null) {
             return pl.getc();
         } else {
@@ -198,14 +198,14 @@ public class Player {
         }
     }
 
-    public static void sayAreaChat(String message) {
+    public static void sayAreaChat(final String message) {
         // TODO: say something into area chat
     }
 
 
     // для начала двигаться к указанному объекту с оффсетом
-    public static void move(int objectId, int offX, int offY) {
-        Gob gob = MapProvider.getGob(objectId);
+    public static void move(final int objectId, final int offX, final int offY) {
+        final Gob gob = MapProvider.getGob(objectId);
         if (gob == null) {
             return;
         }
@@ -213,21 +213,21 @@ public class Player {
         if (oc == null) {
             return;
         }
-        int btn = 1; // левой кнопкой щелкаем
-        int modflags = 0; // никаких клавиш не держим
+        final int btn = 1; // левой кнопкой щелкаем
+        final int modflags = 0; // никаких клавиш не держим
         oc = oc.add(offX, offY);
         MapProvider.getMV().wdgmsg("click", MapProvider.getCenterR(), oc, btn, modflags, objectId, oc);
     }
 
-    public static void moveStep(int x, int y) {
-        Coord pos = getPosition();
+    public static void moveStep(final int x, final int y) {
+        final Coord pos = getPosition();
         if (pos == null) {
             return;
         }
-        int button = 1; // левой кнопкой щелкаем
-        int modflags = 0; // никаких клавиш не держим
+        final int button = 1; // левой кнопкой щелкаем
+        final int modflags = 0; // никаких клавиш не держим
         Coord mc = MapView.tilify(pos);
-        Coord offset = tilesz.mul(x, y);
+        final Coord offset = tilesz.mul(x, y);
         mc = mc.add(offset);
         MapProvider.getMV().wdgmsg("click", MapProvider.getCenterR(), mc, button, modflags);
     }

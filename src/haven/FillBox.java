@@ -15,17 +15,17 @@ class FillBox extends Widget {
     protected int value;
     boolean mouseDown = false;
 
-    FillBox(Coord loc, Coord size, int startValue, Widget parent) {
+    FillBox(final Coord loc, final Coord size, final int startValue, final Widget parent) {
         super(loc, size, parent);
         value = startValue;
     }
 
-    public void draw(GOut g) {
+    public void draw(final GOut g) {
         borders.draw(g, Coord.z, sz);
         g.frect(Coord.z.add(10, 6), new Coord(value, sz.y - 12));
     }
 
-    public boolean mousedown(Coord c, int button) {
+    public boolean mousedown(final Coord c, final int button) {
         if (button == 1) {
             mouseDown = true;
             ui.grabmouse(this);
@@ -36,7 +36,7 @@ class FillBox extends Widget {
         return super.mousedown(c, button);
     }
 
-    public boolean mouseup(Coord c, int button) {
+    public boolean mouseup(final Coord c, final int button) {
         if (button == 1 && mouseDown) {
             mouseDown = false;
             ui.ungrabmouse();
@@ -45,7 +45,7 @@ class FillBox extends Widget {
         return super.mouseup(c, button);
     }
 
-    public void mousemove(Coord c) {
+    public void mousemove(final Coord c) {
         if (mouseDown) {
             if (c.x > 10 && c.x < 110)
                 value = (c.x - 10) % 100;

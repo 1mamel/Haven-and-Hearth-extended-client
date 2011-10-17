@@ -42,47 +42,47 @@ public class CSprite extends Sprite {
         public final Coord moff;
         public final Coord soff;
 
-        public OffsetPart(int z, int subz, Coord moff, Coord soff) {
+        public OffsetPart(final int z, final int subz, final Coord moff, final Coord soff) {
             super(z, subz);
             this.moff = moff;
             this.soff = soff;
         }
 
-        public OffsetPart(int z, int subz) {
+        public OffsetPart(final int z, final int subz) {
             this(z, subz, Coord.z, Coord.z);
         }
 
-        public void setup(Coord cc, Coord off) {
+        public void setup(final Coord cc, final Coord off) {
             super.setup(cc.add(moff), off.add(soff));
         }
 
-        public void draw(BufferedImage buf, Graphics g) {
+        public void draw(final BufferedImage buf, final Graphics g) {
         }
     }
 
     public static class SSPart extends OffsetPart {
         public final SimpleSprite spr;
 
-        public SSPart(SimpleSprite spr, int z, int subz) {
+        public SSPart(final SimpleSprite spr, final int z, final int subz) {
             super(z, subz);
             this.spr = spr;
         }
 
-        public SSPart(SimpleSprite spr) {
+        public SSPart(final SimpleSprite spr) {
             this(spr, spr.img.z, spr.img.subz);
         }
 
-        public void setup(Coord cc, Coord off) {
+        public void setup(final Coord cc, final Coord off) {
             super.setup(cc, off);
             ul = sc().add(spr.ul());
             lr = sc().add(spr.lr());
         }
 
-        public void draw(GOut g) {
+        public void draw(final GOut g) {
             spr.draw(g, sc());
         }
 
-        public boolean checkhit(Coord c) {
+        public boolean checkhit(final Coord c) {
             return (spr.checkhit(c));
         }
     }
@@ -90,18 +90,18 @@ public class CSprite extends Sprite {
     public static class TexPart extends OffsetPart {
         public final Tex tex;
 
-        public TexPart(Tex tex, int z, int subz, Coord moff, Coord soff) {
+        public TexPart(final Tex tex, final int z, final int subz, final Coord moff, final Coord soff) {
             super(z, subz, moff, soff);
             this.tex = tex;
         }
 
-        public void setup(Coord cc, Coord off) {
+        public void setup(final Coord cc, final Coord off) {
             super.setup(cc, off);
             ul = sc();
             lr = sc().add(tex.sz());
         }
 
-        public void draw(GOut g) {
+        public void draw(final GOut g) {
             g.image(tex, sc());
         }
 
@@ -109,27 +109,27 @@ public class CSprite extends Sprite {
             if (!(this.tex instanceof TexI))
                 return (false);
             c = c.sub(moff).sub(soff);
-            TexI img = (TexI) this.tex;
+            final TexI img = (TexI) this.tex;
             if ((c.x < 0) || (c.y < 0) || (c.x >= img.sz().x) || (c.y >= img.sz().y))
                 return (false);
-            int cl = img.getRGB(c);
+            final int cl = img.getRGB(c);
             return (Utils.rgbm.getAlpha(cl) >= 128);
         }
     }
 
-    protected CSprite(Owner owner, Resource res) {
+    protected CSprite(final Owner owner, final Resource res) {
         super(owner, res);
     }
 
-    public boolean checkhit(Coord c) {
-        for (Part p : frame) {
+    public boolean checkhit(final Coord c) {
+        for (final Part p : frame) {
             if (p.checkhit(c))
                 return (true);
         }
         return (false);
     }
 
-    public void setup(Drawer d, Coord cc, Coord off) {
+    public void setup(final Drawer d, final Coord cc, final Coord off) {
         setup(frame, d, cc, off);
     }
 
@@ -138,21 +138,21 @@ public class CSprite extends Sprite {
     }
 
     public void addnegative() {
-        for (Image img : res.layers(Resource.imgc)) {
+        for (final Image img : res.layers(Resource.imgc)) {
             if (img.id < 0)
                 add(img);
         }
     }
 
-    public void add(SimpleSprite ss) {
+    public void add(final SimpleSprite ss) {
         frame.add(new SSPart(ss));
     }
 
-    public void add(haven.resources.layers.Image img) {
+    public void add(final haven.resources.layers.Image img) {
         add(new SimpleSprite(img, res.layer(Resource.negc).cc));
     }
 
-    public void add(Tex tex, int z, Coord moff, Coord soff) {
+    public void add(final Tex tex, final int z, final Coord moff, final Coord soff) {
         frame.add(new TexPart(tex, z, 0, moff, soff));
     }
 }

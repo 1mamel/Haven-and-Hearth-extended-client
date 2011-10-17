@@ -18,7 +18,7 @@ public class Debug {
     /**
      * Turn on debug message output.
      */
-    public static void setDebug(boolean flag) {
+    public static void setDebug(final boolean flag) {
         _debug = flag;
         if (_debug) println("Debug is ON");
     }
@@ -35,7 +35,7 @@ public class Debug {
     /**
      * Write to debug message output destination.
      */
-    public static void println(String msg) {
+    public static void println(final String msg) {
         if (_debug) {
             System.out.println(msg);
         }
@@ -45,7 +45,7 @@ public class Debug {
     /**
      * Write exception text to message output destination.
      */
-    public static void printStackTrace(Exception e) {
+    public static void printStackTrace(final Exception e) {
         e.printStackTrace();
     }
 }

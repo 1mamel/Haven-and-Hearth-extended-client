@@ -28,6 +28,7 @@ package haven;
 
 import haven.scriptengine.InventoryExt;
 import haven.scriptengine.providers.UIProvider;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.awt.font.TextAttribute;
@@ -66,7 +67,7 @@ public class CharWnd extends Window {
 
     static {
         Widget.addtype("chr", new WidgetFactory() {
-            public Widget create(Coord c, Widget parent, Object[] args) {
+            public Widget create(final Coord c, final Widget parent, final Object[] args) {
                 int studyid = -1;
                 if (args.length > 0)
                     studyid = (Integer) args[0];
@@ -79,7 +80,7 @@ public class CharWnd extends Window {
         final String name;
         final Glob.CAttr attr;
 
-        Attr(String name) {
+        Attr(final String name) {
             this.name = name;
             attr = ui.sess.glob.cattr.get(name);
             attrs.put(name, this);
@@ -89,7 +90,7 @@ public class CharWnd extends Window {
         public void update() {
         }
 
-        public void update(Observable attrslen, Object uudata) {
+        public void update(final Observable attrslen, final Object uudata) {
             update();
         }
 
@@ -112,11 +113,11 @@ public class CharWnd extends Window {
         final BufferedImage rbd = Resource.loadimg("gfx/hud/charsh/rightdown");
         final BufferedImage rbg = Resource.loadimg("gfx/hud/charsh/rightgrey");
 
-        Belief(String name, String left, String right, boolean inv, int x, int y) {
+        Belief(final String name, final String left, final String right, final boolean inv, final int x, int y) {
             super(name);
             this.inv = inv;
             lx = x;
-            Label lbl = new Label(new Coord(x, y), belief, String.format("%s / %s", Utils.titlecase(left), Utils.titlecase(right)));
+            final Label lbl = new Label(new Coord(x, y), belief, String.format("%s / %s", Utils.titlecase(left), Utils.titlecase(right)));
             lbl.c = new Coord(72 + x - (lbl.sz.x / 2), y);
             y += 15;
             new Img(new Coord(x, y), Resource.loadtex("gfx/hud/charsh/" + left), belief);
@@ -166,7 +167,7 @@ public class CharWnd extends Window {
     class NAttr extends Attr {
         final Label lbl;
 
-        NAttr(String name, int x, int y) {
+        NAttr(final String name, final int x, final int y) {
             super(name);
             this.lbl = new Label(new Coord(x, y), cattr, "0");
             update();
@@ -198,7 +199,7 @@ public class CharWnd extends Window {
 
     private void updexp() {
         int cost = 0;
-        for (Attr attr : attrs.values()) {
+        for (final Attr attr : attrs.values()) {
             if (attr instanceof SAttr)
                 cost += ((SAttr) attr).cost;
         }
@@ -214,7 +215,7 @@ public class CharWnd extends Window {
         int tvalb, tvalc;
         int cost;
 
-        SAttr(String nm, int x, int y) {
+        SAttr(final String nm, final int x, final int y) {
             super(nm, x, y);
             tvalb = attr.base;
             tvalc = attr.comp;
@@ -224,7 +225,7 @@ public class CharWnd extends Window {
                     upd();
                 }
 
-                public boolean mousewheel(Coord c, int a) {
+                public boolean mousewheel(final Coord c, final int a) {
                     if (a < 0)
                         inc();
                     else
@@ -239,7 +240,7 @@ public class CharWnd extends Window {
                     upd();
                 }
 
-                public boolean mousewheel(Coord c, int a) {
+                public boolean mousewheel(final Coord c, final int a) {
                     if (a < 0)
                         inc();
                     else
@@ -290,11 +291,11 @@ public class CharWnd extends Window {
     }
 
     private class BTimer extends Widget {
-        BTimer(Coord c, Widget parent) {
+        BTimer(final Coord c, final Widget parent) {
             super(c, btimeoff.sz(), parent);
         }
 
-        public void draw(GOut g) {
+        public void draw(final GOut g) {
             if (btime > 0) {
                 g.image(btimeoff, Coord.z);
             } else {
@@ -302,7 +303,7 @@ public class CharWnd extends Window {
             }
         }
 
-        public Object tooltip(Coord c, boolean again) {
+        public Object tooltip(final Coord c, final boolean again) {
             if (btime == 0) {
                 return "It's time to choose!";
             } else if (btime < 3600) {
@@ -322,18 +323,18 @@ public class CharWnd extends Window {
             final int amount;
             final Color col;
 
-            El(String id, int amount, Color col) {
+            El(final String id, final int amount, final Color col) {
                 this.id = id;
                 this.amount = amount;
                 this.col = col;
             }
         }
 
-        FoodMeter(Coord c, Widget parent) {
+        FoodMeter(final Coord c, final Widget parent) {
             super(c, foodmimg.sz(), parent);
         }
 
-        public void draw(GOut g) {
+        public void draw(final GOut g) {
             g.chcolor(Color.BLACK);
             g.frect(new Coord(4, 4), sz.add(-8, -8));
             g.chcolor(255, 255, 255, 128);
@@ -341,8 +342,8 @@ public class CharWnd extends Window {
             g.chcolor();
             synchronized (els) {
                 int x = 4;
-                for (El el : els) {
-                    int w = (174 * el.amount) / cap;
+                for (final El el : els) {
+                    final int w = (174 * el.amount) / cap;
                     g.chcolor(el.col);
                     g.frect(x, 4, w, 24);
                     x += w;
@@ -355,15 +356,15 @@ public class CharWnd extends Window {
             super.draw(g);
         }
 
-        public void update(Object... args) {
+        public void update(final Object... args) {
             cap = (Integer) args[0];
             int sum = 0;
             synchronized (els) {
                 els.clear();
                 for (int i = 1; i < args.length; i += 3) {
-                    String id = (String) args[i];
-                    int amount = (Integer) args[i + 1];
-                    Color col = (Color) args[i + 2];
+                    final String id = (String) args[i];
+                    final int amount = (Integer) args[i + 1];
+                    final Color col = (Color) args[i + 2];
                     els.add(new El(id, amount, col));
                     sum += amount;
                 }
@@ -371,8 +372,8 @@ public class CharWnd extends Window {
             if (els.isEmpty()) {
                 tooltip = String.format("0 of %.1f", cap / 10.0);
             } else {
-                StringBuilder tt = new StringBuilder();
-                for (El el : els)
+                final StringBuilder tt = new StringBuilder();
+                for (final El el : els)
                     tt.append(String.format("%.1f %s + ", el.amount / 10.0, el.id));
                 tt.delete(tt.length() - 3, tt.length());
                 tooltip = String.format("(%s) = %.1f of %.1f", tt.toString(), sum / 10.0, cap / 10.0);
@@ -383,13 +384,13 @@ public class CharWnd extends Window {
     private static class SkillInfo extends RichTextBox {
         Resource cur = null;
 
-        SkillInfo(Coord c, Coord sz, Widget parent) {
+        SkillInfo(final Coord c, final Coord sz, final Widget parent) {
             super(c, sz, parent, "", skbodfnd);
         }
 
-        public void draw(GOut g) {
+        public void draw(final GOut g) {
             if ((cur != null) && !cur.loading.get()) {
-                StringBuilder text = new StringBuilder();
+                final StringBuilder text = new StringBuilder();
                 text.append("$img[").append(cur.name).append("]\n\n");
                 text.append("$font[serif,16]{").append(cur.layer(Resource.tooltip).t).append("}\n\n");
                 text.append(cur.layer(Resource.pagina).text);
@@ -399,7 +400,7 @@ public class CharWnd extends Window {
             super.draw(g);
         }
 
-        public void setsk(Resource sk) {
+        public void setsk(final Resource sk) {
             cur = sk;
             settext("");
         }
@@ -412,7 +413,7 @@ public class CharWnd extends Window {
         Text numen;
         final Tex img;
 
-        Worship(Coord c, Widget parent, String title, Tex img) {
+        Worship(final Coord c, final Widget parent, final String title, final Tex img) {
             super(c, new Coord(100, 200), parent);
             canhastrash = false;
             this.title = Text.render(title);
@@ -426,24 +427,24 @@ public class CharWnd extends Window {
             };
         }
 
-        public void draw(GOut g) {
+        public void draw(final GOut g) {
             g.image(title.tex(), new Coord(50 - (title.tex().sz().x / 2), 0));
             g.image(img, new Coord(50 - (img.sz().x / 2), 15));
-            Coord nmc = new Coord(50 - (nmeter.sz().x / 2), 100);
+            final Coord nmc = new Coord(50 - (nmeter.sz().x / 2), 100);
             g.image(nmeter, nmc);
             g.image(numen.tex(), nmc.add(18, 16 - numen.tex().sz().y));
             super.draw(g);
         }
 
-        public void wish(int i, Indir<Resource> res, int amount) {
-            InventoryExt.InvItem item = wishes.getItem(Coord.z.add(i, 0));
+        public void wish(final int i, final Indir<Resource> res, final int amount) {
+            final InventoryExt.InvItem item = wishes.getItem(Coord.z.add(i, 0));
             if (item != null) {
                 item.destroy();
             }
             wishes.new InvItem(Coord.z.add(1 + i * 31, 1), res, -1, wishes, null, amount);
         }
 
-        public void numen(int n) {
+        public void numen(final int n) {
             this.numen = Text.render(Integer.toString(n));
         }
     }
@@ -455,8 +456,9 @@ public class CharWnd extends Window {
         List<Resource> skills = new ArrayList<Resource>();
         final Map<Resource, Integer> costs = new HashMap<Resource, Integer>();
         final Comparator<Resource> rescomp = new Comparator<Resource>() {
-            public int compare(Resource a, Resource b) {
-                String an, bn;
+            public int compare(final Resource a, final Resource b) {
+                final String an;
+                final String bn;
                 if (a.loading.get())
                     an = a.name;
                 else
@@ -469,7 +471,7 @@ public class CharWnd extends Window {
             }
         };
 
-        SkillList(Coord c, Coord sz, Widget parent) {
+        SkillList(final Coord c, final Coord sz, final Widget parent) {
             super(c, sz, parent);
             h = sz.y / 20;
             sel = -1;
@@ -479,7 +481,7 @@ public class CharWnd extends Window {
             };
         }
 
-        public void draw(GOut g) {
+        public void draw(final GOut g) {
             Collections.sort(skills, rescomp);
             g.chcolor(Color.BLACK);
             g.frect(Coord.z, sz);
@@ -487,7 +489,7 @@ public class CharWnd extends Window {
             for (int i = 0; i < h; i++) {
                 if (i + sb.val >= skills.size())
                     continue;
-                Resource sk = skills.get(i + sb.val);
+                final Resource sk = skills.get(i + sb.val);
                 if (i + sb.val == sel) {
                     g.chcolor(255, 255, 0, 128);
                     g.frect(0, i * 20, sz.x, 20);
@@ -507,9 +509,9 @@ public class CharWnd extends Window {
             super.draw(g);
         }
 
-        public void pop(Collection<Resource> nsk) {
-            List<Resource> skills = new ArrayList<Resource>();
-            for (Resource res : nsk)
+        public void pop(final Collection<Resource> nsk) {
+            final List<Resource> skills = new ArrayList<Resource>();
+            for (final Resource res : nsk)
                 skills.add(res);
             sb.val = 0;
             sb.max = skills.size() - h;
@@ -517,12 +519,12 @@ public class CharWnd extends Window {
             this.skills = skills;
         }
 
-        public boolean mousewheel(Coord c, int amount) {
+        public boolean mousewheel(final Coord c, final int amount) {
             sb.ch(amount);
             return (true);
         }
 
-        public int getcost(Resource sk) {
+        public int getcost(final Resource sk) {
             synchronized (costs) {
                 if (costs.get(sk) == null)
                     return (0);
@@ -531,7 +533,7 @@ public class CharWnd extends Window {
             }
         }
 
-        public boolean mousedown(Coord c, int button) {
+        public boolean mousedown(final Coord c, final int button) {
             if (super.mousedown(c, button))
                 return (true);
             if (button == 1) {
@@ -544,7 +546,7 @@ public class CharWnd extends Window {
             return (false);
         }
 
-        public void changed(Resource sk) {
+        public void changed(final Resource sk) {
         }
 
         public void unsel() {
@@ -553,10 +555,10 @@ public class CharWnd extends Window {
     }
 
     private void buysattrs() {
-        ArrayList<Object> args = new ArrayList<Object>();
-        for (Attr attr : attrs.values()) {
+        final ArrayList<Object> args = new ArrayList<Object>();
+        for (final Attr attr : attrs.values()) {
             if (attr instanceof SAttr) {
-                SAttr sa = (SAttr) attr;
+                final SAttr sa = (SAttr) attr;
                 args.add(sa.name);
                 args.add(sa.tvalb);
             }
@@ -569,19 +571,19 @@ public class CharWnd extends Window {
             wdgmsg("buy", nsk.skills.get(nsk.sel).basename());
     }
 
-    private void baseval(int y, String id, String nm) {
+    private void baseval(final int y, final String id, final String nm) {
         new Img(new Coord(10, y), Resource.loadtex("gfx/hud/charsh/" + id), cattr);
         new Label(new Coord(30, y), cattr, nm + ':');
         new NAttr(id, 100, y);
     }
 
-    private void skillval(int y, String id, String nm) {
+    private void skillval(final int y, final String id, final String nm) {
         new Img(new Coord(210, y), Resource.loadtex("gfx/hud/charsh/" + id), cattr);
         new Label(new Coord(230, y), cattr, nm + ':');
         new SAttr(id, 320, y);
     }
 
-    private CharWnd(Coord c, Widget parent, int studyid) {
+    private CharWnd(final Coord c, final Widget parent, final int studyid) {
         super(c, new Coord(400, 340), parent, "Character Sheet", true, false);
         instance.set(this);
         int y;
@@ -598,7 +600,7 @@ public class CharWnd extends Window {
         baseval(y += 15, "psy", "Psyche");
         foodm = new FoodMeter(new Coord(10, 180), cattr);
 
-        int expbase = 220;
+        final int expbase = 220;
         new Label(new Coord(210, expbase), cattr, "Cost:");
         cost = new Label(new Coord(300, expbase), cattr, "0");
         new Label(new Coord(210, expbase + 15), cattr, "Learning Points:");
@@ -639,7 +641,7 @@ public class CharWnd extends Window {
         ski = new SkillInfo(new Coord(10, 10), new Coord(180, 260), skill);
         new Label(new Coord(210, 10), skill, "Available Skills:");
         nsk = new SkillList(new Coord(210, 25), new Coord(180, 100), skill) {
-            public void changed(Resource sk) {
+            public void changed(final Resource sk) {
                 psk.unsel();
                 skcost.settext("Cost: " + nsk.getcost(sk));
                 ski.setsk(sk);
@@ -653,7 +655,7 @@ public class CharWnd extends Window {
         skcost = new Label(new Coord(300, 130), skill, "Cost: N/A");
         new Label(new Coord(210, 155), skill, "Current Skills:");
         psk = new SkillList(new Coord(210, 170), new Coord(180, 100), skill) {
-            public void changed(Resource sk) {
+            public void changed(final Resource sk) {
                 nsk.unsel();
                 skcost.settext("Cost: N/A");
                 ski.setsk(sk);
@@ -721,7 +723,7 @@ public class CharWnd extends Window {
         hide();
     }
 
-    public void uimsg(String msg, Object... args) {
+    public void uimsg(@NotNull final String msg, final Object... args) {
         if (msg.equals("exp")) {
             exp = (Integer) args[0];
             updexp();
@@ -730,10 +732,10 @@ public class CharWnd extends Window {
         } else if (msg.equals("reset")) {
             updexp();
         } else if (msg.equals("nsk")) {
-            Collection<Resource> skl = new LinkedList<Resource>();
+            final Collection<Resource> skl = new LinkedList<Resource>();
             for (int i = 0; i < args.length; i += 2) {
-                Resource res = Resource.load("gfx/hud/skills/" + args[i]);
-                int cost = (Integer) args[i + 1];
+                final Resource res = Resource.load("gfx/hud/skills/" + args[i]);
+                final int cost = (Integer) args[i + 1];
                 skl.add(res);
                 synchronized (nsk.costs) {
                     nsk.costs.put(res, cost);
@@ -741,9 +743,9 @@ public class CharWnd extends Window {
             }
             nsk.pop(skl);
         } else if (msg.equals("psk")) {
-            Collection<Resource> skl = new LinkedList<Resource>();
-            for (Object arg : args) {
-                Resource res = Resource.load("gfx/hud/skills/" + arg);
+            final Collection<Resource> skl = new LinkedList<Resource>();
+            for (final Object arg : args) {
+                final Resource res = Resource.load("gfx/hud/skills/" + arg);
                 skl.add(res);
             }
             psk.pop(skl);
@@ -755,15 +757,15 @@ public class CharWnd extends Window {
                 onBeliefsAvaliable();
             }
         } else if (msg.equals("wish")) {
-            int ent = (Integer) args[0];
-            int wish = (Integer) args[1];
-            int resid = (Integer) args[2];
-            int amount = (Integer) args[3];
+            final int ent = (Integer) args[0];
+            final int wish = (Integer) args[1];
+            final int resid = (Integer) args[2];
+            final int amount = (Integer) args[3];
             if (ent == 0)
                 ancw.wish(wish, ui.sess.getres(resid), amount);
         } else if (msg.equals("numen")) {
-            int ent = (Integer) args[0];
-            int numen = (Integer) args[1];
+            final int ent = (Integer) args[0];
+            final int numen = (Integer) args[1];
             if (ent == 0)
                 ancw.numen(numen);
         }
@@ -774,7 +776,7 @@ public class CharWnd extends Window {
     }
 
 
-    public boolean type(char key, java.awt.event.KeyEvent ev) {
+    public boolean type(final char key, final java.awt.event.KeyEvent ev) {
         if (key == 27) {
             toggle();
             return (true);
@@ -782,7 +784,7 @@ public class CharWnd extends Window {
         return (super.type(key, ev));
     }
 
-    public void wdgmsg(Widget sender, String msg, Object... args) {
+    public void wdgmsg(final Widget sender, final String msg, final Object... args) {
         if (checkIsCloseButton(sender)) {
             hide();
             return;
@@ -800,7 +802,7 @@ public class CharWnd extends Window {
 
     public void destroy() {
         instance.compareAndSet(this, null);
-        for (Attr attr : attrs.values())
+        for (final Attr attr : attrs.values())
             attr.destroy();
         super.destroy();
     }

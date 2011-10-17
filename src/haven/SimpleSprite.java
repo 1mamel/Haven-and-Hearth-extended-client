@@ -34,15 +34,15 @@ public class SimpleSprite {
     public final Image img;
     public final Coord cc;
 
-    public SimpleSprite(Image img, Coord cc) {
+    public SimpleSprite(final Image img, final Coord cc) {
         this.img = img;
         this.cc = cc;
     }
 
-    public SimpleSprite(Resource res, int id, Coord cc) {
+    public SimpleSprite(final Resource res, final int id, final Coord cc) {
         find:
         {
-            for (haven.resources.layers.Image img : res.layers(Resource.imgc)) {
+            for (final haven.resources.layers.Image img : res.layers(Resource.imgc)) {
                 if (img.id == id) {
                     this.img = img;
                     break find;
@@ -53,20 +53,20 @@ public class SimpleSprite {
         this.cc = cc;
     }
 
-    public SimpleSprite(Resource res, int id) {
+    public SimpleSprite(final Resource res, final int id) {
         this(res, id, res.layer(Resource.negc).cc);
     }
 
-    public SimpleSprite(Resource res) {
+    public SimpleSprite(final Resource res) {
         this(res, -1);
     }
 
-    public final void draw(GOut g, Coord cc) {
+    public final void draw(final GOut g, final Coord cc) {
         g.image(img.tex(), cc.add(ul()));
     }
 
-    public final void draw(Graphics g, Coord cc) {
-        Coord c = cc.add(ul());
+    public final void draw(final Graphics g, final Coord cc) {
+        final Coord c = cc.add(ul());
         g.drawImage(img.img, c.x, c.y, null);
     }
 
@@ -82,7 +82,7 @@ public class SimpleSprite {
         c = c.sub(ul());
         if ((c.x < 0) || (c.y < 0) || (c.x >= img.sz.x) || (c.y >= img.sz.y))
             return (false);
-        int cl = img.img.getRGB(c.x, c.y);
+        final int cl = img.img.getRGB(c.x, c.y);
         return (Utils.rgbm.getAlpha(cl) >= 128);
     }
 }

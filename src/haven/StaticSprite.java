@@ -35,18 +35,18 @@ public class StaticSprite extends ImageSprite {
     private final Object id;
 
     public static final Factory fact = new Factory() {
-        public Sprite create(Owner owner, Resource res, Message sdt) {
+        public Sprite create(final Owner owner, final Resource res, final Message sdt) {
             if (res.layer(Resource.animc) != null)
                 return (null);
             return (new StaticSprite(owner, res, sdt));
         }
     };
 
-    private StaticSprite(Owner owner, Resource res, Message sdt) {
+    private StaticSprite(final Owner owner, final Resource res, final Message sdt) {
         super(owner, res, sdt);
-        Collection<Part> f = new LinkedList<Part>();
-        boolean[] flags = decflags(sdt);
-        for (Image img : res.layers(Resource.imgc)) {
+        final Collection<Part> f = new LinkedList<Part>();
+        final boolean[] flags = decflags(sdt);
+        for (final Image img : res.layers(Resource.imgc)) {
             if ((img.id < 0) || ((flags.length > img.id) && flags[img.id]))
                 f.add(new ImagePart(img));
         }

@@ -11,7 +11,7 @@ package haven;
 public class ResClassLoader extends ClassLoader {
     private Resource resource;
 
-    public ResClassLoader(ClassLoader parent, Resource res) {
+    public ResClassLoader(final ClassLoader parent, final Resource res) {
         super(parent);
         resource = res;
     }

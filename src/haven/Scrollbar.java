@@ -35,30 +35,30 @@ public class Scrollbar extends Widget {
     public int max;
     private boolean drag = false;
 
-    public Scrollbar(Coord c, int h, Widget parent, int min, int max) {
+    public Scrollbar(final Coord c, final int h, final Widget parent, final int min, final int max) {
         super(c.add(-sflarp.sz().x, 0), new Coord(sflarp.sz().x, h), parent);
         this.min = min;
         this.max = max;
         val = min;
     }
 
-    public void draw(GOut g) {
+    public void draw(final GOut g) {
         if (max > min) {
-            int cx = (sflarp.sz().x / 2) - (schain.sz().x / 2);
+            final int cx = (sflarp.sz().x / 2) - (schain.sz().x / 2);
             for (int y = 0; y < sz.y; y += schain.sz().y - 1)
                 g.image(schain, new Coord(cx, y));
-            double a = (double) val / (double) (max - min);
-            int fy = (int) ((sz.y - sflarp.sz().y) * a);
+            final double a = (double) val / (double) (max - min);
+            final int fy = (int) ((sz.y - sflarp.sz().y) * a);
             g.image(sflarp, new Coord(0, fy));
         }
     }
 
-    public boolean mousewheel(Coord c, int amount) {
+    public boolean mousewheel(final Coord c, final int amount) {
         val += val + amount >= min && val + amount <= max ? amount : 0;
         return true;
     }
 
-    public boolean mousedown(Coord c, int button) {
+    public boolean mousedown(final Coord c, final int button) {
         if (button != 1)
             return (false);
         if (max <= min)
@@ -69,7 +69,7 @@ public class Scrollbar extends Widget {
         return (true);
     }
 
-    public void mousemove(Coord c) {
+    public void mousemove(final Coord c) {
         if (drag) {
             double a = (double) (c.y - (sflarp.sz().y / 2)) / (double) (sz.y - sflarp.sz().y);
             if (a < 0)
@@ -81,7 +81,7 @@ public class Scrollbar extends Widget {
         }
     }
 
-    public boolean mouseup(Coord c, int button) {
+    public boolean mouseup(final Coord c, final int button) {
         if (button != 1)
             return (false);
         if (!drag)
@@ -94,7 +94,7 @@ public class Scrollbar extends Widget {
     public void changed() {
     }
 
-    public void ch(int a) {
+    public void ch(final int a) {
         int val = this.val + a;
         if (val > max)
             val = max;

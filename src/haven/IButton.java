@@ -37,13 +37,13 @@ public class IButton extends SSWidget {
 
     static {
         Widget.addtype("ibtn", new WidgetFactory() {
-            public Widget create(Coord c, Widget parent, Object[] args) {
+            public Widget create(final Coord c, final Widget parent, final Object[] args) {
                 return (new IButton(c, parent, Resource.loadimg((String) args[0]), Resource.loadimg((String) args[1])));
             }
         });
     }
 
-    public IButton(Coord c, Widget parent, BufferedImage up, BufferedImage down, BufferedImage hover) {
+    public IButton(final Coord c, final Widget parent, final BufferedImage up, final BufferedImage down, final BufferedImage hover) {
         super(c, Utils.imgsz(up), parent);
         this.up = up;
         this.down = down;
@@ -51,7 +51,7 @@ public class IButton extends SSWidget {
         render();
     }
 
-    public IButton(Coord c, Widget parent, BufferedImage[] images) {
+    public IButton(final Coord c, final Widget parent, final BufferedImage[] images) {
         super(c, Utils.imgsz(images[0]), parent);
         this.up = images[0];
         this.down = images[1];
@@ -63,13 +63,13 @@ public class IButton extends SSWidget {
         render();
     }
 
-    public IButton(Coord c, Widget parent, BufferedImage up, BufferedImage down) {
+    public IButton(final Coord c, final Widget parent, final BufferedImage up, final BufferedImage down) {
         this(c, parent, up, down, up);
     }
 
     public void render() {
         clear();
-        Graphics g = graphics();
+        final Graphics g = graphics();
         if (a)
             g.drawImage(down, 0, 0, null);
         else if (h)
@@ -79,9 +79,9 @@ public class IButton extends SSWidget {
         update();
     }
 
-    public boolean checkhit(Coord c) {
+    public boolean checkhit(final Coord c) {
         if (recthit) return true;
-        int cl = up.getRGB(c.x, c.y);
+        final int cl = up.getRGB(c.x, c.y);
         return (Utils.rgbm.getAlpha(cl) >= 128);
     }
 
@@ -89,7 +89,7 @@ public class IButton extends SSWidget {
         wdgmsg("activate");
     }
 
-    public boolean mousedown(Coord c, int button) {
+    public boolean mousedown(final Coord c, final int button) {
         if (button != 1)
             return (false);
         if (!checkhit(c))
@@ -100,7 +100,7 @@ public class IButton extends SSWidget {
         return (true);
     }
 
-    public boolean mouseup(Coord c, int button) {
+    public boolean mouseup(final Coord c, final int button) {
         if (a && button == 1) {
             a = false;
             ui.ungrabmouse();
@@ -112,8 +112,8 @@ public class IButton extends SSWidget {
         return (false);
     }
 
-    public void mousemove(Coord c) {
-        boolean h = c.isect(Coord.z, sz);
+    public void mousemove(final Coord c) {
+        final boolean h = c.isect(Coord.z, sz);
         if (h != this.h) {
             this.h = h;
             render();

@@ -44,7 +44,7 @@ public class Buff {
     Tex ntext = null;
     boolean major = false;
 
-    public Buff(int id, Indir<Resource> res) {
+    public Buff(final int id, final Indir<Resource> res) {
         this.id = id;
         this.res = res;
     }
@@ -58,7 +58,7 @@ public class Buff {
     // arksu 19.12.2010 lets rock it!
     // получить тул тип в виде текста
     public String getName() {
-        Tooltip tt;
+        final Tooltip tt;
         if ((res.get() != null) && ((tt = res.get().layer(Resource.tooltip)) != null)) {
             return tt.t;
         } else {
@@ -69,11 +69,11 @@ public class Buff {
     // получить время до конца бафа от 0 до 100
     public int getTimeLeft() {
         if (cmeter >= 0) {
-            long now = System.currentTimeMillis();
+            final long now = System.currentTimeMillis();
             double m = cmeter / 100.0;
             if (cticks >= 0) {
-                double ot = cticks * 0.06;
-                double pt = ((double) (now - gettime)) / 1000.0;
+                final double ot = cticks * 0.06;
+                final double pt = ((double) (now - gettime)) / 1000.0;
                 m *= (ot - pt) / ot;
             }
             return (int) Math.round(m * 100);

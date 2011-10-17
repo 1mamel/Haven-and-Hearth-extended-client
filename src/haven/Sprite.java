@@ -46,7 +46,7 @@ public abstract class Sprite {
     }
 
     public static final Comparator<Part> partcmp = new Comparator<Part>() {
-        public int compare(Part a, Part b) {
+        public int compare(final Part a, final Part b) {
             if (a.z != b.z)
                 return (a.z - b.z);
             if (a.cc.y != b.cc.y)
@@ -59,7 +59,7 @@ public abstract class Sprite {
         private int eid = 0;
         private Map<Part, Integer> emergency = null;
 
-        public int compare(Part a, Part b) {
+        public int compare(final Part a, final Part b) {
             int c = partcmp.compare(a, b);
             if (c != 0)
                 return (c);
@@ -72,7 +72,8 @@ public abstract class Sprite {
                 System.err.println("Could not impose ordering on distinct sprite parts, invoking emergency protocol!");
                 emergency = new IdentityHashMap<Part, Integer>();
             }
-            int ai, bi;
+            final int ai;
+            final int bi;
             if (emergency.containsKey(a))
                 ai = emergency.get(a);
             else
@@ -99,7 +100,7 @@ public abstract class Sprite {
         public FactMaker() {
         }
 
-        public Factory make(Class<?> cl) throws InstantiationException, IllegalAccessException {
+        public Factory make(final Class<?> cl) throws InstantiationException, IllegalAccessException {
             if (Factory.class.isAssignableFrom(cl))
                 return (cl.asSubclass(Factory.class).newInstance());
             if (Sprite.class.isAssignableFrom(cl))
@@ -116,19 +117,19 @@ public abstract class Sprite {
     public static class DynFactory implements Factory {
         private final Class<? extends Sprite> cl;
 
-        public DynFactory(Class<? extends Sprite> cl) {
+        public DynFactory(final Class<? extends Sprite> cl) {
             this.cl = cl;
         }
 
-        public Sprite create(Owner owner, Resource res, Message sdt) {
+        public Sprite create(final Owner owner, final Resource res, final Message sdt) {
             try {
                 try {
-                    Constructor<? extends Sprite> m = cl.getConstructor(Owner.class, Resource.class);
+                    final Constructor<? extends Sprite> m = cl.getConstructor(Owner.class, Resource.class);
                     return (m.newInstance(owner, res));
                 } catch (NoSuchMethodException ignored) {
                 }
                 try {
-                    Constructor<? extends Sprite> m = cl.getConstructor(Owner.class, Resource.class, Message.class);
+                    final Constructor<? extends Sprite> m = cl.getConstructor(Owner.class, Resource.class, Message.class);
                     return (m.newInstance(owner, res, sdt));
                 } catch (NoSuchMethodException ignored) {
                 }
@@ -156,12 +157,12 @@ public abstract class Sprite {
             public GOut apply(GOut in);
         }
 
-        public Part(int z) {
+        public Part(final int z) {
             this.z = z;
             this.subz = 0;
         }
 
-        public Part(int z, int subz) {
+        public Part(final int z, final int subz) {
             this.z = z;
             this.subz = subz;
         }
@@ -170,12 +171,12 @@ public abstract class Sprite {
             return (cc.add(off));
         }
 
-        public void setup(Coord cc, Coord off) {
+        public void setup(final Coord cc, final Coord off) {
             ul = lr = this.cc = cc;
             this.off = off;
         }
 
-        public boolean checkhit(Coord c) {
+        public boolean checkhit(final Coord c) {
             return (false);
         }
 
@@ -183,33 +184,33 @@ public abstract class Sprite {
 
         public abstract void draw(GOut g);
 
-        public void drawol(GOut g) {
+        public void drawol(final GOut g) {
         }
     }
 
     public static class ResourceException extends RuntimeException {
         public final Resource res;
 
-        public ResourceException(String msg, Resource res) {
+        public ResourceException(final String msg, final Resource res) {
             super(msg + " (" + res + ", from " + res.source + ')');
             this.res = res;
         }
 
-        public ResourceException(String msg, Throwable cause, Resource res) {
+        public ResourceException(final String msg, final Throwable cause, final Resource res) {
             super(msg + " (" + res + ", from " + res.source + ')', cause);
             this.res = res;
         }
     }
 
-    protected Sprite(Owner owner, Resource res) {
+    protected Sprite(final Owner owner, final Resource res) {
         this.res = res;
         this.owner = owner;
     }
 
-    public static Sprite create(Owner owner, Resource res, Message sdt) {
+    public static Sprite create(final Owner owner, final Resource res, final Message sdt) {
         if (res.loading.get())
             throw (new RuntimeException("Attempted to create sprite on still loading resource"));
-        CodeEntry e = res.layer(CodeEntry.class);
+        final CodeEntry e = res.layer(CodeEntry.class);
         if (e != null) {
             try {
                 return (e.get(Factory.class).create(owner, res, sdt));
@@ -217,8 +218,8 @@ public abstract class Sprite {
                 throw (new ResourceException("Error in sprite creation routine for " + res, exc, res));
             }
         }
-        for (Factory f : factories) {
-            Sprite ret = f.create(owner, res, sdt);
+        for (final Factory f : factories) {
+            final Sprite ret = f.create(owner, res, sdt);
             if (ret != null)
                 return (ret);
         }
@@ -229,14 +230,14 @@ public abstract class Sprite {
 
     public abstract void setup(Drawer d, Coord cc, Coord off);
 
-    public boolean tick(int dt) {
+    public boolean tick(final int dt) {
         return (false);
     }
 
     public abstract Object stateid();
 
-    public static void setup(Collection<? extends Part> parts, Drawer d, Coord cc, Coord off) {
-        for (Part p : parts) {
+    public static void setup(final Collection<? extends Part> parts, final Drawer d, final Coord cc, final Coord off) {
+        for (final Part p : parts) {
             p.setup(cc, off);
             d.addpart(p);
         }

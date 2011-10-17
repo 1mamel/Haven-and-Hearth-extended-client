@@ -12,7 +12,7 @@ public class MinimapPanel extends Window {
     MiniMap mm;
     IButton btncave;
 
-    public MinimapPanel(Coord c, Coord sz, Widget parent) {
+    public MinimapPanel(final Coord c, final Coord sz, final Widget parent) {
         super(c, sz, parent, "Minimap");
         mrgn = Coord.z;
         foldButton.visible = true;
@@ -22,8 +22,8 @@ public class MinimapPanel extends Window {
                 private boolean v = false;
 
                 public void click() {
-                    MapView mv = ui.mainview;
-                    BufferedImage tmp = down;
+                    final MapView mv = ui.mainview;
+                    final BufferedImage tmp = down;
                     down = up;
                     up = tmp;
                     hover = tmp;
@@ -42,8 +42,8 @@ public class MinimapPanel extends Window {
                 private boolean v = false;
 
                 public void click() {
-                    MapView mv = ui.mainview;
-                    BufferedImage tmp = down;
+                    final MapView mv = ui.mainview;
+                    final BufferedImage tmp = down;
                     down = up;
                     up = tmp;
                     hover = tmp;
@@ -62,7 +62,7 @@ public class MinimapPanel extends Window {
 
         new IButton(new Coord(45, 8), this, Resource.loadimg("gfx/hud/buttons/gridu"), Resource.loadimg("gfx/hud/buttons/gridd")) {
             public void click() {
-                BufferedImage tmp = down;
+                final BufferedImage tmp = down;
                 down = up;
                 up = tmp;
                 hover = tmp;
@@ -111,14 +111,14 @@ public class MinimapPanel extends Window {
         //fbtn.c = new Coord(cbtn.c.x - 1 - Utils.imgsz(fbtni[0]).x, cbtn.c.y);
     }
 
-    public void draw(GOut g) {
+    public void draw(final GOut g) {
         super.draw(g);
         btncave.visible = !folded && mm.isCave();
         if (!folded)
             g.image(grip, sz.sub(gzsz));
     }
 
-    public boolean mousedown(Coord c, int button) {
+    public boolean mousedown(final Coord c, final int button) {
         if (folded) {
             return super.mousedown(c, button);
         }
@@ -135,7 +135,7 @@ public class MinimapPanel extends Window {
         return super.mousedown(c, button);
     }
 
-    public boolean mouseup(Coord c, int button) {
+    public boolean mouseup(final Coord c, final int button) {
 	if(dm){
 	    Config.setWindowOpt("minimap_pos", this.c.toString());
 	}
@@ -149,9 +149,9 @@ public class MinimapPanel extends Window {
         return (true);
     }
 
-    public void mousemove(Coord c) {
+    public void mousemove(final Coord c) {
         if (rsm) {
-            Coord d = c.sub(doff);
+            final Coord d = c.sub(doff);
             mm.sz = mm.sz.add(d);
             mm.sz.setX(Math.max(minsz.x, mm.sz.x));
             mm.sz.setY(Math.max(minsz.y, mm.sz.y));
@@ -162,7 +162,7 @@ public class MinimapPanel extends Window {
         }
     }
 
-    public boolean type(char key, java.awt.event.KeyEvent ev) {
+    public boolean type(final char key, final java.awt.event.KeyEvent ev) {
         if (key == 27) {
             wdgmsg(foldButton, "click");
             return (true);

@@ -81,18 +81,18 @@ public class HackSocket extends Socket {
     }
 
     private void hook() {
-        Thread ct = Thread.currentThread();
+        final Thread ct = Thread.currentThread();
         if (!(ct instanceof HackThread))
             throw (new RuntimeException("Tried to use an HackSocket on a non-hacked thread."));
         final HackThread ut = (HackThread) ct;
-        InterruptAction ia = new InterruptAction();
+        final InterruptAction ia = new InterruptAction();
         ut.addil(ia);
         this.ia.set(ia);
     }
 
     private void release() throws ClosedByInterruptException {
-        HackThread ut = (HackThread) Thread.currentThread();
-        InterruptAction ia = this.ia.get();
+        final HackThread ut = (HackThread) Thread.currentThread();
+        final InterruptAction ia = this.ia.get();
         if (ia == null)
             throw (new Error("Tried to release a hacked thread without an interrupt handler."));
         ut.remil(ia);
@@ -102,7 +102,7 @@ public class HackSocket extends Socket {
         }
     }
 
-    public void connect(SocketAddress address, int timeout) throws IOException {
+    public void connect(final SocketAddress address, final int timeout) throws IOException {
         hook();
         try {
             super.connect(address, timeout);
@@ -111,14 +111,14 @@ public class HackSocket extends Socket {
         }
     }
 
-    public void connect(SocketAddress address) throws IOException {
+    public void connect(final SocketAddress address) throws IOException {
         connect(address, 0);
     }
 
     private class HackInputStream extends InputStream {
         private final InputStream bk;
 
-        private HackInputStream(InputStream bk) {
+        private HackInputStream(final InputStream bk) {
             this.bk = bk;
         }
 
@@ -135,7 +135,7 @@ public class HackSocket extends Socket {
             }
         }
 
-        public int read(byte[] buf) throws IOException {
+        public int read(final byte[] buf) throws IOException {
             hook();
             try {
                 return (bk.read(buf));
@@ -144,7 +144,7 @@ public class HackSocket extends Socket {
             }
         }
 
-        public int read(byte[] buf, int off, int len) throws IOException {
+        public int read(final byte[] buf, final int off, final int len) throws IOException {
             hook();
             try {
                 return (bk.read(buf, off, len));
@@ -157,7 +157,7 @@ public class HackSocket extends Socket {
     private class HackOutputStream extends OutputStream {
         private final OutputStream bk;
 
-        private HackOutputStream(OutputStream bk) {
+        private HackOutputStream(final OutputStream bk) {
             this.bk = bk;
         }
 
@@ -174,7 +174,7 @@ public class HackSocket extends Socket {
             }
         }
 
-        public void write(int b) throws IOException {
+        public void write(final int b) throws IOException {
             hook();
             try {
                 bk.write(b);
@@ -183,7 +183,7 @@ public class HackSocket extends Socket {
             }
         }
 
-        public void write(byte[] buf) throws IOException {
+        public void write(final byte[] buf) throws IOException {
             hook();
             try {
                 bk.write(buf);
@@ -192,7 +192,7 @@ public class HackSocket extends Socket {
             }
         }
 
-        public void write(byte[] buf, int off, int len) throws IOException {
+        public void write(final byte[] buf, final int off, final int len) throws IOException {
             hook();
             try {
                 bk.write(buf, off, len);

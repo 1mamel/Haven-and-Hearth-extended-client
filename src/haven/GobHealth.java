@@ -32,19 +32,19 @@ public class GobHealth extends GAttrib {
     final int hp;
     final HpFx fx = new HpFx();
 
-    public GobHealth(Gob g, int hp) {
+    public GobHealth(final Gob g, final int hp) {
         super(g);
         this.hp = hp;
     }
 
     private class HpFx implements Sprite.Part.Effect {
-        public GOut apply(GOut in) {
+        public GOut apply(final GOut in) {
             return (new GOut(in) {
                 {
                     chcolor();
                 }
 
-                public void chcolor(Color col) {
+                public void chcolor(final Color col) {
                     super.chcolor(Utils.blendcol(col, new Color(255, 0, 0, 128 - ((hp * 128) / 4))));
                 }
             });

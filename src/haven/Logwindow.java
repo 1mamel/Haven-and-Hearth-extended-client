@@ -26,13 +26,15 @@
 
 package haven;
 
+import org.jetbrains.annotations.NotNull;
+
 public class Logwindow extends HWindow {
     final Textlog log;
 
     static {
         Widget.addtype("outdated-slenlog", new WidgetFactory() {
-            public Widget create(Coord c, Widget parent, Object[] args) {
-                String t = (String) args[0];
+            public Widget create(final Coord c, final Widget parent, final Object[] args) {
+                final String t = (String) args[0];
                 boolean cl = false;
                 if (args.length > 1)
                     cl = (Integer) args[1] != 0;
@@ -41,12 +43,12 @@ public class Logwindow extends HWindow {
         });
     }
 
-    public Logwindow(Widget parent, String title, boolean closable) {
+    public Logwindow(final Widget parent, final String title, final boolean closable) {
         super(parent, title, closable);
         log = new Textlog(Coord.z, sz, this);
     }
 
-    public void uimsg(String name, Object... args) {
+    public void uimsg(@NotNull final String name, final Object... args) {
         if (name.equals("log")) {
             log.append((String) args[0]);
         } else {

@@ -26,6 +26,8 @@
 
 package haven;
 
+import org.jetbrains.annotations.NotNull;
+
 public class GiveButton extends Widget {
     public static final Tex bg = Resource.loadtex("gfx/hud/combat/knapp/knapp");
     public static final Tex ol = Resource.loadtex("gfx/hud/combat/knapp/ol");
@@ -36,22 +38,22 @@ public class GiveButton extends Widget {
 
     static {
         Widget.addtype("give", new WidgetFactory() {
-            public Widget create(Coord c, Widget parent, Object[] args) {
+            public Widget create(final Coord c, final Widget parent, final Object[] args) {
                 return (new GiveButton(c, parent, (Integer) args[0]));
             }
         });
     }
 
-    public GiveButton(Coord c, Widget parent, int state, Coord sz) {
+    public GiveButton(final Coord c, final Widget parent, final int state, final Coord sz) {
         super(c, sz, parent);
         this.state = state;
     }
 
-    public GiveButton(Coord c, Widget parent, int state) {
+    public GiveButton(final Coord c, final Widget parent, final int state) {
         this(c, parent, state, bg.sz());
     }
 
-    public void draw(GOut g) {
+    public void draw(final GOut g) {
         if (state == 0)
             g.chcolor(255, 192, 192, 255);
         else if (state == 1)
@@ -70,12 +72,12 @@ public class GiveButton extends Widget {
             g.image(sr, Coord.z, sz);
     }
 
-    public boolean mousedown(Coord c, int button) {
+    public boolean mousedown(final Coord c, final int button) {
         wdgmsg("click", button);
         return (true);
     }
 
-    public void uimsg(String name, Object... args) {
+    public void uimsg(@NotNull final String name, final Object... args) {
         if (name.equals("ch")) {
             this.state = (Integer) args[0];
         } else {

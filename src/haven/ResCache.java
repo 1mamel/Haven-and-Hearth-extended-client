@@ -50,13 +50,13 @@ public interface ResCache {
         public OutputStream store(final String name) {
             return (new ByteArrayOutputStream() {
                 public void close() {
-                    byte[] res = toByteArray();
+                    final byte[] res = toByteArray();
                     System.out.println(name + ": " + res.length);
                 }
             });
         }
 
-        public InputStream fetch(String name) throws IOException {
+        public InputStream fetch(final String name) throws IOException {
             throw (new FileNotFoundException());
         }
     }

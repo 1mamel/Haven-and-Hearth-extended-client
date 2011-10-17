@@ -46,13 +46,13 @@ public class ErrorHandler extends ThreadGroup {
     private final Map<String, Object> props = new HashMap<String, Object>();
     private final Reporter reporter;
 
-    public static void setprop(String key, Object val) {
-        ThreadGroup tg = Thread.currentThread().getThreadGroup();
+    public static void setprop(final String key, final Object val) {
+        final ThreadGroup tg = Thread.currentThread().getThreadGroup();
         if (tg instanceof ErrorHandler)
             ((ErrorHandler) tg).lsetprop(key, val);
     }
 
-    public void lsetprop(String key, Object val) {
+    public void lsetprop(final String key, final Object val) {
         props.put(key, val);
     }
 
@@ -60,7 +60,7 @@ public class ErrorHandler extends ThreadGroup {
         private final Queue<Report> errors = new LinkedList<Report>();
         private ErrorStatus status;
 
-        Reporter(ErrorStatus status) {
+        Reporter(final ErrorStatus status) {
             super(initial, "Error reporter");
             setDaemon(true);
             this.status = status;
@@ -86,28 +86,28 @@ public class ErrorHandler extends ThreadGroup {
             }
         }
 
-        private void doreport(Report r) throws IOException {
+        private void doreport(final Report r) throws IOException {
             if (!status.goterror(r.t))
                 return;
-            URLConnection c = errordest.openConnection();
+            final URLConnection c = errordest.openConnection();
             status.connecting();
             c.setDoOutput(true);
             c.addRequestProperty("Content-Type", "application/x-java-error");
             c.connect();
-            ObjectOutputStream o = new ObjectOutputStream(c.getOutputStream());
+            final ObjectOutputStream o = new ObjectOutputStream(c.getOutputStream());
             status.sending();
             o.writeObject(r);
             o.close();
-            InputStream i = c.getInputStream();
-            byte[] buf = new byte[1024];
+            final InputStream i = c.getInputStream();
+            final byte[] buf = new byte[1024];
             //noinspection StatementWithEmptyBody
             while (i.read(buf) >= 0) ;
             i.close();
             status.done();
         }
 
-        public void report(Thread th, Throwable t) {
-            Report r = new Report(t);
+        public void report(final Thread th, final Throwable t) {
+            final Report r = new Report(t);
             r.props.putAll(props);
             r.props.put("thnm", th.getName());
             r.props.put("thcl", th.getClass().getName());
@@ -122,17 +122,17 @@ public class ErrorHandler extends ThreadGroup {
     }
 
     private void defprops() {
-        for (String p : sysprops)
+        for (final String p : sysprops)
             props.put(p, System.getProperty(p));
-        Runtime rt = Runtime.getRuntime();
+        final Runtime rt = Runtime.getRuntime();
         props.put("cpus", rt.availableProcessors());
-        InputStream in = ErrorHandler.class.getResourceAsStream("/buildinfo");
+        final InputStream in = ErrorHandler.class.getResourceAsStream("/buildinfo");
         try {
             try {
                 if (in != null) {
-                    Properties info = new Properties();
+                    final Properties info = new Properties();
                     info.load(in);
-                    for (Map.Entry<Object, Object> e : info.entrySet())
+                    for (final Map.Entry<Object, Object> e : info.entrySet())
                         props.put("jar." + e.getKey(), e.getValue());
                 }
             } finally {
@@ -143,7 +143,7 @@ public class ErrorHandler extends ThreadGroup {
         }
     }
 
-    public ErrorHandler(ErrorStatus ui, URL errordest) {
+    public ErrorHandler(final ErrorStatus ui, final URL errordest) {
         super("Haven client");
         this.errordest = errordest;
         initial = Thread.currentThread().getThreadGroup();
@@ -152,15 +152,15 @@ public class ErrorHandler extends ThreadGroup {
         defprops();
     }
 
-    public ErrorHandler(URL errordest) {
+    public ErrorHandler(final URL errordest) {
         this(new ErrorStatus.Simple(), errordest);
     }
 
-    public void sethandler(ErrorStatus handler) {
+    public void sethandler(final ErrorStatus handler) {
         reporter.status = handler;
     }
 
-    public void uncaughtException(Thread t, Throwable e) {
+    public void uncaughtException(final Thread t, final Throwable e) {
         reporter.report(t, e);
     }
 }

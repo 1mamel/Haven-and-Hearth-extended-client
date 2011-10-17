@@ -97,7 +97,7 @@ public class InventoriesProvider {
     }
 
     // установить текущую вещь по индексу в списке
-    public static void useInventoryItem(int index) {
+    public static void useInventoryItem(final int index) {
         if (inventoryIter == null) {
             return; // TODO: throw something
         }
@@ -109,7 +109,7 @@ public class InventoriesProvider {
         currentItemMode = UIProvider.ItemMode.DRAGGING;
     }
 
-    public static void useEquipItem(int index) {
+    public static void useEquipItem(final int index) {
         currentItemMode = UIProvider.ItemMode.EQUIPORY;
         UIProvider.current_equip_index = index;
     }
@@ -129,23 +129,23 @@ public class InventoriesProvider {
         return null;
     }
 
-    public static boolean isCurrentItemNameContains(String name) {
-        Item i = getCurrentItem();
+    public static boolean isCurrentItemNameContains(final String name) {
+        final Item i = getCurrentItem();
         return i != null && i.getResName().contains(name);
     }
 
     public static String getCurrentItemName() {
-        Item i = getCurrentItem();
+        final Item i = getCurrentItem();
         return i == null ? "" : i.getResName();
     }
 
-    public static boolean isCurrentItemTooltipContains(String tt) {
-        Item i = getCurrentItem();
+    public static boolean isCurrentItemTooltipContains(final String tt) {
+        final Item i = getCurrentItem();
         return i != null && i.getTooltip().contains(tt);
     }
 
     public static String getCurrentItemTooltip() {
-        Item i = getCurrentItem();
+        final Item i = getCurrentItem();
         return i == null ? "" : i.getTooltip();
     }
 
@@ -153,7 +153,7 @@ public class InventoriesProvider {
      * @return current item quality or -1 if no item
      */
     public static int getCurrentItemQuality() {
-        Item i = getCurrentItem();
+        final Item i = getCurrentItem();
         if (i == null) {
             return -1;
         }
@@ -171,11 +171,11 @@ public class InventoriesProvider {
     }
 
     // кликнуть по вещи. с указанным типом действия
-    public static void clickItem(String action, int mod) {
+    public static void clickItem(final String action, final int mod) {
         if (action.equals("itemact") && !haveDragItem()) {
             return;
         }
-        Item i = getCurrentItem();
+        final Item i = getCurrentItem();
         if (i == null || !actions.contains(action)) {
             return;
         }
@@ -187,7 +187,7 @@ public class InventoriesProvider {
     }
 
     public static Coord getInventoryItemCoord() {
-        Item i = getCurrentItem();
+        final Item i = getCurrentItem();
         if (i == null) {
             return new Coord(-1, -1);
         }
@@ -195,7 +195,7 @@ public class InventoriesProvider {
     }
 
     public static int getItemQuantity() {
-        Item i = getCurrentItem();
+        final Item i = getCurrentItem();
         if (i == null) {
             return -1;
         }
@@ -203,28 +203,28 @@ public class InventoriesProvider {
     }
 
     public static int getItemMeter() {
-        Item i = getCurrentItem();
+        final Item i = getCurrentItem();
         if (i == null) {
             return -1;
         }
         return i.getCompletedPercent();
     }
 
-    public static boolean isCursorNameContains(String str) {
+    public static boolean isCursorNameContains(final String str) {
         return UI.cursorName != null && UI.cursorName.contains(str);
     }
 
     // дать команду вещи в инвентаре с указаныым именем. по указанным координатам вещи в этом инвентаре
-    public static void doInventoryAction(String name, int x, int y, String action, int mod) {
+    public static void doInventoryAction(final String name, final int x, final int y, final String action, final int mod) {
         if (!actions.contains(action)) {
             return; //TODO: say no such action
         }
 
-        InventoryExt inventory = InventoryExt.getInventory(name);
+        final InventoryExt inventory = InventoryExt.getInventory(name);
         if (inventory == null) {
             return; //TODO: say that no such inventory
         }
-        InventoryExt.InvItem item = inventory.getItem(new Coord(x, y));
+        final InventoryExt.InvItem item = inventory.getItem(new Coord(x, y));
         if (action.equals("itemact")) {
             item.wdgmsg("itemact", mod);
         } else {
@@ -233,7 +233,7 @@ public class InventoriesProvider {
     }
 
     // дропнуть вещь в текущий инвентарь
-    public static void dropItemIntoCurrentInventory(int x, int y) {
+    public static void dropItemIntoCurrentInventory(final int x, final int y) {
         if (currentInventory == null) {
             return; //TODO: throw something, say that no such inventory
         }
@@ -241,8 +241,8 @@ public class InventoriesProvider {
     }
 
     // дропнуть вещь в указанный инвентарь
-    public static void dropItemIntoInventory(String name, int x, int y) {
-        InventoryExt inventory = InventoryExt.getInventory(name);
+    public static void dropItemIntoInventory(final String name, final int x, final int y) {
+        final InventoryExt inventory = InventoryExt.getInventory(name);
         if (inventory == null) {
             return; //TODO: say that no such inventory
         }

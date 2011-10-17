@@ -50,7 +50,7 @@ public class HavenApplet extends Applet {
         private ErrorPanel() {
             setBackground(Color.BLACK);
             addMouseListener(new MouseAdapter() {
-                public void mouseClicked(MouseEvent e) {
+                public void mouseClicked(final MouseEvent e) {
                     if (ar && !running) {
                         HavenApplet.this.remove(ErrorPanel.this);
                         startgame();
@@ -59,7 +59,7 @@ public class HavenApplet extends Applet {
             });
         }
 
-        public boolean goterror(Throwable t) {
+        public boolean goterror(final Throwable t) {
             stopgame();
             setSize(HavenApplet.this.getSize());
             HavenApplet.this.add(this);
@@ -83,17 +83,17 @@ public class HavenApplet extends Applet {
             repaint();
         }
 
-        public void senderror(Exception e) {
+        public void senderror(final Exception e) {
             status = "Could not send error report";
             ar = true;
             repaint();
         }
 
-        public void paint(Graphics g) {
+        public void paint(final Graphics g) {
             g.setColor(getBackground());
             g.fillRect(0, 0, getWidth(), getHeight());
             g.setColor(Color.WHITE);
-            FontMetrics m = g.getFontMetrics();
+            final FontMetrics m = g.getFontMetrics();
             int y = 0;
             g.drawString("An error has occurred.", 0, y + m.getAscent());
             y += m.getHeight();
@@ -148,19 +148,19 @@ public class HavenApplet extends Applet {
         synchronized (applets) {
             applets.put(p, this);
         }
-        Thread main = new HackThread(p, new Runnable() {
+        final Thread main = new HackThread(p, new Runnable() {
             public void run() {
-                Thread ui = new HackThread(h, "Haven UI thread");
+                final Thread ui = new HackThread(h, "Haven UI thread");
                 ui.start();
                 try {
                     //noinspection InfiniteLoopStatement
                     while (true) {
-                        Bootstrap bill = new Bootstrap();
+                        final Bootstrap bill = new Bootstrap();
                         if ((getParameter("username") != null) && (getParameter("authcookie") != null))
                             bill.setinitcookie(getParameter("username"), Utils.hex2byte(getParameter("authcookie")));
                         bill.setaddr(getCodeBase().getHost());
-                        Session sess = bill.run(h);
-                        RemoteUI rui = new RemoteUI(sess);
+                        final Session sess = bill.run(h);
+                        final RemoteUI rui = new RemoteUI(sess);
                         rui.run(h.newui(sess));
                     }
                 } catch (InterruptedException ignored) {
@@ -194,8 +194,8 @@ public class HavenApplet extends Applet {
 
     static {
         WebBrowser.self = new WebBrowser() {
-            public void show(URL url) {
-                HavenApplet a;
+            public void show(final URL url) {
+                final HavenApplet a;
                 synchronized (applets) {
                     a = applets.get(HackThread.tg());
                 }

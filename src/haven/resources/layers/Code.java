@@ -14,8 +14,8 @@ public class Code extends Layer {
     public final String name;
     transient public final byte[] data;
 
-    public Code(byte[] buf) {
-        int[] off = new int[1];
+    public Code(final byte[] buf) {
+        final int[] off = new int[1];
         off[0] = 0;
         name = Utils.strd(buf, off);
         data = new byte[buf.length - off[0]];

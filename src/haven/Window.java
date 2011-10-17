@@ -26,6 +26,8 @@
 
 package haven;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -76,11 +78,11 @@ public class Window extends Widget implements DTarget {
 
     static {
         Widget.addtype("wnd", new WidgetFactory() {
-            public Widget create(Coord c, Widget parent, Object[] args) {
+            public Widget create(Coord c, final Widget parent, final Object[] args) {
                 if (args.length < 2)
                     return (new Window(c, (Coord) args[0], parent, null));
                 else {
-                    String name = (String) args[1];
+                    final String name = (String) args[1];
                     c = WindowsLocations.getLocationByName(name, c);
                     return (new Window(c, (Coord) args[0], parent, name));
                 }
@@ -110,7 +112,7 @@ public class Window extends Widget implements DTarget {
      * @param rbo     right bottom offset
      * @param flags   Window flags
      */
-    public Window(Coord c, Coord size, Widget parent, String capture, Coord tlo, Coord rbo, int flags) {
+    public Window(final Coord c, Coord size, final Widget parent, final String capture, final Coord tlo, final Coord rbo, final int flags) {
         super(c, new Coord(0, 0), parent);
         this.tlo = tlo;
         this.rbo = rbo;
@@ -142,7 +144,7 @@ public class Window extends Widget implements DTarget {
     }
 
     @SuppressWarnings({"WeakerAccess"})
-    public Window(Coord c, Coord sz, Widget parent, String cap, Coord tlo, Coord rbo) {
+    public Window(final Coord c, Coord sz, final Widget parent, final String cap, final Coord tlo, final Coord rbo) {
         super(c, new Coord(0, 0), parent);
         this.tlo = tlo;
         this.rbo = rbo;
@@ -168,22 +170,22 @@ public class Window extends Widget implements DTarget {
         // TODO simplify with  this(c, sz, parent, cap, tlo, rbo, true);
     }
 
-    public Window(Coord c, Coord sz, Widget parent, String cap) {
+    public Window(final Coord c, final Coord sz, final Widget parent, final String cap) {
         this(c, sz, parent, cap, new Coord(0, 0), new Coord(0, 0));
     }
 
-    public Window(Coord c, Coord sz, Widget parent, String cap, boolean closable, boolean foldable) {
+    public Window(final Coord c, final Coord sz, final Widget parent, final String cap, final boolean closable, final boolean foldable) {
         this(c, sz, parent, cap, new Coord(0, 0), new Coord(0, 0), (closable ? FLAG_CLOSABLE : FLAG_NOFLAG) | (foldable ? FLAG_FOLDABLE : FLAG_NOFLAG));
     }
 
-    public void cdraw(GOut g) {
+    public void cdraw(final GOut g) {
     }
 
     private static final Coord coord3x3 = new Coord(3, 3);
 
-    public void draw(GOut og) {
-        GOut g = og.reclip(tlo, wsz);
-        Coord bgc = new Coord(3, 3);
+    public void draw(final GOut og) {
+        final GOut g = og.reclip(tlo, wsz);
+        final Coord bgc = new Coord(3, 3);
         for (bgc.setY(3); bgc.y < wsz.y - 6; bgc.setY(bgc.y + bg.sz().y)) {
             for (bgc.setX(3); bgc.x < wsz.x - 6; bgc.setX(bgc.x + bg.sz().x))
                 g.image(bg, bgc, coord3x3, wsz.add(-6, -6));
@@ -191,9 +193,9 @@ public class Window extends Widget implements DTarget {
         cdraw(og.reclip(xlate(Coord.z, true), sz));
         wbox.draw(g, Coord.z, wsz);
         if (cap != null) {
-            GOut cg = og.reclip(new Coord(0, -7), sz.add(0, 7));
-            int w = cap.tex().sz().x;
-            int x0 = (folded) ? (mrgn.x + (w / 2)) : (sz.x / 2) - (w / 2);
+            final GOut cg = og.reclip(new Coord(0, -7), sz.add(0, 7));
+            final int w = cap.tex().sz().x;
+            final int x0 = (folded) ? (mrgn.x + (w / 2)) : (sz.x / 2) - (w / 2);
             cg.image(cl, new Coord(x0 - cl.sz().x, 0));
             cg.image(cm, new Coord(x0, 0), new Coord(w, cm.sz().y));
             cg.image(cr, new Coord(x0 + w, 0));
@@ -215,7 +217,7 @@ public class Window extends Widget implements DTarget {
                 wdg.show();
             }
         }
-        Coord max = new Coord(ssz);
+        final Coord max = new Coord(ssz);
         if (folded) {
             max.setY(0);
         } else {
@@ -225,7 +227,7 @@ public class Window extends Widget implements DTarget {
         recalcsz(max);
     }
 
-    protected void recalcsz(Coord max) {
+    protected void recalcsz(final Coord max) {
         sz = max.add(wbox.bsz().add(mrgn.mul(2)).add(tlo).add(rbo)).add(-1, -1);
         wsz = sz.sub(tlo).sub(rbo);
         if (folded)
@@ -234,16 +236,16 @@ public class Window extends Widget implements DTarget {
     }
 
     public void pack() {
-        boolean isrunestone = cap.text.equals("Runestone");
-        Coord max = new Coord(0, 0);
+        final boolean isrunestone = cap.text.equals("Runestone");
+        final Coord max = new Coord(0, 0);
         for (Widget wdg = child; wdg != null; wdg = wdg.next) {
             if (checkIsCloseButton(wdg) || checkIsFoldButton(wdg))
                 continue;
             if ((isrunestone) && (wdg instanceof Label)) {
-                Label lbl = (Label) wdg;
+                final Label lbl = (Label) wdg;
                 lbl.settext(Config.translator.translate(lbl.texts));
             }
-            Coord br = wdg.c.add(wdg.sz);
+            final Coord br = wdg.c.add(wdg.sz);
             if (br.x > max.x)
                 max.setX(br.x);
             if (br.y > max.y)
@@ -256,7 +258,7 @@ public class Window extends Widget implements DTarget {
         placecbtn();
     }
 
-    public void uimsg(String msg, Object... args) {
+    public void uimsg(@NotNull final String msg, final Object... args) {
         if (msg.equals("pack")) {
             pack();
         } else if (msg.equals("dt")) {
@@ -266,15 +268,15 @@ public class Window extends Widget implements DTarget {
         }
     }
 
-    public Coord xlate(Coord c, boolean in) {
-        Coord ctl = wbox.tloff();
+    public Coord xlate(final Coord c, final boolean in) {
+        final Coord ctl = wbox.tloff();
         if (in)
             return (c.add(ctl).add(tlo).add(mrgn));
         else
             return (c.sub(ctl).sub(tlo).sub(mrgn));
     }
 
-    public boolean mousedown(Coord c, int button) {
+    public boolean mousedown(final Coord c, final int button) {
         parent.setfocus(this);
         raise();
         if (super.mousedown(c, button))
@@ -289,7 +291,7 @@ public class Window extends Widget implements DTarget {
         return (true);
     }
 
-    public boolean mouseup(Coord c, int button) {
+    public boolean mouseup(final Coord c, final int button) {
         if (dm) {
             ui.ungrabmouse();
             dm = false;
@@ -300,7 +302,7 @@ public class Window extends Widget implements DTarget {
         return (true);
     }
 
-    public void mousemove(Coord c) {
+    public void mousemove(final Coord c) {
         if (dm) {
             this.c = this.c.add(c.sub(doff));
         } else {
@@ -308,7 +310,7 @@ public class Window extends Widget implements DTarget {
         }
     }
 
-    public void wdgmsg(Widget sender, String msg, Object... args) {
+    public void wdgmsg(final Widget sender, final String msg, final Object... args) {
         if (checkIsCloseButton(sender)) {
             if (justclose)
                 ui.destroy(this);
@@ -330,7 +332,7 @@ public class Window extends Widget implements DTarget {
         folded = false;
     }
 
-    public boolean type(char key, java.awt.event.KeyEvent ev) {
+    public boolean type(final char key, final java.awt.event.KeyEvent ev) {
         if (key == 27) {
             if (justclose)
                 ui.destroy(this);
@@ -341,7 +343,7 @@ public class Window extends Widget implements DTarget {
         return (super.type(key, ev));
     }
 
-    public boolean drop(Coord cc, Coord ul, Item item) {
+    public boolean drop(final Coord cc, final Coord ul, final Item item) {
         if (dt) {
             wdgmsg("drop", cc);
             return (true);
@@ -349,23 +351,23 @@ public class Window extends Widget implements DTarget {
         return (false);
     }
 
-    public boolean iteminteract(Coord cc, Coord ul) {
+    public boolean iteminteract(final Coord cc, final Coord ul) {
         return (false);
     }
 
-    public Object tooltip(Coord c, boolean again) {
-        Object ret = super.tooltip(c, again);
+    public Object tooltip(final Coord c, final boolean again) {
+        final Object ret = super.tooltip(c, again);
         if (ret != null)
             return (ret);
         else
             return ("");
     }
 
-    protected boolean checkIsCloseButton(Widget w) {
+    protected boolean checkIsCloseButton(final Widget w) {
         return closeButton != null && w == closeButton;
     }
 
-    protected boolean checkIsFoldButton(Widget w) {
+    protected boolean checkIsFoldButton(final Widget w) {
         return foldButton != null && w == foldButton;
     }
 

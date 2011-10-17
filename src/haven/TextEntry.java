@@ -26,6 +26,8 @@
 
 package haven;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
@@ -49,17 +51,17 @@ public class TextEntry extends Widget {
 
     static {
         Widget.addtype("text", new WidgetFactory() {
-            public Widget create(Coord c, Widget parent, Object[] args) {
+            public Widget create(final Coord c, final Widget parent, final Object[] args) {
                 return (new TextEntry(c, (Coord) args[0], parent, (String) args[1]));
             }
         });
     }
 
-    public void settext(String text) {
+    public void settext(final String text) {
         buf.setline(text);
     }
 
-    public void uimsg(String name, Object... args) {
+    public void uimsg(@NotNull final String name, final Object... args) {
         if (name.equals("settext")) {
             settext((String) args[0]);
         } else if (name.equals("get")) {
@@ -75,11 +77,11 @@ public class TextEntry extends Widget {
         return buf.line;
     }
 
-    public void draw(GOut g) {
+    public void draw(final GOut g) {
         super.draw(g);
-        String dtext;
+        final String dtext;
         if (pw) {        //	Replace the text with stars if its a password
-            StringBuilder b = new StringBuilder();
+            final StringBuilder b = new StringBuilder();
             for (int i = 0; i < buf.line.length(); i++)
                 b.append('*');
             dtext = b.toString();
@@ -89,23 +91,23 @@ public class TextEntry extends Widget {
         g.frect(Coord.z, sz);
         if ((tcache == null) || !tcache.text.equals(dtext))
             tcache = fnd.render(dtext);
-        int cx = tcache.advance(buf.point);
+        final int cx = tcache.advance(buf.point);
         if (cx < sx) sx = cx;
         if (cx > sx + (sz.x - 1)) sx = cx - (sz.x - 1);
         g.image(tcache.tex(), new Coord(-sx, 0));
         if (hasfocus && ((System.currentTimeMillis() % 1000) > 500)) {
-            int lx = cx - sx + 1;
+            final int lx = cx - sx + 1;
             g.chcolor(0, 0, 0, 255);
             g.line(new Coord(lx, 1), new Coord(lx, tcache.sz().y - 1), 1);
             g.chcolor();
         }
     }
 
-    public TextEntry(Coord c, Coord sz, Widget parent, String deftext) {
+    public TextEntry(final Coord c, final Coord sz, final Widget parent, String deftext) {
         super(c, sz, parent);
         if (deftext == null) deftext = "";
         buf = new LineEdit(text = deftext) {
-            protected void done(String line) {
+            protected void done(final String line) {
                 activate(line);
             }
 
@@ -116,12 +118,12 @@ public class TextEntry extends Widget {
         setcanfocus(true);
     }
 
-    public void activate(String text) {
+    public void activate(final String text) {
         if (canactivate)
             wdgmsg("activate", text);
     }
 
-    public boolean type(char c, KeyEvent ev) {
+    public boolean type(final char c, final KeyEvent ev) {
         if (Character.isDigit(c) && noNumbers && !ev.isAltDown() || badchars.indexOf(c) > -1) {
             ev.consume();
             return true;
@@ -133,12 +135,12 @@ public class TextEntry extends Widget {
         return (buf.key(ev));
     }
 
-    public boolean keydown(KeyEvent e) {
+    public boolean keydown(final KeyEvent e) {
         buf.key(e);
         return (true);
     }
 
-    public boolean mousedown(Coord c, int button) {
+    public boolean mousedown(final Coord c, final int button) {
         parent.setfocus(this);
         if (tcache != null) {
             buf.point = tcache.charat(c.x + sx);
@@ -152,16 +154,16 @@ public class TextEntry extends Widget {
      * @param clipboard
      * @param contents
      */
-    public void lostOwnership(Clipboard clipboard, Transferable contents) {
+    public void lostOwnership(final Clipboard clipboard, final Transferable contents) {
         // TODO: Add your code here
     }
 
     public static String getClipboardContents() {
         String result = "";
-        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        final Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         //odd: the Object param of getContents is not currently used
-        Transferable contents = clipboard.getContents(null);
-        boolean hasTransferableText = (contents != null) && contents.isDataFlavorSupported(DataFlavor.stringFlavor);
+        final Transferable contents = clipboard.getContents(null);
+        final boolean hasTransferableText = (contents != null) && contents.isDataFlavorSupported(DataFlavor.stringFlavor);
         if (hasTransferableText) {
             try {
                 result = (String) contents.getTransferData(DataFlavor.stringFlavor);

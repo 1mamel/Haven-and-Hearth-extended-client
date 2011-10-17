@@ -44,14 +44,14 @@ public class LineEdit {
     }
 
     public class PCMode extends KeyHandler {
-        public boolean key(char c, int code, int mod) {
+        public boolean key(final char c, final int code, final int mod) {
             if ((c == 8) && (mod == 0)) {
                 if (point > 0) {
                     line = line.substring(0, point - 1) + line.substring(point);
                     point--;
                 }
             } else if ((c == 8) && (mod == C)) {
-                int b = wordstart(point);
+                final int b = wordstart(point);
                 line = line.substring(0, b) + line.substring(point);
                 point = b;
             } else if (c == 10) {
@@ -60,13 +60,13 @@ public class LineEdit {
                 if (point < line.length())
                     line = line.substring(0, point) + line.substring(point + 1);
             } else if ((c == 127) && (mod == C)) {
-                int b = wordend(point);
+                final int b = wordend(point);
                 line = line.substring(0, point) + line.substring(b);
             } else if ((c >= 32) && (mod == 0)) {
                 line = line.substring(0, point) + c + line.substring(point);
                 point++;
             } else if (((c == 'v') || (c == 'V')) && (mod == C)) {
-                String str = Utils.getClipboard();
+                final String str = Utils.getClipboard();
                 line = line.substring(0, point) + str + line.substring(point);
                 point += str.length();
             } else if ((code == KeyEvent.VK_LEFT) && (mod == 0)) {
@@ -115,20 +115,20 @@ public class LineEdit {
                 undolist.add(new UndoState());
         }
 
-        private void mode(String mode) {
+        private void mode(final String mode) {
             if ((mode.length() == 0) || (!last.equals(mode)))
                 save();
             last = mode;
         }
 
-        private void kill(String text) {
+        private void kill(final String text) {
             yanklist.add(text);
         }
 
-        public boolean key(char c, int code, int mod) {
+        public boolean key(final char c, final int code, final int mod) {
             if (mark > line.length())
                 mark = line.length();
-            String last = this.last;
+            final String last = this.last;
             if ((c == 8) && (mod == 0)) {
                 mode("erase");
                 if (point > 0) {
@@ -138,7 +138,7 @@ public class LineEdit {
             } else if ((c == 8) && ((mod == C) || (mod == M))) {
                 mode("backward-kill-word");
                 save();
-                int b = wordstart(point);
+                final int b = wordstart(point);
                 if (last.equals("backward-kill-word"))
                     yanklist.set(yanklist.size() - 1, line.substring(b, point) + yanklist.get(yanklist.size() - 1));
                 else
@@ -154,7 +154,7 @@ public class LineEdit {
             } else if ((c == 'd') && (mod == M)) {
                 mode("kill-word");
                 save();
-                int b = wordend(point);
+                final int b = wordend(point);
                 if (last.equals("kill-word"))
                     yanklist.set(yanklist.size() - 1, yanklist.get(yanklist.size() - 1) + line.substring(point, b));
                 else
@@ -215,7 +215,7 @@ public class LineEdit {
                 save();
                 yankpos = yanklist.size();
                 if (yankpos > 0) {
-                    String yank = yanklist.get(--yankpos);
+                    final String yank = yanklist.get(--yankpos);
                     mark = point;
                     line = line.substring(0, point) + yank + line.substring(point);
                     point = mark + yank.length();
@@ -224,7 +224,7 @@ public class LineEdit {
                 mode("yank");
                 save();
                 if ((last.equals("yank")) && (yankpos > 0)) {
-                    String yank = yanklist.get(--yankpos);
+                    final String yank = yanklist.get(--yankpos);
                     line = line.substring(0, mark) + yank + line.substring(point);
                     point = mark + yank.length();
                 }
@@ -237,7 +237,7 @@ public class LineEdit {
                 if (!last.equals("undo"))
                     undopos = undolist.size() - 1;
                 if (undopos > 0) {
-                    UndoState s = undolist.get(--undopos);
+                    final UndoState s = undolist.get(--undopos);
                     line = s.line;
                     point = s.point;
                 }
@@ -253,7 +253,7 @@ public class LineEdit {
     }
 
     public LineEdit() {
-        String mode = Utils.getpref("editmode", "pc");
+        final String mode = Utils.getpref("editmode", "pc");
         if (mode.equals("emacs")) {
             this.mode = new EmacsMode();
         } else {
@@ -261,14 +261,14 @@ public class LineEdit {
         }
     }
 
-    public LineEdit(String line) {
+    public LineEdit(final String line) {
         this();
         this.line = line;
         this.point = line.length();
     }
 
-    public void setline(String line) {
-        String prev = this.line;
+    public void setline(final String line) {
+        final String prev = this.line;
         this.line = line;
         if (point > line.length())
             point = line.length();
@@ -276,15 +276,15 @@ public class LineEdit {
             changed();
     }
 
-    public boolean key(char c, int code, int mod) {
-        String prev = line;
-        boolean ret = mode.key(c, code, mod);
+    public boolean key(final char c, final int code, final int mod) {
+        final String prev = line;
+        final boolean ret = mode.key(c, code, mod);
         if (!prev.equals(line))
             changed();
         return (ret);
     }
 
-    public boolean key(KeyEvent ev) {
+    public boolean key(final KeyEvent ev) {
         int mod = 0;
         if ((ev.getModifiersEx() & InputEvent.CTRL_DOWN_MASK) != 0) mod |= C;
         if ((ev.getModifiersEx() & (InputEvent.META_DOWN_MASK | InputEvent.ALT_DOWN_MASK)) != 0) mod |= M;
@@ -311,7 +311,7 @@ public class LineEdit {
         return (false);
     }
 
-    private static boolean wordchar(char c) {
+    private static boolean wordchar(final char c) {
         return (Character.isLetterOrDigit(c));
     }
 
@@ -327,13 +327,13 @@ public class LineEdit {
         return (from);
     }
 
-    protected void done(String line) {
+    protected void done(final String line) {
     }
 
     protected void changed() {
     }
 
-    public Text render(Text.Foundry f) {
+    public Text render(final Text.Foundry f) {
         if ((tcache == null) || (!tcache.text.equals(line)))
             tcache = f.render(line);
         return (tcache);
@@ -341,7 +341,7 @@ public class LineEdit {
 
     static {
         Console.setscmd("editmode", new Console.Command() {
-            public void run(Console cons, String[] args) {
+            public void run(final Console cons, final String[] args) {
                 Utils.setpref("editmode", args[1]);
             }
         });

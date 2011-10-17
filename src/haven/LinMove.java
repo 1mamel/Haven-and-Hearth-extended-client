@@ -32,7 +32,7 @@ public class LinMove extends Moving {
     final int c;
     double a;
 
-    public LinMove(Gob gob, Coord s, Coord t, int c) {
+    public LinMove(final Gob gob, final Coord s, final Coord t, final int c) {
         super(gob);
         this.s = s;
         this.t = t;
@@ -41,10 +41,11 @@ public class LinMove extends Moving {
     }
 
     public Coord getc() {
-        double dx, dy;
+        final double dx;
+        final double dy;
         dx = t.x - s.x;
         dy = t.y - s.y;
-        Coord m = new Coord((int) (dx * a), (int) (dy * a));
+        final Coord m = new Coord((int) (dx * a), (int) (dy * a));
         return (s.add(m));
     }
 
@@ -55,15 +56,15 @@ public class LinMove extends Moving {
      }
      */
 
-    public void ctick(int dt) {
-        double da = ((double) dt / 1000) / (((double) c) * 0.06);
+    public void ctick(final int dt) {
+        final double da = ((double) dt / 1000) / (((double) c) * 0.06);
         a += da * 0.9;
         if (a > 1)
             a = 1;
     }
 
-    public void setl(int l) {
-        double a = ((double) l) / ((double) c);
+    public void setl(final int l) {
+        final double a = ((double) l) / ((double) c);
         if (a > this.a)
             this.a = a;
     }

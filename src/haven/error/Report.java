@@ -35,10 +35,10 @@ public class Report implements java.io.Serializable {
     public final long time;
     public final Map<String, Object> props = new HashMap<String, Object>();
 
-    public Report(Throwable t) {
+    public Report(final Throwable t) {
         this.t = t;
         time = System.currentTimeMillis();
-        Runtime rt = Runtime.getRuntime();
+        final Runtime rt = Runtime.getRuntime();
         props.put("mem.free", rt.freeMemory());
         props.put("mem.total", rt.totalMemory());
         props.put("mem.max", rt.maxMemory());

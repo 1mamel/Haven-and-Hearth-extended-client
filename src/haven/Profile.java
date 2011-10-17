@@ -69,8 +69,8 @@ public class Profile {
             last = then = System.nanoTime();
         }
 
-        public void tick(String nm) {
-            long now = System.nanoTime();
+        public void tick(final String nm) {
+            final long now = System.nanoTime();
             pw.add(now - last);
             nw.add(nm);
             last = now;
@@ -92,7 +92,7 @@ public class Profile {
         }
 
         public String toString() {
-            StringBuilder buf = new StringBuilder();
+            final StringBuilder buf = new StringBuilder();
             for (int i = 0; i < prt.length; i++) {
                 if (i > 0)
                     buf.append(", ");
@@ -103,7 +103,7 @@ public class Profile {
         }
     }
 
-    public Profile(int hl) {
+    public Profile(final int hl) {
         hist = new Frame[hl];
     }
 
@@ -113,16 +113,16 @@ public class Profile {
         return (hist[i - 1]);
     }
 
-    public Tex draw(int h, long scale) {
-        TexIM ret = new TexIM(new Coord(hist.length, h));
-        Graphics g = ret.graphics();
+    public Tex draw(final int h, final long scale) {
+        final TexIM ret = new TexIM(new Coord(hist.length, h));
+        final Graphics g = ret.graphics();
         for (int i = 0; i < hist.length; i++) {
-            Frame f = hist[i];
+            final Frame f = hist[i];
             if (f == null)
                 continue;
             long a = 0;
             for (int o = 0; o < f.prt.length; o++) {
-                long c = a + f.prt[o];
+                final long c = a + f.prt[o];
                 g.setColor(cols[o]);
                 g.drawLine(i, (int) (h - (a / scale)), i, (int) (h - (c / scale)));
                 a = c;

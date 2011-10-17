@@ -38,27 +38,27 @@ public class JnlpCache implements ResCache {
     private final PersistenceService back;
     private final URL base;
 
-    private JnlpCache(PersistenceService back, URL base) {
+    private JnlpCache(final PersistenceService back, final URL base) {
         this.back = back;
         this.base = base;
     }
 
     public static JnlpCache create() {
         try {
-            Class<? extends ServiceManager> cl = Class.forName("javax.jnlp.ServiceManager").asSubclass(ServiceManager.class);
-            Method m = cl.getMethod("lookup", String.class);
-            BasicService basic = (BasicService) m.invoke(null, "javax.jnlp.BasicService");
-            PersistenceService prs = (PersistenceService) m.invoke(null, "javax.jnlp.PersistenceService");
+            final Class<? extends ServiceManager> cl = Class.forName("javax.jnlp.ServiceManager").asSubclass(ServiceManager.class);
+            final Method m = cl.getMethod("lookup", String.class);
+            final BasicService basic = (BasicService) m.invoke(null, "javax.jnlp.BasicService");
+            final PersistenceService prs = (PersistenceService) m.invoke(null, "javax.jnlp.PersistenceService");
             return (new JnlpCache(prs, basic.getCodeBase()));
         } catch (Exception e) {
             return (null);
         }
     }
 
-    private static String mangle(String nm) {
-        StringBuilder buf = new StringBuilder();
+    private static String mangle(final String nm) {
+        final StringBuilder buf = new StringBuilder();
         for (int i = 0; i < nm.length(); i++) {
-            char c = nm.charAt(i);
+            final char c = nm.charAt(i);
             if (c == '/')
                 buf.append('_');
             else
@@ -67,7 +67,7 @@ public class JnlpCache implements ResCache {
         return (buf.toString());
     }
 
-    private void realput(URL loc, byte[] data) {
+    private void realput(final URL loc, final byte[] data) {
         FileContents file;
         try {
             try {
@@ -82,7 +82,7 @@ public class JnlpCache implements ResCache {
                     return;
                 }
             }
-            OutputStream s = file.getOutputStream(true);
+            final OutputStream s = file.getOutputStream(true);
             try {
                 s.write(data);
             } finally {
@@ -113,8 +113,8 @@ public class JnlpCache implements ResCache {
         });
     }
 
-    private InputStream get(URL loc) throws IOException {
-        FileContents file = back.get(loc);
+    private InputStream get(final URL loc) throws IOException {
+        final FileContents file = back.get(loc);
         return (file.getInputStream());
     }
 
@@ -129,9 +129,9 @@ public class JnlpCache implements ResCache {
        *
        * Oh God, it's so stupid.
        */
-        OutputStream ret = new ByteArrayOutputStream() {
+        final OutputStream ret = new ByteArrayOutputStream() {
             public void close() {
-                byte[] res = toByteArray();
+                final byte[] res = toByteArray();
                 try {
                     put(new URL(base, mangle(name)), res);
                 } catch (java.net.MalformedURLException e) {
@@ -142,9 +142,9 @@ public class JnlpCache implements ResCache {
         return (ret);
     }
 
-    public InputStream fetch(String name) throws IOException {
+    public InputStream fetch(final String name) throws IOException {
         try {
-            URL loc = new URL(base, mangle(name));
+            final URL loc = new URL(base, mangle(name));
             return (get(loc));
         } catch (IOException e) {
             throw (e);

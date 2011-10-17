@@ -25,16 +25,16 @@ public class MessageBox extends Window {
     private static final int BUTTONWIDTH = 50; // px
     private final Callback<Integer> callback;
 
-    public MessageBox(Coord position, Coord size, Widget parent, String capture, String message) {
+    public MessageBox(final Coord position, final Coord size, final Widget parent, final String capture, final String message) {
         this(position, size, parent, capture, message, BUTTONS_DEFAULT, null);
 
     }
 
-    public MessageBox(Coord position, Coord size, Widget parent, String capture, String message, int buttons, final Callback<Integer> callback) {
+    public MessageBox(final Coord position, final Coord size, final Widget parent, final String capture, final String message, final int buttons, final Callback<Integer> callback) {
         super(position, new Coord(size), parent, capture, true, false);
         this.justclose = true;
         this.callback = callback;
-        Label message1 = new Label(new Coord(10, 6), this, message);
+        final Label message1 = new Label(new Coord(10, 6), this, message);
 
         int width = Math.max(message1.sz.x, sz.x);
 
@@ -48,11 +48,11 @@ public class MessageBox extends Window {
                 buttonsCopy >>= 1;
             }
         }
-        int allButtonsWidth = 10 + buttonsCount * (BUTTONWIDTH + 5) + 5;
+        final int allButtonsWidth = 10 + buttonsCount * (BUTTONWIDTH + 5) + 5;
 
         width = Math.max(width, allButtonsWidth);
 
-        int buttonsY = 6 + message1.sz.y + 7;
+        final int buttonsY = 6 + message1.sz.y + 7;
         if (sz.y < buttonsY + 18) {
             sz.y = buttonsY + 18;
         }
@@ -113,7 +113,7 @@ public class MessageBox extends Window {
     }
 
     @Override
-    public void wdgmsg(Widget sender, String msg, Object... args) {
+    public void wdgmsg(final Widget sender, final String msg, final Object... args) {
         if (checkIsCloseButton(sender)) {
             if (callback != null) {
                 callback.result(BUTTON_CANCEL);

@@ -26,6 +26,8 @@
 
 package haven;
 
+import org.jetbrains.annotations.NotNull;
+
 public class ISBox extends Widget implements DTarget {
     static final Tex bg = Resource.loadtex("gfx/hud/bosq");
     static final Text.Foundry lf;
@@ -39,39 +41,39 @@ public class ISBox extends Widget implements DTarget {
 
     static {
         Widget.addtype("isbox", new WidgetFactory() {
-            public Widget create(Coord c, Widget parent, Object[] args) {
+            public Widget create(final Coord c, final Widget parent, final Object[] args) {
                 return (new ISBox(c, parent, Resource.load((String) args[0]), (Integer) args[1], (Integer) args[2], (Integer) args[3]));
             }
         });
     }
 
-    private void setlabel(int rem, int av, int bi) {
+    private void setlabel(final int rem, final int av, final int bi) {
         label = lf.renderf("%d/%d/%d", rem, av, bi);
     }
 
-    public ISBox(Coord c, Widget parent, Resource res, int rem, int av, int bi) {
+    public ISBox(final Coord c, final Widget parent, final Resource res, final int rem, final int av, final int bi) {
         super(c, bg.sz(), parent);
         this.res = res;
         setlabel(rem, av, bi);
     }
 
-    public void draw(GOut g) {
+    public void draw(final GOut g) {
         g.image(bg, Coord.z);
         if (!res.loading.get()) {
-            Tex t = res.layer(Resource.imgc).tex();
-            Coord dc = new Coord(6, (bg.sz().y / 2) - (t.sz().y / 2));
+            final Tex t = res.layer(Resource.imgc).tex();
+            final Coord dc = new Coord(6, (bg.sz().y / 2) - (t.sz().y / 2));
             g.image(t, dc);
         }
         g.image(label.tex(), new Coord(40, (bg.sz().y / 2) - (label.tex().sz().y / 2)));
     }
 
-    public Object tooltip(Coord c, boolean again) {
+    public Object tooltip(final Coord c, final boolean again) {
         if (!res.loading.get() && (res.layer(Resource.tooltip) != null))
             return (res.layer(Resource.tooltip).t);
         return (null);
     }
 
-    public boolean mousedown(Coord c, int button) {
+    public boolean mousedown(final Coord c, final int button) {
         if (button == 1) {
             if (ui.modshift)
                 wdgmsg("xfer");
@@ -82,7 +84,7 @@ public class ISBox extends Widget implements DTarget {
         return (false);
     }
 
-    public boolean mousewheel(Coord c, int amount) {
+    public boolean mousewheel(final Coord c, final int amount) {
         if (amount < 0)
             wdgmsg("xfer2", -1, ui.modflags());
         if (amount > 0)
@@ -90,17 +92,17 @@ public class ISBox extends Widget implements DTarget {
         return (true);
     }
 
-    public boolean drop(Coord cc, Coord ul, Item item) {
+    public boolean drop(final Coord cc, final Coord ul, final Item item) {
         wdgmsg("drop");
         return (true);
     }
 
-    public boolean iteminteract(Coord cc, Coord ul) {
+    public boolean iteminteract(final Coord cc, final Coord ul) {
         wdgmsg("iact");
         return (true);
     }
 
-    public void uimsg(String msg, Object... args) {
+    public void uimsg(@NotNull final String msg, final Object... args) {
         if (msg.equals("chnum")) {
             setlabel((Integer) args[0], (Integer) args[1], (Integer) args[2]);
         } else {

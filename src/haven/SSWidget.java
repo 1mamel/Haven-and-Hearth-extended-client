@@ -34,17 +34,17 @@ import java.awt.*;
 public class SSWidget extends Widget {
     private final TexIM surf;
 
-    public SSWidget(Coord c, Coord sz, Widget parent) {
+    public SSWidget(final Coord c, final Coord sz, final Widget parent) {
         super(c, sz, parent);
         surf = new TexIM(sz);
     }
 
-    public void draw(GOut g) {
+    public void draw(final GOut g) {
         g.image(surf, Coord.z);
     }
 
     public Graphics graphics() {
-        Graphics g = surf.graphics();
+        final Graphics g = surf.graphics();
         return (g);
     }
 

@@ -39,49 +39,49 @@ public class GrowingPlant extends CSprite {
         public final int num;
         public final Neg neg;
 
-        public Factory(int stages, int variants, int num, boolean rev) {
-            Resource res = Utils.myres(this.getClass());
+        public Factory(final int stages, final int variants, final int num, final boolean rev) {
+            final Resource res = Utils.myres(this.getClass());
             this.neg = res.layer(Resource.negc);
             this.num = num;
             strands = new Tex[stages][variants];
             if (rev) {
-                for (Image img : res.layers(Resource.imgc)) {
+                for (final Image img : res.layers(Resource.imgc)) {
                     if (img.id != -1)
                         strands[img.id / variants][img.id % variants] = img.tex();
                 }
             } else {
-                for (Image img : res.layers(Resource.imgc)) {
+                for (final Image img : res.layers(Resource.imgc)) {
                     if (img.id != -1)
                         strands[img.id % stages][img.id / stages] = img.tex();
                 }
             }
         }
 
-        public Factory(int stages, int variants, int num) {
+        public Factory(final int stages, final int variants, final int num) {
             this(stages, variants, num, false);
         }
 
-        public Sprite create(Owner owner, Resource res, Message sdt) {
-            int m = sdt.uint8();
-            GrowingPlant spr = new GrowingPlant(owner, res);
+        public Sprite create(final Owner owner, final Resource res, final Message sdt) {
+            final int m = sdt.uint8();
+            final GrowingPlant spr = new GrowingPlant(owner, res);
             spr.addnegative();
-            Random rnd = owner.mkrandoom();
-            int n = Config.simple_plants ? 1 : num;
+            final Random rnd = owner.mkrandoom();
+            final int n = Config.simple_plants ? 1 : num;
             for (int i = 0; i < n; i++) {
-                Coord c;
+                final Coord c;
                 if (Config.simple_plants) {
                     c = neg.bc.add(neg.bs).sub(5, 5);
                 } else {
                     c = new Coord(rnd.nextInt(neg.bs.x), rnd.nextInt(neg.bs.y)).add(neg.bc);
                 }
-                Tex s = strands[m][rnd.nextInt(strands[m].length)];
+                final Tex s = strands[m][rnd.nextInt(strands[m].length)];
                 spr.add(s, 0, MapView.m2s(c), new Coord(s.sz().x / 2, s.sz().y).inv());
             }
             return (spr);
         }
     }
 
-    protected GrowingPlant(Owner owner, Resource res) {
+    protected GrowingPlant(final Owner owner, final Resource res) {
         super(owner, res);
     }
 }

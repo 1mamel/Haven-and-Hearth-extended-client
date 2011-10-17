@@ -35,18 +35,18 @@ import static java.text.AttributedCharacterIterator.Attribute;
 public class AttributedStringBuffer {
     private AttributedString current = new AttributedString("");
 
-    public static String gettext(AttributedCharacterIterator s) {
-        StringBuilder tbuf = new StringBuilder();
+    public static String gettext(final AttributedCharacterIterator s) {
+        final StringBuilder tbuf = new StringBuilder();
         for (int i = s.getBeginIndex(); i < s.getEndIndex(); i++)
             tbuf.append(s.setIndex(i));
         return (tbuf.toString());
     }
 
-    public static void dump(AttributedCharacterIterator s, java.io.PrintStream out) {
+    public static void dump(final AttributedCharacterIterator s, final java.io.PrintStream out) {
         int cl = 0;
         Map<? extends Attribute, ?> attrs;
         for (int i = s.getBeginIndex(); i < s.getEndIndex(); i++) {
-            char c = s.setIndex(i);
+            final char c = s.setIndex(i);
             if (i >= cl) {
                 attrs = s.getAttributes();
                 out.println();
@@ -58,20 +58,20 @@ public class AttributedStringBuffer {
         out.println();
     }
 
-    public static AttributedString concat(AttributedCharacterIterator... strings) {
-        StringBuilder tbuf = new StringBuilder();
-        for (AttributedCharacterIterator s : strings) {
+    public static AttributedString concat(final AttributedCharacterIterator... strings) {
+        final StringBuilder tbuf = new StringBuilder();
+        for (final AttributedCharacterIterator s : strings) {
             for (int o = s.getBeginIndex(); o < s.getEndIndex(); o++)
                 tbuf.append(s.setIndex(o));
         }
-        AttributedString res = new AttributedString(tbuf.toString());
+        final AttributedString res = new AttributedString(tbuf.toString());
         int ro = 0;
-        for (AttributedCharacterIterator s : strings) {
+        for (final AttributedCharacterIterator s : strings) {
             int o = s.getBeginIndex();
             while (o < s.getEndIndex()) {
                 s.setIndex(o);
-                int n = s.getRunLimit();
-                int l = n - o;
+                final int n = s.getRunLimit();
+                final int l = n - o;
                 res.addAttributes(s.getAttributes(), ro, ro + l);
                 o = n;
                 ro += l;
@@ -80,18 +80,18 @@ public class AttributedStringBuffer {
         return (res);
     }
 
-    public static AttributedString concat(AttributedString... strings) {
-        AttributedCharacterIterator[] its = new AttributedCharacterIterator[strings.length];
+    public static AttributedString concat(final AttributedString... strings) {
+        final AttributedCharacterIterator[] its = new AttributedCharacterIterator[strings.length];
         for (int i = 0; i < strings.length; i++)
             its[i] = strings[i].getIterator();
         return (concat(its));
     }
 
-    public void append(AttributedString string) {
+    public void append(final AttributedString string) {
         this.current = concat(this.current, string);
     }
 
-    public void append(String string, Map<? extends Attribute, ?> attrs) {
+    public void append(final String string, final Map<? extends Attribute, ?> attrs) {
         append(new AttributedString(string, attrs));
     }
 

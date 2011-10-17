@@ -30,15 +30,15 @@ public class ParsedToken {
     /**
      * Parse string into array of ParsedTokens
      */
-    public static ParsedToken[] stringToParsedTokens(String s, String delim) {
+    public static ParsedToken[] stringToParsedTokens(final String s, final String delim) {
         ParsedToken tokens[] = null;
         try {
             // Tokenize string, build vector of tokens
             int pos = 0;
-            StringTokenizer toker = new StringTokenizer(s, delim);
-            Vector v = new Vector();
+            final StringTokenizer toker = new StringTokenizer(s, delim);
+            final Vector v = new Vector();
             while (toker.hasMoreTokens()) {
-                ParsedToken tok = new ParsedToken();
+                final ParsedToken tok = new ParsedToken();
                 tok.token = toker.nextToken();
                 tok.index = pos;
                 pos += tok.token.length() + 1;

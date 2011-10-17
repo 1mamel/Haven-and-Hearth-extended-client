@@ -26,6 +26,8 @@
 
 package haven;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,8 +39,8 @@ public class ChatHW extends HWindow {
 
     static {
         Widget.addtype("slenchat", new WidgetFactory() {
-            public Widget create(Coord c, Widget parent, Object[] args) {
-                String t = (String) args[0];
+            public Widget create(final Coord c, final Widget parent, final Object[] args) {
+                final String t = (String) args[0];
                 boolean cl = false;
                 if (args.length > 1)
                     cl = (Integer) args[1] != 0;
@@ -50,7 +52,7 @@ public class ChatHW extends HWindow {
         todarken.add(Color.YELLOW);
     }
 
-    public ChatHW(Widget parent, String title, boolean closable) {
+    public ChatHW(final Widget parent, final String title, final boolean closable) {
         super((Widget) ChatHWPanel.instance, title, closable);
         in = new TextEntry(new Coord(0, sz.y - 20), new Coord(sz.x, 20), this, "");
         in.canactivate = true;
@@ -63,14 +65,14 @@ public class ChatHW extends HWindow {
         setsz(sz);
     }
 
-    public void setsz(Coord s) {
+    public void setsz(final Coord s) {
         super.setsz(s);
         in.c = new Coord(0, sz.y - 20);
         in.sz = new Coord(sz.x, 20);
         out.sz = new Coord(sz.x, sz.y - 20);
     }
 
-    public void uimsg(String msg, Object... args) {
+    public void uimsg(@NotNull final String msg, final Object... args) {
         if (msg.equals("log")) {
             Color col = null;
             if (args.length > 1)
@@ -92,7 +94,7 @@ public class ChatHW extends HWindow {
         }
     }
 
-    public void wdgmsg(Widget sender, String msg, Object... args) {
+    public void wdgmsg(final Widget sender, final String msg, final Object... args) {
         if (sender == in) {
             if (msg.equals("activate")) {
                 wdgmsg("msg", args[0]);
@@ -103,7 +105,7 @@ public class ChatHW extends HWindow {
         super.wdgmsg(sender, msg, args);
     }
 
-    public boolean mousewheel(Coord c, int amount) {
+    public boolean mousewheel(final Coord c, final int amount) {
         return (out.mousewheel(c, amount));
     }
 }

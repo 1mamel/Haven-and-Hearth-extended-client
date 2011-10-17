@@ -26,6 +26,8 @@
 
 package haven;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.awt.*;
 
 import static java.lang.Math.PI;
@@ -43,10 +45,10 @@ public class FlowerMenu extends Widget {
 
     static {
         Widget.addtype("sm", new WidgetFactory() {
-            public Widget create(Coord c, Widget parent, Object[] args) {
+            public Widget create(Coord c, final Widget parent, final Object[] args) {
                 if ((c.x == -1) && (c.y == -1))
                     c = parent.ui.lcc;
-                String[] opts = new String[args.length];
+                final String[] opts = new String[args.length];
                 for (int i = 0; i < args.length; i++)
                     opts[i] = (String) args[i];
                 return (new FlowerMenu(c, parent, opts));
@@ -62,29 +64,29 @@ public class FlowerMenu extends Widget {
         final Text text;
         double a = 1;
 
-        public Petal(String name) {
+        public Petal(final String name) {
             super(Coord.z, Coord.z, FlowerMenu.this);
             this.name = name;
             text = ptf.render(name, ptc);
             sz = new Coord(text.sz().x + 25, ph);
         }
 
-        public void move(Coord c) {
+        public void move(final Coord c) {
             this.c = c.sub(sz.div(2));
         }
 
-        public void move(double a, double r) {
+        public void move(final double a, final double r) {
             move(Coord.sc(a, r));
         }
 
-        public void draw(GOut g) {
+        public void draw(final GOut g) {
             g.chcolor(new Color(255, 255, 255, (int) (255 * a)));
             g.image(pbg, new Coord(3, 3), new Coord(3, 3), sz.add(new Coord(-6, -6)));
             pbox.draw(g, Coord.z, sz);
             g.image(text.tex(), sz.div(2).sub(text.sz().div(2)));
         }
 
-        public boolean mousedown(Coord c, int button) {
+        public boolean mousedown(final Coord c, final int button) {
             wdgmsg(FlowerMenu.this, "cl", num);
             return (true);
         }
@@ -96,8 +98,8 @@ public class FlowerMenu extends Widget {
         double s = 0.0;
 
         public void tick() {
-            int dt = (int) (System.currentTimeMillis() - st);
-            int animlength = (Config.fastFlowerAnim) ? 0 : ms;
+            final int dt = (int) (System.currentTimeMillis() - st);
+            final int animlength = (Config.fastFlowerAnim) ? 0 : ms;
             if (dt < animlength)
                 s = (double) dt / animlength;
             else
@@ -116,7 +118,7 @@ public class FlowerMenu extends Widget {
 
     public class Opening extends Anim {
         public void tick2() {
-            for (Petal p : opts) {
+            for (final Petal p : opts) {
                 p.move(p.ta + ((1 - s) * PI), p.tr * s);
                 p.a = s;
             }
@@ -126,13 +128,13 @@ public class FlowerMenu extends Widget {
     public class Chosen extends Anim {
         final Petal chosen;
 
-        Chosen(Petal c) {
+        Chosen(final Petal c) {
             ms = 750;
             chosen = c;
         }
 
         public void tick2() {
-            for (Petal p : opts) {
+            for (final Petal p : opts) {
                 if (p == chosen) {
                     if (s > 0.6) {
                         p.a = 1 - ((s - 0.6) / 0.4);
@@ -155,7 +157,7 @@ public class FlowerMenu extends Widget {
 
     public class Cancel extends Anim {
         public void tick2() {
-            for (Petal p : opts) {
+            for (final Petal p : opts) {
                 p.move(p.ta + ((s) * PI), p.tr * (1 - s));
                 p.a = 1 - s;
             }
@@ -166,7 +168,7 @@ public class FlowerMenu extends Widget {
         }
     }
 
-    private static void organize(Petal[] opts) {
+    private static void organize(final Petal[] opts) {
         int l = 1, p = 0, i;
         int lr = -1;
         for (i = 0; i < opts.length; i++) {
@@ -184,7 +186,7 @@ public class FlowerMenu extends Widget {
         }
     }
 
-    public FlowerMenu(Coord c, Widget parent, String... options) {
+    public FlowerMenu(final Coord c, final Widget parent, final String... options) {
         super(c, Coord.z, parent);
         opts = new Petal[options.length];
         for (int i = 0; i < options.length; i++) {
@@ -198,7 +200,7 @@ public class FlowerMenu extends Widget {
         UI.flowerMenu.set(this);
     }
 
-    public boolean mousedown(Coord c, int button) {
+    public boolean mousedown(final Coord c, final int button) {
         if (anim != null)
             return (true);
         if (!super.mousedown(c, button))
@@ -206,7 +208,7 @@ public class FlowerMenu extends Widget {
         return (true);
     }
 
-    public void uimsg(String msg, Object... args) {
+    public void uimsg(@NotNull final String msg, final Object... args) {
         if (msg.equals("cancel")) {
             anim = new Cancel();
             ui.ungrabmouse();
@@ -218,12 +220,12 @@ public class FlowerMenu extends Widget {
         }
     }
 
-    public void draw(GOut g) {
+    public void draw(final GOut g) {
         super.draw(g);
     }
 
-    public void select(String name) {
-        for (Petal opt : opts) {
+    public void select(final String name) {
+        for (final Petal opt : opts) {
             if (opt.name.equals(name)) {
                 wdgmsg(this, "cl", opt.num);
                 break;
@@ -231,9 +233,9 @@ public class FlowerMenu extends Widget {
         }
     }
 
-    public boolean type(char key, java.awt.event.KeyEvent ev) {
+    public boolean type(final char key, final java.awt.event.KeyEvent ev) {
         if ((key >= '0') && (key <= '9')) {
-            int opt = (key == '0') ? 10 : (key - '1');
+            final int opt = (key == '0') ? 10 : (key - '1');
             if (opt < opts.length)
                 wdgmsg("cl", opt);
             ui.ungrabkeys();
@@ -252,7 +254,7 @@ public class FlowerMenu extends Widget {
         super.destroy();
     }
 
-    public void update(long dt) {
+    public void update(final long dt) {
         if (anim != null)
             anim.tick();
     }

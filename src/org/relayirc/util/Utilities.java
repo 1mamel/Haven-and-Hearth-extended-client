@@ -25,15 +25,15 @@ public class Utilities {
     /**
      * Convert string to integer array.
      */
-    public static String[] stringToStringArray(String instr, String delim) {
+    public static String[] stringToStringArray(final String instr, final String delim) {
         String[] sa = null;
 
         try {
             // Tokenize string, build vector of tokens
-            StringTokenizer toker = new StringTokenizer(instr, delim);
-            Vector v = new Vector();
+            final StringTokenizer toker = new StringTokenizer(instr, delim);
+            final Vector v = new Vector();
             while (toker.hasMoreTokens()) {
-                String s = toker.nextToken();
+                final String s = toker.nextToken();
                 v.addElement(s);
             }
 
@@ -53,17 +53,17 @@ public class Utilities {
     /**
      * Convert string to integer array.
      */
-    public static int[] stringToIntArray(String instr, String delim)
+    public static int[] stringToIntArray(final String instr, final String delim)
             throws NoSuchElementException, NumberFormatException {
 
-        int intArray[];
+        final int[] intArray;
 
         // Tokenize string, build vector of tokens
-        StringTokenizer toker = new StringTokenizer(instr, delim);
-        Vector ints = new Vector();
+        final StringTokenizer toker = new StringTokenizer(instr, delim);
+        final Vector ints = new Vector();
         while (toker.hasMoreTokens()) {
-            String sInt = toker.nextToken();
-            int nInt = Integer.parseInt(sInt);
+            final String sInt = toker.nextToken();
+            final int nInt = Integer.parseInt(sInt);
             ints.addElement(nInt);
         }
 
@@ -79,9 +79,9 @@ public class Utilities {
     /**
      * Convert integer array to a string.
      */
-    public static String intArrayToString(int[] intArray) {
-        StringBuilder ret = new StringBuilder();
-        for (int anIntArray : intArray) {
+    public static String intArrayToString(final int[] intArray) {
+        final StringBuilder ret = new StringBuilder();
+        for (final int anIntArray : intArray) {
             if (ret.length() == 0)
                 ret.append(',');
             ret.append(Integer.toString(anIntArray));

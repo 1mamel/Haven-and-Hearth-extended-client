@@ -20,11 +20,11 @@ public class CustomStarter {
         if (!CustomConfigProcessor.loadSettings()) {
             CustomConfigProcessor.setDefaultSettings();
             final JFrame configFrame = new JFrame("Screen Size");
-            Container contentPane = configFrame.getContentPane();
+            final Container contentPane = configFrame.getContentPane();
             final JPanel clientSettingsPanel = new JPanel(new GridBagLayout(), true);
             final JPanel ircSettingsPanel = new JPanel(new GridBagLayout(), true);
-            JButton startBtn = new JButton("Start!");
-            GridBagConstraints constraints;
+            final JButton startBtn = new JButton("Start!");
+            final GridBagConstraints constraints;
             final JCheckBox ircOn = new JCheckBox("IRC Enabled", true);
             final FilteredTextField xField = new FilteredTextField();
             final FilteredTextField yField = new FilteredTextField();
@@ -122,13 +122,13 @@ public class CustomStarter {
             clientSettingsPanel.add(ircOn, constraints);
 
             ircOn.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
+                public void actionPerformed(final ActionEvent e) {
                     CustomConfig.isIRCOn = ircOn.isSelected();
                 }
             });
 
             typeStandard.addChangeListener(new ChangeListener() {
-                public void stateChanged(ChangeEvent e) {
+                public void stateChanged(final ChangeEvent e) {
                     if (!typeStandard.isSelected() && !typeCustom.isSelected()) {
                         typeStandard.setSelected(true);
                     }
@@ -141,7 +141,7 @@ public class CustomStarter {
                 }
             });
             typeCustom.addChangeListener(new ChangeListener() {
-                public void stateChanged(ChangeEvent e) {
+                public void stateChanged(final ChangeEvent e) {
                     if (!typeStandard.isSelected() && !typeCustom.isSelected()) {
                         typeCustom.setSelected(true);
                     }
@@ -162,10 +162,10 @@ public class CustomStarter {
                 }
             });
             xField.addFocusListener(new FocusListener() {
-                public void focusGained(FocusEvent e) {
+                public void focusGained(final FocusEvent e) {
                 }
 
-                public void focusLost(FocusEvent e) {
+                public void focusLost(final FocusEvent e) {
                     try {
                         if (Integer.parseInt(xField.getText()) < 800) {
                             xField.setText("800");
@@ -176,10 +176,10 @@ public class CustomStarter {
                 }
             });
             yField.addFocusListener(new FocusListener() {
-                public void focusGained(FocusEvent e) {
+                public void focusGained(final FocusEvent e) {
                 }
 
-                public void focusLost(FocusEvent e) {
+                public void focusLost(final FocusEvent e) {
                     try {
                         if (Integer.parseInt(yField.getText()) < 600) {
                             yField.setText("600");
@@ -190,10 +190,10 @@ public class CustomStarter {
                 }
             });
             ircDefNickField.addFocusListener(new FocusListener() {
-                public void focusGained(FocusEvent e) {
+                public void focusGained(final FocusEvent e) {
                 }
 
-                public void focusLost(FocusEvent e) {
+                public void focusLost(final FocusEvent e) {
                     if (ircDefNickField.getText().trim().length() != 0) {
                         CustomConfig.ircDefNick = ircDefNickField.getText().trim();
                     }
@@ -203,10 +203,10 @@ public class CustomStarter {
                 }
             });
             ircAltNickField.addFocusListener(new FocusListener() {
-                public void focusGained(FocusEvent e) {
+                public void focusGained(final FocusEvent e) {
                 }
 
-                public void focusLost(FocusEvent e) {
+                public void focusLost(final FocusEvent e) {
                     if (ircAltNickField.getText().trim().length() != 0) {
                         if (ircDefNickField.getText().trim().length() == 0) {
                             ircDefNickField.setText(ircAltNickField.getText().trim());
@@ -223,9 +223,9 @@ public class CustomStarter {
                 }
             });
             startBtn.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    int x = stdRes.isEnabled() ? ((Coord) stdRes.getSelectedItem()).x : Integer.parseInt(xField.getText());
-                    int y = stdRes.isEnabled() ? ((Coord) stdRes.getSelectedItem()).y : Integer.parseInt(yField.getText());
+                public void actionPerformed(final ActionEvent e) {
+                    final int x = stdRes.isEnabled() ? ((Coord) stdRes.getSelectedItem()).x : Integer.parseInt(xField.getText());
+                    final int y = stdRes.isEnabled() ? ((Coord) stdRes.getSelectedItem()).y : Integer.parseInt(yField.getText());
                     CustomConfig.setWindowSize(x, y);
 
                     new Thread() {
@@ -238,7 +238,7 @@ public class CustomStarter {
                 }
             });
             configFrame.pack();
-            Toolkit toolkit = Toolkit.getDefaultToolkit();
+            final Toolkit toolkit = Toolkit.getDefaultToolkit();
             configFrame.setLocation((int) (toolkit.getScreenSize().getWidth() - configFrame.getWidth()) / 2,
                     (int) (toolkit.getScreenSize().getHeight() - configFrame.getHeight()) / 2);
             configFrame.setVisible(true);

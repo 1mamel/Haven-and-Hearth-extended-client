@@ -32,14 +32,14 @@ public class ResDrawable extends Drawable {
     Sprite spr = null;
     int delay = 0;
 
-    public ResDrawable(Gob gob, Indir<Resource> res, Message sdt) {
+    public ResDrawable(final Gob gob, final Indir<Resource> res, final Message sdt) {
         super(gob);
         this.res = res;
         this.sdt = sdt;
         init();
     }
 
-    public ResDrawable(Gob gob, Resource res) {
+    public ResDrawable(final Gob gob, final Resource res) {
         this(gob, res.indir(), new Message(0));
     }
 
@@ -51,20 +51,20 @@ public class ResDrawable extends Drawable {
         spr = Sprite.create(gob, res.get(), sdt.clone());
     }
 
-    public boolean checkhit(Coord c) {
+    public boolean checkhit(final Coord c) {
         init();
         if (spr != null)
             return (spr.checkhit(c));
         return (false);
     }
 
-    public void setup(Sprite.Drawer d, Coord cc, Coord off) {
+    public void setup(final Sprite.Drawer d, final Coord cc, final Coord off) {
         init();
         if (spr != null)
             spr.setup(d, cc, off);
     }
 
-    public void ctick(int dt) {
+    public void ctick(final int dt) {
         if (spr == null) {
             delay += dt;
         } else {

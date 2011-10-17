@@ -30,13 +30,13 @@ public class TexSI extends Tex {
     final Tex parent;
     final Coord ul;
 
-    public TexSI(Tex parent, Coord ul, Coord sz) {
+    public TexSI(final Tex parent, final Coord ul, final Coord sz) {
         super(sz);
         this.parent = parent;
         this.ul = ul;
     }
 
-    public void render(GOut g, Coord c, Coord ul, Coord br, Coord sz) {
+    public void render(final GOut g, final Coord c, final Coord ul, final Coord br, final Coord sz) {
         parent.render(g, c, this.ul.add(ul), this.ul.add(br), sz);
     }
 }

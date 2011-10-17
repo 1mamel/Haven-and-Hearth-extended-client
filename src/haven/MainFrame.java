@@ -52,13 +52,13 @@ public class MainFrame extends Frame implements Runnable, FSMan {
         }
     }
 
-    DisplayMode findmode(Dimension size) {
-        GraphicsDevice dev = getGraphicsConfiguration().getDevice();
+    DisplayMode findmode(final Dimension size) {
+        final GraphicsDevice dev = getGraphicsConfiguration().getDevice();
         if (!dev.isFullScreenSupported())
             return (null);
         DisplayMode b = null;
-        for (DisplayMode m : dev.getDisplayModes()) {
-            int d = m.getBitDepth();
+        for (final DisplayMode m : dev.getDisplayModes()) {
+            final int d = m.getBitDepth();
             if ((m.getWidth() == size.width) && (m.getHeight() == size.height) && ((d == 24) || (d == 32) || (d == DisplayMode.BIT_DEPTH_MULTI))) {
                 if ((b == null) || (d > b.getBitDepth()) || ((d == b.getBitDepth()) && (m.getRefreshRate() > b.getRefreshRate())))
                     b = m;
@@ -68,7 +68,7 @@ public class MainFrame extends Frame implements Runnable, FSMan {
     }
 
     public void setfs() {
-        GraphicsDevice dev = getGraphicsConfiguration().getDevice();
+        final GraphicsDevice dev = getGraphicsConfiguration().getDevice();
         if (prefs != null)
             return;
         prefs = dev.getDisplayMode();
@@ -86,7 +86,7 @@ public class MainFrame extends Frame implements Runnable, FSMan {
     }
 
     public void setwnd() {
-        GraphicsDevice dev = getGraphicsConfiguration().getDevice();
+        final GraphicsDevice dev = getGraphicsConfiguration().getDevice();
         if (prefs == null)
             return;
         try {
@@ -116,7 +116,7 @@ public class MainFrame extends Frame implements Runnable, FSMan {
     private void seticon() {
         Image icon = null;
         try {
-            InputStream data = MainFrame.class.getResourceAsStream("icon.png");
+            final InputStream data = MainFrame.class.getResourceAsStream("icon.png");
             icon = javax.imageio.ImageIO.read(data);
             data.close();
         } catch (IOException e) {
@@ -126,7 +126,7 @@ public class MainFrame extends Frame implements Runnable, FSMan {
     }
 
     @Override
-    public void setTitle(String charname) {
+    public void setTitle(final String charname) {
         String str = DEFAULT_TITLE;
         if (charname != null) {
             str = charname + " - " + str;
@@ -134,7 +134,7 @@ public class MainFrame extends Frame implements Runnable, FSMan {
         super.setTitle(str);
     }
 
-    private MainFrame(final Coord sizeC, ThreadGroup tg) {
+    private MainFrame(final Coord sizeC, final ThreadGroup tg) {
         super("");
         setWindowTitle(null);
         ourInstance = this;
@@ -149,9 +149,9 @@ public class MainFrame extends Frame implements Runnable, FSMan {
         add(panel);
         pack();
 
-        Insets insets = getInsets();
+        final Insets insets = getInsets();
         insetsSize = new Dimension(insets.left + insets.right, insets.top + insets.bottom);
-        Dimension minimalSizeWithInsets = new Dimension(800 + insetsSize.width, 600 + insetsSize.height);
+        final Dimension minimalSizeWithInsets = new Dimension(800 + insetsSize.width, 600 + insetsSize.height);
         setMinimumSize(minimalSizeWithInsets);
         setSize(new Dimension(size.width + insetsSize.width, size.height + insetsSize.height));
 
@@ -165,32 +165,32 @@ public class MainFrame extends Frame implements Runnable, FSMan {
     @SuppressWarnings({"ObjectAllocationInLoop"})
     public void run() {
         addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
+            public void windowClosing(final WindowEvent e) {
                 if (CustomConfig.isSaveable) CustomConfigProcessor.saveSettings();
                 g.interrupt();
             }
         });
         addComponentListener(new ComponentAdapter() {
-            public void componentResized(ComponentEvent evt) {
+            public void componentResized(final ComponentEvent evt) {
                 CustomConfig.updateWindowSize(getWidth() - insetsSize.width, getHeight() - insetsSize.height);
             }
         });
-        Thread ui = new HackThread(panel, "Haven UI thread");
+        final Thread ui = new HackThread(panel, "Haven UI thread");
         panel.setfsm(this);
         ui.start();
         try {
             // Main Game cycle  Login -> Game -> ...
             //noinspection InfiniteLoopStatement
             while (true) {
-                Bootstrap bill = new Bootstrap();
+                final Bootstrap bill = new Bootstrap();
                 if (Config.defaultServer != null)
                     bill.setaddr(Config.defaultServer);
                 if ((Config.authuser != null) && (Config.authck != null)) {
                     bill.setinitcookie(Config.authuser, Config.authck);
                     Config.authck = null;
                 }
-                Session sess = bill.run(panel);
-                RemoteUI rui = new RemoteUI(sess);
+                final Session sess = bill.run(panel);
+                final RemoteUI rui = new RemoteUI(sess);
                 rui.run(panel.newui(sess));
             }
         } catch (InterruptedException ignored) {
@@ -213,7 +213,7 @@ public class MainFrame extends Frame implements Runnable, FSMan {
         }
         if (!Config.nopreload) {
             try {
-                InputStream pls = Resource.class.getResourceAsStream("res-preload");
+                final InputStream pls = Resource.class.getResourceAsStream("res-preload");
                 if (pls != null) {
                     Resource.loadlist(pls, -5);
                 }
@@ -221,7 +221,7 @@ public class MainFrame extends Frame implements Runnable, FSMan {
                 CustomConfig.logger.error("Failed to load res-preload", e);
             }
             try {
-                InputStream pls = Resource.class.getResourceAsStream("res-bgload");
+                final InputStream pls = Resource.class.getResourceAsStream("res-bgload");
                 if (pls != null) {
                     Resource.loadlist(pls, -10);
                 }
@@ -240,7 +240,7 @@ public class MainFrame extends Frame implements Runnable, FSMan {
         try {
             javax.swing.SwingUtilities.invokeAndWait(new Runnable() {
                 public void run() {
-                    java.io.PrintStream bitbucket = new java.io.PrintStream(new java.io.ByteArrayOutputStream());
+                    final java.io.PrintStream bitbucket = new java.io.PrintStream(new java.io.ByteArrayOutputStream());
                     bitbucket.print(LoginScreen.textf);
                     bitbucket.print(LoginScreen.textfs);
                 }
@@ -253,11 +253,11 @@ public class MainFrame extends Frame implements Runnable, FSMan {
         javax.imageio.spi.IIORegistry.getDefaultInstance();
     }
 
-    private static void main2(String[] args) {
+    private static void main2(final String[] args) {
         Config.cmdline(args);
-        ThreadGroup threadGroup = HackThread.tg();
+        final ThreadGroup threadGroup = HackThread.tg();
         setupres();
-        MainFrame mainFrame = new MainFrame(CustomConfig.getWindowSize(), threadGroup);
+        final MainFrame mainFrame = new MainFrame(CustomConfig.getWindowSize(), threadGroup);
         //noinspection UnusedParameters
         CustomConfig.isSaveable = true;
         if (Config.fullscreen)
@@ -275,12 +275,12 @@ public class MainFrame extends Frame implements Runnable, FSMan {
         dumplist(Resource.cached(), Config.allused);
         if (ResCache.global != null) {
             try {
-                Collection<Resource> used = new LinkedList<Resource>();
-                for (Resource res : Resource.cached()) {
+                final Collection<Resource> used = new LinkedList<Resource>();
+                for (final Resource res : Resource.cached()) {
                     if (res.getPriority() >= 0)
                         used.add(res);
                 }
-                Writer w = new OutputStreamWriter(ResCache.global.store("tmp/allused"), "UTF-8");
+                final Writer w = new OutputStreamWriter(ResCache.global.store("tmp/allused"), "UTF-8");
                 try {
                     Resource.dumplist(used, w);
                 } finally {
@@ -294,7 +294,7 @@ public class MainFrame extends Frame implements Runnable, FSMan {
     public static void main(final String[] args) {
         /* Set up the error handler as early as humanly possible. */
         ThreadGroup g = new ThreadGroup("Haven client");
-        String ed;
+        final String ed;
         if (!(ed = Utils.getprop("haven.errorurl", "")).isEmpty()) {
             try {
                 final haven.error.ErrorHandler hg = new haven.error.ErrorHandler(new java.net.URL(ed));
@@ -307,7 +307,7 @@ public class MainFrame extends Frame implements Runnable, FSMan {
             } catch (java.net.MalformedURLException ignored) {
             }
         }
-        Thread main = new HackThread(g, new Runnable() {
+        final Thread main = new HackThread(g, new Runnable() {
             public void run() {
                 try {
                     javabughack();
@@ -327,10 +327,10 @@ public class MainFrame extends Frame implements Runnable, FSMan {
         System.exit(0);
     }
 
-    private static void dumplist(Collection<Resource> list, String fn) {
+    private static void dumplist(final Collection<Resource> list, final String fn) {
         if (fn == null) return;
         try {
-            Writer w = new OutputStreamWriter(new FileOutputStream(fn), "UTF-8");
+            final Writer w = new OutputStreamWriter(new FileOutputStream(fn), "UTF-8");
             try {
                 Resource.dumplist(list, w);
             } finally {
@@ -341,12 +341,12 @@ public class MainFrame extends Frame implements Runnable, FSMan {
         }
     }
 
-    public static void setWindowSize(Dimension dimension) {
+    public static void setWindowSize(final Dimension dimension) {
         if (ourInstance == null) return;
         ourInstance.setSize(dimension);
     }
 
-    public static void setWindowTitle(String name) {
+    public static void setWindowTitle(final String name) {
         if (ourInstance == null) return;
         ourInstance.setTitle(name);
     }

@@ -15,7 +15,7 @@ import java.io.UnsupportedEncodingException;
 public class Pagina extends Layer {
     public final String text;
 
-    public Pagina(byte[] buf) {
+    public Pagina(final byte[] buf) {
         try {
             text = new String(buf, "UTF-8");
         } catch (UnsupportedEncodingException e) {

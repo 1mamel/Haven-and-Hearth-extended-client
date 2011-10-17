@@ -15,7 +15,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class CuriositiesInventory extends InventoryExt {
     public static AtomicReference<InventoryExt> instance = new AtomicReference<InventoryExt>(null);
 
-    public CuriositiesInventory(Coord c, Coord sz, Widget parent) {
+    public CuriositiesInventory(final Coord c, final Coord sz, final Widget parent) {
         super(c, sz, parent);
     }
 
@@ -25,8 +25,8 @@ public class CuriositiesInventory extends InventoryExt {
      */
     long timeToNextFree() {
         long ret = Long.MAX_VALUE;
-        for (InvItem item : items.values()) {
-            long ttc = item.getTimeToComplete();
+        for (final InvItem item : items.values()) {
+            final long ttc = item.getTimeToComplete();
             if (ttc == 0){ // %) it cannot be true =)
                 continue;
             }

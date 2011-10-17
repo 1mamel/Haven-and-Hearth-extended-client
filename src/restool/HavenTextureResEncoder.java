@@ -8,7 +8,7 @@ import java.io.OutputStream;
 
 public class HavenTextureResEncoder {
 
-    public static void save(InputStream in, OutputStream out, byte[] imgFlags) throws Exception {
+    public static void save(final InputStream in, final OutputStream out, final byte[] imgFlags) throws Exception {
         final byte[] layerName = "image".getBytes();
         out.write(layerName); // layer name
         out.write(0); // null terminator
@@ -20,7 +20,7 @@ public class HavenTextureResEncoder {
         final byte[] imageBytes = outStream.toByteArray();
 
         // img length
-        byte[] buf = new byte[4];
+        final byte[] buf = new byte[4];
         Utils.int32e(imageBytes.length + imgFlags.length, buf, 0);
         out.write(buf);
 

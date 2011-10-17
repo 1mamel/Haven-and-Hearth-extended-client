@@ -41,7 +41,7 @@ public class CustomConfig {
         return logger.getLevel().isGreaterOrEqual(Level.DEBUG);
     }
 
-    public static void setDebugLogging(boolean debug) {
+    public static void setDebugLogging(final boolean debug) {
         logger.setLevel(debug ? Level.DEBUG : Level.INFO);
     }
 
@@ -49,7 +49,7 @@ public class CustomConfig {
         return xray;
     }
 
-    public static void setXray(boolean xray) {
+    public static void setXray(final boolean xray) {
         CustomConfig.xray = xray;
     }
 
@@ -57,7 +57,7 @@ public class CustomConfig {
         return hide;
     }
 
-    public static void setHideObjects(boolean hide) {
+    public static void setHideObjects(final boolean hide) {
         CustomConfig.hide = hide;
     }
 
@@ -93,17 +93,17 @@ public class CustomConfig {
         return windowCenter.y;
     }
 
-    public static void setWindowSize(Coord size) {
+    public static void setWindowSize(final Coord size) {
         windowSize = size;
         MainFrame.setWindowSize(size.toDimension());
     }
 
-    public static void setWindowSize(int width, int height) {
+    public static void setWindowSize(final int width, final int height) {
         windowSize = new Coord(width, height);
         MainFrame.setWindowSize(new Dimension(width, height));
     }
 
-    public static void updateWindowSize(int width, int height) {
+    public static void updateWindowSize(final int width, final int height) {
         windowSize = new Coord(width, height);
     }
 
@@ -115,7 +115,7 @@ public class CustomConfig {
         return render;
     }
 
-    public static void setRender(boolean flag) {
+    public static void setRender(final boolean flag) {
         render = flag;
     }
 
@@ -141,7 +141,7 @@ public class CustomConfig {
         int hudActiveBelt = 1;
         String[][] hudBelt = new String[SlenHud._BELTSIZE][SlenHud._BELTSIZE];
 
-        CharData(String name) {
+        CharData(final String name) {
             this.name = name;
         }
 
@@ -173,8 +173,8 @@ public class CustomConfig {
     public static boolean logIRC = false;
     public static boolean logServerMessages = false;
 
-    public static void setActiveCharacter(String name) {
-        for (CharData cData : characterList) {
+    public static void setActiveCharacter(final String name) {
+        for (final CharData cData : characterList) {
             if (cData.name.equalsIgnoreCase(name)) {
                 activeCharacter = cData;
                 CustomConfig.isSaveable = true;

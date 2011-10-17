@@ -29,7 +29,7 @@ package haven;
 public abstract class Tex {
     protected final Coord dim;
 
-    public Tex(Coord sz) {
+    public Tex(final Coord sz) {
         dim = sz;
     }
 
@@ -37,7 +37,7 @@ public abstract class Tex {
         return (dim);
     }
 
-    public static int nextp2(int in) {
+    public static int nextp2(final int in) {
         int ret;
 
         //noinspection StatementWithEmptyBody
@@ -47,46 +47,46 @@ public abstract class Tex {
 
     public abstract void render(GOut g, Coord c, Coord ul, Coord br, Coord sz);
 
-    public void render(GOut g, Coord c) {
+    public void render(final GOut g, final Coord c) {
         render(g, c, Coord.z, dim, dim);
     }
 
-    public void crender(GOut g, Coord c, Coord ul, Coord sz, Coord tsz) {
+    public void crender(final GOut g, final Coord c, final Coord ul, final Coord sz, final Coord tsz) {
         if ((tsz.x == 0) || (tsz.y == 0))
             return;
         if ((c.x >= ul.x + sz.x) || (c.y >= ul.y + sz.y) ||
                 (c.x + tsz.x <= ul.x) || (c.y + tsz.y <= ul.y))
             return;
-        Coord t = new Coord(c);
-        Coord uld = new Coord(0, 0);
-        Coord brd = new Coord(dim);
-        Coord szd = new Coord(tsz);
+        final Coord t = new Coord(c);
+        final Coord uld = new Coord(0, 0);
+        final Coord brd = new Coord(dim);
+        final Coord szd = new Coord(tsz);
         if (c.x < ul.x) {
-            int pd = ul.x - c.x;
+            final int pd = ul.x - c.x;
             t.setX(ul.x);
             uld.setX((pd * dim.x) / tsz.x);
             szd.setX(szd.x - pd);
         }
         if (c.y < ul.y) {
-            int pd = ul.y - c.y;
+            final int pd = ul.y - c.y;
             t.setY(ul.y);
             uld.setY((pd * dim.y) / tsz.y);
             szd.setY(szd.y - pd);
         }
         if (c.x + tsz.x > ul.x + sz.x) {
-            int pd = (c.x + tsz.x) - (ul.x + sz.x);
+            final int pd = (c.x + tsz.x) - (ul.x + sz.x);
             szd.setX(szd.x - pd);
             brd.setX(brd.x - (pd * dim.x) / tsz.x);
         }
         if (c.y + tsz.y > ul.y + sz.y) {
-            int pd = (c.y + tsz.y) - (ul.y + sz.y);
+            final int pd = (c.y + tsz.y) - (ul.y + sz.y);
             szd.setY(szd.y - pd);
             brd.setY(brd.y - (pd * dim.y) / tsz.y);
         }
         render(g, t, uld, brd, szd);
     }
 
-    public void crender(GOut g, Coord c, Coord ul, Coord sz) {
+    public void crender(final GOut g, final Coord c, final Coord ul, final Coord sz) {
         crender(g, c, ul, sz, dim);
     }
 

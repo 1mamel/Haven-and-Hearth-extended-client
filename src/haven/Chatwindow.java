@@ -26,28 +26,30 @@
 
 package haven;
 
+import org.jetbrains.annotations.NotNull;
+
 public class Chatwindow extends ChatHW {
 
     static {
         Widget.addtype("chat", new WidgetFactory() {
-            public Widget create(Coord c, Widget parent, Object[] args) {
+            public Widget create(final Coord c, final Widget parent, final Object[] args) {
                 return (new Chatwindow(c, (Coord) args[0], parent));
             }
         });
     }
 
-    public Chatwindow(Coord c, Coord sz, Widget parent) {
+    public Chatwindow(final Coord c, final Coord sz, final Widget parent) {
         super(parent, "Global", true);
     }
 
-    public void uimsg(String msg, Object... args) {
+    public void uimsg(@NotNull final String msg, final Object... args) {
         if (msg.equals("log")) {
             makeurgent(1);
         }
         super.uimsg(msg, args);
     }
 
-    public void wdgmsg(Widget sender, String msg, Object... args) {
+    public void wdgmsg(final Widget sender, final String msg, final Object... args) {
         if (sender == in) {
             if (msg.equals("activate")) {
                 wdgmsg("msg", args[0]);

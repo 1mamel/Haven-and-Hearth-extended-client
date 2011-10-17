@@ -90,8 +90,8 @@ public class IRCConnection implements Runnable, IRCConstants {
      * @param userName Player's login/user name (e.g. mps).
      * @param fullName Player's full name (e.g. Mortimer P. Snerd)
      */
-    public IRCConnection(String server, int port,
-                         String nick, String altNick, String userName, String fullName) {
+    public IRCConnection(final String server, final int port,
+                         final String nick, final String altNick, final String userName, final String fullName) {
         _server = server;
         _port = port;
         _nick = nick;
@@ -125,7 +125,7 @@ public class IRCConnection implements Runnable, IRCConstants {
      *
      * @param state new ChatEngine state
      */
-    public void setState(int state) {
+    public void setState(final int state) {
         _state = state;
     }
     //------------------------------------------------------------------
@@ -148,7 +148,7 @@ public class IRCConnection implements Runnable, IRCConstants {
      * and starts firing events to listeners. Syncs with previousConnection
      * as suggested in bug #211402.
      */
-    public void open(IRCConnection previousConnection) {
+    public void open(final IRCConnection previousConnection) {
         // MGENT FIX (bug #211402) - previous connection logic:
         // prepare to wait for any previous _messageLoopThread to finish
         if (previousConnection != null && previousConnection._identd != null) {
@@ -200,7 +200,7 @@ public class IRCConnection implements Runnable, IRCConstants {
     /**
      * For now, only one listener is supported.
      */
-    public void setIRCConnectionListener(IRCConnectionListener listener) {
+    public void setIRCConnectionListener(final IRCConnectionListener listener) {
         _listener = listener;
     }
     //------------------------------------------------------------------
@@ -217,7 +217,7 @@ public class IRCConnection implements Runnable, IRCConstants {
      * Send change-nickname request to IRC server and save value as
      * the nick name currently in use.
      */
-    public void sendNick(String nick) {
+    public void sendNick(final String nick) {
         _nick = nick;
         writeln("NICK " + _nick + "\r\n");
     }
@@ -226,10 +226,10 @@ public class IRCConnection implements Runnable, IRCConstants {
     /**
      * Parses nick name of origin
      */
-    private static String parseOrgnick(String origin) {
+    private static String parseOrgnick(final String origin) {
         String orgnick = null;
         if (origin.length() > 0) {
-            StringTokenizer toker2 = new StringTokenizer(origin, "!");
+            final StringTokenizer toker2 = new StringTokenizer(origin, "!");
             try {
                 orgnick = toker2.nextToken();
             } catch (NoSuchElementException e) {
@@ -244,7 +244,7 @@ public class IRCConnection implements Runnable, IRCConstants {
      * Write directly to the IRC chat server, refer to RFC-1459
      * for valid commands.
      */
-    public void writeln(String message) {
+    public void writeln(final String message) {
 
         // MGENTFIX (bug #111583)
         // "Connection dropped while sending message is not detected"
@@ -381,17 +381,17 @@ public class IRCConnection implements Runnable, IRCConstants {
             while ((message = _inputStream.readLine()) != null) {
                 Debug.println("message=" + message);
 
-                int pos = 0;
+                final int pos = 0;
                 origin = "";
                 command = "";
 
                 // Parse message into a vector of strings
-                ParsedToken[] tokens =
+                final ParsedToken[] tokens =
                         ParsedToken.stringToParsedTokens(message, " ");
 
                 // Get origin, if there is one, and the command
                 if (tokens.length > 0) {
-                    ParsedToken tok = tokens[0];
+                    final ParsedToken tok = tokens[0];
                     if (tok.token.substring(0, 1).equals(":")) {
 
                         // token 0 begins with ":" so assume it's the origin
@@ -439,19 +439,19 @@ public class IRCConnection implements Runnable, IRCConstants {
      * Handle commands. Parse the command arguments and pass them
      * off to the appropriate handler method.
      */
-    private boolean handleCommand(String message,
-                                  String command, String origin, ParsedToken[] tokens) {
+    private boolean handleCommand(final String message,
+                                  final String command, final String origin, final ParsedToken[] tokens) {
 
         boolean handled = false;
 
         if (command.equals("PING")) {
-            String params = message.substring(message.indexOf("PING") + 4);
+            final String params = message.substring(message.indexOf("PING") + 4);
             _mux.onPing(params);
             handled = true;
         } else if (command.equals("PRIVMSG")) {
-            String channel = tokens[2].token;
-            String text = message.substring(tokens[3].index).trim();
-            String orgnick = parseOrgnick(origin);
+            final String channel = tokens[2].token;
+            final String text = message.substring(tokens[3].index).trim();
+            final String orgnick = parseOrgnick(origin);
             if (orgnick != null) {
                 handled = true;
                 if (text.indexOf("\001VERSION") != -1) {
@@ -469,8 +469,8 @@ public class IRCConnection implements Runnable, IRCConstants {
             }
         } else if (command.equals("NOTICE")) {
 
-            String orgnick = parseOrgnick(origin);
-            String text = message.substring(tokens[4].index).trim();
+            final String orgnick = parseOrgnick(origin);
+            final String text = message.substring(tokens[4].index).trim();
 
             try {
                 handled = true;
@@ -484,39 +484,39 @@ public class IRCConnection implements Runnable, IRCConstants {
             }
         } else if (command.equals("MODE")) {
             _mux.onStatus("MODE: " + message);
-            String orgnick = parseOrgnick(origin);
+            final String orgnick = parseOrgnick(origin);
             if (orgnick != null) {
-                String chan = tokens[2].token;
-                String mode = tokens[3].token;
+                final String chan = tokens[2].token;
+                final String mode = tokens[3].token;
                 if (mode.equals("+o")) {
-                    String oped = tokens[4].token;
+                    final String oped = tokens[4].token;
                     _mux.onOp(orgnick, chan, oped);
                     handled = true;
                 } else if (mode.equals("+b")) {
-                    String banned = tokens[4].token;
+                    final String banned = tokens[4].token;
                     _mux.onBan(banned, chan, orgnick);
                     handled = true;
                 }
             }
         } else if (command.equals("INVITE")) {
-            String target = tokens[2].token;
-            String channel = tokens[3].token;
-            String orgnick = parseOrgnick(origin);
+            final String target = tokens[2].token;
+            final String channel = tokens[3].token;
+            final String orgnick = parseOrgnick(origin);
             if (orgnick != null) {
                 _mux.onInvite(origin, orgnick, target, channel.substring(1));
                 handled = true;
             }
         } else if (command.equals("JOIN")) {
-            String channel = tokens[2].token;
-            String orgnick = parseOrgnick(origin);
+            final String channel = tokens[2].token;
+            final String orgnick = parseOrgnick(origin);
             if (orgnick != null) {
                 _mux.onJoin(origin, orgnick, channel.substring(1), false);
                 handled = true;
             }
         } else if (command.equals("PART")) {
             Debug.println("PART: " + message);
-            String channel = tokens[2].token;
-            String orgnick = parseOrgnick(origin);
+            final String channel = tokens[2].token;
+            final String orgnick = parseOrgnick(origin);
             if (orgnick != null) {
                 _mux.onPart(origin, orgnick, channel);
                 handled = true;
@@ -524,10 +524,10 @@ public class IRCConnection implements Runnable, IRCConstants {
         } else if (command.equals("KICK")) {
             Debug.println("KICK: " + message);
             try {
-                String orgnick = parseOrgnick(origin);
-                String channel = tokens[2].token;
-                String kicked = tokens[3].token;
-                String reason = tokens[4].token;
+                final String orgnick = parseOrgnick(origin);
+                final String channel = tokens[2].token;
+                final String kicked = tokens[3].token;
+                final String reason = tokens[4].token;
                 if (orgnick != null) {
                     _mux.onKick(kicked, channel, orgnick, reason);
                     handled = true;
@@ -538,24 +538,24 @@ public class IRCConnection implements Runnable, IRCConstants {
                 e.printStackTrace();
             } // is not ok
         } else if (command.equals("QUIT")) {
-            String channel = tokens[2].token;
-            String text = message.substring(tokens[2].index + 1);
-            String orgnick = parseOrgnick(origin);
+            final String channel = tokens[2].token;
+            final String text = message.substring(tokens[2].index + 1);
+            final String orgnick = parseOrgnick(origin);
             if (orgnick != null) {
                 _mux.onQuit(origin, orgnick, text);
                 //Debug.println("--- QUIT --- "+origin+"|"+orgnick+"|"+text);
                 handled = true;
             }
         } else if (command.equals("NICK")) {
-            String channel = tokens[2].token;
-            String orgnick = parseOrgnick(origin);
+            final String channel = tokens[2].token;
+            final String orgnick = parseOrgnick(origin);
             if (orgnick != null) {
                 _mux.onNick(origin, orgnick, channel.substring(1));
                 handled = true;
             }
         } else if (command.equals("TOPIC")) {
-            String channel = tokens[2].token;
-            String topic = tokens[3].token.substring(1);
+            final String channel = tokens[2].token;
+            final String topic = tokens[3].token.substring(1);
             _mux.onTopic(channel, topic);
             handled = true;
         } else if (command.equals("MSG")) {
@@ -572,11 +572,11 @@ public class IRCConnection implements Runnable, IRCConstants {
      * them off to the appropriate handler method.
      */
     @SuppressWarnings({"OctalInteger"})
-    private boolean handleReply(String message,
-                                String command, String origin, ParsedToken[] tokens) throws IRCException {
+    private boolean handleReply(final String message,
+                                final String command, final String origin, final ParsedToken[] tokens) throws IRCException {
 
         // Parse command ID into integer
-        int cmdid;
+        final int cmdid;
         try {
             cmdid = Integer.parseInt(command);
         } catch (Exception e) {
@@ -594,7 +594,7 @@ public class IRCConnection implements Runnable, IRCConstants {
                 break;
 
             case RPL_LUSERCHANNELS:
-                int channelCount;
+                final int channelCount;
                 try {
                     channelCount = Integer.parseInt(tokens[3].token);
                     _mux.onReplyListUserChannels(channelCount);
@@ -611,13 +611,13 @@ public class IRCConnection implements Runnable, IRCConstants {
 
             case RPL_LIST: {
                 // "<channel> <# visible> :<topic>"
-                String channel = tokens[3].token;
+                final String channel = tokens[3].token;
                 int userCount = 0;
                 try {
                     userCount = Integer.parseInt(tokens[4].token);
                 } catch (Exception ignored) {
                 }
-                String topic = message.substring(tokens[5].index + 1);
+                final String topic = message.substring(tokens[5].index + 1);
                 _mux.onReplyList(channel, userCount, topic);
                 handled = true;
                 break;
@@ -628,7 +628,7 @@ public class IRCConnection implements Runnable, IRCConstants {
                 break;
 
             case RPL_LUSERCLIENT: {
-                String msg = message.substring(tokens[3].index + 1);
+                final String msg = message.substring(tokens[3].index + 1);
                 _mux.onReplyListUserClient(msg);
                 handled = true;
                 break;
@@ -636,26 +636,26 @@ public class IRCConnection implements Runnable, IRCConstants {
 
             case RPL_WHOISUSER: {
                 // "<srv> <cmd> <to_nick> <nick> <uname> <host> * :<fname>"
-                String nick = tokens[3].token;
-                String user = tokens[4].token;
-                String host = tokens[5].token;
-                String fullName = message.substring(tokens[7].index + 1);
+                final String nick = tokens[3].token;
+                final String user = tokens[4].token;
+                final String host = tokens[5].token;
+                final String fullName = message.substring(tokens[7].index + 1);
                 _mux.onReplyWhoIsUser(nick, user, fullName, host);
                 handled = true;
                 break;
             }
             case RPL_WHOISSERVER: {
                 // "<srv> <cmd> <to_nick> <nick> <server> :<server info>"
-                String nick = tokens[3].token;
-                String server = tokens[4].token;
-                String info = message.substring(tokens[5].index + 1);
+                final String nick = tokens[3].token;
+                final String server = tokens[4].token;
+                final String info = message.substring(tokens[5].index + 1);
                 _mux.onReplyWhoIsServer(nick, server, info);
                 handled = true;
                 break;
             }
             case RPL_WHOISOPERATOR:
                 // "<srv> <cmd> <to_nick> <nick> :is an IRC operator"
-                String opmsg = message.substring(tokens[3].index);
+                final String opmsg = message.substring(tokens[3].index);
                 _mux.onReplyWhoIsOperator(opmsg);
                 handled = true;
                 break;
@@ -663,11 +663,11 @@ public class IRCConnection implements Runnable, IRCConstants {
             case RPL_WHOISIDLE: {
                 // "<srv> <cmd> <to_nick> <nick> <idle> <signon> :<comments>
 
-                String nick = tokens[3].token;
+                final String nick = tokens[3].token;
 
                 // Parse integer: idle time in seconds
                 int idle = 0;
-                String secStr = tokens[4].token;
+                final String secStr = tokens[4].token;
                 try {
                     idle = Integer.parseInt(secStr);
                 } catch (Exception ignored) {
@@ -675,14 +675,14 @@ public class IRCConnection implements Runnable, IRCConstants {
 
                 // Parse long: signon time in seconds-since-epoc time
                 long signon = 0;
-                String signonStr = tokens[5].token;
+                final String signonStr = tokens[5].token;
                 try {
                     signon = Long.parseLong(signonStr) * 1000;
                 } catch (Exception ignored) {
                 }
-                Date signonTime = new Date(signon);
+                final Date signonTime = new Date(signon);
 
-                String comments = message.substring(tokens[6].index + 1);
+                final String comments = message.substring(tokens[6].index + 1);
 
                 _mux.onReplyWhoIsIdle(nick, idle, signonTime);
                 handled = true;
@@ -690,15 +690,15 @@ public class IRCConnection implements Runnable, IRCConstants {
             }
             case RPL_ENDOFWHOIS: {
                 // "<srv> <cmd> <to_nick> <nick> :End of /WHOIS list"
-                String nick = tokens[3].token;
+                final String nick = tokens[3].token;
                 _mux.onReplyEndOfWhoIs(nick);
                 handled = true;
                 break;
             }
             case RPL_WHOISCHANNELS:
                 // "<srv> <cmd> <to_nick> <nick> :{[@|+]<channel><space>}"
-                String nick = tokens[3].token;
-                String chans = message.substring(
+                final String nick = tokens[3].token;
+                final String chans = message.substring(
                         tokens[4].index + 1);
 
                 _mux.onReplyWhoIsChannels(nick, chans);
@@ -714,7 +714,7 @@ public class IRCConnection implements Runnable, IRCConstants {
                 break;
 
             case RPL_MOTD: {
-                String msg = message.substring(
+                final String msg = message.substring(
                         tokens[3].index);
                 _mux.onReplyMOTD(msg);
                 handled = true;
@@ -722,7 +722,7 @@ public class IRCConnection implements Runnable, IRCConstants {
             }
 
             case RPL_ENDOFMOTD: {
-                String msg = message.substring(
+                final String msg = message.substring(
                         tokens[3].index);
                 _mux.onReplyMOTDEnd();
                 handled = true;
@@ -730,8 +730,8 @@ public class IRCConnection implements Runnable, IRCConstants {
             }
 
             case RPL_TOPIC: {
-                String chan1 = tokens[3].token;
-                String top = message.substring(
+                final String chan1 = tokens[3].token;
+                final String top = message.substring(
                         tokens[4].index).substring(1);
                 _mux.onReplyTopic(chan1, top);
                 handled = true;
@@ -739,8 +739,8 @@ public class IRCConnection implements Runnable, IRCConstants {
             }
             case RPL_NAMREPLY: {
                 // "<channel> :[[@|+]<nick> [[@|+]<nick> [...]]]"
-                String chn = tokens[4].token;
-                String users = message.substring(tokens[5].index);
+                final String chn = tokens[4].token;
+                final String users = message.substring(tokens[5].index);
                 _mux.onReplyNameReply(chn, users.substring(1));
                 handled = true;
                 break;
@@ -799,8 +799,8 @@ public class IRCConnection implements Runnable, IRCConstants {
 
             // Unsupported commands and replies
             case RPL_ISON: {
-                int userCount = tokens.length - 1;
-                String[] users = new String[userCount];
+                final int userCount = tokens.length - 1;
+                final String[] users = new String[userCount];
                 for (int i = 1; i < tokens.length; i++) {
                     users[i - 1] = tokens[i].token;
                 }
@@ -831,24 +831,24 @@ public class IRCConnection implements Runnable, IRCConstants {
 
     private class _IRCConnectionMux extends IRCConnectionAdapter {
 
-        public void onAction(String user, String chan, String txt) {
+        public void onAction(final String user, final String chan, final String txt) {
             Debug.println("_IRCConnectionMux.onAction(" + user + ',' + chan + ',' + txt + ')');
             _listener.onAction(user, chan, txt);
         }
 
-        public void onBan(String banned, String chan, String banner) {
+        public void onBan(final String banned, final String chan, final String banner) {
             _listener.onBan(banned, chan, banner);
         }
 
-        public void onClientInfo(String orgnick) {
+        public void onClientInfo(final String orgnick) {
             _listener.onClientInfo(orgnick);
         }
 
-        public void onClientSource(String orgnick) {
+        public void onClientSource(final String orgnick) {
             _listener.onClientSource(orgnick);
         }
 
-        public void onClientVersion(String orgnick) {
+        public void onClientVersion(final String orgnick) {
             _listener.onClientVersion(orgnick);
         }
 
@@ -864,83 +864,83 @@ public class IRCConnection implements Runnable, IRCConstants {
             _listener.onDisconnect();
         }
 
-        public void onIsOn(String[] usersOn) {
+        public void onIsOn(final String[] usersOn) {
             _listener.onIsOn(usersOn);
         }
 
         public void onInvite(
-                String origin, String originNick, String target, String chan) {
+                final String origin, final String originNick, final String target, final String chan) {
             _listener.onInvite(origin, originNick, target, chan);
         }
 
         public void onJoin(
-                String user, String nick, String chan, boolean create) {
+                final String user, final String nick, final String chan, final boolean create) {
             _listener.onJoin(user, nick, chan, create);
         }
 
-        public void onJoins(String users, String chan) {
+        public void onJoins(final String users, final String chan) {
             _listener.onJoins(users, chan);
         }
 
         public void onKick(
-                String kicked, String chan, String kicker, String txt) {
+                final String kicked, final String chan, final String kicker, final String txt) {
             _listener.onKick(kicked, chan, kicker, txt);
         }
 
-        public void onMessage(String message) {
+        public void onMessage(final String message) {
             _listener.onMessage(message);
         }
 
-        public void onPrivateMessage(String orgnick, String chan, String txt) {
+        public void onPrivateMessage(final String orgnick, final String chan, final String txt) {
             _listener.onPrivateMessage(orgnick, chan, txt);
         }
 
-        public void onNick(String user, String oldnick, String newnick) {
+        public void onNick(final String user, final String oldnick, final String newnick) {
             _listener.onNick(user, oldnick, newnick);
         }
 
-        public void onNotice(String text) {
+        public void onNotice(final String text) {
             _listener.onNotice(text);
         }
 
-        public void onPart(String user, String nick, String chan) {
+        public void onPart(final String user, final String nick, final String chan) {
             _listener.onPart(user, nick, chan);
         }
 
-        public void onOp(String oper, String chan, String oped) {
+        public void onOp(final String oper, final String chan, final String oped) {
             _listener.onOp(oper, chan, oped);
         }
 
-        public void onParsingError(String message) {
+        public void onParsingError(final String message) {
             _listener.onParsingError(message);
         }
 
-        public void onPing(String params) {
+        public void onPing(final String params) {
             _listener.onPing(params);
         }
 
-        public void onStatus(String msg) {
+        public void onStatus(final String msg) {
             _listener.onStatus(msg);
         }
 
-        public void onTopic(String chanName, String newTopic) {
+        public void onTopic(final String chanName, final String newTopic) {
             _listener.onTopic(chanName, newTopic);
         }
 
-        public void onVersionNotice(String orgnick, String origin,
-                                    String version) {
+        public void onVersionNotice(final String orgnick, final String origin,
+                                    final String version) {
             _listener.onVersionNotice(orgnick, origin, version);
         }
 
-        public void onQuit(String user, String nick, String txt) {
+        public void onQuit(final String user, final String nick, final String txt) {
             _listener.onQuit(user, nick, txt);
         }
 
-        public void onReplyVersion(String version) {
+        public void onReplyVersion(final String version) {
             _listener.onReplyVersion(version);
         }
 
-        public void onReplyListUserChannels(int channelCount) {
+        public void onReplyListUserChannels(final int channelCount) {
             _listener.onReplyListUserChannels(channelCount);
         }
 
@@ -948,7 +948,7 @@ public class IRCConnection implements Runnable, IRCConstants {
             _listener.onReplyListStart();
         }
 
-        public void onReplyList(String channel, int userCount, String topic) {
+        public void onReplyList(final String channel, final int userCount, final String topic) {
             _listener.onReplyList(channel, userCount, topic);
         }
 
@@ -956,32 +956,32 @@ public class IRCConnection implements Runnable, IRCConstants {
             _listener.onReplyListEnd();
         }
 
-        public void onReplyListUserClient(String msg) {
+        public void onReplyListUserClient(final String msg) {
             _listener.onReplyListUserClient(msg);
         }
 
-        public void onReplyWhoIsUser(String nick, String user,
-                                     String name, String host) {
+        public void onReplyWhoIsUser(final String nick, final String user,
+                                     final String name, final String host) {
             _listener.onReplyWhoIsUser(nick, user, name, host);
         }
 
-        public void onReplyWhoIsServer(String nick, String server, String info) {
+        public void onReplyWhoIsServer(final String nick, final String server, final String info) {
             _listener.onReplyWhoIsServer(nick, server, info);
         }
 
-        public void onReplyWhoIsOperator(String info) {
+        public void onReplyWhoIsOperator(final String info) {
             _listener.onReplyWhoIsOperator(info);
         }
 
-        public void onReplyWhoIsIdle(String nick, int idle, Date signon) {
+        public void onReplyWhoIsIdle(final String nick, final int idle, final Date signon) {
             _listener.onReplyWhoIsIdle(nick, idle, signon);
         }
 
-        public void onReplyEndOfWhoIs(String nick) {
+        public void onReplyEndOfWhoIs(final String nick) {
             _listener.onReplyEndOfWhoIs(nick);
         }
 
-        public void onReplyWhoIsChannels(String nick, String channels) {
+        public void onReplyWhoIsChannels(final String nick, final String channels) {
             _listener.onReplyWhoIsChannels(nick, channels);
         }
 
@@ -989,7 +989,7 @@ public class IRCConnection implements Runnable, IRCConstants {
             _listener.onReplyMOTDStart();
         }
 
-        public void onReplyMOTD(String msg) {
+        public void onReplyMOTD(final String msg) {
             _listener.onReplyMOTD(msg);
         }
 
@@ -997,11 +997,11 @@ public class IRCConnection implements Runnable, IRCConstants {
             _listener.onReplyMOTDEnd();
         }
 
-        public void onReplyNameReply(String channel, String users) {
+        public void onReplyNameReply(final String channel, final String users) {
             _listener.onReplyNameReply(channel, users);
         }
 
-        public void onReplyTopic(String channel, String topic) {
+        public void onReplyTopic(final String channel, final String topic) {
             _listener.onReplyTopic(channel, topic);
         }
 
@@ -1033,11 +1033,11 @@ public class IRCConnection implements Runnable, IRCConstants {
             _listener.onErrorAlreadyRegistered();
         }
 
-        public void onErrorUnknown(String message) {
+        public void onErrorUnknown(final String message) {
             _listener.onErrorUnknown(message);
         }
 
-        public void onErrorUnsupported(String message) {
+        public void onErrorUnsupported(final String message) {
             _listener.onErrorUnsupported(message);
         }
     }

@@ -19,17 +19,17 @@ public class Request {
         super();
     }
 
-    public Request(String reqString) {
+    public Request(final String reqString) {
         this();
         initSearch(reqString);
     }
 
-    public Request(String reqString, RequestCallback reqCallback) {
+    public Request(final String reqString, final RequestCallback reqCallback) {
         this(reqString);
         callback = reqCallback;
     }
 
-    public void initSearch(String req) {
+    public void initSearch(final String req) {
         search = req;
         try {
             url = new URL(wiki + "/w/index.php?search=" + URLEncoder.encode(search, "UTF-8"));
@@ -38,7 +38,7 @@ public class Request {
         }
     }
 
-    public void initPage(String req) {
+    public void initPage(final String req) {
         search = req;
         search.replaceAll(" ", "_");
         try {

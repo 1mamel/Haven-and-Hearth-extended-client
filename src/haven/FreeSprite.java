@@ -43,41 +43,41 @@ public abstract class FreeSprite extends Sprite {
     private static class LPart extends Part {
         final Layer lay;
 
-        LPart(Layer lay, int z, int subz) {
+        LPart(final Layer lay, final int z, final int subz) {
             super(z, subz);
             this.lay = lay;
         }
 
-        public void draw(GOut g) {
+        public void draw(final GOut g) {
             lay.draw(g, sc());
         }
 
-        public void draw(java.awt.image.BufferedImage img, java.awt.Graphics g) {
+        public void draw(final java.awt.image.BufferedImage img, final java.awt.Graphics g) {
         }
     }
 
-    protected FreeSprite(Owner owner, Resource res, int z, int subz) {
+    protected FreeSprite(final Owner owner, final Resource res, final int z, final int subz) {
         super(owner, res);
         add(new Layer() {
-            public void draw(GOut g, Coord sc) {
+            public void draw(final GOut g, final Coord sc) {
                 FreeSprite.this.draw(g, sc);
             }
         }, z, subz);
     }
 
-    protected FreeSprite(Owner owner, Resource res) {
+    protected FreeSprite(final Owner owner, final Resource res) {
         this(owner, res, 0, 0);
     }
 
-    public void add(Layer lay, int z, int subz) {
+    public void add(final Layer lay, final int z, final int subz) {
         layers.add(new LPart(lay, z, subz));
     }
 
-    public boolean checkhit(Coord c) {
+    public boolean checkhit(final Coord c) {
         return (false);
     }
 
-    public void setup(Drawer d, Coord cc, Coord off) {
+    public void setup(final Drawer d, final Coord cc, final Coord off) {
         setup(layers, d, cc, off);
     }
 

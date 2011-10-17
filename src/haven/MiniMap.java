@@ -63,18 +63,18 @@ public class MiniMap extends Widget {
         return scales[scale];
     }
 
-    public void setScale(int scale) {
+    public void setScale(final int scale) {
         this.scale = Math.max(0, Math.min(scale, scales.length - 1));
     }
 
     static class Loader implements Runnable {
         Thread me = null;
 
-        private static InputStream getreal(String nm) throws IOException {
-            URL url = new URL(Config.mapurl, nm + ".png");
-            URLConnection c = url.openConnection();
+        private static InputStream getreal(final String nm) throws IOException {
+            final URL url = new URL(Config.mapurl, nm + ".png");
+            final URLConnection c = url.openConnection();
             c.addRequestProperty("Player-Agent", "Haven/1.0");
-            InputStream s = c.getInputStream();
+            final InputStream s = c.getInputStream();
             /*
             * I've commented this out, since it seems that the JNLP
             * PersistenceService (or at least Sun's implementation of
@@ -91,21 +91,21 @@ public class MiniMap extends Widget {
             return (s);
         }
 
-        private static InputStream getcached(String nm) throws IOException {
+        private static InputStream getcached(final String nm) throws IOException {
             /*if(ResCache.global == null)
            throw(new FileNotFoundException("No resource cache installed"));
            return(ResCache.global.fetch("mm/" + nm));*/
             if (mappingSession > 0) {
-                String fileName;
+                final String fileName;
                 if (gridsHashes.containsKey(nm)) {
-                    Coord coordinates = gridsHashes.get(nm);
+                    final Coord coordinates = gridsHashes.get(nm);
                     fileName = "tile_" + coordinates.x + '_'
                             + coordinates.y;
                 } else {
                     fileName = nm;
                 }
 
-                File inputfile = new File("map/"
+                final File inputfile = new File("map/"
                         + Utils.sessdate(mappingSession) + '/' + fileName
                         + ".png");
                 if (!inputfile.exists())
@@ -124,7 +124,7 @@ public class MiniMap extends Widget {
                         grid = null;
                         // TODO: what this cycle means?
                         //noinspection LoopStatementThatDoesntLoop
-                        for (String cg : loading) {
+                        for (final String cg : loading) {
                             grid = cg;
                             break;
                         }
@@ -145,16 +145,16 @@ public class MiniMap extends Widget {
                         try {
                             img = ImageIO.read(in);
                             if ((!cached) & (mappingSession > 0)) {
-                                String fileName;
+                                final String fileName;
                                 if (gridsHashes.containsKey(grid)) {
-                                    Coord coordinates = gridsHashes.get(grid);
+                                    final Coord coordinates = gridsHashes.get(grid);
                                     fileName = "tile_" + coordinates.x + '_'
                                             + coordinates.y;
                                 } else {
                                     fileName = grid;
                                 }
 
-                                File outputfile = new File("map/"
+                                final File outputfile = new File("map/"
                                         + Utils.sessdate(mappingSession) + "/" + fileName
                                         + ".png");
                                 ImageIO.write(img, "png", outputfile);
@@ -163,7 +163,7 @@ public class MiniMap extends Widget {
                             Utils.readtileof(in);
                             in.close();
                         }
-                        Tex tex = new TexI(img);
+                        final Tex tex = new TexI(img);
                         synchronized (grids) {
                             grids.put(grid, tex);
                             loading.remove(grid);
@@ -192,7 +192,7 @@ public class MiniMap extends Widget {
             }
         }
 
-        void req(String nm) {
+        void req(final String nm) {
             synchronized (grids) {
                 if (loading.contains(nm))
                     return;
@@ -203,11 +203,11 @@ public class MiniMap extends Widget {
     }
 
     public static void newMappingSession() {
-        long newSession = System.currentTimeMillis();
-        String date = Utils.sessdate(newSession);
+        final long newSession = System.currentTimeMillis();
+        final String date = Utils.sessdate(newSession);
         try {
             (new File("map/" + date)).mkdirs();
-            Writer currentSessionFile = new FileWriter("map/currentsession.js");
+            final Writer currentSessionFile = new FileWriter("map/currentsession.js");
             currentSessionFile.write("var currentSession = '" + date + "';\n");
             currentSessionFile.close();
             mappingSession = newSession;
@@ -217,7 +217,7 @@ public class MiniMap extends Widget {
         }
     }
 
-    public MiniMap(Coord c, Coord sz, Widget parent, MapView mv) {
+    public MiniMap(final Coord c, final Coord sz, final Widget parent, final MapView mv) {
         super(c, sz, parent);
         this.mv = mv;
         off = Coord.z;
@@ -239,7 +239,7 @@ public class MiniMap extends Widget {
         }));
     }
 
-    public Coord xlate(Coord c, boolean in) {
+    public Coord xlate(final Coord c, final boolean in) {
         if (in) {
             return c.div(getScale());
         } else {
@@ -248,19 +248,19 @@ public class MiniMap extends Widget {
     }
 
     @SuppressWarnings({"SynchronizeOnNonFinalField"})
-    public void draw(GOut og) {
-        double scale = getScale();
-        Coord hsz = sz.div(scale);
+    public void draw(final GOut og) {
+        final double scale = getScale();
+        final Coord hsz = sz.div(scale);
 
-        Coord tc = mv.mc.div(tilesz).add(off.div(scale));
-        Coord ulg = tc.div(cmaps);
+        final Coord tc = mv.mc.div(tilesz).add(off.div(scale));
+        final Coord ulg = tc.div(cmaps);
         while ((ulg.x * cmaps.x) - tc.x + (hsz.x / 2) > 0)
             ulg.setX(ulg.x - 1);
         while ((ulg.y * cmaps.y) - tc.y + (hsz.y / 2) > 0)
             ulg.setY(ulg.y - 1);
 
         if (!hidden) {
-            Coord s = bg.sz();
+            final Coord s = bg.sz();
             for (int y = 0; (y * s.y) < sz.y; y++) {
                 for (int x = 0; (x * s.x) < sz.x; x++) {
                     og.image(bg, new Coord(x * s.x, y * s.y));
@@ -268,7 +268,7 @@ public class MiniMap extends Widget {
             }
         }
 
-        GOut g = og.reclip(og.ul.mul((1 - scale) / scale), hsz);
+        final GOut g = og.reclip(og.ul.mul((1 - scale) / scale), hsz);
         g.gl.glPushMatrix();
         g.scale(scale);
 
@@ -276,11 +276,11 @@ public class MiniMap extends Widget {
 
             for (int y = ulg.y; (y * cmaps.y) - tc.y + (hsz.y / 2) < hsz.y; y++) {
                 for (int x = ulg.x; (x * cmaps.x) - tc.x + (hsz.x / 2) < hsz.x; x++) {
-                    Coord cg = new Coord(x, y);
+                    final Coord cg = new Coord(x, y);
                     if (mappingStartPoint == null) {
                         mappingStartPoint = new Coord(cg);
                     }
-                    MCache.Grid grid;
+                    final MCache.Grid grid;
                     synchronized (ui.sess.glob.map.req) {
                         synchronized (ui.sess.glob.map.grids) {
                             grid = ui.sess.glob.map.grids.get(cg);
@@ -311,7 +311,7 @@ public class MiniMap extends Widget {
                             gridsHashes.put(mnm, relativeCoordinates);
                             coordHashes.put(relativeCoordinates, mnm);
                         } else {
-                            Coord coordinates = gridsHashes.get(mnm);
+                            final Coord coordinates = gridsHashes.get(mnm);
                             if (!coordinates.equals(relativeCoordinates)) {
                                 mappingStartPoint = mappingStartPoint.add(relativeCoordinates.sub(coordinates));
                             }
@@ -364,7 +364,7 @@ public class MiniMap extends Widget {
 
         if ((!plx.loading.get()) && (!hidden)) {
             synchronized (ui.sess.glob.party.memb) {
-                for (Party.Member m : ui.sess.glob.party.memb.values()) {
+                for (final Party.Member m : ui.sess.glob.party.memb.values()) {
                     Coord ptc = m.getc();
                     if (ptc == null)
                         continue;
@@ -388,10 +388,10 @@ public class MiniMap extends Widget {
     public void saveCaveMaps() {
         synchronized (caveTex) {
             Coord rc = null;
-            String sess = Utils.sessdate(System.currentTimeMillis());
+            final String sess = Utils.sessdate(System.currentTimeMillis());
             File outputfile = new File("cave/" + sess);
             try {
-                Writer currentSessionFile = new FileWriter("cave/currentsession.js");
+                final Writer currentSessionFile = new FileWriter("cave/currentsession.js");
                 currentSessionFile.write("var currentSession = '" + sess + "';\n");
                 currentSessionFile.close();
             } catch (IOException e1) {
@@ -401,9 +401,9 @@ public class MiniMap extends Widget {
                 if (rc == null) {
                     rc = c;
                 }
-                TexI tex = (TexI) caveTex.get(c);
+                final TexI tex = (TexI) caveTex.get(c);
                 c = c.sub(rc);
-                String fileName = "tile_" + c.x + "_" + c.y;
+                final String fileName = "tile_" + c.x + "_" + c.y;
                 outputfile = new File("cave/" + sess + "/" + fileName + ".png");
                 try {
                     ImageIO.write(tex.back, "png", outputfile);
@@ -413,7 +413,7 @@ public class MiniMap extends Widget {
         }
     }
 
-    public boolean mousedown(Coord c, int button) {
+    public boolean mousedown(final Coord c, final int button) {
         if (button == 1) {
             ui.grabmouse(this);
             dm = true;
@@ -422,7 +422,7 @@ public class MiniMap extends Widget {
         return (true);
     }
 
-    public boolean mouseup(Coord c, int button) {
+    public boolean mouseup(final Coord c, final int button) {
         if (dm) {
             ui.ungrabmouse();
             dm = false;
@@ -432,7 +432,7 @@ public class MiniMap extends Widget {
         }
     }
 
-    public void mousemove(Coord c) {
+    public void mousemove(final Coord c) {
         if (dm) {
             off = off.add(doff.sub(c));
             doff = c;

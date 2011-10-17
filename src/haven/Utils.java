@@ -52,7 +52,7 @@ public class Utils {
     private static Background bgworker = null;
     public static final Pattern tabulationPattern = Pattern.compile("\t");
 
-    public static Coord imgsz(BufferedImage img) {
+    public static Coord imgsz(final BufferedImage img) {
         return (new Coord(img.getWidth(), img.getHeight()));
     }
 
@@ -80,7 +80,7 @@ public class Utils {
             }
         }
 
-        public void defer(Runnable r) {
+        public void defer(final Runnable r) {
             synchronized (q) {
                 q.add(r);
                 q.notify();
@@ -88,7 +88,7 @@ public class Utils {
         }
     }
 
-    public static String sessdate(long sess) {
+    public static String sessdate(final long sess) {
         return (new SimpleDateFormat("yyyy-MM-dd HH.mm.ss")).format(new Date(sess));
     }
 
@@ -97,10 +97,10 @@ public class Utils {
     }
 
     public static String getClipboard() {
-        Transferable t = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
+        final Transferable t = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
         try {
             if (t != null && t.isDataFlavorSupported(DataFlavor.stringFlavor)) {
-                String text = (String) t.getTransferData(DataFlavor.stringFlavor);
+                final String text = (String) t.getTransferData(DataFlavor.stringFlavor);
                 return text;
             }
         } catch (UnsupportedFlavorException e) {
@@ -109,7 +109,7 @@ public class Utils {
         return "";
     }
 
-    public static void defer(Runnable r) {
+    public static void defer(final Runnable r) {
         synchronized (Utils.class) {
             if (bgworker == null)
                 bgworker = new Background();
@@ -117,11 +117,11 @@ public class Utils {
         bgworker.defer(r);
     }
 
-    static void drawgay(BufferedImage t, BufferedImage img, Coord c) {
-        Coord sz = imgsz(img);
+    static void drawgay(final BufferedImage t, final BufferedImage img, final Coord c) {
+        final Coord sz = imgsz(img);
         for (int y = 0; y < sz.y; y++) {
             for (int x = 0; x < sz.x; x++) {
-                int p = img.getRGB(x, y);
+                final int p = img.getRGB(x, y);
                 if (Utils.rgbm.getAlpha(p) > 128) {
                     if ((p & 0x00ffffff) == 0x00ff0080)
                         t.setRGB(x + c.x, y + c.y, 0);
@@ -132,34 +132,34 @@ public class Utils {
         }
     }
 
-    public static int drawtext(Graphics g, String text, Coord c) {
-        java.awt.FontMetrics m = g.getFontMetrics();
+    public static int drawtext(final Graphics g, final String text, final Coord c) {
+        final java.awt.FontMetrics m = g.getFontMetrics();
         g.drawString(text, c.x, c.y + m.getAscent());
         return (m.getHeight());
     }
 
-    static Coord textsz(Graphics g, String text) {
-        java.awt.FontMetrics m = g.getFontMetrics();
-        java.awt.geom.Rectangle2D ts = m.getStringBounds(text, g);
+    static Coord textsz(final Graphics g, final String text) {
+        final java.awt.FontMetrics m = g.getFontMetrics();
+        final java.awt.geom.Rectangle2D ts = m.getStringBounds(text, g);
         return (new Coord((int) ts.getWidth(), (int) ts.getHeight()));
     }
 
-    static void aligntext(Graphics g, String text, Coord c, double ax, double ay) {
-        java.awt.FontMetrics m = g.getFontMetrics();
-        java.awt.geom.Rectangle2D ts = m.getStringBounds(text, g);
+    static void aligntext(final Graphics g, final String text, final Coord c, final double ax, final double ay) {
+        final java.awt.FontMetrics m = g.getFontMetrics();
+        final java.awt.geom.Rectangle2D ts = m.getStringBounds(text, g);
         g.drawString(text, (int) (c.x - ts.getWidth() * ax), (int) (c.y + m.getAscent() - ts.getHeight() * ay));
     }
 
-    static void line(Graphics g, Coord c1, Coord c2) {
+    static void line(final Graphics g, final Coord c1, final Coord c2) {
         g.drawLine(c1.x, c1.y, c2.x, c2.y);
     }
 
-    static void AA(Graphics g) {
-        java.awt.Graphics2D g2 = (java.awt.Graphics2D) g;
+    static void AA(final Graphics g) {
+        final java.awt.Graphics2D g2 = (java.awt.Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     }
 
-    static synchronized String getpref(String prefname, String def) {
+    static synchronized String getpref(final String prefname, final String def) {
         try {
             if (prefs == null)
                 prefs = Preferences.userNodeForPackage(Utils.class);
@@ -169,7 +169,7 @@ public class Utils {
         }
     }
 
-    static synchronized void setpref(String prefname, String val) {
+    static synchronized void setpref(final String prefname, final String val) {
         try {
             if (prefs == null)
                 prefs = Preferences.userNodeForPackage(Utils.class);
@@ -178,7 +178,7 @@ public class Utils {
         }
     }
 
-    static synchronized byte[] getprefb(String prefname, byte[] def) {
+    static synchronized byte[] getprefb(final String prefname, final byte[] def) {
         try {
             if (prefs == null)
                 prefs = Preferences.userNodeForPackage(Utils.class);
@@ -188,7 +188,7 @@ public class Utils {
         }
     }
 
-    static synchronized void setprefb(String prefname, byte[] val) {
+    static synchronized void setprefb(final String prefname, final byte[] val) {
         try {
             if (prefs == null)
                 prefs = Preferences.userNodeForPackage(Utils.class);
@@ -197,7 +197,7 @@ public class Utils {
         }
     }
 
-    public static String getprop(String propname, String def) {
+    public static String getprop(final String propname, final String def) {
         try {
             return (System.getProperty(propname, def));
         } catch (SecurityException e) {
@@ -205,67 +205,67 @@ public class Utils {
         }
     }
 
-    public static int ub(byte b) {
+    public static int ub(final byte b) {
         if (b < 0)
             return (256 + b);
         else
             return (b);
     }
 
-    static byte sb(int b) {
+    static byte sb(final int b) {
         if (b > 127)
             return ((byte) (-256 + b));
         else
             return ((byte) b);
     }
 
-    public static int uint16d(byte[] buf, int off) {
+    public static int uint16d(final byte[] buf, final int off) {
         return (ub(buf[off]) + (ub(buf[off + 1]) * 256));
     }
 
-    public static int int16d(byte[] buf, int off) {
-        int u = uint16d(buf, off);
+    public static int int16d(final byte[] buf, final int off) {
+        final int u = uint16d(buf, off);
         if (u > 32767)
             return (-65536 + u);
         else
             return (u);
     }
 
-    static long uint32d(byte[] buf, int off) {
+    static long uint32d(final byte[] buf, final int off) {
         return (ub(buf[off]) + (ub(buf[off + 1]) * 256) + (ub(buf[off + 2]) * 65536) + (ub(buf[off + 3]) * 16777216));
     }
 
-    static void uint32e(long num, byte[] buf, int off) {
+    static void uint32e(final long num, final byte[] buf, final int off) {
         buf[off] = sb((int) (num & 0xff));
         buf[off + 1] = sb((int) ((num & 0xff00) >> 8));
         buf[off + 2] = sb((int) ((num & 0xff0000) >> 16));
         buf[off + 3] = sb((int) ((num & 0xff000000) >> 24));
     }
 
-    public static int int32d(byte[] buf, int off) {
-        long u = uint32d(buf, off);
+    public static int int32d(final byte[] buf, final int off) {
+        final long u = uint32d(buf, off);
         if (u > Integer.MAX_VALUE)
             return ((int) ((((long) Integer.MIN_VALUE) * 2) - u));
         else
             return ((int) u);
     }
 
-    public static void int32e(int num, byte[] buf, int off) {
+    public static void int32e(final int num, final byte[] buf, final int off) {
         if (num < 0)
             uint32e(0x100000000L + ((long) num), buf, off);
         else
             uint32e(num, buf, off);
     }
 
-    public static void uint16e(int num, byte[] buf, int off) {
+    public static void uint16e(final int num, final byte[] buf, final int off) {
         buf[off] = sb(num & 0xff);
         buf[off + 1] = sb((num & 0xff00) >> 8);
     }
 
-    public static String strd(byte[] buf, int[] off) {
+    public static String strd(final byte[] buf, final int[] off) {
         int i;
         for (i = off[0]; buf[i] != 0; i++) ;
-        String ret;
+        final String ret;
         try {
             ret = new String(buf, off[0], i - off[0], "utf-8");
         } catch (UnsupportedEncodingException e) {
@@ -275,14 +275,14 @@ public class Utils {
         return (ret);
     }
 
-    static char num2hex(int num) {
+    static char num2hex(final int num) {
         if (num < 10)
             return ((char) ('0' + num));
         else
             return ((char) ('A' + num - 10));
     }
 
-    static int hex2num(char hex) {
+    static int hex2num(final char hex) {
         if ((hex >= '0') && (hex <= '9'))
             return (hex - '0');
         else if ((hex >= 'a') && (hex <= 'f'))
@@ -293,31 +293,31 @@ public class Utils {
             throw (new IllegalArgumentException());
     }
 
-    static String byte2hex(byte[] in) {
-        StringBuilder buf = new StringBuilder();
-        for (byte b : in) {
+    static String byte2hex(final byte[] in) {
+        final StringBuilder buf = new StringBuilder();
+        for (final byte b : in) {
             buf.append(num2hex((b & 0xf0) >> 4));
             buf.append(num2hex(b & 0x0f));
         }
         return (buf.toString());
     }
 
-    static byte[] hex2byte(String hex) {
+    static byte[] hex2byte(final String hex) {
         if (hex.length() % 2 != 0)
             throw (new IllegalArgumentException("Invalid hex-encoded string"));
-        byte[] ret = new byte[hex.length() / 2];
+        final byte[] ret = new byte[hex.length() / 2];
         for (int i = 0, o = 0; i < hex.length(); i += 2, o++)
             ret[o] = (byte) ((hex2num(hex.charAt(i)) << 4) | hex2num(hex.charAt(i + 1)));
         return (ret);
     }
 
-    public static String[] splitwords(String text) {
-        ArrayList<String> words = new ArrayList<String>();
+    public static String[] splitwords(final String text) {
+        final ArrayList<String> words = new ArrayList<String>();
         StringBuilder buf = new StringBuilder();
         String st = "ws";
         int i = 0;
         while (i < text.length()) {
-            char c = text.charAt(i);
+            final char c = text.charAt(i);
             if (st.equals("ws")) {
                 if (!Character.isWhitespace(c))
                     st = "word";
@@ -366,11 +366,11 @@ public class Utils {
         return (words.toArray(new String[words.size()]));
     }
 
-    public static String[] splitlines(String text) {
-        ArrayList<String> ret = new ArrayList<String>();
+    public static String[] splitlines(final String text) {
+        final ArrayList<String> ret = new ArrayList<String>();
         int p = 0;
         while (true) {
-            int p2 = text.indexOf('\n', p);
+            final int p2 = text.indexOf('\n', p);
             if (p2 < 0) {
                 ret.add(text.substring(p));
                 break;
@@ -381,7 +381,7 @@ public class Utils {
         return (ret.toArray(new String[ret.size()]));
     }
 
-    static int atoi(String a) {
+    static int atoi(final String a) {
         try {
             return (Integer.parseInt(a));
         } catch (NumberFormatException e) {
@@ -389,26 +389,26 @@ public class Utils {
         }
     }
 
-    static void readtileof(InputStream in) throws IOException {
-        byte[] buf = new byte[4096];
+    static void readtileof(final InputStream in) throws IOException {
+        final byte[] buf = new byte[4096];
         while (true) {
             if (in.read(buf, 0, buf.length) < 0)
                 return;
         }
     }
 
-    public static byte[] readall(InputStream in) throws IOException {
+    public static byte[] readall(final InputStream in) throws IOException {
         byte[] buf = new byte[4096];
         int off = 0;
         while (true) {
             if (off == buf.length) {
-                byte[] n = new byte[buf.length * 2];
+                final byte[] n = new byte[buf.length * 2];
                 System.arraycopy(buf, 0, n, 0, buf.length);
                 buf = n;
             }
-            int ret = in.read(buf, off, buf.length - off);
+            final int ret = in.read(buf, off, buf.length - off);
             if (ret < 0) {
-                byte[] n = new byte[off];
+                final byte[] n = new byte[off];
                 System.arraycopy(buf, 0, n, 0, off);
                 return (n);
             }
@@ -416,27 +416,27 @@ public class Utils {
         }
     }
 
-    private static void dumptg(ThreadGroup tg, PrintWriter out, int indent) {
+    private static void dumptg(final ThreadGroup tg, final PrintWriter out, final int indent) {
         for (int o = 0; o < indent; o++)
             out.print("\t");
         out.println("G: \"" + tg.getName() + '\"');
-        Thread[] ths = new Thread[tg.activeCount() * 2];
-        ThreadGroup[] tgs = new ThreadGroup[tg.activeGroupCount() * 2];
-        int nt = tg.enumerate(ths, false);
-        int ng = tg.enumerate(tgs, false);
+        final Thread[] ths = new Thread[tg.activeCount() * 2];
+        final ThreadGroup[] tgs = new ThreadGroup[tg.activeGroupCount() * 2];
+        final int nt = tg.enumerate(ths, false);
+        final int ng = tg.enumerate(tgs, false);
         for (int i = 0; i < nt; i++) {
-            Thread ct = ths[i];
+            final Thread ct = ths[i];
             for (int o = 0; o < indent + 1; o++)
                 out.print("\t");
             out.println("T: \"" + ct.getName() + '\"');
         }
         for (int i = 0; i < ng; i++) {
-            ThreadGroup cg = tgs[i];
+            final ThreadGroup cg = tgs[i];
             dumptg(cg, out, indent + 1);
         }
     }
 
-    public static void dumptg(ThreadGroup tg, PrintWriter out) {
+    public static void dumptg(ThreadGroup tg, final PrintWriter out) {
         if (tg == null) {
             tg = Thread.currentThread().getThreadGroup();
             while (tg.getParent() != null)
@@ -446,8 +446,8 @@ public class Utils {
         out.flush();
     }
 
-    public static Resource myres(Class<?> c) {
-        ClassLoader cl = c.getClassLoader();
+    public static Resource myres(final Class<?> c) {
+        final ClassLoader cl = c.getClassLoader();
         if (cl instanceof ResClassLoader) {
             return (((ResClassLoader) cl).getres());
         } else {
@@ -455,18 +455,18 @@ public class Utils {
         }
     }
 
-    public static String titlecase(String str) {
+    public static String titlecase(final String str) {
         return (Character.toTitleCase(str.charAt(0)) + str.substring(1));
     }
 
-    public static Color contrast(Color col) {
-        int max = Math.max(col.getRed(), Math.max(col.getGreen(), col.getBlue()));
+    public static Color contrast(final Color col) {
+        final int max = Math.max(col.getRed(), Math.max(col.getGreen(), col.getBlue()));
         if (max > 128) {
             return (new Color(col.getRed() / 4, col.getGreen() / 4, col.getBlue() / 4, col.getAlpha()));
         } else if (max == 0) {
             return (Color.WHITE);
         } else {
-            int f = 128 / max;
+            final int f = 128 / max;
             return (new Color(col.getRed() * f, col.getGreen() * f, col.getBlue() * f, col.getAlpha()));
         }
     }
@@ -483,16 +483,16 @@ public class Utils {
         return (new Color(r, g, b, a));
     }
 
-    public static BufferedImage outline(BufferedImage img, Color col) {
-        Coord sz = imgsz(img).add(2, 2);
-        BufferedImage ol = TexI.mkbuf(sz);
+    public static BufferedImage outline(final BufferedImage img, final Color col) {
+        final Coord sz = imgsz(img).add(2, 2);
+        final BufferedImage ol = TexI.mkbuf(sz);
         for (int y = 0; y < sz.y; y++) {
             for (int x = 0; x < sz.x; x++) {
-                boolean t;
+                final boolean t;
                 if ((y == 0) || (x == 0) || (y == sz.y - 1) || (x == sz.x - 1)) {
                     t = true;
                 } else {
-                    int cl = img.getRGB(x - 1, y - 1);
+                    final int cl = img.getRGB(x - 1, y - 1);
                     t = Utils.rgbm.getAlpha(cl) < 250;
                 }
                 if (!t)
@@ -507,40 +507,40 @@ public class Utils {
         return (ol);
     }
 
-    public static BufferedImage outline2(BufferedImage img, Color col) {
-        BufferedImage ol = outline(img, col);
-        Graphics g = ol.getGraphics();
+    public static BufferedImage outline2(final BufferedImage img, final Color col) {
+        final BufferedImage ol = outline(img, col);
+        final Graphics g = ol.getGraphics();
         g.drawImage(img, 1, 1, null);
         g.dispose();
         return (ol);
     }
 
-    public static int floordiv(int a, int b) {
+    public static int floordiv(final int a, final int b) {
         if (a < 0)
             return (((a + 1) / b) - 1);
         else
             return (a / b);
     }
 
-    public static int floormod(int a, int b) {
+    public static int floormod(final int a, final int b) {
         int r = a % b;
         if (r < 0)
             r += b;
         return (r);
     }
 
-    public static int floordiv(float a, float b) {
+    public static int floordiv(final float a, final float b) {
         return ((int) Math.floor(a / b));
     }
 
-    public static float floormod(float a, float b) {
+    public static float floormod(final float a, final float b) {
         float r = a % b;
         if (r < 0)
             r += b;
         return (r);
     }
 
-    public static double clip(double d, double min, double max) {
+    public static double clip(final double d, final double min, final double max) {
         if (d < min)
             return (min);
         if (d > max)
@@ -548,7 +548,7 @@ public class Utils {
         return (d);
     }
 
-    public static int clip(int i, int min, int max) {
+    public static int clip(final int i, final int min, final int max) {
         if (i < min)
             return (min);
         if (i > max)
@@ -556,23 +556,23 @@ public class Utils {
         return (i);
     }
 
-    public static Color blendcol(Color in, Color bl) {
-        int f1 = bl.getAlpha();
-        int f2 = 255 - bl.getAlpha();
+    public static Color blendcol(final Color in, final Color bl) {
+        final int f1 = bl.getAlpha();
+        final int f2 = 255 - bl.getAlpha();
         return (new Color(((in.getRed() * f2) + (bl.getRed() * f1)) / 255,
                 ((in.getGreen() * f2) + (bl.getGreen() * f1)) / 255,
                 ((in.getBlue() * f2) + (bl.getBlue() * f1)) / 255,
                 in.getAlpha()));
     }
 
-    public static void serialize(Object obj, OutputStream out) throws IOException {
-        ObjectOutputStream oout = new ObjectOutputStream(out);
+    public static void serialize(final Object obj, final OutputStream out) throws IOException {
+        final ObjectOutputStream oout = new ObjectOutputStream(out);
         oout.writeObject(obj);
         oout.flush();
     }
 
-    public static byte[] serialize(Object obj) {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
+    public static byte[] serialize(final Object obj) {
+        final ByteArrayOutputStream out = new ByteArrayOutputStream();
         try {
             serialize(obj, out);
         } catch (IOException e) {
@@ -581,8 +581,8 @@ public class Utils {
         return (out.toByteArray());
     }
 
-    public static Object deserialize(InputStream in) throws IOException {
-        ObjectInputStream oin = new ObjectInputStream(in);
+    public static Object deserialize(final InputStream in) throws IOException {
+        final ObjectInputStream oin = new ObjectInputStream(in);
         try {
             return (oin.readObject());
         } catch (ClassNotFoundException e) {
@@ -590,10 +590,10 @@ public class Utils {
         }
     }
 
-    public static Object deserialize(byte[] buf) {
+    public static Object deserialize(final byte[] buf) {
         if (buf == null)
             return (null);
-        InputStream in = new ByteArrayInputStream(buf);
+        final InputStream in = new ByteArrayInputStream(buf);
         try {
             return (deserialize(in));
         } catch (IOException e) {
@@ -601,7 +601,7 @@ public class Utils {
         }
     }
 
-    public static boolean parsebool(String s, boolean def) {
+    public static boolean parsebool(final String s, final boolean def) {
         if (s == null)
             return (def);
         else if (s.equalsIgnoreCase("1") || s.equalsIgnoreCase("on") || s.equalsIgnoreCase("true") || s.equalsIgnoreCase("yes"))
@@ -613,12 +613,12 @@ public class Utils {
 
     static {
         Console.setscmd("die", new Console.Command() {
-            public void run(Console cons, String[] args) {
+            public void run(final Console cons, final String[] args) {
                 throw (new Error("Triggered death"));
             }
         });
         Console.setscmd("threads", new Console.Command() {
-            public void run(Console cons, String[] args) {
+            public void run(final Console cons, final String[] args) {
                 Utils.dumptg(null, cons.out);
             }
         });

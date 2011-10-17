@@ -34,7 +34,7 @@ public class CheckBox extends Widget {
 
     static {
         Widget.addtype("chk", new WidgetFactory() {
-            public Widget create(Coord c, Widget parent, Object[] args) {
+            public Widget create(final Coord c, final Widget parent, final Object[] args) {
                 return (new CheckBox(c, parent, (String) args[0]));
             }
         });
@@ -42,13 +42,13 @@ public class CheckBox extends Widget {
         mark = Resource.loadtex("gfx/hud/chkmark");
     }
 
-    public CheckBox(Coord c, Widget parent, String lbl) {
+    public CheckBox(final Coord c, final Widget parent, final String lbl) {
         super(c, box.sz(), parent);
         this.lbl = Text.std.render(lbl, java.awt.Color.WHITE);
         sz = box.sz().add(this.lbl.sz());
     }
 
-    public boolean mousedown(Coord c, int button) {
+    public boolean mousedown(final Coord c, final int button) {
         if (button != 1)
             return (false);
         a = !a;
@@ -56,7 +56,7 @@ public class CheckBox extends Widget {
         return (true);
     }
 
-    public void draw(GOut g) {
+    public void draw(final GOut g) {
         g.image(lbl.tex(), new Coord(box.sz().x, box.sz().y - lbl.sz().y));
         g.image(box, Coord.z);
         if (a)
@@ -64,7 +64,7 @@ public class CheckBox extends Widget {
         super.draw(g);
     }
 
-    public void changed(boolean val) {
+    public void changed(final boolean val) {
         wdgmsg("ch", a);
     }
 }

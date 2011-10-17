@@ -27,12 +27,12 @@ public class Tileset extends Layer {
     private int flavprob;
     private Resource resource;
 
-    public Tileset(Resource resource, byte[] buf) {
+    public Tileset(final Resource resource, final byte[] buf) {
         this.resource = resource;
-        int[] off = new int[1];
+        final int[] off = new int[1];
         off[0] = 0;
         fl = Utils.ub(buf[off[0]++]);
-        int flnum = Utils.uint16d(buf, off[0]);
+        final int flnum = Utils.uint16d(buf, off[0]);
         off[0] += 2;
         flavprob = Utils.uint16d(buf, off[0]);
         off[0] += 2;
@@ -47,28 +47,28 @@ public class Tileset extends Layer {
         }
     }
 
-    private void packtiles(Collection<Tile> tiles, Coord tsz) {
+    private void packtiles(final Collection<Tile> tiles, final Coord tsz) {
         int min = -1, minw = -1, minh = -1;
-        int nt = tiles.size();
+        final int nt = tiles.size();
         for (int i = 1; i <= nt; i++) {
-            int w = Tex.nextp2(tsz.x * i);
+            final int w = Tex.nextp2(tsz.x * i);
             int h;
             if ((nt % i) == 0)
                 h = nt / i;
             else
                 h = (nt / i) + 1;
             h = Tex.nextp2(tsz.y * h);
-            int a = w * h;
+            final int a = w * h;
             if ((min == -1) || (a < min)) {
                 min = a;
                 minw = w;
                 minh = h;
             }
         }
-        TexIM packbuf = new TexIM(new Coord(minw, minh));
-        Graphics g = packbuf.graphics();
+        final TexIM packbuf = new TexIM(new Coord(minw, minh));
+        final Graphics g = packbuf.graphics();
         int x = 0, y = 0;
-        for (Tile t : tiles) {
+        for (final Tile t : tiles) {
             g.drawImage(t.img, x, y, null);
             t.tex = new TexSI(packbuf, new Coord(x, y), tsz);
             if ((x += tsz.x) > (minw - tsz.x)) {
@@ -90,9 +90,9 @@ public class Tileset extends Layer {
                 throw (new Resource.LoadException("Illegal resource dependency", e));
             }
         }
-        Collection<Tile> tiles = new LinkedList<Tile>();
+        final Collection<Tile> tiles = new LinkedList<Tile>();
         ground = new WeightList<Tile>();
-        boolean hastrans = (fl & 1) != 0;
+        final boolean hastrans = (fl & 1) != 0;
         if (hastrans) {
             ctrans = new WeightList[15];
             btrans = new WeightList[15];
@@ -102,7 +102,7 @@ public class Tileset extends Layer {
             }
         }
         Coord tsz = null;
-        for (Tile t : resource.layers(Tile.class)) {
+        for (final Tile t : resource.layers(Tile.class)) {
             if (t.t == 'g')
                 ground.add(t, t.w);
             else if (t.t == 'b' && hastrans)
@@ -125,7 +125,7 @@ public class Tileset extends Layer {
         return flavobjs;
     }
 
-    public void setFlavobjs(WeightList<Resource> flavobjs) {
+    public void setFlavobjs(final WeightList<Resource> flavobjs) {
         this.flavobjs = flavobjs;
     }
 
@@ -133,7 +133,7 @@ public class Tileset extends Layer {
         return ground;
     }
 
-    public void setGround(WeightList<Tile> ground) {
+    public void setGround(final WeightList<Tile> ground) {
         this.ground = ground;
     }
 
@@ -141,7 +141,7 @@ public class Tileset extends Layer {
         return ctrans;
     }
 
-    public void setCtrans(WeightList<Tile>[] ctrans) {
+    public void setCtrans(final WeightList<Tile>[] ctrans) {
         this.ctrans = ctrans;
     }
 
@@ -149,7 +149,7 @@ public class Tileset extends Layer {
         return btrans;
     }
 
-    public void setBtrans(WeightList<Tile>[] btrans) {
+    public void setBtrans(final WeightList<Tile>[] btrans) {
         this.btrans = btrans;
     }
 
@@ -157,7 +157,7 @@ public class Tileset extends Layer {
         return flavprob;
     }
 
-    public void setFlavprob(int flavprob) {
+    public void setFlavprob(final int flavprob) {
         this.flavprob = flavprob;
     }
 
@@ -165,7 +165,7 @@ public class Tileset extends Layer {
         return resource;
     }
 
-    public void setResource(Resource resource) {
+    public void setResource(final Resource resource) {
         this.resource = resource;
     }
 }

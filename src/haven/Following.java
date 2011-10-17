@@ -31,7 +31,7 @@ public class Following extends Moving {
     Coord doff;
     int szo;
 
-    public Following(Gob gob, int tgt, Coord doff, int szo) {
+    public Following(final Gob gob, final int tgt, final Coord doff, final int szo) {
         super(gob);
         this.tgt = tgt;
         this.doff = doff;
@@ -39,10 +39,10 @@ public class Following extends Moving {
     }
 
     public Coord getc() {
-        Gob tgt = gob.glob.oc.getgob(this.tgt);
+        final Gob tgt = gob.glob.oc.getgob(this.tgt);
         if (tgt == null)
             return (gob.rc);
-        Coord c = tgt.getc();
+        final Coord c = tgt.getc();
         return (c);
     }
 

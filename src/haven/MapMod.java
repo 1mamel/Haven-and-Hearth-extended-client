@@ -39,13 +39,13 @@ public class MapMod extends Window implements MapView.Grabber {
 
     static {
         Widget.addtype("mapmod", new WidgetFactory() {
-            public Widget create(Coord c, Widget parent, Object[] args) {
+            public Widget create(final Coord c, final Widget parent, final Object[] args) {
                 return (new MapMod(c, parent));
             }
         });
     }
 
-    public MapMod(Coord c, Widget parent) {
+    public MapMod(final Coord c, final Widget parent) {
         super(c, new Coord(200, 100), parent, "Kartlasskostning");
         map = ui.sess.glob.map;
         walkmod = true;
@@ -68,8 +68,8 @@ public class MapMod extends Window implements MapView.Grabber {
     }
 
 
-    public void mmousedown(Coord mc, int button) {
-        Coord tc = mc.div(MCache.tilesz);
+    public void mmousedown(final Coord mc, final int button) {
+        final Coord tc = mc.div(MCache.tilesz);
         if (ol != null)
             ol.destroy();
         ol = map.new Overlay(tc, tc, 1 << 17);
@@ -78,16 +78,17 @@ public class MapMod extends Window implements MapView.Grabber {
         ui.grabmouse(ui.mainview);
     }
 
-    public void mmouseup(Coord mc, int button) {
+    public void mmouseup(final Coord mc, final int button) {
         dm = false;
         ui.ungrabmouse();
     }
 
-    public void mmousemove(Coord mc) {
+    public void mmousemove(final Coord mc) {
         if (!dm)
             return;
-        Coord tc = mc.div(MCache.tilesz);
-        Coord c1 = new Coord(0, 0), c2 = new Coord(0, 0);
+        final Coord tc = mc.div(MCache.tilesz);
+        final Coord c1 = new Coord(0, 0);
+        final Coord c2 = new Coord(0, 0);
         if (tc.x < sc.x) {
             c1.setX(tc.x);
             c2.setX(sc.x);
@@ -108,7 +109,7 @@ public class MapMod extends Window implements MapView.Grabber {
         text.settext(String.format(fmt, c2.x - c1.x + 1, c2.y - c1.y + 1));
     }
 
-    public void wdgmsg(Widget sender, String msg, Object... args) {
+    public void wdgmsg(final Widget sender, final String msg, final Object... args) {
         if (sender == btn) {
             if ((c1 != null) && (c2 != null))
                 wdgmsg("mod", c1, c2);

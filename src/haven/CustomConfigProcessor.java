@@ -69,22 +69,22 @@ public class CustomConfigProcessor {
 
     public static boolean loadSettings() {
         setDefaultSettings();
-        BufferedReader reader = null;
+        final BufferedReader reader = null;
         try {
-            SAXParserFactory spFactory = SAXParserFactory.newInstance();
-            SAXParser saxParser = spFactory.newSAXParser();
+            final SAXParserFactory spFactory = SAXParserFactory.newInstance();
+            final SAXParser saxParser = spFactory.newSAXParser();
 
-            XMLReader xmlReader = saxParser.getXMLReader();
+            final XMLReader xmlReader = saxParser.getXMLReader();
             xmlReader.setContentHandler(new DefaultHandler() {
                 private boolean ircElementActive = false;
                 private boolean beltElementActive = false;
                 private boolean beltListElementActive = false;
                 private int activeBelt = 0;
 
-                public void startElement(String namespaceURI, String localName,
-                                         String qName, Attributes atts) throws SAXException {
+                public void startElement(final String namespaceURI, final String localName,
+                                         final String qName, final Attributes atts) throws SAXException {
                     String value;
-                    String key = qName.toUpperCase().trim();
+                    final String key = qName.toUpperCase().trim();
 
                     //	Logs the loading sequence on the console
 //                    if (CustomConfig.logLoad) {
@@ -102,10 +102,10 @@ public class CustomConfigProcessor {
 
                     if (key.equals("SCREENSIZE")) {
                         value = atts.getValue("width") == null ? "1024" : atts.getValue("width");
-                        int x = Integer.parseInt(value);
+                        final int x = Integer.parseInt(value);
 
                         value = atts.getValue("height") == null ? "1024" : atts.getValue("height");
-                        int y = Integer.parseInt(value);
+                        final int y = Integer.parseInt(value);
                         CustomConfig.setWindowSize(x, y);
                     } else if (key.equals("SOUND")) {
                         value = atts.getValue("enabled") == null ? "true" : atts.getValue("enabled");
@@ -136,7 +136,7 @@ public class CustomConfigProcessor {
                     } else if (key.equals("CHANNEL") && atts.getValue("name") != null
                             && ircElementActive) {
                         value = atts.getValue("password") == null ? "" : atts.getValue("password");
-                        Listbox.Option chan = new Listbox.Option(atts.getValue("name"), value.trim());
+                        final Listbox.Option chan = new Listbox.Option(atts.getValue("name"), value.trim());
                         CustomConfig.ircChannelList.add(chan);
                     } else if (key.equals("BELT-LIST") && !(beltElementActive || ircElementActive
                             || beltListElementActive)
@@ -157,8 +157,8 @@ public class CustomConfigProcessor {
                     }
                 }
 
-                public void endElement(String namespaceURI, String localName,
-                                       String qName) throws SAXException {
+                public void endElement(final String namespaceURI, final String localName,
+                                       final String qName) throws SAXException {
                     if (ircElementActive && qName.equals("IRC")) {
                         ircElementActive = false;
                     } else if (beltElementActive && qName.equals("BELT")) {
@@ -203,7 +203,7 @@ public class CustomConfigProcessor {
 
     public static synchronized void saveSettings() {
         try {
-            BufferedWriter writer;
+            final BufferedWriter writer;
             if (ResCache.global != null) {
                 writer = new BufferedWriter(new OutputStreamWriter(ResCache.global.store("config.xml"), "UTF-8"));
             } else {
@@ -220,12 +220,12 @@ public class CustomConfigProcessor {
                     + "\" server=\"" + CustomConfig.ircServerAddress
                     + "\" default-nick=\"" + CustomConfig.ircDefNick
                     + "\" alternate-nick=\"" + CustomConfig.ircAltNick + "\">\n");
-            for (Listbox.Option channel : CustomConfig.ircChannelList) {
+            for (final Listbox.Option channel : CustomConfig.ircChannelList) {
                 writer.write("\t\t<CHANNEL name=\"" + channel.name + "\" password=\"" + channel.disp + "\"/>\n");
             }
             writer.write("\t</IRC>\n");
 
-            for (CustomConfig.CharData cData : CustomConfig.characterList) {
+            for (final CustomConfig.CharData cData : CustomConfig.characterList) {
                 if (CustomConfig.noChars) break;
                 if (cData.name.equals(CustomConfig.activeCharacter.name))
                     cData.hudActiveBelt = CustomConfig.activeCharacter.hudActiveBelt;

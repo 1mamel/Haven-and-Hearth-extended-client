@@ -132,24 +132,24 @@ public class Config {
     }
 
     public static String mksmiley(String str) {
-        for (Map.Entry<Pattern, String> patternStringEntry : Config.smileys.entrySet()) {
-            String res = patternStringEntry.getValue();
+        for (final Map.Entry<Pattern, String> patternStringEntry : Config.smileys.entrySet()) {
+            final String res = patternStringEntry.getValue();
             str = patternStringEntry.getKey().matcher(str).replaceAll(res);
         }
         return str;
     }
 
-    private static void usage(PrintStream out) {
+    private static void usage(final PrintStream out) {
         out.println("usage: haven.jar [-hdPf] [-u USER] [-C HEXCOOKIE] [-r RESDIR] [-U RESURL] [-A AUTHSERV] [SERVER]");
     }
 
-    public static void cmdline(String[] args) {
-        PosixArgs opt = PosixArgs.getopt(args, "hqdPU:fr:A:m:u:b:k:C:");
+    public static void cmdline(final String[] args) {
+        final PosixArgs opt = PosixArgs.getopt(args, "hqdPU:fr:A:m:u:b:k:C:");
         if (opt == null) {
             usage(System.err);
             System.exit(1);
         }
-        for (char c : opt.parsed()) {
+        for (final char c : opt.parsed()) {
             switch (c) {
                 case 'h':
                     usage(System.out);
@@ -214,14 +214,15 @@ public class Config {
     private static void loadSmileys() {
         smileys.clear();
         try {
-            FileInputStream fstream;
+            final FileInputStream fstream;
             fstream = new FileInputStream("smileys.conf");
-            DataInputStream in = new DataInputStream(fstream);
-            BufferedReader br = new BufferedReader(new InputStreamReader(in));
+            final DataInputStream in = new DataInputStream(fstream);
+            final BufferedReader br = new BufferedReader(new InputStreamReader(in));
             String strLine;
             while ((strLine = br.readLine()) != null) {
-                String[] tmp = Utils.tabulationPattern.split(strLine);
-                String smile, res;
+                final String[] tmp = Utils.tabulationPattern.split(strLine);
+                final String smile;
+                final String res;
                 smile = tmp[0];
                 res = "\\$img\\[smiley\\/" + tmp[1] + "\\]";
                 smileys.put(Pattern.compile(smile, Pattern.CASE_INSENSITIVE | Pattern.LITERAL), res);
@@ -234,7 +235,7 @@ public class Config {
     }
 
     private static void loadWindowOptions() {
-        File inputFile = new File("windows.conf");
+        final File inputFile = new File("windows.conf");
         if (!inputFile.exists()) {
             return;
         }
@@ -246,7 +247,7 @@ public class Config {
     }
 
     private static void loadOptions() {
-        File inputFile = new File("haven.conf");
+        final File inputFile = new File("haven.conf");
         if (!inputFile.exists()) {
             return;
         }
@@ -255,7 +256,7 @@ public class Config {
         } catch (IOException e) {
             System.out.println(e);
         }
-        String hideObjects = options.getProperty("hideObjects", "");
+        final String hideObjects = options.getProperty("hideObjects", "");
         translator.useKey(options.getProperty("GoogleAPIKey", null));
         zoom = options.getProperty("zoom", "false").equals("true");
         noborders = options.getProperty("noborders", "false").equals("true");
@@ -281,7 +282,7 @@ public class Config {
         musicVol = Integer.parseInt(options.getProperty("music_vol", "100"));
         hideObjectList.clear();
         if (!hideObjects.isEmpty()) {
-            for (String objectName : Utils.commaPattern.split(hideObjects)) {
+            for (final String objectName : Utils.commaPattern.split(hideObjects)) {
                 if (!objectName.isEmpty()) {
                     hideObjectList.add(objectName);
                 }
@@ -290,9 +291,9 @@ public class Config {
         timestamp = options.getProperty("timestamp", "false").equals("true");
     }
 
-    public static synchronized void setWindowOpt(String key, String value) {
+    public static synchronized void setWindowOpt(final String key, final String value) {
         synchronized (window_props) {
-            String prev_val = window_props.getProperty(key);
+            final String prev_val = window_props.getProperty(key);
             if ((prev_val != null) && prev_val.equals(value))
                 return;
             window_props.setProperty(key, value);
@@ -300,7 +301,7 @@ public class Config {
         saveWindowOpt();
     }
 
-    public static synchronized void setWindowOpt(String key, Boolean value) {
+    public static synchronized void setWindowOpt(final String key, final Boolean value) {
         setWindowOpt(key, value ? "true" : "false");
     }
 
@@ -316,8 +317,8 @@ public class Config {
 
     public static void saveOptions() {
         try {
-            StringBuilder hideObjects = new StringBuilder();
-            for (String objectName : hideObjectList) {
+            final StringBuilder hideObjects = new StringBuilder();
+            for (final String objectName : hideObjectList) {
                 hideObjects.append(objectName).append(',');
             }
             options.setProperty("hideObjects", hideObjects.toString());

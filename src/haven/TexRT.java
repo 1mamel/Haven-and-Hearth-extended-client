@@ -38,13 +38,13 @@ public abstract class TexRT extends TexGL {
     public final Profile prof = new Profile(300);
     private Profile.Frame curf;
 
-    public TexRT(Coord sz) {
+    public TexRT(final Coord sz) {
         super(sz);
     }
 
     protected abstract boolean subrend(GOut g);
 
-    private void rerender(GL gl) {
+    private void rerender(final GL gl) {
         if (incurrent != gl) {
             Collection<TexRT> tc;
             synchronized (current) {
@@ -61,7 +61,7 @@ public abstract class TexRT extends TexGL {
         }
     }
 
-    public void render(GOut g, Coord c, Coord ul, Coord br, Coord sz) {
+    public void render(final GOut g, final Coord c, final Coord ul, final Coord br, final Coord sz) {
         super.render(g, c, ul, br, sz);
         rerender(g.gl);
     }
@@ -70,17 +70,17 @@ public abstract class TexRT extends TexGL {
         return (new byte[tdim.x * tdim.y * 4]);
     }
 
-    protected void fill(GOut g) {
+    protected void fill(final GOut g) {
         rerender(g.gl);
-        byte[] idat = initdata();
+        final byte[] idat = initdata();
         g.gl.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, tdim.x, tdim.y, 0, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, (idat == null) ? null : java.nio.ByteBuffer.wrap(idat));
         GOut.checkerr(g.gl);
     }
 
-    private void subrend2(GOut g) {
+    private void subrend2(final GOut g) {
         if (id < 0)
             return;
-        GL gl = g.gl;
+        final GL gl = g.gl;
         if (Config.profile)
             curf = prof.new Frame();
         if (!subrend(g))
@@ -98,16 +98,16 @@ public abstract class TexRT extends TexGL {
         }
     }
 
-    public static void renderall(GOut g) {
-        GL gl = g.gl;
-        Collection<TexRT> tc;
+    public static void renderall(final GOut g) {
+        final GL gl = g.gl;
+        final Collection<TexRT> tc;
         synchronized (current) {
             tc = current.get(gl);
             current.put(gl, new HashSet<TexRT>());
         }
         if (tc != null) {
             synchronized (tc) {
-                for (TexRT t : tc) {
+                for (final TexRT t : tc) {
                     t.incurrent = null;
                     t.subrend2(g);
                 }

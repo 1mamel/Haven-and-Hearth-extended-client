@@ -50,7 +50,7 @@ public class ServerEvent extends EventObject {
     /**
      * Event with no associated value.
      */
-    public ServerEvent(Server src) {
+    public ServerEvent(final Server src) {
         super(src);
         Debug.println("ServerEvent(" + src + ')');
     }
@@ -59,7 +59,7 @@ public class ServerEvent extends EventObject {
     /**
      * Invite with origin nick, target nick and channel name.
      */
-    public ServerEvent(Server src, String orgnick, String targnick, String chan) {
+    public ServerEvent(final Server src, final String orgnick, final String targnick, final String chan) {
         super(src);
         Debug.println("ServerEvent(" + src + ')');
         _originNick = orgnick;
@@ -71,7 +71,7 @@ public class ServerEvent extends EventObject {
     /**
      * Event associated with a channel.
      */
-    public ServerEvent(Server src, Channel channel) {
+    public ServerEvent(final Server src, final Channel channel) {
         super(src);
         _channel = channel;
         Debug.println("ServerEvent(" + src + ',' + channel + ')');
@@ -81,7 +81,7 @@ public class ServerEvent extends EventObject {
     /**
      * Event associated with server.
      */
-    public ServerEvent(Server src, Server server) {
+    public ServerEvent(final Server src, final Server server) {
         super(src);
         _server = server;
         Debug.println("ServerEvent(" + src + ',' + server + ')');
@@ -91,7 +91,7 @@ public class ServerEvent extends EventObject {
     /**
      * Event associated with a user.
      */
-    public ServerEvent(Server src, User user) {
+    public ServerEvent(final Server src, final User user) {
         super(src);
         _user = user;
         Debug.println("ServerEvent(" + src + ',' + user + ')');
@@ -101,7 +101,7 @@ public class ServerEvent extends EventObject {
     /**
      * Event associated with a user.
      */
-    public ServerEvent(Server src, String[] usersOn) {
+    public ServerEvent(final Server src, final String[] usersOn) {
         super(src);
         _usersOn = usersOn;
         Debug.println("ServerEvent(" + src + ',' + Arrays.toString(usersOn) + ')');
@@ -112,7 +112,7 @@ public class ServerEvent extends EventObject {
      * Event associated with status message. Server sends out
      * status messages as events.
      */
-    public ServerEvent(Server src, String message) {
+    public ServerEvent(final Server src, final String message) {
         super(src);
         _message = message;
         Debug.println("ServerEvent(" + src + ',' + message + ')');

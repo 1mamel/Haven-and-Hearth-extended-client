@@ -33,11 +33,11 @@ public class HttpSource implements ResSource, Serializable {
         ssl.ignoreName();
     }
 
-    public HttpSource(URL baseurl) {
+    public HttpSource(final URL baseurl) {
         this.baseurl = baseurl;
     }
 
-    private static URL encodeurl(URL raw) throws IOException {
+    private static URL encodeurl(final URL raw) throws IOException {
         /* This is "kinda" ugly. It is, actually, how the Java
         * documentation recommend that it be done, though... */
         try {
@@ -47,9 +47,9 @@ public class HttpSource implements ResSource, Serializable {
         }
     }
 
-    public InputStream get(String name) throws IOException {
-        URL resurl = encodeurl(new URL(baseurl, name + ".res"));
-        URLConnection c;
+    public InputStream get(final String name) throws IOException {
+        final URL resurl = encodeurl(new URL(baseurl, name + ".res"));
+        final URLConnection c;
         if (resurl.getProtocol().equals("https"))
             c = ssl.connect(resurl);
         else

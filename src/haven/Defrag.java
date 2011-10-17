@@ -32,7 +32,7 @@ public class Defrag {
     long last = 0;
     final int[] ms1 = new int[20], ms2 = new int[20];
 
-    public Defrag(int len) {
+    public Defrag(final int len) {
         this.len = len;
         this.blob = new byte[len];
         ms1[0] = 0;
@@ -41,7 +41,7 @@ public class Defrag {
             ms1[i] = -1;
     }
 
-    private void addm(int m1, int m2) {
+    private void addm(final int m1, final int m2) {
         for (int i = 0; i < ms1.length; i++) {
             if (ms1[i] == -1) {
                 ms1[i] = m1;
@@ -52,13 +52,15 @@ public class Defrag {
         throw (new RuntimeException("Ran out of segment buffers!"));
     }
 
-    public void add(byte[] blob, int boff, int blen, int off) {
+    public void add(final byte[] blob, final int boff, final int blen, final int off) {
         System.arraycopy(blob, boff, this.blob, off, blen);
         for (int i = 0; i < ms1.length; i++) {
             if (ms1[i] == -1)
                 continue;
-            int m1 = ms1[i], m2 = ms2[i];
-            @SuppressWarnings({"UnnecessaryLocalVariable"}) int s1 = off, s2 = off + blen;
+            final int m1 = ms1[i];
+            final int m2 = ms2[i];
+            @SuppressWarnings({"UnnecessaryLocalVariable"}) final int s1 = off;
+            @SuppressWarnings({"UnnecessaryLocalVariable"}) final int s2 = off + blen;
             if ((m1 >= s1) && (m2 <= s2)) {
                 ms1[i] = -1;
             } else if ((m1 >= s1) && (m1 < s2) && (m2 >= s2)) {
@@ -73,7 +75,7 @@ public class Defrag {
     }
 
     public boolean done() {
-        for (int aMs1 : ms1) {
+        for (final int aMs1 : ms1) {
             if (aMs1 != -1)
                 return (false);
         }

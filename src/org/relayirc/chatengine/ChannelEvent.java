@@ -45,7 +45,7 @@ public class ChannelEvent extends EventObject {
     /**
      * Event with no associated values.
      */
-    public ChannelEvent(Channel src) {
+    public ChannelEvent(final Channel src) {
         super(src);
         Debug.println("ChannelEvent(" + src + ')');
     }
@@ -54,7 +54,7 @@ public class ChannelEvent extends EventObject {
     /**
      * Event with an optional arbitrary value.
      */
-    public ChannelEvent(Channel src, Object value) {
+    public ChannelEvent(final Channel src, final Object value) {
         super(src);
         _value = value;
         Debug.println("ChannelEvent(" + src + ',' + value);
@@ -64,8 +64,8 @@ public class ChannelEvent extends EventObject {
     /**
      * Event with originating user and an optional arbitrary value.
      */
-    public ChannelEvent(Channel src,
-                        String originNick, String originAddress, Object value) {
+    public ChannelEvent(final Channel src,
+                        final String originNick, final String originAddress, final Object value) {
 
         super(src);
         _originNick = originNick;
@@ -79,9 +79,9 @@ public class ChannelEvent extends EventObject {
      * Event with originating user, destination user and an optional
      * arbitrary value.
      */
-    public ChannelEvent(Channel src,
-                        String originNick, String originAddress,
-                        String subjectNick, String subjectAddress, Object value) {
+    public ChannelEvent(final Channel src,
+                        final String originNick, final String originAddress,
+                        final String subjectNick, final String subjectAddress, final Object value) {
 
         this(src, originNick, originAddress, value);
         _subjectNick = subjectNick;

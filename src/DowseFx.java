@@ -8,21 +8,21 @@ public class DowseFx extends FreeSprite {
     int a1;
     int a2;
 
-    public DowseFx(Sprite.Owner owner, Resource res, Message msg) {
+    public DowseFx(final Sprite.Owner owner, final Resource res, final Message msg) {
         super(owner, res, -15, 0);
         a2 = (msg.uint8() * 360 / 200);
         a1 = (msg.uint8() * 360 / 200);
         a1 = (-45 - a1);
         a2 = (-45 - a2);
-        int a0 = (a1 + a2) / 2;
-        int d = Math.max(Math.abs(a1 - a2) % 360, 5);
+        final int a0 = (a1 + a2) / 2;
+        final int d = Math.max(Math.abs(a1 - a2) % 360, 5);
         a2 = a1 + d;
         if (Config.showDirection) {
             new TrackingWnd(a0 + 270, d, a1, a2);
         }
     }
 
-    public void draw(GOut g, Coord c) {
+    public void draw(final GOut g, final Coord c) {
         if (this.a < 0.25D) {
             g.chcolor(255, 0, 0, 128);
             g.fellipse(c, new Coord((int) (this.a / 0.25D * 100.0D), (int) (this.a / 0.25D * 100.0D / 2.0D)));
@@ -38,7 +38,7 @@ public class DowseFx extends FreeSprite {
         g.chcolor();
     }
 
-    public boolean tick(int paramInt) {
+    public boolean tick(final int paramInt) {
         this.a += paramInt / 2000.0D;
         return this.a >= 1.0D;
     }

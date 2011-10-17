@@ -26,22 +26,24 @@
 
 package haven;
 
+import org.jetbrains.annotations.NotNull;
+
 public class Img extends Widget {
     private Tex img;
     public boolean hit = false;
 
     static {
         Widget.addtype("img", new WidgetFactory() {
-            public Widget create(Coord c, Widget parent, Object[] args) {
-                Tex tex;
+            public Widget create(final Coord c, final Widget parent, final Object[] args) {
+                final Tex tex;
                 if (args.length > 1) {
-                    Resource res = Resource.load((String) args[0], (Integer) args[1]);
+                    final Resource res = Resource.load((String) args[0], (Integer) args[1]);
                     res.loadwait();
                     tex = res.layer(Resource.imgc).tex();
                 } else {
                     tex = Resource.loadtex((String) args[0]);
                 }
-                Img ret = new Img(c, tex, parent);
+                final Img ret = new Img(c, tex, parent);
                 if (args.length > 2)
                     ret.hit = (Integer) args[2] != 0;
                 return (ret);
@@ -49,24 +51,24 @@ public class Img extends Widget {
         });
     }
 
-    public void draw(GOut g) {
+    public void draw(final GOut g) {
         synchronized (img) {
             g.image(img, Coord.z);
         }
     }
 
-    public Img(Coord c, Tex img, Widget parent) {
+    public Img(final Coord c, final Tex img, final Widget parent) {
         super(c, img.sz(), parent);
         this.img = img;
     }
 
-    public void uimsg(String name, Object... args) {
+    public void uimsg(@NotNull final String name, final Object... args) {
         if (name.equals("ch")) {
             img = Resource.loadtex((String) args[0]);
         }
     }
 
-    public boolean mousedown(Coord c, int button) {
+    public boolean mousedown(final Coord c, final int button) {
         if (hit) {
             wdgmsg("click", c, button, ui.modflags());
             return (true);

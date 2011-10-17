@@ -23,7 +23,7 @@ public class PageStream {
      * @param in the Java IO <code>InputStream</code> to fetch pages
      *           from.
      */
-    public PageStream(InputStream in) {
+    public PageStream(final InputStream in) {
         this.in = in;
         sync.init();
     }
@@ -41,9 +41,9 @@ public class PageStream {
     public Page page() throws IOException {
         if (eos)
             return (null);
-        Page page = new Page();
+        final Page page = new Page();
         while (true) {
-            int ret = sync.pageout(page);
+            final int ret = sync.pageout(page);
             if (ret < 0)
                 throw (new OggException()); /* ? */
             if (ret == 1) {
@@ -51,8 +51,8 @@ public class PageStream {
                     eos = true;
                 return (page);
             }
-            int off = sync.buffer(4096);
-            int len = in.read(sync.data, off, 4096);
+            final int off = sync.buffer(4096);
+            final int len = in.read(sync.data, off, 4096);
             if (len < 0)
                 return (null);
             sync.wrote(len);

@@ -40,8 +40,8 @@ public class HWindow extends Widget {
 
     static {
         Widget.addtype("hwnd", new WidgetFactory() {
-            public Widget create(Coord c, Widget parent, Object[] args) {
-                String t = (String) args[0];
+            public Widget create(final Coord c, final Widget parent, final Object[] args) {
+                final String t = (String) args[0];
                 boolean cl = false;
                 if (args.length > 1)
                     cl = (Integer) args[1] != 0;
@@ -50,14 +50,14 @@ public class HWindow extends Widget {
         });
     }
 
-    public void setsz(Coord s) {
+    public void setsz(final Coord s) {
         sz = s;
         if (cbtn != null)
             cbtn.c = new Coord(sz.x - cbtni[0].getWidth(), 0);
 
     }
 
-    public HWindow(Widget parent, String title, boolean closable) {
+    public HWindow(final Widget parent, final String title, final boolean closable) {
         super(new Coord(234, 29), new Coord(430, 100), parent);
         canhastrash = false;
         this.title = title;
@@ -69,7 +69,7 @@ public class HWindow extends Widget {
             cbtn = new IButton(new Coord(sz.x - cbtni[0].getWidth(), 0), this, cbtni[0], cbtni[1], cbtni[2]);
     }
 
-    public void wdgmsg(Widget sender, String msg, Object... args) {
+    public void wdgmsg(final Widget sender, final String msg, final Object... args) {
         if (sender == cbtn) {
             wdgmsg("close");
         } else {
@@ -82,7 +82,7 @@ public class HWindow extends Widget {
         if (shp!=null) shp.remwnd(this);
     }
 
-    public void makeurgent(int level) {
+    public void makeurgent(final int level) {
         if (shp!=null) shp.updurgency(this, level);
     }
 }

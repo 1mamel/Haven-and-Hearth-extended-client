@@ -41,32 +41,32 @@ public class CommonPlant extends CSprite {
         public final int num;
         public final Neg neg;
 
-        public Factory(int num) {
-            Resource res = Utils.myres(this.getClass());
+        public Factory(final int num) {
+            final Resource res = Utils.myres(this.getClass());
             this.neg = res.layer(Resource.negc);
             this.num = num;
-            ArrayList<Tex> strands = new ArrayList<Tex>();
-            for (Image img : res.layers(Resource.imgc)) {
+            final ArrayList<Tex> strands = new ArrayList<Tex>();
+            for (final Image img : res.layers(Resource.imgc)) {
                 if (img.id != -1)
                     strands.add(img.tex());
             }
             this.strands = strands.toArray(new Tex[strands.size()]);
         }
 
-        public Sprite create(Owner owner, Resource res, Message sdt) {
-            CommonPlant spr = new CommonPlant(owner, res);
+        public Sprite create(final Owner owner, final Resource res, final Message sdt) {
+            final CommonPlant spr = new CommonPlant(owner, res);
             spr.addnegative();
-            Random rnd = owner.mkrandoom();
+            final Random rnd = owner.mkrandoom();
             for (int i = 0; i < num; i++) {
-                Coord c = new Coord(rnd.nextInt(neg.bs.x), rnd.nextInt(neg.bs.y)).add(neg.bc);
-                Tex s = strands[rnd.nextInt(strands.length)];
+                final Coord c = new Coord(rnd.nextInt(neg.bs.x), rnd.nextInt(neg.bs.y)).add(neg.bc);
+                final Tex s = strands[rnd.nextInt(strands.length)];
                 spr.add(s, 0, MapView.m2s(c), new Coord(s.sz().x / 2, s.sz().y).inv());
             }
             return (spr);
         }
     }
 
-    protected CommonPlant(Owner owner, Resource res) {
+    protected CommonPlant(final Owner owner, final Resource res) {
         super(owner, res);
     }
 }

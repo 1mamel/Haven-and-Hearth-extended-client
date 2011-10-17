@@ -40,7 +40,7 @@ public class ChannelSearch {
     /**
      * Channel search needs a server.
      */
-    public ChannelSearch(Server server) {
+    public ChannelSearch(final Server server) {
         _server = server;
     }
 
@@ -54,7 +54,7 @@ public class ChannelSearch {
     /**
      * Set channel name search string.
      */
-    public void setName(String name) {
+    public void setName(final String name) {
         _name = name;
     }
 
@@ -68,7 +68,7 @@ public class ChannelSearch {
     /**
      * Set minimum user-count criteria.
      */
-    public void setMinUsers(int min) {
+    public void setMinUsers(final int min) {
         _minUsers = min;
     }
 
@@ -82,14 +82,14 @@ public class ChannelSearch {
     /**
      * Set maximum user-count criteria.
      */
-    public void setMaxUsers(int min) {
+    public void setMaxUsers(final int min) {
         _maxUsers = min;
     }
 
     /**
      * Internal use.
      */
-    void setComplete(boolean complete) {
+    void setComplete(final boolean complete) {
         _complete = complete;
     }
 
@@ -111,7 +111,7 @@ public class ChannelSearch {
     /**
      * Number of channels found in most recent search, or null on error.
      */
-    public Channel getChannelAt(int index) {
+    public Channel getChannelAt(final int index) {
         if (_results == null) return null;
         return (Channel) _results.elementAt(index);
     }
@@ -127,21 +127,21 @@ public class ChannelSearch {
     /**
      * Add search listener.
      */
-    public void addChannelSearchListener(ChannelSearchListener listener) {
+    public void addChannelSearchListener(final ChannelSearchListener listener) {
         _listeners.addElement(listener);
     }
 
     /**
      * Remove search listener.
      */
-    public void removeChannelSearchListener(ChannelSearchListener listener) {
+    public void removeChannelSearchListener(final ChannelSearchListener listener) {
         _listeners.removeElement(listener);
     }
 
     /**
      * Internal use.
      */
-    void processChannel(Channel chan) {
+    void processChannel(final Channel chan) {
         if (chan.getUserCount() > _minUsers && chan.getUserCount() < _maxUsers) {
             _results.addElement(chan);
             for (int i = 0; i < _listeners.size(); i++) {
@@ -153,7 +153,7 @@ public class ChannelSearch {
     /**
      * Internal use.
      */
-    void searchStarted(int channels) {
+    void searchStarted(final int channels) {
         for (int i = 0; i < _listeners.size(); i++) {
             ((ChannelSearchListener) _listeners.elementAt(i)).searchStarted(channels);
         }

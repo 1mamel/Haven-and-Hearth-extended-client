@@ -61,7 +61,7 @@ public class ScriptsManagerTest extends TestCase {
     public void testSimpleBot() throws Exception {
         ScriptsManager.exec("import simplebot");
         assertTrue(ScriptsManager.containsBot("simplebot"));
-        Bot bot = ScriptsManager.createBot("simplebot");
+        final Bot bot = ScriptsManager.createBot("simplebot");
         System.out.println("About:" + bot.about());
         System.out.println("Author:" + bot.author());
         System.out.println("\tstarting bot...\n");
@@ -69,8 +69,8 @@ public class ScriptsManagerTest extends TestCase {
         System.out.println("\n\tbot stopped");
     }
 
-    public static void main(String[] args) {
-        Scanner in = new Scanner(System.in);
+    public static void main(final String[] args) {
+        final Scanner in = new Scanner(System.in);
         String line;
         while (!(line = in.nextLine()).equals("exit")) {
             ScriptsManager.exec(line);

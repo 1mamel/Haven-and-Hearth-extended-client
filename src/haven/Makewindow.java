@@ -26,6 +26,8 @@
 
 package haven;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.awt.*;
 import java.util.LinkedList;
 import java.util.List;
@@ -41,15 +43,15 @@ public class Makewindow extends HWindow {
 
     static {
         Widget.addtype("make", new WidgetFactory() {
-            public Widget create(Coord c, Widget parent, Object[] args) {
+            public Widget create(final Coord c, final Widget parent, final Object[] args) {
                 return (new Makewindow(parent, (String) args[0]));
             }
         });
     }
 
-    public Makewindow(Widget parent, String rcpnm) {
+    public Makewindow(final Widget parent, final String rcpnm) {
         super(parent, "Crafting", true);
-        Label nm = new Label(new Coord(10, 10), this, rcpnm, nmf);
+        final Label nm = new Label(new Coord(10, 10), this, rcpnm, nmf);
         receiptName = rcpnm;
         nm.c = new Coord(sz.x - 10 - nm.sz.x, 10);
         new Label(new Coord(10, 18), this, "Input:");
@@ -65,14 +67,14 @@ public class Makewindow extends HWindow {
         super.destroy();
     }
 
-    public void uimsg(String msg, Object... args) {
+    public void uimsg(@NotNull final String msg, final Object... args) {
         if (msg.equals("pop")) {
             ready = true;
             final int xoff = 50;
             if (inputs != null) {
-                for (Widget w : inputs)
+                for (final Widget w : inputs)
                     w.unlink();
-                for (Widget w : outputs)
+                for (final Widget w : outputs)
                     w.unlink();
             }
             inputs = new LinkedList<Widget>();
@@ -80,14 +82,14 @@ public class Makewindow extends HWindow {
             int i;
             Coord c = new Coord(xoff, 10);
             for (i = 0; (Integer) args[i] >= 0; i += 2) {
-                Widget box = new Inventory(c, new Coord(1, 1), this);
+                final Widget box = new Inventory(c, new Coord(1, 1), this);
                 inputs.add(box);
                 c = c.add(new Coord(31, 0));
                 new Item(Coord.z, (Integer) args[i], -1, box, null, (Integer) args[i + 1]);
             }
             c = new Coord(xoff, 65);
             for (i++; (i < args.length) && ((Integer) args[i] >= 0); i += 2) {
-                Widget box = new Inventory(c, new Coord(1, 1), this);
+                final Widget box = new Inventory(c, new Coord(1, 1), this);
                 outputs.add(box);
                 c = c.add(new Coord(31, 0));
                 new Item(Coord.z, (Integer) args[i], -1, box, null, (Integer) args[i + 1]);
@@ -95,7 +97,7 @@ public class Makewindow extends HWindow {
         }
     }
 
-    public void wdgmsg(Widget sender, String msg, Object... args) {
+    public void wdgmsg(final Widget sender, final String msg, final Object... args) {
         if (sender == obtn) {
             if (msg.equals("activate"))
                 wdgmsg("make", 0);
@@ -113,7 +115,7 @@ public class Makewindow extends HWindow {
         super.wdgmsg(sender, msg, args);
     }
 
-    public boolean globtype(char ch, java.awt.event.KeyEvent ev) {
+    public boolean globtype(final char ch, final java.awt.event.KeyEvent ev) {
         if (ch == '\n') {
             wdgmsg("make", ui.modctrl ? 1 : 0);
             return (true);

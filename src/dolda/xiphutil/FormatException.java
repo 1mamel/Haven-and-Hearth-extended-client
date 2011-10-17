@@ -13,7 +13,7 @@ package dolda.xiphutil;
  * @author Fredrik Tolf <code>&lt;fredrik@dolda2000.com&gt;</code>
  */
 public class FormatException extends java.io.IOException {
-    public FormatException(String msg) {
+    public FormatException(final String msg) {
         super(msg);
     }
 }

@@ -31,7 +31,7 @@ import haven.Widget;
 public class Robot {
     public final TestClient c;
 
-    public Robot(TestClient cl) {
+    public Robot(final TestClient cl) {
         this.c = cl;
         cl.addbot(this);
     }
@@ -40,12 +40,12 @@ public class Robot {
         c.rembot(this);
     }
 
-    public void newwdg(int id, Widget w, Object... args) {
+    public void newwdg(final int id, final Widget w, final Object... args) {
     }
 
-    public void dstwdg(int id, Widget w) {
+    public void dstwdg(final int id, final Widget w) {
     }
 
-    public void uimsg(int id, Widget w, String msg, Object... args) {
+    public void uimsg(final int id, final Widget w, final String msg, final Object... args) {
     }
 }

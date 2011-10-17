@@ -29,12 +29,12 @@ package haven.test;
 public class RobotException extends RuntimeException {
     public final Robot bot;
 
-    public RobotException(Robot bot, String msg, Throwable cause) {
+    public RobotException(final Robot bot, final String msg, final Throwable cause) {
         super(bot.c.user + ": " + msg, cause);
         this.bot = bot;
     }
 
-    public RobotException(Robot bot, String msg) {
+    public RobotException(final Robot bot, final String msg) {
         this(bot, msg, null);
     }
 }

@@ -26,6 +26,8 @@
 
 package haven;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.awt.*;
 import java.util.LinkedList;
 import java.util.List;
@@ -43,35 +45,35 @@ public class Avaview extends Widget {
 
     static {
         Widget.addtype("av", new WidgetFactory() {
-            public Widget create(Coord c, Widget parent, Object[] args) {
+            public Widget create(final Coord c, final Widget parent, final Object[] args) {
                 return (new Avaview(c, parent, (Integer) args[0]));
             }
         });
         Widget.addtype("av2", new WidgetFactory() {
-            public Widget create(Coord c, Widget parent, Object[] args) {
-                List<Indir<Resource>> rl = new LinkedList<Indir<Resource>>();
-                for (Object arg : args)
+            public Widget create(final Coord c, final Widget parent, final Object[] args) {
+                final List<Indir<Resource>> rl = new LinkedList<Indir<Resource>>();
+                for (final Object arg : args)
                     rl.add(parent.ui.sess.getres((Integer) arg));
                 return (new Avaview(c, parent, rl));
             }
         });
     }
 
-    private Avaview(Coord c, Widget parent, Coord asz) {
+    private Avaview(final Coord c, final Widget parent, final Coord asz) {
         super(c, asz.add(Window.wbox.bisz()).sub(unborder.mul(2)), parent);
         this.asz = asz;
     }
 
-    public Avaview(Coord c, Widget parent, int avagob, Coord asz) {
+    public Avaview(final Coord c, final Widget parent, final int avagob, final Coord asz) {
         this(c, parent, asz);
         this.avagob = avagob;
     }
 
-    public Avaview(Coord c, Widget parent, int avagob) {
+    public Avaview(final Coord c, final Widget parent, final int avagob) {
         this(c, parent, avagob, dasz);
     }
 
-    public Avaview(Coord c, Widget parent, List<Indir<Resource>> rl) {
+    public Avaview(final Coord c, final Widget parent, final List<Indir<Resource>> rl) {
         this(c, parent, dasz);
         if (rl.isEmpty())
             none = true;
@@ -79,14 +81,14 @@ public class Avaview extends Widget {
             this.myown = new AvaRender(rl);
     }
 
-    public void uimsg(String msg, Object... args) {
+    public void uimsg(@NotNull final String msg, final Object... args) {
         if (msg.equals("upd")) {
             this.avagob = (Integer) args[0];
             return;
         }
         if (msg.equals("ch")) {
-            List<Indir<Resource>> rl = new LinkedList<Indir<Resource>>();
-            for (Object arg : args)
+            final List<Indir<Resource>> rl = new LinkedList<Indir<Resource>>();
+            for (final Object arg : args)
                 rl.add(ui.sess.getres((Integer) arg));
             if (rl.isEmpty()) {
                 this.myown = null;
@@ -103,21 +105,21 @@ public class Avaview extends Widget {
         super.uimsg(msg, args);
     }
 
-    public void draw(GOut g) {
+    public void draw(final GOut g) {
         Tex at = null;
         if (none) {
         } else if (myown != null) {
             at = myown;
         } else {
-            Gob gob = ui.sess.glob.oc.getgob(avagob);
+            final Gob gob = ui.sess.glob.oc.getgob(avagob);
             Avatar ava = null;
             if (gob != null)
                 ava = gob.getattr(Avatar.class);
             if (ava != null)
                 at = ava.rend;
         }
-        GOut g2 = g.reclip(Window.wbox.tloff().sub(unborder), asz);
-        int yo;
+        final GOut g2 = g.reclip(Window.wbox.tloff().sub(unborder), asz);
+        final int yo;
         if (at == null) {
             at = missing;
             yo = 0;
@@ -125,13 +127,13 @@ public class Avaview extends Widget {
             g2.image(Equipory.bg, new Coord(Equipory.bg.sz().x / 2 - asz.x / 2, 20).inv());
             yo = (20 * asz.y) / dasz.y;
         }
-        Coord tsz = new Coord((at.sz().x * asz.x) / dasz.x, (at.sz().y * asz.y) / dasz.y);
+        final Coord tsz = new Coord((at.sz().x * asz.x) / dasz.x, (at.sz().y * asz.y) / dasz.y);
         g2.image(at, new Coord(tsz.x / 2 - asz.x / 2, yo).inv(), tsz);
         g.chcolor(color);
         Window.wbox.draw(g, Coord.z, asz.add(Window.wbox.bisz()).sub(unborder.mul(2)));
     }
 
-    public boolean mousedown(Coord c, int button) {
+    public boolean mousedown(final Coord c, final int button) {
         wdgmsg("click", button);
         return (true);
     }

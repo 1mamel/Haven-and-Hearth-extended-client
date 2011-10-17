@@ -41,33 +41,33 @@ public class GaussianPlant extends CSprite {
         public final int num;
         public final Neg neg;
 
-        public Factory(int num) {
-            Resource res = Utils.myres(this.getClass());
+        public Factory(final int num) {
+            final Resource res = Utils.myres(this.getClass());
             this.neg = res.layer(Resource.negc);
             this.num = num;
-            ArrayList<Tex> strands = new ArrayList<Tex>();
-            for (Image img : res.layers(Resource.imgc)) {
+            final ArrayList<Tex> strands = new ArrayList<Tex>();
+            for (final Image img : res.layers(Resource.imgc)) {
                 if (img.id != -1)
                     strands.add(img.tex());
             }
             this.strands = strands.toArray(new Tex[strands.size()]);
         }
 
-        public Sprite create(Owner owner, Resource res, Message sdt) {
-            GaussianPlant spr = new GaussianPlant(owner, res);
+        public Sprite create(final Owner owner, final Resource res, final Message sdt) {
+            final GaussianPlant spr = new GaussianPlant(owner, res);
             spr.addnegative();
-            Random rnd = owner.mkrandoom();
-            Coord bs = neg.bs;
+            final Random rnd = owner.mkrandoom();
+            final Coord bs = neg.bs;
             for (int i = 0; i < num; i++) {
-                Coord c = new Coord((int) (rnd.nextGaussian() * bs.x / 2), (int) (rnd.nextGaussian() * bs.y / 2));
-                Tex s = strands[rnd.nextInt(strands.length)];
+                final Coord c = new Coord((int) (rnd.nextGaussian() * bs.x / 2), (int) (rnd.nextGaussian() * bs.y / 2));
+                final Tex s = strands[rnd.nextInt(strands.length)];
                 spr.add(s, 0, MapView.m2s(c), new Coord(s.sz().x / 2, s.sz().y).inv());
             }
             return (spr);
         }
     }
 
-    protected GaussianPlant(Owner owner, Resource res) {
+    protected GaussianPlant(final Owner owner, final Resource res) {
         super(owner, res);
     }
 }

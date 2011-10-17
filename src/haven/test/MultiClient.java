@@ -35,7 +35,7 @@ public class MultiClient extends BaseTest {
     public final int delay;
     public int started;
 
-    public MultiClient(int num, int delay) {
+    public MultiClient(final int num, final int delay) {
         this.num = num;
         this.delay = delay;
         this.started = 0;
@@ -46,10 +46,10 @@ public class MultiClient extends BaseTest {
         long laststarted = 0;
         try {
             while (true) {
-                long now = System.currentTimeMillis();
+                final long now = System.currentTimeMillis();
                 long timeout = 1000;
                 if ((started < num) && (now - laststarted >= delay)) {
-                    TestClient c = new TestClient("test" + (started + 1));
+                    final TestClient c = new TestClient("test" + (started + 1));
                     new CharSelector(c, null, null) {
                         public void succeed() {
                             System.out.println("Selected character");
@@ -74,7 +74,7 @@ public class MultiClient extends BaseTest {
                 }
                 if (now - lastck > 1000) {
                     int alive = 0;
-                    for (TestClient c : clients) {
+                    for (final TestClient c : clients) {
                         if (c.alive())
                             alive++;
                     }
@@ -93,7 +93,7 @@ public class MultiClient extends BaseTest {
 
     public void stopall() {
         synchronized (clients) {
-            for (TestClient c : clients)
+            for (final TestClient c : clients)
                 c.stop();
         }
     }
@@ -102,12 +102,12 @@ public class MultiClient extends BaseTest {
         System.err.println("usage: MultiClient NUM [DELAY]");
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         if (args.length < 1) {
             usage();
             System.exit(1);
         }
-        int num = Integer.parseInt(args[0]);
+        final int num = Integer.parseInt(args[0]);
         int delay = 0;
         if (args.length > 1)
             delay = Integer.parseInt(args[1]);

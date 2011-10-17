@@ -11,7 +11,7 @@ package wikilib.dom;
 public class List extends BranchingNode<Node> {
     private boolean ordered;
 
-    public  List(boolean ordered) {
+    public  List(final boolean ordered) {
         this.ordered = ordered;
     }
 

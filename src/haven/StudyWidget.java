@@ -17,7 +17,7 @@ public class StudyWidget extends Widget {
     private final Label maxLabel;
     private final Label usedLabel;
 
-    public StudyWidget(Coord c, Coord sz, Widget parent) {
+    public StudyWidget(final Coord c, final Coord sz, final Widget parent) {
         super(c, sz, parent);
         this.canhastrash = false;
         new Label(new Coord(138, 210), this, "Used attention:");
@@ -34,12 +34,12 @@ public class StudyWidget extends Widget {
         super.destroy();
     }
 
-    public void setAttention(int used) {
+    public void setAttention(final int used) {
         this.attention = used;
         usedLabel.settext(Integer.toString(used));
     }
 
-    public void setAttentionLimit(int limit) {
+    public void setAttentionLimit(final int limit) {
         this.attentionLimit = limit;
         maxLabel.settext(Integer.toString(limit));
     }

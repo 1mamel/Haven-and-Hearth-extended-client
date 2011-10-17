@@ -28,19 +28,19 @@ import java.util.Date;
  * @see IRCConnectionListener
  */
 public class IRCConnectionAdapter implements IRCConnectionListener {
-    public void onAction(String user, String chan, String txt) {
+    public void onAction(final String user, final String chan, final String txt) {
     }
 
-    public void onBan(String banned, String chan, String banner) {
+    public void onBan(final String banned, final String chan, final String banner) {
     }
 
-    public void onClientInfo(String orgnick) {
+    public void onClientInfo(final String orgnick) {
     }
 
-    public void onClientSource(String orgnick) {
+    public void onClientSource(final String orgnick) {
     }
 
-    public void onClientVersion(String orgnick) {
+    public void onClientVersion(final String orgnick) {
     }
 
     public void onConnect() {
@@ -49,106 +49,106 @@ public class IRCConnectionAdapter implements IRCConnectionListener {
     public void onDisconnect() {
     }
 
-    public void onIsOn(String[] usersOn) {
+    public void onIsOn(final String[] usersOn) {
     }
 
-    public void onInvite(String orgin, String orgnick, String invitee, String chan) {
+    public void onInvite(final String orgin, final String orgnick, final String invitee, final String chan) {
     }
 
-    public void onJoin(String user, String nick, String chan, boolean create) {
+    public void onJoin(final String user, final String nick, final String chan, final boolean create) {
     }
 
-    public void onJoins(String users, String chan) {
+    public void onJoins(final String users, final String chan) {
     }
 
-    public void onKick(String kicked, String chan, String kicker, String txt) {
+    public void onKick(final String kicked, final String chan, final String kicker, final String txt) {
     }
 
-    public void onMessage(String message) {
+    public void onMessage(final String message) {
     }
 
-    public void onPrivateMessage(String orgnick, String chan, String txt) {
+    public void onPrivateMessage(final String orgnick, final String chan, final String txt) {
     }
 
-    public void onNick(String user, String oldnick, String newnick) {
+    public void onNick(final String user, final String oldnick, final String newnick) {
     }
 
-    public void onNotice(String text) {
+    public void onNotice(final String text) {
     }
 
-    public void onPart(String user, String nick, String chan) {
+    public void onPart(final String user, final String nick, final String chan) {
     }
 
-    public void onOp(String oper, String chan, String oped) {
+    public void onOp(final String oper, final String chan, final String oped) {
     }
 
-    public void onParsingError(String message) {
+    public void onParsingError(final String message) {
     }
 
-    public void onPing(String params) {
+    public void onPing(final String params) {
     }
 
-    public void onStatus(String msg) {
+    public void onStatus(final String msg) {
     }
 
-    public void onTopic(String chanName, String newTopic) {
+    public void onTopic(final String chanName, final String newTopic) {
     }
 
-    public void onVersionNotice(String orgnick, String origin, String version) {
+    public void onVersionNotice(final String orgnick, final String origin, final String version) {
     }
 
-    public void onQuit(String user, String nick, String txt) {
+    public void onQuit(final String user, final String nick, final String txt) {
     }
 
-    public void onReplyVersion(String version) {
+    public void onReplyVersion(final String version) {
     }
 
-    public void onReplyListUserChannels(int channelCount) {
+    public void onReplyListUserChannels(final int channelCount) {
     }
 
     public void onReplyListStart() {
     }
 
-    public void onReplyList(String channel, int userCount, String topic) {
+    public void onReplyList(final String channel, final int userCount, final String topic) {
     }
 
     public void onReplyListEnd() {
     }
 
-    public void onReplyListUserClient(String msg) {
+    public void onReplyListUserClient(final String msg) {
     }
 
-    public void onReplyWhoIsUser(String nick, String user, String name, String host) {
+    public void onReplyWhoIsUser(final String nick, final String user, final String name, final String host) {
     }
 
-    public void onReplyWhoIsServer(String nick, String server, String info) {
+    public void onReplyWhoIsServer(final String nick, final String server, final String info) {
     }
 
-    public void onReplyWhoIsOperator(String info) {
+    public void onReplyWhoIsOperator(final String info) {
     }
 
-    public void onReplyWhoIsIdle(String nick, int idle, Date signon) {
+    public void onReplyWhoIsIdle(final String nick, final int idle, final Date signon) {
     }
 
-    public void onReplyEndOfWhoIs(String nick) {
+    public void onReplyEndOfWhoIs(final String nick) {
     }
 
-    public void onReplyWhoIsChannels(String nick, String channels) {
+    public void onReplyWhoIsChannels(final String nick, final String channels) {
     }
 
     public void onReplyMOTDStart() {
     }
 
-    public void onReplyMOTD(String msg) {
+    public void onReplyMOTD(final String msg) {
     }
 
     public void onReplyMOTDEnd() {
     }
 
-    public void onReplyNameReply(String channel, String users) {
+    public void onReplyNameReply(final String channel, final String users) {
     }
 
-    public void onReplyTopic(String channel, String topic) {
+    public void onReplyTopic(final String channel, final String topic) {
     }
 
     public void onErrorNoMOTD() {
@@ -160,21 +160,21 @@ public class IRCConnectionAdapter implements IRCConnectionListener {
     public void onErrorNoNicknameGiven() {
     }
 
-    public void onErrorNickNameInUse(String badNick) {
+    public void onErrorNickNameInUse(final String badNick) {
     }
 
-    public void onErrorNickCollision(String badNick) {
+    public void onErrorNickCollision(final String badNick) {
     }
 
-    public void onErrorErroneusNickname(String badNick) {
+    public void onErrorErroneusNickname(final String badNick) {
     }
 
     public void onErrorAlreadyRegistered() {
     }
 
-    public void onErrorUnknown(String message) {
+    public void onErrorUnknown(final String message) {
     }
 
-    public void onErrorUnsupported(String messag) {
+    public void onErrorUnsupported(final String messag) {
     }
 }

@@ -34,18 +34,18 @@ public class ComWin extends HWindow {
     static final Tex iptex = Resource.loadtex("gfx/hud/combat/ip");
     final Fightview fv;
 
-    public ComWin(Widget parent, Fightview fv) {
+    public ComWin(final Widget parent, final Fightview fv) {
         super(parent, "Combat", false);
         this.fv = fv;
         (new Label(new Coord(10, 5), this, "Attack:")).setcolor(Color.BLACK);
         new Label(new Coord(10, 55), this, "Maneuver:").setcolor(Color.BLACK);
     }
 
-    public void draw(GOut g) {
+    public void draw(final GOut g) {
         super.draw(g);
         Resource res;
-        boolean hasbatk = (fv.batk != null) && (fv.batk.get() != null);
-        boolean hasiatk = (fv.iatk != null) && (fv.iatk.get() != null);
+        final boolean hasbatk = (fv.batk != null) && (fv.batk.get() != null);
+        final boolean hasiatk = (fv.iatk != null) && (fv.iatk.get() != null);
         if (hasbatk) {
             res = fv.batk.get();
             g.image(res.layer(Resource.imgc).tex(), new Coord(15, 20));
@@ -57,7 +57,7 @@ public class ComWin extends HWindow {
         }
         if (hasiatk) {
             res = fv.iatk.get();
-            Coord c;
+            final Coord c;
             if (hasbatk)
                 c = new Coord(18, 23);
             else
@@ -70,7 +70,7 @@ public class ComWin extends HWindow {
         if ((fv.blk != null) && ((res = fv.blk.get()) != null)) {
             g.image(res.layer(Resource.imgc).tex(), new Coord(15, 70));
             g.chcolor(0, 0, 0, 255);
-            AButton act = res.layer(Resource.action);
+            final AButton act = res.layer(Resource.action);
             String name = "";
             if (act != null) {
                 name = act.name;
@@ -79,13 +79,13 @@ public class ComWin extends HWindow {
             g.chcolor();
         }
         g.image(iptex, new Coord(200, 32));
-        Fightview.Relation rel = fv.current;
+        final Fightview.Relation rel = fv.current;
         if (rel != null) {
             g.chcolor(0, 0, 0, 255);
             g.text(rel.ip + "/" + rel.oip, new Coord(205 + iptex.sz().x, 30));
             g.chcolor();
         }
-        long now = System.currentTimeMillis();
+        final long now = System.currentTimeMillis();
         if (now < fv.atkc) {
             g.chcolor(255, 0, 128, 255);
             g.frect(new Coord(200, 55), new Coord((int) (fv.atkc - now) / 100, 20));

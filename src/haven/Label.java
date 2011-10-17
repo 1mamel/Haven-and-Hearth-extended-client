@@ -26,6 +26,8 @@
 
 package haven;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.awt.*;
 
 public class Label extends Widget {
@@ -36,7 +38,7 @@ public class Label extends Widget {
 
     static {
         Widget.addtype("lbl", new WidgetFactory() {
-            public Widget create(Coord c, Widget parent, Object[] args) {
+            public Widget create(final Coord c, final Widget parent, final Object[] args) {
                 if (args.length > 1)
                     return (new Label(c, parent, (String) args[0], (Integer) args[1]));
                 else
@@ -45,44 +47,44 @@ public class Label extends Widget {
         });
     }
 
-    public void draw(GOut g) {
+    public void draw(final GOut g) {
         g.image(text.tex(), Coord.z);
     }
 
-    public Label(Coord c, Widget parent, String text, int w, Text.Foundry f) {
+    public Label(final Coord c, final Widget parent, final String text, final int w, final Text.Foundry f) {
         super(c, Coord.z, parent);
         this.f = f;
         this.text = f.renderwrap(texts = text, this.col, w);
         sz = this.text.sz();
     }
 
-    public Label(Coord c, Widget parent, String text, Text.Foundry f) {
+    public Label(final Coord c, final Widget parent, final String text, final Text.Foundry f) {
         super(c, Coord.z, parent);
         this.f = f;
         this.text = f.render(texts = text, this.col);
         sz = this.text.sz();
     }
 
-    public Label(Coord c, Widget parent, String text, int w) {
+    public Label(final Coord c, final Widget parent, final String text, final int w) {
         this(c, parent, text, w, Text.std);
     }
 
-    public Label(Coord c, Widget parent, String text) {
+    public Label(final Coord c, final Widget parent, final String text) {
         this(c, parent, text, Text.std);
     }
 
-    public void settext(String text) {
+    public void settext(final String text) {
         this.text = f.render(texts = text, col);
         sz = this.text.sz();
     }
 
-    public void setcolor(Color color) {
+    public void setcolor(final Color color) {
         col = color;
         this.text = f.render(texts, col);
         sz = this.text.sz();
     }
 
-    public void uimsg(String msg, Object... args) {
+    public void uimsg(@NotNull final String msg, final Object... args) {
         if (msg.equals("set"))
             settext((String) args[0]);
     }

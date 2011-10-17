@@ -17,9 +17,9 @@ class FilteredTextField extends JTextField {
     boolean noNumbers = false;
     int maxCharacters = 0;
 
-    public void processKeyEvent(KeyEvent ev) {
+    public void processKeyEvent(final KeyEvent ev) {
 
-        char c = ev.getKeyChar();
+        final char c = ev.getKeyChar();
 
         if (Character.isDigit(c) && noNumbers && !ev.isAltDown() || badchars.indexOf(c) > -1) {
             ev.consume();
@@ -43,11 +43,11 @@ class FilteredTextField extends JTextField {
 
     }
 
-    public void setBadChars(String badchars) {
+    public void setBadChars(final String badchars) {
         this.badchars = badchars;
     }
 
-    public void setMaxCharacters(int maxChars) {
+    public void setMaxCharacters(final int maxChars) {
         maxCharacters = maxChars;
     }
 
@@ -55,11 +55,11 @@ class FilteredTextField extends JTextField {
         badchars = defbadchars;
     }
 
-    public void setNoNumbers(boolean state) {
+    public void setNoNumbers(final boolean state) {
         noNumbers = state;
     }
 
-    public void setNoLetters(boolean state) {
+    public void setNoLetters(final boolean state) {
         noLetters = state;
     }
 }

@@ -29,7 +29,7 @@ public class GoogleTranslator {
         if (!turnedon || apiKey == null)
             return str;
         String res = "";
-        URL url = url(str);
+        final URL url = url(str);
         if (url == null)
             return str;
         try {
@@ -38,18 +38,18 @@ public class GoogleTranslator {
             uc.setRequestMethod("GET");
             uc.setDoOutput(true);
             try {
-                String result;
+                final String result;
                 try {
                     result = inputStreamToString(uc.getInputStream());
                 } catch (Exception e) {
                     return str;
                 }
-                JSONObject o = (JSONObject) JSONValue.parseWithException(result);
-                JSONObject data = (JSONObject) o.get("data");
-                JSONArray translations = (JSONArray) data.get("translations");
-                JSONObject tr1 = (JSONObject) translations.get(0);
+                final JSONObject o = (JSONObject) JSONValue.parseWithException(result);
+                final JSONObject data = (JSONObject) o.get("data");
+                final JSONArray translations = (JSONArray) data.get("translations");
+                final JSONObject tr1 = (JSONObject) translations.get(0);
                 str = (String) tr1.get("translatedText");
-                String sourceLanguage = (String) tr1.get("detectedSourceLanguage");
+                final String sourceLanguage = (String) tr1.get("detectedSourceLanguage");
                 res = '[' + sourceLanguage + "] " + str;
             } catch (ParseException e) {
                 return str;
@@ -76,7 +76,7 @@ public class GoogleTranslator {
         try {
             String string;
             if (inputStream != null) {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, ENCODING));
+                final BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, ENCODING));
                 while (null != (string = reader.readLine())) {
                     outputBuilder.append(string).append('\n');
                 }
@@ -94,7 +94,7 @@ public class GoogleTranslator {
         } catch (UnsupportedEncodingException e) {
             return null;
         }
-        URL url;
+        final URL url;
         try {
             url = new URL(apiUrl + apiKey + "&target=" + lang + "&q=" + str);
         } catch (MalformedURLException e) {
@@ -103,7 +103,7 @@ public class GoogleTranslator {
         return url;
     }
 
-    public void useKey(String apiKey) {
+    public void useKey(final String apiKey) {
         this.apiKey = apiKey;
     }
 
@@ -115,11 +115,11 @@ public class GoogleTranslator {
         turnedon = false;
     }
 
-    public void turn(boolean run) {
+    public void turn(final boolean run) {
         turnedon = run;
     }
 
-    public void useLanguage(String lang) {
+    public void useLanguage(final String lang) {
         this.lang = lang;
     }
 

@@ -31,7 +31,7 @@ public class Lumin extends GAttrib {
     final int sz;
     final int str;
 
-    public Lumin(Gob g, Coord off, int sz, int str) {
+    public Lumin(final Gob g, final Coord off, final int sz, final int str) {
         super(g);
         this.off = off;
         this.sz = sz;

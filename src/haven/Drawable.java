@@ -27,7 +27,7 @@
 package haven;
 
 public abstract class Drawable extends GAttrib {
-    public Drawable(Gob gob) {
+    public Drawable(final Gob gob) {
         super(gob);
     }
 

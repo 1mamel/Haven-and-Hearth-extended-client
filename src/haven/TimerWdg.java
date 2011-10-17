@@ -17,14 +17,14 @@ public class TimerWdg extends Widget {
     private final Button stop;
     private final Button delete;
 
-    public TimerWdg(Coord c, Widget parent, Timer timer) {
+    public TimerWdg(final Coord c, final Widget parent, final Timer timer) {
         super(c, bg.sz(), parent);
 
         this.timer = timer;
         timer.updcallback = new Callback() {
 
             @Override
-            public void run(Timer timer) {
+            public void run(final Timer timer) {
                 synchronized (time) {
                     time.settext(timer.toString());
                     updbtns();
@@ -57,13 +57,13 @@ public class TimerWdg extends Widget {
     }
 
     @Override
-    public void draw(GOut g) {
+    public void draw(final GOut g) {
         g.image(bg, Coord.z);
         super.draw(g);
     }
 
     @Override
-    public void wdgmsg(Widget sender, String msg, Object... args) {
+    public void wdgmsg(final Widget sender, final String msg, final Object... args) {
         if (sender == start) {
             timer.start();
             updbtns();

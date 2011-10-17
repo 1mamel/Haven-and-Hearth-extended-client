@@ -38,14 +38,14 @@ public abstract class BollSprite extends Sprite {
         private Boll n, p;
         public final double x, y, z;
 
-        public Boll(int pz, int subz, double x, double y, double z) {
+        public Boll(final int pz, final int subz, final double x, final double y, final double z) {
             super(pz, subz);
             this.x = x;
             this.y = y;
             this.z = z;
         }
 
-        public Boll(double x, double y, double z) {
+        public Boll(final double x, final double y, final double z) {
             this(0, 0, x, y, z);
         }
 
@@ -57,30 +57,30 @@ public abstract class BollSprite extends Sprite {
 
         public abstract void draw(GOut g, Coord sc);
 
-        public void setup(Coord cc, Coord off) {
+        public void setup(final Coord cc, final Coord off) {
             super.setup(cc.add((int) ((x * 2) - (y * 2)), (int) (x + y)), off.add(0, (int) z));
         }
 
-        public void draw(GOut g) {
+        public void draw(final GOut g) {
             draw(g, sc());
         }
 
-        public void draw(java.awt.image.BufferedImage img, java.awt.Graphics g) {
+        public void draw(final java.awt.image.BufferedImage img, final java.awt.Graphics g) {
         }
     }
 
-    protected BollSprite(Owner owner, Resource res) {
+    protected BollSprite(final Owner owner, final Resource res) {
         super(owner, res);
     }
 
-    public void add(Boll boll) {
+    public void add(final Boll boll) {
         if (bollar != null)
             bollar.p = boll;
         boll.n = bollar;
         bollar = boll;
     }
 
-    public void remove(Boll boll) {
+    public void remove(final Boll boll) {
         if (boll.n != null)
             boll.n.p = boll.p;
         if (boll.p != null)
@@ -91,7 +91,7 @@ public abstract class BollSprite extends Sprite {
 
     public abstract boolean tick2(int dt);
 
-    public boolean tick(int dt) {
+    public boolean tick(final int dt) {
         Boll n;
         for (Boll boll = bollar; boll != null; boll = n) {
             n = boll.n;
@@ -101,11 +101,11 @@ public abstract class BollSprite extends Sprite {
         return (tick2(dt));
     }
 
-    public boolean checkhit(Coord c) {
+    public boolean checkhit(final Coord c) {
         return (false);
     }
 
-    public void setup(Drawer d, Coord cc, Coord off) {
+    public void setup(final Drawer d, final Coord cc, final Coord off) {
         for (Boll boll = bollar; boll != null; boll = boll.n) {
             boll.setup(cc, off);
             d.addpart(boll);

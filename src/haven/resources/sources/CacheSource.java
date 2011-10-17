@@ -17,11 +17,11 @@ import java.io.Serializable;
 public class CacheSource implements ResSource, Serializable {
     public transient ResCache cache;
 
-    public CacheSource(ResCache cache) {
+    public CacheSource(final ResCache cache) {
         this.cache = cache;
     }
 
-    public InputStream get(String name) throws IOException {
+    public InputStream get(final String name) throws IOException {
         return (cache.fetch("res/" + name));
     }
 

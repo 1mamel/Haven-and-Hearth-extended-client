@@ -26,7 +26,7 @@ public class TimersController {
     static class CheckTask extends TimerTask {
         @Override
         public void run() {
-            for (Timer timer : timers) {
+            for (final Timer timer : timers) {
                 if ((timer.isWorking()) && (timer.update())) {
                     timer.stop();
                 }
@@ -34,11 +34,11 @@ public class TimersController {
         }
     }
 
-    static void add(Timer t) {
+    static void add(final Timer t) {
         timers.add(t);
     }
 
-    static void remove(Timer t) {
+    static void remove(final Timer t) {
         timers.remove(t);
         TimersController.save();
     }
@@ -48,16 +48,16 @@ public class TimersController {
             try {
                 options.load(new FileInputStream("timers.conf"));
                 timers.clear();
-                for (Object key : options.keySet()) {
-                    String str = key.toString();
+                for (final Object key : options.keySet()) {
+                    final String str = key.toString();
                     if (str.indexOf("Name") > 0) {
                         continue;
                     }
-                    String tmp[] = Utils.commaPattern.split(options.getProperty(str));
+                    final String[] tmp = Utils.commaPattern.split(options.getProperty(str));
                     try {
-                        int start = Integer.parseInt(tmp[0]);
-                        int time = Integer.parseInt(tmp[1]);
-                        String name = options.getProperty(str + "Name");
+                        final int start = Integer.parseInt(tmp[0]);
+                        final int time = Integer.parseInt(tmp[1]);
+                        final String name = options.getProperty(str + "Name");
                         new Timer(start, time, name);
                     } catch (Exception e) {
                     }
@@ -73,7 +73,7 @@ public class TimersController {
         synchronized (options) {
             options.clear();
             synchronized (timers) {
-                for (Timer timer : timers) {
+                for (final Timer timer : timers) {
                     options.setProperty("Timer" + i, String.format("%d,%d", timer.getStart(), timer.getTime()));
                     options.setProperty("Timer" + i + "Name", timer.getName());
                     i++;

@@ -36,7 +36,7 @@ public class AnimSprite extends ImageSprite {
     private Frame[] frames;
     private int fno, te;
     public static final Factory fact = new Factory() {
-        public Sprite create(Owner owner, Resource res, Message sdt) {
+        public Sprite create(final Owner owner, final Resource res, final Message sdt) {
             if (res.layer(Resource.animc) == null)
                 return (null);
             return (new AnimSprite(owner, res, sdt));
@@ -49,16 +49,16 @@ public class AnimSprite extends ImageSprite {
         Object id;
     }
 
-    private AnimSprite(Owner owner, Resource res, Message sdt) {
+    private AnimSprite(final Owner owner, final Resource res, final Message sdt) {
         super(owner, res, sdt);
-        boolean[] flags = decflags(sdt);
-        Collection<Part> stp = new LinkedList<Part>();
-        for (Image img : res.layers(Resource.imgc)) {
+        final boolean[] flags = decflags(sdt);
+        final Collection<Part> stp = new LinkedList<Part>();
+        for (final Image img : res.layers(Resource.imgc)) {
             if ((img.id < 0) || ((img.id < flags.length) && flags[img.id]))
                 stp.add(new ImagePart(img));
         }
         frames = null;
-        for (Anim anim : res.layers(Resource.animc)) {
+        for (final Anim anim : res.layers(Resource.animc)) {
             if ((anim.id < 0) || ((anim.id < flags.length) && flags[anim.id])) {
                 if (frames == null) {
                     frames = new Frame[anim.f.length];
@@ -71,7 +71,7 @@ public class AnimSprite extends ImageSprite {
                     if (frames[i] == null) {
                         f = frames[i] = new Frame();
                         f.dur = anim.d;
-                        for (Part p : stp)
+                        for (final Part p : stp)
                             f.parts.add(p);
                         f.id = (res.name + ':' + res.ver + ':' + i).intern();
                     }
@@ -83,7 +83,7 @@ public class AnimSprite extends ImageSprite {
         }
         if (frames == null) {
             frames = new Frame[1];
-            Frame f = frames[0] = new Frame();
+            final Frame f = frames[0] = new Frame();
             f.dur = 10000;
             f.parts = stp;
             f.id = (res.name + ':' + res.ver).intern();
@@ -93,7 +93,7 @@ public class AnimSprite extends ImageSprite {
         curf = frames[0].parts;
     }
 
-    public boolean tick(int dt) {
+    public boolean tick(final int dt) {
         boolean rv = false;
         te += dt;
         while (te > frames[fno].dur) {

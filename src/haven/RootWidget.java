@@ -43,17 +43,17 @@ public class RootWidget extends ConsoleHost {
     public static boolean screenshot = false;
     public static boolean names_ready = false;
 
-    public RootWidget(UI ui, Coord sz) {
+    public RootWidget(final UI ui, final Coord sz) {
         super(ui, new Coord(0, 0), sz);
         setfocusctl(true);
         cursor = defcurs;
     }
 
-    public boolean globtype(char key, KeyEvent ev) {
+    public boolean globtype(final char key, final KeyEvent ev) {
         if (!super.globtype(key, ev)) {
-            int code = ev.getKeyCode();
-            boolean ctrl = ev.isControlDown();
-            boolean alt = ev.isAltDown();
+            final int code = ev.getKeyCode();
+            final boolean ctrl = ev.isControlDown();
+            final boolean alt = ev.isAltDown();
 
             if (Config.profile && key == '`') {
                 new Profwnd(ui.slen, ui.mainview.prof, "MV prof");
@@ -101,7 +101,7 @@ public class RootWidget extends ConsoleHost {
         return true;
     }
 
-    public void draw(GOut g) {
+    public void draw(final GOut g) {
         if (screenshot && Config.sshot_noui) {
             visible = false;
         }
@@ -111,10 +111,10 @@ public class RootWidget extends ConsoleHost {
             visible = true;
             screenshot = false;
             try {
-                Coord s = CustomConfig.getWindowSize();
-                String stamp = Utils.sessdate(System.currentTimeMillis());
-                String ext = Config.sshot_compress ? ".jpg" : ".png";
-                File f = new File("screenshots/SS_" + stamp + ext);
+                final Coord s = CustomConfig.getWindowSize();
+                final String stamp = Utils.sessdate(System.currentTimeMillis());
+                final String ext = Config.sshot_compress ? ".jpg" : ".png";
+                final File f = new File("screenshots/SS_" + stamp + ext);
                 f.mkdirs();
                 Screenshot.writeToFile(f, s.x, s.y);
             } catch (GLException e) {
@@ -134,7 +134,7 @@ public class RootWidget extends ConsoleHost {
 //	}
     }
 
-    public void error(String msg) {
+    public void error(final String msg) {
     }
 
     @Override

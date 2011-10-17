@@ -29,13 +29,13 @@ package haven;
 public abstract class GAttrib {
     final Gob gob;
 
-    public GAttrib(Gob gob) {
+    public GAttrib(final Gob gob) {
         this.gob = gob;
     }
 
     public void tick() {
     }
 
-    public void ctick(int dt) {
+    public void ctick(final int dt) {
     }
 }

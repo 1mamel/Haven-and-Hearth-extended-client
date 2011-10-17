@@ -75,11 +75,11 @@ public class MCache {
         Coord c1, c2;
         final int mask;
 
-        public Overlay(Coord c1, Coord c2, int mask) {
+        public Overlay(final Coord c1, final Coord c2, final int mask) {
             this(ols, c1, c2, mask);
         }
 
-        public Overlay(Set<Overlay> set, Coord c1, Coord c2, int mask) {
+        public Overlay(final Set<Overlay> set, final Coord c1, final Coord c2, final int mask) {
             this.list = set;
             this.c1 = c1;
             this.c2 = c2;
@@ -92,7 +92,7 @@ public class MCache {
             list = null;
         }
 
-        public void update(Coord c1, Coord c2) {
+        public void update(final Coord c1, final Coord c2) {
             this.c1 = c1;
             this.c2 = c2;
         }
@@ -114,7 +114,7 @@ public class MCache {
         BufferedImage img;
         Tex tex;
 
-        public Grid(Coord gc) {
+        public Grid(final Coord gc) {
             this.gc = gc;
             tiles = new int[cmaps.x][cmaps.y];
             ol = new int[cmaps.x][cmaps.y];
@@ -122,11 +122,11 @@ public class MCache {
             tcache = new Tile[cmaps.x][cmaps.y][];
         }
 
-        public int gettile(Coord tc) {
+        public int gettile(final Coord tc) {
             return (tiles[tc.x][tc.y]);
         }
 
-        public int getol(Coord tc) {
+        public int getol(final Coord tc) {
             return (ol[tc.x][tc.y]);
         }
 
@@ -139,11 +139,11 @@ public class MCache {
 
         public void render() {
             img = TexI.mkbuf(cmaps);
-            Graphics2D g = img.createGraphics();
+            final Graphics2D g = img.createGraphics();
 
             for (int y = 0; y < cmaps.x; ++y) {
                 for (int x = 0; x < cmaps.y; ++x) {
-                    int id = tiles[x][y];
+                    final int id = tiles[x][y];
                     Color col = colors.get(id);
                     if (col == null) {
                         col = new Color(255, 0, 255);
@@ -164,16 +164,16 @@ public class MCache {
 
         public void makeflavor() {
             fo.clear();
-            Coord tc = gc.mul(cmaps);
+            final Coord tc = gc.mul(cmaps);
             for (int cy = 0; cy < cmaps.x; ++cy) {
                 for (int cx = 0; cx < cmaps.y; ++cx) {
-                    Tileset set = sets[tiles[cx][cy]];
-                    WeightList<Resource> flavobjs = set.getFlavobjs();
+                    final Tileset set = sets[tiles[cx][cy]];
+                    final WeightList<Resource> flavobjs = set.getFlavobjs();
                     if (!flavobjs.isEmpty()) {
-                        Random rnd = mkrandoom(cx, cy);
+                        final Random rnd = mkrandoom(cx, cy);
                         if (rnd.nextInt(set.getFlavprob()) == 0) {
-                            Resource r = flavobjs.pick(rnd);
-                            Gob g = new Gob(sess.glob, tc.add(cx, cy).mul(tilesz), -1, 0);
+                            final Resource r = flavobjs.pick(rnd);
+                            final Gob g = new Gob(sess.glob, tc.add(cx, cy).mul(tilesz), -1, 0);
                             g.setattr(new ResDrawable(g, r));
                             fo.add(g);
                         }
@@ -186,37 +186,37 @@ public class MCache {
             }
         }
 
-        public int randoom(Coord c, int r) {
+        public int randoom(final Coord c, final int r) {
             return (MCache.this.randoom(c.add(gc.mul(cmaps)), r));
         }
 
-        public Random mkrandoom(int x, int y) {
+        public Random mkrandoom(final int x, final int y) {
             return (MCache.mkrandoom((gc.mul(cmaps)).add(x, y)));
         }
 
-        public Random mkrandoom(Coord c) {
+        public Random mkrandoom(final Coord c) {
             return (MCache.mkrandoom(c.add(gc.mul(cmaps))));
         }
     }
 
-    private Tileset loadset(String name, int ver) {
-        Resource res = Resource.load(name, ver);
+    private Tileset loadset(final String name, final int ver) {
+        final Resource res = Resource.load(name, ver);
         res.loadwait();
-        Tileset layer = res.layer(Resource.tileset);
+        final Tileset layer = res.layer(Resource.tileset);
         return layer;
     }
 
-    public MCache(Session sess) {
+    public MCache(final Session sess) {
         this.sess = sess;
     }
 
-    private static void initrandoom(Random r, Coord c) {
+    private static void initrandoom(final Random r, final Coord c) {
         r.setSeed(c.x);
         r.setSeed(r.nextInt() ^ c.y);
     }
 
-    public int randoom(Coord c) {
-        int ret;
+    public int randoom(final Coord c) {
+        final int ret;
 
         synchronized (gen) {
             initrandoom(gen, c);
@@ -225,45 +225,45 @@ public class MCache {
         }
     }
 
-    public int randoom(Coord c, int r) {
+    public int randoom(final Coord c, final int r) {
         return (randoom(c) % r);
     }
 
-    public static Random mkrandoom(Coord c) {
-        Random ret = new Random();
+    public static Random mkrandoom(final Coord c) {
+        final Random ret = new Random();
         initrandoom(ret, c);
         return (ret);
     }
 
-    private void replace(Grid g) {
+    private void replace(final Grid g) {
         if (g == last)
             last = null;
     }
 
-    public void invalidate(Coord cc) {
+    public void invalidate(final Coord cc) {
         synchronized (req) {
             if (req.get(cc) == null)
                 req.put(cc, new Grid(cc));
         }
     }
 
-    public void invalblob(Message msg) {
-        int type = msg.uint8();
+    public void invalblob(final Message msg) {
+        final int type = msg.uint8();
         if (type == 0) {
             invalidate(msg.coord());
         } else if (type == 1) {
-            Coord ul = msg.coord();
-            Coord lr = msg.coord();
+            final Coord ul = msg.coord();
+            final Coord lr = msg.coord();
             trim(ul, lr);
         } else if (type == 2) {
             trimall();
         }
     }
 
-    public Tile[] gettrans(Coord tc) {
-        Grid g;
+    public Tile[] gettrans(final Coord tc) {
+        final Grid g;
         synchronized (grids) {
-            Coord gc = tc.div(cmaps);
+            final Coord gc = tc.div(cmaps);
             if ((last != null) && last.gc.equals(gc))
                 g = last;
             else
@@ -271,14 +271,14 @@ public class MCache {
         }
         if (g == null)
             return (null);
-        Coord gtc = tc.mod(cmaps);
+        final Coord gtc = tc.mod(cmaps);
         if (g.tcache[gtc.x][gtc.y] == null) {
-            int tr[][] = new int[3][3];
+            final int[][] tr = new int[3][3];
             for (int y = -1; y <= 1; y++) {
                 for (int x = -1; x <= 1; x++) {
                     if ((x == 0) && (y == 0))
                         continue;
-                    int tn = gettilen(tc.add(new Coord(x, y)));
+                    final int tn = gettilen(tc.add(new Coord(x, y)));
                     if (tn < 0)
                         return (null);
                     tr[x + 1][y + 1] = tn;
@@ -292,11 +292,11 @@ public class MCache {
             if (tr[0][2] >= tr[1][2]) tr[0][2] = -1;
             if (tr[2][2] >= tr[2][1]) tr[2][2] = -1;
             if (tr[2][2] >= tr[1][2]) tr[2][2] = -1;
-            int bx[] = {0, 1, 2, 1};
-            int by[] = {1, 0, 1, 2};
-            int cx[] = {0, 2, 2, 0};
-            int cy[] = {0, 0, 2, 2};
-            ArrayList<Tile> buf = new ArrayList<Tile>();
+            final int[] bx = {0, 1, 2, 1};
+            final int[] by = {1, 0, 1, 2};
+            final int[] cx = {0, 2, 2, 0};
+            final int[] cy = {0, 0, 2, 2};
+            final ArrayList<Tile> buf = new ArrayList<Tile>();
             for (int i = gettilen(tc) - 1; i >= 0; i--) {
                 if ((sets[i] == null) || (sets[i].getBtrans() == null) || (sets[i].getCtrans() == null))
                     continue;
@@ -317,10 +317,10 @@ public class MCache {
         return (g.tcache[gtc.x][gtc.y]);
     }
 
-    public Tile getground(Coord tc) {
-        Grid g;
+    public Tile getground(final Coord tc) {
+        final Grid g;
         synchronized (grids) {
-            Coord gc = tc.div(cmaps);
+            final Coord gc = tc.div(cmaps);
             if ((last != null) && last.gc.equals(gc))
                 g = last;
             else
@@ -328,9 +328,9 @@ public class MCache {
         }
         if (g == null)
             return (null);
-        Coord gtc = tc.mod(cmaps);
+        final Coord gtc = tc.mod(cmaps);
         if (g.gcache[gtc.x][gtc.y] == null) {
-            Tileset ts = sets[g.gettile(gtc)];
+            final Tileset ts = sets[g.gettile(gtc)];
             if (ts != null) {
                 g.gcache[gtc.x][gtc.y] = ts.getGround().pick(randoom(tc));
             }
@@ -338,10 +338,10 @@ public class MCache {
         return (g.gcache[gtc.x][gtc.y]);
     }
 
-    public int gettilen(Coord tc) {
-        Grid g;
+    public int gettilen(final Coord tc) {
+        final Grid g;
         synchronized (grids) {
-            Coord gc = tc.div(cmaps);
+            final Coord gc = tc.div(cmaps);
             if ((last != null) && last.gc.equals(gc))
                 g = last;
             else
@@ -352,17 +352,17 @@ public class MCache {
         return (g.gettile(tc.mod(cmaps)));
     }
 
-    public Tileset gettile(Coord tc) {
-        int tn = gettilen(tc);
+    public Tileset gettile(final Coord tc) {
+        final int tn = gettilen(tc);
         if (tn == -1)
             return (null);
         return (sets[tn]);
     }
 
-    public int getol(Coord tc) {
-        Grid g;
+    public int getol(final Coord tc) {
+        final Grid g;
         synchronized (grids) {
-            Coord gc = tc.div(cmaps);
+            final Coord gc = tc.div(cmaps);
             if ((last != null) && last.gc.equals(gc))
                 g = last;
             else
@@ -371,33 +371,33 @@ public class MCache {
         if (g == null)
             return (-1);
         int ol = g.getol(tc.mod(cmaps));
-        for (Overlay lol : ols) {
+        for (final Overlay lol : ols) {
             if (tc.isect(lol.c1, lol.c2.sub(lol.c1).add(1, 1)))
                 ol |= lol.mask;
         }
         return (ol);
     }
 
-    public void mapdata2(Message msg) {
-        Coord c = msg.coord();
+    public void mapdata2(final Message msg) {
+        final Coord c = msg.coord();
         String mmname = msg.string().intern();
         if (mmname.length() == 0)
             mmname = null;
-        int[] pfl = new int[256];
+        final int[] pfl = new int[256];
         while (true) {
-            int pidx = msg.uint8();
+            final int pidx = msg.uint8();
             if (pidx == 255)
                 break;
             pfl[pidx] = msg.uint8();
         }
-        Message blob = new Message(0);
+        final Message blob = new Message(0);
         {
-            Inflater z = new Inflater();
+            final Inflater z = new Inflater();
             z.setInput(msg.blob, msg.off, msg.blob.length - msg.off);
-            byte[] buf = new byte[10000];
+            final byte[] buf = new byte[10000];
             while (true) {
                 try {
-                    int len;
+                    final int len;
                     if ((len = z.inflate(buf)) == 0) {
                         if (!z.finished())
                             throw (new RuntimeException("Got unterminated map blob"));
@@ -412,7 +412,7 @@ public class MCache {
         synchronized (req) {
             synchronized (grids) {
                 if (req.containsKey(c)) {
-                    Grid g = req.get(c);
+                    final Grid g = req.get(c);
                     g.mnm = mmname;
                     for (int y = 0; y < cmaps.y; y++) {
                         for (int x = 0; x < cmaps.x; x++) {
@@ -424,14 +424,14 @@ public class MCache {
                             g.ol[x][y] = 0;
                     }
                     while (true) {
-                        int pidx = blob.uint8();
+                        final int pidx = blob.uint8();
                         if (pidx == 255)
                             break;
-                        int fl = pfl[pidx];
-                        int type = blob.uint8();
-                        Coord c1 = new Coord(blob.uint8(), blob.uint8());
-                        Coord c2 = new Coord(blob.uint8(), blob.uint8());
-                        int ol;
+                        final int fl = pfl[pidx];
+                        final int type = blob.uint8();
+                        final Coord c1 = new Coord(blob.uint8(), blob.uint8());
+                        final Coord c2 = new Coord(blob.uint8(), blob.uint8());
+                        final int ol;
                         if (type == 0) {
                             if ((fl & 1) == 1)
                                 ol = 2;
@@ -465,11 +465,11 @@ public class MCache {
         }
     }
 
-    public void mapdata(Message msg) {
-        long now = System.currentTimeMillis();
-        int pktid = msg.int32();
-        int off = msg.uint16();
-        int len = msg.uint16();
+    public void mapdata(final Message msg) {
+        final long now = System.currentTimeMillis();
+        final int pktid = msg.int32();
+        final int off = msg.uint16();
+        final int len = msg.uint16();
         Defrag fragbuf;
         synchronized (fragbufs) {
             if ((fragbuf = fragbufs.get(pktid)) == null) {
@@ -485,19 +485,19 @@ public class MCache {
 
             /* Clean up old buffers */
             for (Iterator<Map.Entry<Integer, Defrag>> i = fragbufs.entrySet().iterator(); i.hasNext(); ) {
-                Map.Entry<Integer, Defrag> e = i.next();
-                Defrag old = e.getValue();
+                final Map.Entry<Integer, Defrag> e = i.next();
+                final Defrag old = e.getValue();
                 if (now - old.last > 10000)
                     i.remove();
             }
         }
     }
 
-    public void tilemap(Message msg) {
+    public void tilemap(final Message msg) {
         while (!msg.eom()) {
-            int id = msg.uint8();
-            String resnm = msg.string();
-            int resver = msg.uint16();
+            final int id = msg.uint8();
+            final String resnm = msg.string();
+            final int resver = msg.uint16();
             sets[id] = loadset(resnm, resver);
         }
     }
@@ -505,9 +505,9 @@ public class MCache {
     public void trimall() {
         synchronized (req) {
             synchronized (grids) {
-                for (Grid g : req.values())
+                for (final Grid g : req.values())
                     g.remove();
-                for (Grid g : grids.values())
+                for (final Grid g : grids.values())
                     g.remove();
                 grids.clear();
                 req.clear();
@@ -519,12 +519,12 @@ public class MCache {
         UI.instance.mainview.resetcam();
     }
 
-    public void trim(Coord ul, Coord lr) {
+    public void trim(final Coord ul, final Coord lr) {
         synchronized (grids) {
             for (Iterator<Map.Entry<Coord, Grid>> i = grids.entrySet().iterator(); i.hasNext(); ) {
-                Map.Entry<Coord, Grid> e = i.next();
-                Coord gc = e.getKey();
-                Grid g = e.getValue();
+                final Map.Entry<Coord, Grid> e = i.next();
+                final Coord gc = e.getKey();
+                final Grid g = e.getValue();
                 if ((gc.x < ul.x) || (gc.y < ul.y) || (gc.x > lr.x) || (gc.y > lr.y)) {
                     i.remove();
                     g.remove();
@@ -533,9 +533,9 @@ public class MCache {
         }
         synchronized (req) {
             for (Iterator<Map.Entry<Coord, Grid>> i = req.entrySet().iterator(); i.hasNext(); ) {
-                Map.Entry<Coord, Grid> e = i.next();
-                Coord gc = e.getKey();
-                Grid g = e.getValue();
+                final Map.Entry<Coord, Grid> e = i.next();
+                final Coord gc = e.getKey();
+                final Grid g = e.getValue();
                 if ((gc.x < ul.x) || (gc.y < ul.y) || (gc.x > lr.x) || (gc.y > lr.y)) {
                     i.remove();
                     g.remove();
@@ -544,7 +544,7 @@ public class MCache {
         }
     }
 
-    public void request(Coord gc) {
+    public void request(final Coord gc) {
         synchronized (req) {
             if (!req.containsKey(gc))
                 req.put(gc, new Grid(gc));
@@ -552,18 +552,18 @@ public class MCache {
     }
 
     public void sendreqs() {
-        long now = System.currentTimeMillis();
+        final long now = System.currentTimeMillis();
         synchronized (req) {
             for (Iterator<Map.Entry<Coord, Grid>> i = req.entrySet().iterator(); i.hasNext(); ) {
-                Map.Entry<Coord, Grid> e = i.next();
-                Coord c = e.getKey();
-                Grid gr = e.getValue();
+                final Map.Entry<Coord, Grid> e = i.next();
+                final Coord c = e.getKey();
+                final Grid gr = e.getValue();
                 if (now - gr.lastreq > 1000) {
                     gr.lastreq = now;
                     if (++gr.reqs >= 5) {
                         i.remove();
                     } else {
-                        Message msg = new Message(Session.MSG_MAPREQ);
+                        final Message msg = new Message(Session.MSG_MAPREQ);
                         msg.addcoord(c);
                         sess.sendmsg(msg);
                     }

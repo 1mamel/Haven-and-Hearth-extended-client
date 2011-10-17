@@ -27,30 +27,30 @@ package org.relayirc.chatengine;
  * @see ServerListener
  */
 public class ServerAdapter implements ServerListener {
-    public void onConnect(ServerEvent event) {
+    public void onConnect(final ServerEvent event) {
     }
 
-    public void onDisconnect(ServerEvent event) {
+    public void onDisconnect(final ServerEvent event) {
     }
 
-    public void onChannelAdd(ServerEvent event) {
+    public void onChannelAdd(final ServerEvent event) {
     }
 
-    public void onChannelJoin(ServerEvent event) {
+    public void onChannelJoin(final ServerEvent event) {
     }
 
-    public void onChannelPart(ServerEvent event) {
+    public void onChannelPart(final ServerEvent event) {
     }
 
-    public void onInvite(ServerEvent event) {
+    public void onInvite(final ServerEvent event) {
     }
 
-    public void onIsOn(ServerEvent event) {
+    public void onIsOn(final ServerEvent event) {
     }
 
-    public void onStatus(ServerEvent event) {
+    public void onStatus(final ServerEvent event) {
     }
 
-    public void onWhoIs(ServerEvent event) {
+    public void onWhoIs(final ServerEvent event) {
     }
 }

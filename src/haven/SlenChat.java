@@ -28,13 +28,13 @@ public class SlenChat extends ChatHW {
 
         static {
             Widget.addtype("ircuserlist", new WidgetFactory() {
-                public Widget create(Coord c, Widget parent, Object[] args) {
+                public Widget create(final Coord c, final Widget parent, final Object[] args) {
                     return (new UserList((SlenChat) parent));
                 }
             });
         }
 
-        public UserList(SlenChat parent) {
+        public UserList(final SlenChat parent) {
             super(new Coord(10, CustomConfig.getWindowHeight() - parent.sz.y - 10), new Coord(100, parent.sz.y - 10), parent.parent.parent, "Users", false, true);
             out = new Listbox(Coord.z, new Coord(100, 105), this, users);
             owner = parent;
@@ -42,38 +42,38 @@ public class SlenChat extends ChatHW {
             ui.bind(out, CustomConfig.getNextCustomWidgetId());
         }
 
-        synchronized public void addUser(String user, String nick) {
+        synchronized public void addUser(final String user, final String nick) {
             if (user != null && !containsNick(nick)) {
                 users.add(new Listbox.Option(user, nick));
             }
         }
 
-        public void addUserList(List<Listbox.Option> userList) {
+        public void addUserList(final List<Listbox.Option> userList) {
             users = userList == null ? userList : users;
         }
 
-        public void rmvUser(String name) {
-            Listbox.Option tUser;
+        public void rmvUser(final String name) {
+            final Listbox.Option tUser;
             if (name != null
                     && (tUser = getUser(name)) != null) {
                 users.remove(tUser);
             }
         }
 
-        public boolean containsUser(String user) {
-            for (Listbox.Option tUser : users) {
+        public boolean containsUser(final String user) {
+            for (final Listbox.Option tUser : users) {
                 if (tUser.containsString(user)) return true;
             }
             return false;
         }
 
-        public boolean containsNick(String nick) {
+        public boolean containsNick(final String nick) {
             return containsUser(nick);
         }
 
-        public Listbox.Option getUser(String ident) {
+        public Listbox.Option getUser(final String ident) {
             if (containsUser(ident)) {
-                for (Listbox.Option tUser : users) {
+                for (final Listbox.Option tUser : users) {
                     if (tUser.containsString(ident)) {
                         return tUser;
                     }
@@ -82,9 +82,9 @@ public class SlenChat extends ChatHW {
             return null;
         }
 
-        public void changeUser(String olduser, String newuser) {
+        public void changeUser(final String olduser, final String newuser) {
             if (!containsUser(olduser)) return;
-            Listbox.Option tUser = getUser(olduser);
+            final Listbox.Option tUser = getUser(olduser);
             if (tUser != null) tUser.name = newuser;
         }
 
@@ -92,11 +92,11 @@ public class SlenChat extends ChatHW {
             oldnick = SlenConsole.parseNick(oldnick);
             newnick = SlenConsole.parseNick(newnick);
             if (!containsNick(oldnick)) return;
-            Listbox.Option tUser = getUser(oldnick);
+            final Listbox.Option tUser = getUser(oldnick);
             if (tUser != null) tUser.disp = newnick;
         }
 
-        public boolean keydown(KeyEvent e) {
+        public boolean keydown(final KeyEvent e) {
             if (e.getKeyCode() == KeyEvent.VK_ENTER
                     && out.chosen != null
                     && out.hasfocus
@@ -124,18 +124,18 @@ public class SlenChat extends ChatHW {
 
     static {
         Widget.addtype("ircchat", new WidgetFactory() {
-            public Widget create(Coord c, Widget parent, Object[] args) {
-                String channel = (String) args[0];
+            public Widget create(final Coord c, final Widget parent, final Object[] args) {
+                final String channel = (String) args[0];
                 return (new SlenChat((SlenConsole) parent, channel, null));
             }
         });
     }
 
-    SlenChat(SlenConsole parentHandler, String channel, String password) {
+    SlenChat(final SlenConsole parentHandler, final String channel, final String password) {
         this(parentHandler, channel, password, true);
     }
 
-    SlenChat(SlenConsole parentHandler, String channel, String password, boolean hasUserList) {
+    SlenChat(final SlenConsole parentHandler, final String channel, final String password, final boolean hasUserList) {
         super(parentHandler.parent, channel, true);
         this.channel = channel;
         this.password = password == null ? "" : password;
@@ -144,7 +144,7 @@ public class SlenChat extends ChatHW {
         initialized = true;
     }
 
-    public void wdgmsg(Widget sender, String msg, Object... args) {
+    public void wdgmsg(final Widget sender, final String msg, final Object... args) {
         if (sender == in) {
             handler.handleInput((String) args[0], this);
             in.settext("");
@@ -166,7 +166,7 @@ public class SlenChat extends ChatHW {
         super.show();
     }
 
-    public void setChannel(String newChannel) {
+    public void setChannel(final String newChannel) {
         channel = newChannel;
     }
 

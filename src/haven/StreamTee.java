@@ -38,7 +38,7 @@ public class StreamTee extends InputStream {
     private boolean readeof = false;
     private boolean ncwe = false; /* NCWE = No Close Without EOF */
 
-    public StreamTee(InputStream in) {
+    public StreamTee(final InputStream in) {
         this.in = in;
     }
 
@@ -50,7 +50,7 @@ public class StreamTee extends InputStream {
         in.close();
         if (!ncwe || readeof) {
             synchronized (forked) {
-                for (OutputStream s : forked)
+                for (final OutputStream s : forked)
                     s.close();
             }
         }
@@ -62,12 +62,12 @@ public class StreamTee extends InputStream {
 
     public void flush() throws IOException {
         synchronized (forked) {
-            for (OutputStream s : forked)
+            for (final OutputStream s : forked)
                 s.flush();
         }
     }
 
-    public void mark(int limit) {
+    public void mark(final int limit) {
     }
 
     public boolean markSupported() {
@@ -75,10 +75,10 @@ public class StreamTee extends InputStream {
     }
 
     public int read() throws IOException {
-        int rv = in.read();
+        final int rv = in.read();
         if (rv >= 0) {
             synchronized (forked) {
-                for (OutputStream s : forked)
+                for (final OutputStream s : forked)
                     s.write(rv);
             }
         } else {
@@ -87,11 +87,11 @@ public class StreamTee extends InputStream {
         return (rv);
     }
 
-    public int read(byte[] buf, int off, int len) throws IOException {
-        int rv = in.read(buf, off, len);
+    public int read(final byte[] buf, final int off, final int len) throws IOException {
+        final int rv = in.read(buf, off, len);
         if (rv > 0) {
             synchronized (forked) {
-                for (OutputStream s : forked)
+                for (final OutputStream s : forked)
                     s.write(buf, off, rv);
             }
         } else {
@@ -104,7 +104,7 @@ public class StreamTee extends InputStream {
         throw (new IOException("Mark not supported on StreamTee"));
     }
 
-    public void attach(OutputStream s) {
+    public void attach(final OutputStream s) {
         synchronized (forked) {
             forked.add(s);
         }

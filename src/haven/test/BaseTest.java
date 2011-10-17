@@ -51,7 +51,7 @@ public abstract class BaseTest implements Runnable {
         });
     }
 
-    public static void printf(String fmt, Object... args) {
+    public static void printf(final String fmt, final Object... args) {
         System.out.println(String.format(fmt, args));
     }
 

@@ -27,6 +27,7 @@
 package haven;
 
 import ender.timer.TimersController;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -78,7 +79,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
 
     static {
         Widget.addtype("slen", new WidgetFactory() {
-            public Widget create(Coord c, Widget parent, Object[] args) {
+            public Widget create(final Coord c, final Widget parent, final Object[] args) {
                 return (new SlenHud(c, parent));
             }
         });
@@ -87,7 +88,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
         } else {
             bg = Resource.loadtex("gfx/hud/slen/low");
         }
-        int h = bg.sz().y;
+        final int h = bg.sz().y;
         sz = new Coord(800, h);
         sz.setY((h - fc.y > sz.y) ? (h - fc.y) : sz.y);
         sz.setY((h - mc.y > sz.y) ? (h - mc.y) : sz.y);
@@ -100,12 +101,12 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
         int urgency;
         int dy;
 
-        FoldButton(Coord c, Widget parent) {
+        FoldButton(final Coord c, final Widget parent) {
             super(c, parent, ButtonImgUp, ButtonImgDown);
             dy = sz.y;
         }
 
-        public void draw(GOut g) {
+        public void draw(final GOut g) {
             c.setX(CustomConfig.getWindowCenter().x - sz.x / 2);
             c.setY(CustomConfig.getWindowHeight() + dy);
             super.draw(g);
@@ -124,7 +125,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
         long st;
         boolean w, c;
 
-        VC(SlenHud m, IButton sb) {
+        VC(final SlenHud m, final IButton sb) {
             this.m = m;
             this.sb = sb;
             w = c = true;
@@ -147,8 +148,8 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
         }
 
         void tick() {
-            long ct = System.currentTimeMillis() - st;
-            double ca;
+            final long ct = System.currentTimeMillis() - st;
+            final double ca;
             if (ct >= ms) {
                 ca = 1;
             } else {
@@ -179,7 +180,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
         }
     }
 
-    public SlenHud(Coord c, Widget parent) {
+    public SlenHud(final Coord c, final Widget parent) {
         super(new Coord(CustomConfig.getWindowCenter().x - sz.x / 2, CustomConfig.getWindowHeight() - sz.y), sz, parent);
         ui.slen = this;
         if (Config.new_chat)
@@ -213,7 +214,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
                     private boolean v = false;
 
                     public void click() {
-                        MapView mv = ui.mainview;
+                        final MapView mv = ui.mainview;
                         if (v) {
                             mv.disol(2, 3);
                             v = false;
@@ -230,7 +231,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
                     private boolean v = false;
 
                     public void click() {
-                        MapView mv = ui.mainview;
+                        final MapView mv = ui.mainview;
                         if (v) {
                             mv.disol(0, 1);
                             v = false;
@@ -266,8 +267,8 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
         initBelt();
     }
 
-    public Coord xlate(Coord c, boolean in) {
-        Coord bgc = sz.sub(bg.sz());
+    public Coord xlate(final Coord c, final boolean in) {
+        final Coord bgc = sz.sub(bg.sz());
         if (in)
             return (c.add(bgc));
         else
@@ -275,12 +276,12 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
         return (c.sub(bgc));
     }
 
-    public void error(String err) {
+    public void error(final String err) {
         lasterr = errfoundry.render(err);
         errtime = System.currentTimeMillis();
     }
 
-    private static Coord beltc(int i) {
+    private static Coord beltc(final int i) {
         if (i < 5) {
             return (bc1.add(i * (invsq.sz().x + 2), 0));
         } else {
@@ -290,7 +291,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
 
     private int beltslot(Coord c) {
         c = xlate(c, false);
-        int sw = invsq.sz().x + 2;
+        final int sw = invsq.sz().x + 2;
         if ((c.x >= bc1.x) && (c.y >= bc1.y) && (c.y < bc1.y + invsq.sz().y)) {
             if ((c.x - bc1.x) / sw < 5) {
                 if ((c.x - bc1.x) % sw < invsq.sz().x)
@@ -315,7 +316,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
             nums[i] = Text.render(Integer.toString(i)).tex();
     }
 
-    public void draw(GOut g) {
+    public void draw(final GOut g) {
         vc.tick();
         if (!ui.sess.alive()) {
             if (ircConsole != null) {
@@ -325,14 +326,14 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
         }
         c.setX(CustomConfig.getWindowCenter().x - sz.x / 2);
         c.setY(CustomConfig.getWindowHeight() + dy);
-        Coord bgc = sz.sub(bg.sz());
+        final Coord bgc = sz.sub(bg.sz());
         g.image(bg, bgc);
         super.draw(g);
 
         //	Draws the belt
         for (int i = 0; i < _BELTSIZE; i++) {
-            Coord c = xlate(beltc(i), true);
-            Coord x = c.add(invsq.sz().add(-10, 0));
+            final Coord c = xlate(beltc(i), true);
+            final Coord x = c.add(invsq.sz().add(-10, 0));
             g.image(invsq, c);
             g.chcolor(156, 180, 158, 255);
             g.aimage(nums[(i + 1) % 10], c.add(invsq.sz()), 1, 1);
@@ -349,18 +350,18 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
 
         if (cmdline != null) {
             drawcmd(g.reclip(new Coord(0, -20), new Coord(sz.x, 20)), new Coord(15, 0));
-            @SuppressWarnings({"UnusedAssignment"}) GOut eg = g.reclip(new Coord(0, -20), new Coord(sz.x, 20));
+            @SuppressWarnings({"UnusedAssignment"}) final GOut eg = g.reclip(new Coord(0, -20), new Coord(sz.x, 20));
         } else if (lasterr != null) {
             if ((System.currentTimeMillis() - errtime) > 3000) {
                 lasterr = null;
             } else {
-                GOut eg = g.reclip(new Coord(0, -20), new Coord(sz.x, 20));
+                final GOut eg = g.reclip(new Coord(0, -20), new Coord(sz.x, 20));
                 eg.image(lasterr.tex(), new Coord(15, 0));
             }
         }
     }
 
-    public void wdgmsg(Widget sender, String msg, Object... args) {
+    public void wdgmsg(final Widget sender, final String msg, final Object... args) {
         if (sender == hb) {
             vc.hide();
             return;
@@ -389,7 +390,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
         wdgmsg("inv"); // Opening Inventory
     }
 
-    public void uimsg(String msg, Object... args) {
+    public void uimsg(@NotNull final String msg, final Object... args) {
         if (msg.equals("err")) {
             error((String) args[0]);
         } else if (msg.equals("setbelt")) {
@@ -421,11 +422,11 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
             if (woff > wnds.size() - 5)
                 woff = wnds.size() - 5;
         }
-        for (Button b : btns.values())
+        for (final Button b : btns.values())
             b.visible = false;
         sub.visible = sdb.visible = false;
         for (int i = 0; i < 5; i++) {
-            int wi = i + woff;
+            final int wi = i + woff;
             if (wi >= wnds.size())
                 continue;
             if ((i == 0) && (woff > 0)) {
@@ -433,8 +434,8 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
             } else if ((i == 4) && (woff < wnds.size() - 5)) {
                 sdb.visible = true;
             } else {
-                HWindow w = wnds.get(wi);
-                Button b = btns.get(w);
+                final HWindow w = wnds.get(wi);
+                final Button b = btns.get(w);
                 b.visible = true;
                 b.c = new Coord(b.c.x, 29 + (i * 20));
             }
@@ -451,7 +452,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
         updbtns();
     }
 
-    public void setawnd(HWindow wnd, boolean focus) {
+    public void setawnd(final HWindow wnd, final boolean focus) {
         // Hide the current active window
         if (awnd != null) {
             if (awnd != wnd) {
@@ -465,7 +466,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
             }
         }
 
-        for (HWindow w : wnds) {
+        for (final HWindow w : wnds) {
             w.visible = false;
         }
 
@@ -482,7 +483,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
         }
     }
 
-    public void setawnd(HWindow wnd) {
+    public void setawnd(final HWindow wnd) {
         setawnd(wnd, false);
     }
 
@@ -508,7 +509,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
         }
     }
 
-    public void updurgency(HWindow wnd, int level) {
+    public void updurgency(final HWindow wnd, int level) {
         if ((wnd == awnd) && vc.c)
             level = -1;
         if (level == -1) {
@@ -520,13 +521,13 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
                 return;
             wnd.urgent = level;
         }
-        Button b = btns.get(wnd);
+        final Button b = btns.get(wnd);
         if (urgcols[wnd.urgent] != null)
             b.change(wnd.title, urgcols[wnd.urgent]);
         else
             b.change(wnd.title);
         int max = 0;
-        for (HWindow w : wnds) {
+        for (final HWindow w : wnds) {
             if (w.urgent > max)
                 max = w.urgent;
         }
@@ -535,7 +536,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
 
     public void addwnd(final HWindow wnd) {
         wnds.add(wnd);
-        Button wndButton = new Button(new Coord(134, 29), 100, this, wnd.title) {
+        final Button wndButton = new Button(new Coord(134, 29), 100, this, wnd.title) {
             public void click() {
                 setawnd(wnd);
             }
@@ -547,7 +548,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
             ui.cons.out = new java.io.PrintWriter(new java.io.Writer() {
                 StringBuilder buf = new StringBuilder();
 
-                public void write(char[] src, int off, int len) {
+                public void write(final char[] src, final int off, final int len) {
                     buf.append(src, off, len);
                     int p;
                     while ((p = buf.indexOf("\n")) >= 0) {
@@ -565,9 +566,9 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
         }
     }
 
-    public void remwnd(HWindow wnd) {
+    public void remwnd(final HWindow wnd) {
         if (wnd == awnd) {
-            int i = wnds.indexOf(wnd);
+            final int i = wnds.indexOf(wnd);
             if (wnds.size() == 1)
                 setawnd(null);
             else if (i < 0)
@@ -583,8 +584,8 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
         updbtns();
     }
 
-    public boolean mousedown(Coord c, int button) {
-        int slot = beltslot(c);
+    public boolean mousedown(final Coord c, final int button) {
+        final int slot = beltslot(c);
         if (slot != -1) {
             wdgmsg("belt", slot, button, ui.modflags());
             return (true);
@@ -592,7 +593,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
         return (super.mousedown(c, button));
     }
 
-    public boolean mousewheel(Coord c, int amount) {
+    public boolean mousewheel(Coord c, final int amount) {
         c = xlate(c, false);
         if (c.isect(new Coord(134, 29), new Coord(100, 100))) {
             woff += amount;
@@ -607,7 +608,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
             optwnd.wdgmsg("close");
         } else {
             optwnd = new OptWnd(new Coord(100, 100), parent) {
-                public void wdgmsg(Widget sender, String msg, Object... args) {
+                public void wdgmsg(final Widget sender, final String msg, final Object... args) {
                     if (msg.equals("close")) {
                         this.saveSome();
                         ui.destroy(this);
@@ -620,7 +621,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
         }
     }
 
-    public boolean globtype(char ch, KeyEvent ev) {
+    public boolean globtype(final char ch, final KeyEvent ev) {
         if (ch == ' ') { // Hide Hud
             vc.toggle();
             return (true);
@@ -630,13 +631,13 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
         } else if (ch >= '0' && ch <= '9' && ev.isAltDown()) { // Change belt
             activeBelt = ch - '0';
             CustomConfig.activeCharacter.hudActiveBelt = activeBelt;
-            Resource[] ab = belt[activeBelt];
+            final Resource[] ab = belt[activeBelt];
             for (int i = 0; i < ab.length; i++) {
                 wdgmsg("setbelt", i, (ab[i] == null) ? 0 : (ab[i].name));
             }
             return true;
         } else if ((ch >= '0') && (ch <= '9')) {
-            int nb = (9 + (ch - '0')) % 10;
+            final int nb = (9 + (ch - '0')) % 10;
             if (belt[activeBelt][nb] != null)
                 wdgmsg("belt", nb, 1, 0);
             return (true);
@@ -650,8 +651,8 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
         return (CustomConfig.getWindowHeight() - c.y);
     }
 
-    public boolean drop(Coord cc, Coord ul, Item item) {
-        int slot = beltslot(cc);
+    public boolean drop(final Coord cc, final Coord ul, final Item item) {
+        final int slot = beltslot(cc);
         if (slot != -1) {
             if (CustomConfig.noChars)
                 error("You must restart the client to set and save your hotkeys");
@@ -662,19 +663,19 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
         return (false);
     }
 
-    public boolean iteminteract(Coord cc, Coord ul) {
+    public boolean iteminteract(final Coord cc, final Coord ul) {
         return (false);
     }
 
-    public boolean dropthing(Coord c, Object thing) {
-        int slot = beltslot(c);
+    public boolean dropthing(final Coord c, final Object thing) {
+        final int slot = beltslot(c);
         if (slot != -1) {
             if (CustomConfig.noChars) {
                 error("You must restart the client to set and save your hotkeys");
                 return true;
             }
             if (thing instanceof Resource) {
-                Resource res = (Resource) thing;
+                final Resource res = (Resource) thing;
                 if (res.layer(Resource.action) != null) {
                     belt[activeBelt][slot] = res;
                     CustomConfig.activeCharacter.hudBelt[activeBelt][slot] = belt[activeBelt][slot].name;
@@ -713,7 +714,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
 
     {
         cmdmap.put("afk", new Console.Command() {
-            public void run(Console cons, String[] args) {
+            public void run(final Console cons, final String[] args) {
                 wdgmsg("afk");
             }
         });

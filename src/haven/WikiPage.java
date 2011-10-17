@@ -23,7 +23,7 @@ public class WikiPage extends HWindow {
     private final AtomicBoolean busy = new AtomicBoolean(false);
 
 
-    public WikiPage(Widget parent, String request) {
+    public WikiPage(final Widget parent, final String request) {
         super(parent, request, true);
         content = new RichTextBox(Coord.z, sz, this, "", fnd);
         content.bg = new Color(255, 255, 255, 128);
@@ -49,12 +49,12 @@ public class WikiPage extends HWindow {
         }
     }
 
-    public void setsz(Coord s) {
+    public void setsz(final Coord s) {
         super.setsz(s);
         content.setsz(sz);
     }
 
-    public void draw(GOut g) {
+    public void draw(final GOut g) {
         super.draw(g);
         if (busy.get()) {
             g.chcolor(busycolor);
@@ -63,12 +63,12 @@ public class WikiPage extends HWindow {
         }
     }
 
-    public void wdgmsg(Widget sender, String msg, Object... args) {
+    public void wdgmsg(final Widget sender, final String msg, final Object... args) {
         if (busy.get()) {
             return;
         }
         if (sender == content) {
-            String request = (String) args[0];
+            final String request = (String) args[0];
             if ((Integer) args[1] == 1) {
                 open(request);
             } else {

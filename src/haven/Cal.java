@@ -48,22 +48,22 @@ public class Cal extends SSWidget {
         for (int i = 0; i < moon.length; i++)
             moon[i] = Resource.loadimg(String.format("gfx/hud/calendar/m%02d", i));
         Widget.addtype("cal", new WidgetFactory() {
-            public Widget create(Coord c, Widget parent, Object[] args) {
+            public Widget create(final Coord c, final Widget parent, final Object[] args) {
                 return (new Cal(c, parent));
             }
         });
     }
 
     private void render() {
-        Astronomy a = current = ui.sess.glob.ast;
+        final Astronomy a = current = ui.sess.glob.ast;
         clear();
-        Graphics g = graphics();
+        final Graphics g = graphics();
         g.drawImage(bg, 0, 0, null);
         g.drawImage(a.night ? nsky : dsky, 0, 0, null);
-        int mp = (int) (a.mp * (double) moon.length);
-        BufferedImage moon = Cal.moon[mp];
-        Coord mc = Coord.sc((a.dt + 0.25) * 2 * PI, hbr).add(sz.div(2)).sub(Utils.imgsz(moon).div(2));
-        Coord sc = Coord.sc((a.dt + 0.75) * 2 * PI, hbr).add(sz.div(2)).sub(Utils.imgsz(sun).div(2));
+        final int mp = (int) (a.mp * (double) moon.length);
+        final BufferedImage moon = Cal.moon[mp];
+        final Coord mc = Coord.sc((a.dt + 0.25) * 2 * PI, hbr).add(sz.div(2)).sub(Utils.imgsz(moon).div(2));
+        final Coord sc = Coord.sc((a.dt + 0.75) * 2 * PI, hbr).add(sz.div(2)).sub(Utils.imgsz(sun).div(2));
         g.drawImage(moon, mc.x, mc.y, null);
         g.drawImage(sun, sc.x, sc.y, null);
         g.drawImage(a.night ? nlnd : dlnd, 0, 0, null);
@@ -71,12 +71,12 @@ public class Cal extends SSWidget {
         update = System.currentTimeMillis();
     }
 
-    public Cal(Coord c, Widget parent) {
+    public Cal(final Coord c, final Widget parent) {
         super(new Coord(CustomConfig.getWindowCenter().x - (Utils.imgsz(bg).x / 2), c.y), Utils.imgsz(bg), parent);
         render();
     }
 
-    public void draw(GOut g) {
+    public void draw(final GOut g) {
         if (!current.equals(ui.sess.glob.ast))
             render();
         super.draw(g);

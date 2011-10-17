@@ -23,7 +23,7 @@ public class PacketStream {
      *
      * @param in the {@link PageStream} object to decode packets from.
      */
-    public PacketStream(PageStream in) {
+    public PacketStream(final PageStream in) {
         this.in = in;
     }
 
@@ -45,9 +45,9 @@ public class PacketStream {
             page = in.page();
             strm.init(page.serialno());
         }
-        Packet pkt = new Packet();
+        final Packet pkt = new Packet();
         while (true) {
-            int ret = strm.packetout(pkt);
+            final int ret = strm.packetout(pkt);
             if (ret < 0)
                 throw (new OggException()); /* ? */
             if (ret == 1)

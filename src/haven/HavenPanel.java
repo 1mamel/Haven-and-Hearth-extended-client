@@ -68,7 +68,7 @@ public class HavenPanel extends GLCanvas implements Runnable {
         caps.setBlueBits(8);
     }
 
-    public HavenPanel(Dimension size) {
+    public HavenPanel(final Dimension size) {
         super(caps);
         last_tick = System.currentTimeMillis();
         setSize(size);
@@ -86,17 +86,17 @@ public class HavenPanel extends GLCanvas implements Runnable {
         final Thread caller = Thread.currentThread();
         addGLEventListener(new GLEventListener() {
 
-            public void display(GLAutoDrawable d) {
-                GL gl = d.getGL();
+            public void display(final GLAutoDrawable d) {
+                final GL gl = d.getGL();
                 if (inited && rdr)
                     redraw(gl);
                 TexGL.disposeall(gl);
             }
 
-            public void init(GLAutoDrawable d) {
-                GL gl = d.getGL();
+            public void init(final GLAutoDrawable d) {
+                final GL gl = d.getGL();
                 if (caller.getThreadGroup() instanceof ErrorHandler) {
-                    ErrorHandler h = (ErrorHandler) caller.getThreadGroup();
+                    final ErrorHandler h = (ErrorHandler) caller.getThreadGroup();
                     h.lsetprop("gl.vendor", gl.glGetString(GL.GL_VENDOR));
                     h.lsetprop("gl.version", gl.glGetString(GL.GL_VERSION));
                     h.lsetprop("gl.renderer", gl.glGetString(GL.GL_RENDERER));
@@ -112,10 +112,10 @@ public class HavenPanel extends GLCanvas implements Runnable {
                 GOut.checkerr(gl);
             }
 
-            public void reshape(GLAutoDrawable d, int x, int y, int w, int h) {
+            public void reshape(final GLAutoDrawable d, final int x, final int y, final int w, final int h) {
             }
 
-            public void displayChanged(GLAutoDrawable d, boolean cp1, boolean cp2) {
+            public void displayChanged(final GLAutoDrawable d, final boolean cp1, final boolean cp2) {
             }
         });
     }
@@ -124,43 +124,43 @@ public class HavenPanel extends GLCanvas implements Runnable {
         setFocusTraversalKeysEnabled(false);
         ui = new UI(getSize(), null);
         addKeyListener(new KeyAdapter() {
-            public void keyTyped(KeyEvent e) {
+            public void keyTyped(final KeyEvent e) {
                 checkfs();
                 events.add(e);
             }
 
-            public void keyPressed(KeyEvent e) {
+            public void keyPressed(final KeyEvent e) {
                 checkfs();
                 events.add(e);
             }
 
-            public void keyReleased(KeyEvent e) {
+            public void keyReleased(final KeyEvent e) {
                 checkfs();
                 events.add(e);
             }
         });
-        MouseAdapter mouseListener = new MouseAdapter() {
-            public void mousePressed(MouseEvent e) {
+        final MouseAdapter mouseListener = new MouseAdapter() {
+            public void mousePressed(final MouseEvent e) {
                 checkfs();
                 events.add(e);
             }
 
-            public void mouseReleased(MouseEvent e) {
+            public void mouseReleased(final MouseEvent e) {
                 checkfs();
                 events.add(e);
             }
 
-            public void mouseDragged(MouseEvent e) {
+            public void mouseDragged(final MouseEvent e) {
                 checkfs();
                 events.add(e);
             }
 
-            public void mouseMoved(MouseEvent e) {
+            public void mouseMoved(final MouseEvent e) {
                 checkfs();
                 events.add(e);
             }
 
-            public void mouseWheelMoved(MouseWheelEvent e) {
+            public void mouseWheelMoved(final MouseWheelEvent e) {
                 checkfs();
                 events.add(e);
             }
@@ -175,7 +175,7 @@ public class HavenPanel extends GLCanvas implements Runnable {
         private final FSMan wrapped;
         private boolean tgt;
 
-        private SyncFSM(FSMan wrapped) {
+        private SyncFSM(final FSMan wrapped) {
             this.wrapped = wrapped;
             tgt = wrapped.hasfs();
         }
@@ -208,34 +208,34 @@ public class HavenPanel extends GLCanvas implements Runnable {
         }
     }
 
-    public void setfsm(FSMan fsm) {
+    public void setfsm(final FSMan fsm) {
         this.fsm = new SyncFSM(fsm);
         ui.fsm = this.fsm;
     }
 
-    UI newui(Session sess) {
+    UI newui(final Session sess) {
         ui = new UI(getSize(), sess);
         ui.root.gprof = prof;
         ui.fsm = this.fsm;
         return (ui);
     }
 
-    private static Cursor makeawtcurs(BufferedImage img, Coord hs) {
-        java.awt.Dimension cd = Toolkit.getDefaultToolkit().getBestCursorSize(img.getWidth(), img.getHeight());
-        BufferedImage buf = TexI.mkbuf(new Coord((int) cd.getWidth(), (int) cd.getHeight()));
-        java.awt.Graphics g = buf.getGraphics();
+    private static Cursor makeawtcurs(final BufferedImage img, final Coord hs) {
+        final java.awt.Dimension cd = Toolkit.getDefaultToolkit().getBestCursorSize(img.getWidth(), img.getHeight());
+        final BufferedImage buf = TexI.mkbuf(new Coord((int) cd.getWidth(), (int) cd.getHeight()));
+        final java.awt.Graphics g = buf.getGraphics();
         g.drawImage(img, 0, 0, null);
         g.dispose();
         return (Toolkit.getDefaultToolkit().createCustomCursor(buf, new java.awt.Point(hs.x, hs.y), ""));
     }
 
-    void redraw(GL gl) {
+    void redraw(final GL gl) {
 
-        long dt = System.currentTimeMillis() - last_tick;
+        final long dt = System.currentTimeMillis() - last_tick;
         last_tick = System.currentTimeMillis();
         ui.update(dt);
 
-        GOut g = new GOut(gl, getContext(), CustomConfig.getWindowSize().clone());
+        final GOut g = new GOut(gl, getContext(), CustomConfig.getWindowSize().clone());
         if (CustomConfig.isRender()) {
 
             gl.glMatrixMode(GL.GL_PROJECTION);
@@ -262,15 +262,16 @@ public class HavenPanel extends GLCanvas implements Runnable {
                 g.atext("FPS: " + fps, new Coord(10, 545), 0, 1);
                 g.atext("Texhit: " + dth, new Coord(10, 530), 0, 1);
                 g.atext("Texmiss: " + dtm, new Coord(10, 515), 0, 1);
-                Runtime rt = Runtime.getRuntime();
-                long free = rt.freeMemory(), total = rt.totalMemory();
+                final Runtime rt = Runtime.getRuntime();
+                final long free = rt.freeMemory();
+                final long total = rt.totalMemory();
                 g.atext(String.format("Mem: %,011d/%,011d/%,011d/%,011d", free, total - free, total, rt.maxMemory()), new Coord(10, 500), 0, 1);
                 g.atext(String.format("LCache: %d/%d", Layered.cache.size(), Layered.cache.cached()), new Coord(10, 485), 0, 1);
                 g.atext(String.format("RT-current: %d", TexRT.current.get(gl).size()), new Coord(10, 470), 0, 1);
                 if (Resource.qdepth() > 0)
                     g.atext(String.format("RQ depth: %d (%d)", Resource.qdepth(), Resource.numloaded()), new Coord(10, 455), 0, 1);
             }
-            Object tooltip = ui.root.tooltip(mousepos, true);
+            final Object tooltip = ui.root.tooltip(mousepos, true);
             Tex tt = null;
             if (tooltip != null) {
                 if (tooltip instanceof Text) {
@@ -283,8 +284,8 @@ public class HavenPanel extends GLCanvas implements Runnable {
                 }
             }
             if (tt != null) {
-                Coord sz = tt.sz();
-                Coord pos = mousepos.sub(sz);
+                final Coord sz = tt.sz();
+                final Coord pos = mousepos.sub(sz);
                 if (pos.x < 0)
                     pos.setX(0);
                 if (pos.y < 0)
@@ -297,7 +298,7 @@ public class HavenPanel extends GLCanvas implements Runnable {
                 g.image(tt, pos);
             }
         }
-        Resource curs = ui.root.getcurs(mousepos);
+        final Resource curs = ui.root.getcurs(mousepos);
         if (!curs.loading.get()) {
             switch (cursmode) {
                 case AWT:
@@ -314,7 +315,7 @@ public class HavenPanel extends GLCanvas implements Runnable {
                     }
                     break;
                 case TEXTURE:
-                    Coord dc = mousepos.sub(curs.layer(Resource.negc).cc);
+                    final Coord dc = mousepos.sub(curs.layer(Resource.negc).cc);
                     if (curs != lastcursor) {
                         UI.setCursorName(curs.name);
                         System.err.println("setting cursor " + curs.name);
@@ -330,8 +331,8 @@ public class HavenPanel extends GLCanvas implements Runnable {
         InputEvent e;
         while ((e = events.poll()) != null) {
             if (e instanceof MouseEvent) {
-                MouseEvent me = (MouseEvent) e;
-                @SuppressWarnings({"ObjectAllocationInLoop"}) Coord mouseCoord = new Coord(me.getX(), me.getY());
+                final MouseEvent me = (MouseEvent) e;
+                @SuppressWarnings({"ObjectAllocationInLoop"}) final Coord mouseCoord = new Coord(me.getX(), me.getY());
                 switch (me.getID()) {
                     case MouseEvent.MOUSE_PRESSED:
                         ui.mousedown(me, mouseCoord, me.getButton());
@@ -349,7 +350,7 @@ public class HavenPanel extends GLCanvas implements Runnable {
                         break;
                 }
             } else if (e instanceof KeyEvent) {
-                KeyEvent ke = (KeyEvent) e;
+                final KeyEvent ke = (KeyEvent) e;
                 switch (ke.getID()) {
                     case KeyEvent.KEY_PRESSED:
                         ui.keydown(ke);

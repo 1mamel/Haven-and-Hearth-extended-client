@@ -40,8 +40,8 @@ public class Listbox extends Widget {
 
     static {
         Widget.addtype("lb", new WidgetFactory() {
-            public Widget create(Coord c, Widget parent, Object[] args) {
-                List<Option> opts = new LinkedList<Option>();
+            public Widget create(final Coord c, final Widget parent, final Object[] args) {
+                final List<Option> opts = new LinkedList<Option>();
                 for (int i = 1; i < args.length; i += 2)
                     opts.add(new Option((String) args[i], (String) args[i + 1]));
                 return (new Listbox(c, (Coord) args[0], parent, opts));
@@ -53,12 +53,12 @@ public class Listbox extends Widget {
         public String name, disp;
         int y1, y2;
 
-        public Option(String name, String disp) {
+        public Option(final String name, final String disp) {
             this.name = name;
             this.disp = disp;
         }
 
-        public boolean containsString(String data) {
+        public boolean containsString(final String data) {
             return (data.equals(name) || data.equals(disp));
         }
 
@@ -67,12 +67,12 @@ public class Listbox extends Widget {
         }
     }
 
-    public void draw(GOut g) {
+    public void draw(final GOut g) {
         for (int i = 0; i < height && scrollBar != null; i++) {
-            Color c;
+            final Color c;
             if (i + scrollBar.val >= opts.size())
                 continue;
-            Option b = opts.get(i + scrollBar.val);
+            final Option b = opts.get(i + scrollBar.val);
             if (b.equals(chosen)) {
                 c = FlowerMenu.pink;
             } else {
@@ -85,7 +85,7 @@ public class Listbox extends Widget {
         super.draw(g);
     }
 
-    public Listbox(Coord c, Coord sz, Widget parent, List<Option> opts) {
+    public Listbox(final Coord c, final Coord sz, final Widget parent, final List<Option> opts) {
         super(c, sz, parent);
         this.opts = opts;
         height = sz.y / 10;
@@ -94,13 +94,13 @@ public class Listbox extends Widget {
         setcanfocus(true);
     }
 
-    static List<Option> makelist(Option[] opts) {
-        List<Option> ol = new LinkedList<Option>();
+    static List<Option> makelist(final Option[] opts) {
+        final List<Option> ol = new LinkedList<Option>();
         ol.addAll(Arrays.asList(opts));
         return (ol);
     }
 
-    public Listbox(Coord c, Coord sz, Widget parent, Option[] opts) {
+    public Listbox(final Coord c, final Coord sz, final Widget parent, final Option[] opts) {
         this(c, sz, parent, makelist(opts));
     }
 
@@ -108,7 +108,7 @@ public class Listbox extends Widget {
         wdgmsg("chose", chosen.name);
     }
 
-    public boolean mousedown(Coord c, int button) {
+    public boolean mousedown(final Coord c, final int button) {
         if (button == 1 && c.x < sz.x - 25) {
             int sel = (c.y / 10) + scrollBar.val;
             if (sel >= opts.size()) {
@@ -125,10 +125,10 @@ public class Listbox extends Widget {
         return scrollBar.mousedown(c, button);
     }
 
-    public boolean mousewheel(Coord c, int amount) {
+    public boolean mousewheel(final Coord c, final int amount) {
         return scrollBar.mousewheel(c, amount);
     }
 
-    public void changed(Option changed) {
+    public void changed(final Option changed) {
     }
 }

@@ -43,13 +43,13 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
         }
     }
 
-    public ToolbarWnd(Coord c, Widget parent, String name) {
+    public ToolbarWnd(final Coord c, final Widget parent, final String name) {
         super(c, Coord.z, parent, null);
         this.name = name;
         init(1, 10, new Coord(5, 10), KeyEvent.VK_0);
     }
 
-    public ToolbarWnd(Coord c, Widget parent, String name, int belt, int sz, Coord off, int key) {
+    public ToolbarWnd(final Coord c, final Widget parent, final String name, final int belt, final int sz, final Coord off, final int key) {
         super(c, Coord.z, parent, null);
         this.name = name;
         init(belt, sz, off, key);
@@ -69,7 +69,7 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
         c = new Coord(Config.window_props.getProperty(name + "_pos", c.toString()));
     }
 
-    private void init(int belt, int sz, Coord off, int key) {
+    private void init(final int belt, final int sz, final Coord off, final int key) {
         gsz = new Coord(1, sz);
         this.off = off;
         foldButton.show();
@@ -116,7 +116,7 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
         /* Text rendering is slow, so pre-cache the hotbar numbers. */
         nums = new Tex[sz];
         for (int i = 0; i < sz; i++) {
-            String slot = (key == KeyEvent.VK_0) ? Integer.toString(i) : "F" + Integer.toString(i + 1);
+            final String slot = (key == KeyEvent.VK_0) ? Integer.toString(i) : "F" + Integer.toString(i + 1);
             nums[i] = Text.render(slot).tex();
         }
     }
@@ -131,7 +131,7 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
 
     public static void loadBelts() {
 
-        String configFileName = "belts_" + Config.currentCharName.replaceAll("[^a-zA-Z()]", "_") + ".conf";
+        final String configFileName = "belts_" + Config.currentCharName.replaceAll("[^a-zA-Z()]", "_") + ".conf";
         try {
             synchronized (beltsConfig) {
                 beltsConfig.load(new FileInputStream(configFileName));
@@ -141,13 +141,13 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
         }
     }
 
-    private void loadBelt(int beltNr) {
+    private void loadBelt(final int beltNr) {
         belt = beltNr % BELTS_NUM;
         if (belt < 0)
             belt += BELTS_NUM;
         synchronized (beltsConfig) {
             for (int slot = 0; slot < layout.length; slot++) {
-                String icon = beltsConfig.getProperty("belt_" + belt + "_" + slot, "");
+                final String icon = beltsConfig.getProperty("belt_" + belt + "_" + slot, "");
                 if (icon.length() > 0) {
                     layout[slot] = Resource.load(icon);
                 } else {
@@ -159,7 +159,7 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
 
     public static void saveBelts() {
         synchronized (beltsConfig) {
-            String configFileName = "belts_" + Config.currentCharName.replaceAll("[^a-zA-Z()]", "_") + ".conf";
+            final String configFileName = "belts_" + Config.currentCharName.replaceAll("[^a-zA-Z()]", "_") + ".conf";
             try {
                 beltsConfig.store(new FileOutputStream(configFileName), "Belts actions for " + Config.currentCharName);
             } catch (FileNotFoundException e) {
@@ -168,10 +168,10 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
         }
     }
 
-    public void wdgmsg(Widget sender, String msg, Object... args) {
+    public void wdgmsg(final Widget sender, final String msg, final Object... args) {
         if (checkIsCloseButton(sender))
             ui.destroy(this);
-        Boolean _folded = folded;
+        final Boolean _folded = folded;
         if (checkIsFoldButton(sender))
             super.wdgmsg(sender, msg, args);
         if (_folded != folded) {
@@ -179,21 +179,21 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
         }
     }
 
-    public void draw(GOut g) {
+    public void draw(final GOut g) {
         super.draw(g);
         if (folded)
             return;
         for (int y = 0; y < gsz.y; y++) {
             for (int x = 0; x < gsz.x; x++) {
-                Coord p = getcoord(x, y);
+                final Coord p = getcoord(x, y);
                 g.image(bg, p);
                 int slot = x + y;
                 if (key == KeyEvent.VK_0)
                     slot = (slot + 1) % 10;
                 g.aimage(nums[slot], p.add(bg.sz()), 1, 1);
-                Resource btn = layout[x + y];
+                final Resource btn = layout[x + y];
                 if (btn != null) {
-                    Tex btex = btn.layer(Resource.imgc).tex();
+                    final Tex btex = btn.layer(Resource.imgc).tex();
                     g.image(btex, p.add(1, 1));
                     if (btn == pressed) {
                         g.chcolor(new Color(0, 0, 0, 128));
@@ -208,15 +208,15 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
         if (dragging != null) {
             final Tex dt = dragging.layer(Resource.imgc).tex();
             ui.drawafter(new UI.AfterDraw() {
-                public void draw(GOut g) {
+                public void draw(final GOut g) {
                     g.image(dt, ui.mc.add(dt.sz().div(2).inv()));
                 }
             });
         }
     }
 
-    private Coord getcoord(int x, int y) {
-        Coord p = xlate(bgsz.mul(new Coord(x, y)), true);
+    private Coord getcoord(final int x, final int y) {
+        final Coord p = xlate(bgsz.mul(new Coord(x, y)), true);
         if (off.x > 0)
             if (flipped) {
                 p.setX(p.x + off.y * (x / off.x));
@@ -228,7 +228,7 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
 
     public void checkfold() {
         super.checkfold();
-        Coord max = new Coord(ssz);
+        final Coord max = new Coord(ssz);
         if ((folded) && (flipped)) {
             max.setX(0);
             recalcsz(max);
@@ -236,7 +236,7 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
         placecbtn();
     }
 
-    protected void recalcsz(Coord max) {
+    protected void recalcsz(final Coord max) {
         sz = max.add(wbox.bsz().add(mrgn.mul(2)).add(tlo).add(rbo)).add(-1, -1);
         wsz = sz.sub(tlo).sub(rbo);
         if (folded)
@@ -296,15 +296,15 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
         placecbtn();
     }
 
-    private Resource bhit(Coord c) {
-        int i = index(c);
+    private Resource bhit(final Coord c) {
+        final int i = index(c);
         if (i >= 0)
             return (layout[i]);
         else
             return (null);
     }
 
-    private int index(Coord c) {
+    private int index(final Coord c) {
         for (int y = 0; y < gsz.y; y++) {
             for (int x = 0; x < gsz.x; x++) {
                 if (c.isect(getcoord(x, y), bgsz))
@@ -314,8 +314,8 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
         return -1;
     }
 
-    public boolean mousedown(Coord c, int button) {
-        Resource h = bhit(c);
+    public boolean mousedown(final Coord c, final int button) {
+        final Resource h = bhit(c);
         if (button == 1) {
             if (h != null) {
                 pressed = h;
@@ -327,8 +327,8 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
         return (true);
     }
 
-    public boolean mouseup(Coord c, int button) {
-        Resource h = bhit(c);
+    public boolean mouseup(final Coord c, final int button) {
+        final Resource h = bhit(c);
         if (button == 1) {
             if (dragging != null) {
                 ui.dropthing(ui.root, ui.mc, dragging);
@@ -349,10 +349,10 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
         return (true);
     }
 
-    public void mousemove(Coord c) {
+    public void mousemove(final Coord c) {
         if ((!locked) && (dragging == null) && (pressed != null)) {
             dragging = pressed;
-            int slot = index(c);
+            final int slot = index(c);
             if (slot >= 0) {
                 layout[slot] = null;
             }
@@ -364,18 +364,18 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
 
     }
 
-    public boolean drop(Coord cc, Coord ul, Item item) {
+    public boolean drop(final Coord cc, final Coord ul, final Item item) {
         return (true);
     }
 
-    public boolean iteminteract(Coord cc, Coord ul) {
+    public boolean iteminteract(final Coord cc, final Coord ul) {
         return (true);
     }
 
-    public boolean dropthing(Coord c, Object thing) {
+    public boolean dropthing(final Coord c, final Object thing) {
         if ((!locked) && (thing instanceof Resource)) {
-            int slot = index(c);
-            Resource res = (Resource) thing;
+            final int slot = index(c);
+            final Resource res = (Resource) thing;
             setBeltSlot(slot, res.name);
             layout[slot] = res;
             return true;
@@ -383,8 +383,8 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
         return false;
     }
 
-    private void setBeltSlot(int slot, String icon) {
-        String key = "belt_" + belt + "_" + slot;
+    private void setBeltSlot(final int slot, final String icon) {
+        final String key = "belt_" + belt + "_" + slot;
         synchronized (beltsConfig) {
             beltsConfig.setProperty(key, icon);
         }
@@ -396,13 +396,13 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
     private Text curtt = null;
     private long hoverstart;
 
-    public Object tooltip(Coord c, boolean again) {
-        Resource res = bhit(c);
-        long now = System.currentTimeMillis();
+    public Object tooltip(final Coord c, final boolean again) {
+        final Resource res = bhit(c);
+        final long now = System.currentTimeMillis();
         if ((res != null) && (res.layer(Resource.action) != null)) {
             if (!again)
                 hoverstart = now;
-            boolean ttl = (now - hoverstart) > 500;
+            final boolean ttl = (now - hoverstart) > 500;
             if ((res != curttr) || (ttl != curttl)) {
                 curtt = rendertt(res, ttl);
                 curttr = res;
@@ -415,9 +415,9 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
         }
     }
 
-    private static Text rendertt(Resource res, boolean withpg) {
-        AButton ad = res.layer(Resource.action);
-        Pagina pg = res.layer(Resource.pagina);
+    private static Text rendertt(final Resource res, final boolean withpg) {
+        final AButton ad = res.layer(Resource.action);
+        final Pagina pg = res.layer(Resource.pagina);
         String tt = ad.name;
         if (withpg && (pg != null)) {
             tt += "\n\n" + pg.text;
@@ -425,11 +425,11 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
         return (ttfnd.render(tt, 0));
     }
 
-    private boolean checkKey(char ch, KeyEvent ev) {
-        int code = ev.getKeyCode();
+    private boolean checkKey(final char ch, final KeyEvent ev) {
+        final int code = ev.getKeyCode();
         int slot = code - key;
-        boolean alt = ev.isAltDown();
-        boolean ctrl = ev.isControlDown();
+        final boolean alt = ev.isAltDown();
+        final boolean ctrl = ev.isControlDown();
         if (alt && key == KeyEvent.VK_F1) {
             slot = code - KeyEvent.VK_0;
             if ((slot > 0) && (slot <= 5)) {
@@ -446,7 +446,7 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
         } else if (!alt && !ctrl && (slot >= 0) && (slot < gsz.x * gsz.y)) {
             if (key == KeyEvent.VK_0)
                 slot = (slot == 0) ? 9 : slot - 1;
-            Resource h = layout[slot];
+            final Resource h = layout[slot];
             if ((h != null) && (ui.mnu != null))
                 ui.mnu.use(h);
             return true;
@@ -454,14 +454,14 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
         return false;
     }
 
-    public boolean globtype(char ch, KeyEvent ev) {
+    public boolean globtype(final char ch, final KeyEvent ev) {
         if (!checkKey(ch, ev))
             return (super.globtype(ch, ev));
         else
             return true;
     }
 
-    public boolean type(char key, KeyEvent ev) {
+    public boolean type(final char key, final KeyEvent ev) {
         if (key == 27) {
             wdgmsg(foldButton, "click");
             return (true);
@@ -472,7 +472,7 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
             return true;
     }
 
-    public static void setbelt(int slot, Indir<Resource> res) {
+    public static void setbelt(final int slot, final Indir<Resource> res) {
         synchronized (defbelt) {
             defbelt[slot] = res;
         }

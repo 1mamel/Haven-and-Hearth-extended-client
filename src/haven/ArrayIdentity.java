@@ -37,18 +37,18 @@ public class ArrayIdentity {
     private static class Entry<T> {
         final WeakReference<T[]> arr;
 
-        private Entry(T[] arr) {
+        private Entry(final T[] arr) {
             this.arr = new WeakReference<T[]>(arr);
         }
 
-        public boolean equals(Object x) {
+        public boolean equals(final Object x) {
             if (!(x instanceof Entry))
                 return (false);
-            T[] a = arr.get();
+            final T[] a = arr.get();
             if (a == null)
                 return (false);
-            Entry<?> e = (Entry<?>) x;
-            Object[] ea = e.arr.get();
+            final Entry<?> e = (Entry<?>) x;
+            final Object[] ea = e.arr.get();
             if (ea == null)
                 return (false);
             if (ea.length != a.length)
@@ -61,11 +61,11 @@ public class ArrayIdentity {
         }
 
         public int hashCode() {
-            T[] a = arr.get();
+            final T[] a = arr.get();
             if (a == null)
                 return (0);
             int ret = 1;
-            for (T o : a)
+            for (final T o : a)
                 ret = (ret * 31) + System.identityHashCode(o);
             return (ret);
         }
@@ -73,27 +73,27 @@ public class ArrayIdentity {
 
     private static synchronized void clean() {
         for (Iterator<Entry<?>> i = set.keySet().iterator(); i.hasNext();) {
-            Entry<?> e = i.next();
+            final Entry<?> e = i.next();
             if (e.arr.get() == null)
                 i.remove();
         }
     }
 
     @SuppressWarnings("unchecked")
-    private static <T> Entry<T> getcanon(Entry<T> e) {
+    private static <T> Entry<T> getcanon(final Entry<T> e) {
         return ((Entry<T>) set.get(e));
     }
 
-    public static <T> T[] intern(T[] arr) {
+    public static <T> T[] intern(final T[] arr) {
         synchronized (ArrayIdentity.class) {
             if (cleanint++ > 100) {
                 clean();
                 cleanint = 0;
             }
         }
-        Entry<T> e = new Entry<T>(arr);
+        final Entry<T> e = new Entry<T>(arr);
         synchronized (ArrayIdentity.class) {
-            Entry<T> e2 = getcanon(e);
+            final Entry<T> e2 = getcanon(e);
             T[] ret;
             if (e2 == null) {
                 set.put(e, e);

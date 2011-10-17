@@ -48,7 +48,7 @@ public class Gob implements Sprite.Owner {
         public final int id;
         public boolean delign = false;
 
-        public Overlay(int id, Indir<Resource> res, Message sdt) {
+        public Overlay(final int id, final Indir<Resource> res, final Message sdt) {
             this.id = id;
             this.res = res;
             this.sdt = sdt;
@@ -60,14 +60,14 @@ public class Gob implements Sprite.Owner {
         }
     }
 
-    public Gob(Glob glob, Coord c, int id, int frame) {
+    public Gob(final Glob glob, final Coord c, final int id, final int frame) {
         this.glob = glob;
         this.rc = c;
         this.id = id;
         this.frame = frame;
     }
 
-    public Gob(Glob glob, Coord c) {
+    public Gob(final Glob glob, final Coord c) {
         this(glob, c, 0, 0);
     }
 
@@ -75,30 +75,30 @@ public class Gob implements Sprite.Owner {
         public void ch(T n);
     }
 
-    public void ctick(int dt) {
-        int dt2 = dt + initdelay;
+    public void ctick(final int dt) {
+        final int dt2 = dt + initdelay;
         initdelay = 0;
-        for (GAttrib a : attr.values()) {
+        for (final GAttrib a : attr.values()) {
             if (a instanceof Drawable)
                 a.ctick(dt2);
             else
                 a.ctick(dt);
         }
         for (Iterator<Overlay> i = ols.iterator(); i.hasNext(); ) {
-            Overlay ol = i.next();
+            final Overlay ol = i.next();
             if (ol.spr == null) {
                 if (((getattr(Drawable.class) == null) || (getneg() != null)) && (ol.res.get() != null))
                     ol.spr = Sprite.create(this, ol.res.get(), ol.sdt);
             } else {
-                boolean done = ol.spr.tick(dt);
+                final boolean done = ol.spr.tick(dt);
                 if ((!ol.delign || (ol.spr instanceof Overlay.CDel)) && done)
                     i.remove();
             }
         }
     }
 
-    public Overlay findol(int id) {
-        for (Overlay ol : ols) {
+    public Overlay findol(final int id) {
+        for (final Overlay ol : ols) {
             if (ol.id == id)
                 return (ol);
         }
@@ -106,19 +106,19 @@ public class Gob implements Sprite.Owner {
     }
 
     public void tick() {
-        for (GAttrib a : attr.values())
+        for (final GAttrib a : attr.values())
             a.tick();
     }
 
-    public void move(Coord c) {
-        Moving m = getattr(Moving.class);
+    public void move(final Coord c) {
+        final Moving m = getattr(Moving.class);
         if (m != null)
             m.move(c);
         this.rc = c;
     }
 
     public Coord getc() {
-        Moving m = getattr(Moving.class);
+        final Moving m = getattr(Moving.class);
         if (m != null)
             return (m.getc());
         else
@@ -127,46 +127,46 @@ public class Gob implements Sprite.Owner {
 
     private static Class<? extends GAttrib> attrclass(Class<? extends GAttrib> cl) {
         while (true) {
-            Class<?> p = cl.getSuperclass();
+            final Class<?> p = cl.getSuperclass();
             if (p == GAttrib.class)
                 return (cl);
             cl = p.asSubclass(GAttrib.class);
         }
     }
 
-    public void setattr(GAttrib a) {
-        Class<? extends GAttrib> ac = attrclass(a.getClass());
+    public void setattr(final GAttrib a) {
+        final Class<? extends GAttrib> ac = attrclass(a.getClass());
         attr.put(ac, a);
     }
 
-    public <C extends GAttrib> C getattr(Class<C> c) {
-        GAttrib attr = this.attr.get(attrclass(c));
+    public <C extends GAttrib> C getattr(final Class<C> c) {
+        final GAttrib attr = this.attr.get(attrclass(c));
         if (!c.isInstance(attr))
             return (null);
         return (c.cast(attr));
     }
 
-    public void delattr(Class<? extends GAttrib> c) {
+    public void delattr(final Class<? extends GAttrib> c) {
         attr.remove(attrclass(c));
     }
 
     public Coord drawoff() {
         Coord ret = Coord.z;
-        DrawOffset dro = getattr(DrawOffset.class);
+        final DrawOffset dro = getattr(DrawOffset.class);
         if (dro != null)
             ret = ret.add(dro.off);
-        Following flw = getattr(Following.class);
+        final Following flw = getattr(Following.class);
         if (flw != null)
             ret = ret.add(flw.doff);
         return (ret);
     }
 
-    public void drawsetup(Sprite.Drawer drawer, Coord dc, Coord sz) {
-        Drawable d = getattr(Drawable.class);
-        String resourceName = resname();
+    public void drawsetup(final Sprite.Drawer drawer, final Coord dc, final Coord sz) {
+        final Drawable d = getattr(Drawable.class);
+        final String resourceName = resname();
         hide = false;
-        Coord dro = drawoff();
-        for (Overlay ol : ols) {
+        final Coord dro = drawoff();
+        for (final Overlay ol : ols) {
             if (ol.spr != null) {
                 try {
                     ol.spr.setup(drawer, dc, dro);
@@ -175,7 +175,7 @@ public class Gob implements Sprite.Owner {
             }
         }
         if (CustomConfig.isHideObjects()) {
-            for (String objectName : Config.hideObjectList) {
+            for (final String objectName : Config.hideObjectList) {
                 if (resourceName.contains(objectName) && (!resourceName.contains("door"))) {
                     hide = true;
                 }
@@ -187,8 +187,8 @@ public class Gob implements Sprite.Owner {
     }
 
     public String resname() {
-        Resource res;
-        ResDrawable dw = getattr(ResDrawable.class);
+        final Resource res;
+        final ResDrawable dw = getattr(ResDrawable.class);
         String name = "";
         if (dw != null) {
             res = dw.res.get();
@@ -196,7 +196,7 @@ public class Gob implements Sprite.Owner {
                 name = res.name;
             }
         } else {
-            Layered ld = getattr(Layered.class);
+            final Layered ld = getattr(Layered.class);
             if ((ld != null) && (ld.layers.size() > 0)) {
                 res = ld.layers.get(0).get();
                 if (res != null)
@@ -215,16 +215,16 @@ public class Gob implements Sprite.Owner {
     }
 
     public Neg getneg() {
-        Drawable d = getattr(Drawable.class);
+        final Drawable d = getattr(Drawable.class);
         if (d instanceof ResDrawable) {
-            ResDrawable rd = (ResDrawable) d;
-            Resource r;
+            final ResDrawable rd = (ResDrawable) d;
+            final Resource r;
             if ((r = rd.res.get()) == null)
                 return (null);
             return (r.layer(Resource.negc));
         } else if (d instanceof Layered) {
-            Layered l = (Layered) d;
-            Resource r;
+            final Layered l = (Layered) d;
+            final Resource r;
             if ((r = l.base.get()) == null)
                 return (null);
             return (r.layer(Resource.negc));
@@ -239,8 +239,8 @@ public class Gob implements Sprite.Owner {
      * @return resource name
      */
     public String getResName() {
-        Drawable d = getattr(Drawable.class);
-        ResDrawable dw = getattr(ResDrawable.class);
+        final Drawable d = getattr(Drawable.class);
+        final ResDrawable dw = getattr(ResDrawable.class);
         if (d != null && dw != null && dw.res.get() != null) {
             return dw.res.get().name;
         }
@@ -248,9 +248,9 @@ public class Gob implements Sprite.Owner {
     }
 
     // получить байт из мессаги
-    public byte getBlob(int index) {
-        Drawable d = getattr(Drawable.class);
-        ResDrawable dw = getattr(ResDrawable.class);
+    public byte getBlob(final int index) {
+        final Drawable d = getattr(Drawable.class);
+        final ResDrawable dw = getattr(ResDrawable.class);
         if (dw != null && d != null && index < dw.sdt.blob.length && index >= 0) {
             return dw.sdt.blob[index];
         }

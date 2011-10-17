@@ -27,11 +27,11 @@
 package haven;
 
 public abstract class Moving extends GAttrib {
-    public Moving(Gob gob) {
+    public Moving(final Gob gob) {
         super(gob);
     }
 
-    public void move(Coord c) {
+    public void move(final Coord c) {
     }
 
     public abstract Coord getc();

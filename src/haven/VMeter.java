@@ -26,6 +26,8 @@
 
 package haven;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.awt.*;
 
 public class VMeter extends Widget {
@@ -36,8 +38,8 @@ public class VMeter extends Widget {
 
     static {
         Widget.addtype("vm", new WidgetFactory() {
-            public Widget create(Coord c, Widget parent, Object[] args) {
-                Color cl;
+            public Widget create(final Coord c, final Widget parent, final Object[] args) {
+                final Color cl;
                 if (args.length > 4) {
                     cl = new Color((Integer) args[1],
                             (Integer) args[2],
@@ -53,13 +55,13 @@ public class VMeter extends Widget {
         });
     }
 
-    public VMeter(Coord c, Widget parent, int amount, Color cl) {
+    public VMeter(final Coord c, final Widget parent, final int amount, final Color cl) {
         super(c, bg.sz(), parent);
         this.amount = amount;
         this.cl = cl;
     }
 
-    public void draw(GOut g) {
+    public void draw(final GOut g) {
         g.image(bg, Coord.z);
         g.chcolor(cl);
         int h = (sz.y - 6);
@@ -67,7 +69,7 @@ public class VMeter extends Widget {
         g.image(fg, new Coord(0, 0), new Coord(0, sz.y - 3 - h), sz.add(0, h));
     }
 
-    public void uimsg(String msg, Object... args) {
+    public void uimsg(@NotNull final String msg, final Object... args) {
         if (msg.equals("set")) {
             amount = (Integer) args[0];
         } else {

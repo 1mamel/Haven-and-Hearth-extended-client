@@ -30,14 +30,14 @@ public class Astronomy {
     final double dt, mp, yt;
     final boolean night;
 
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (!(o instanceof Astronomy))
             return (false);
-        Astronomy a = (Astronomy) o;
+        final Astronomy a = (Astronomy) o;
         return a.dt == dt && a.mp == mp && a.yt == yt && a.night == night;
     }
 
-    public Astronomy(double dt, double mp, double yt, boolean night) {
+    public Astronomy(final double dt, final double mp, final double yt, final boolean night) {
         this.dt = dt;
         this.mp = mp;
         this.yt = yt;

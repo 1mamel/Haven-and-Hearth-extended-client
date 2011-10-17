@@ -46,7 +46,7 @@ public class Glob {
     public final Map<Integer, Buff> buffs = new TreeMap<Integer, Buff>();
     public java.awt.Color amblight = null;
 
-    public Glob(Session sess) {
+    public Glob(final Session sess) {
         this.sess = sess;
         map = new MCache(sess);
         party = new Party(this);
@@ -79,13 +79,13 @@ public class Glob {
         final String nm;
         int base, comp;
 
-        public CAttr(String nm, int base, int comp) {
+        public CAttr(final String nm, final int base, final int comp) {
             this.nm = nm.intern();
             this.base = base;
             this.comp = comp;
         }
 
-        public void update(int base, int comp) {
+        public void update(final int base, final int comp) {
             if ((base == this.base) && (comp == this.comp))
                 return;
             this.base = base;
@@ -95,11 +95,11 @@ public class Glob {
         }
     }
 
-    private static double defix(int i) {
+    private static double defix(final int i) {
         return (((double) i) / 1e9);
     }
 
-    public void blob(Message msg) {
+    public void blob(final Message msg) {
         while (!msg.eom()) {
             switch (msg.uint8()) {
                 case GMSG_TIME:
@@ -107,10 +107,10 @@ public class Glob {
                     Timer.local = System.currentTimeMillis() / 1000;
                     break;
                 case GMSG_ASTRO:
-                    double dt = defix(msg.int32());
-                    double mp = defix(msg.int32());
-                    double yt = defix(msg.int32());
-                    boolean night = (dt < 0.25) || (dt > 0.75);
+                    final double dt = defix(msg.int32());
+                    final double mp = defix(msg.int32());
+                    final double yt = defix(msg.int32());
+                    final boolean night = (dt < 0.25) || (dt > 0.75);
                     ast = new Astronomy(dt, mp, yt, night);
                     break;
                 case GMSG_LIGHT:
@@ -120,29 +120,29 @@ public class Glob {
         }
     }
 
-    public void paginae(Message msg) {
+    public void paginae(final Message msg) {
         synchronized (paginae) {
             while (!msg.eom()) {
-                int act = msg.uint8();
+                final int act = msg.uint8();
                 if (act == '+') {
-                    String nm = msg.string();
-                    int ver = msg.uint16();
+                    final String nm = msg.string();
+                    final int ver = msg.uint16();
                     paginae.add(Resource.load(nm, ver));
                 } else if (act == '-') {
-                    String nm = msg.string();
-                    int ver = msg.uint16();
+                    final String nm = msg.string();
+                    final int ver = msg.uint16();
                     paginae.remove(Resource.load(nm, ver));
                 }
             }
         }
     }
 
-    public void cattr(Message msg) {
+    public void cattr(final Message msg) {
         synchronized (cattr) {
             while (!msg.eom()) {
-                String nm = msg.string();
-                int base = msg.int32();
-                int comp = msg.int32();
+                final String nm = msg.string();
+                final int base = msg.int32();
+                final int comp = msg.int32();
                 CAttr a = cattr.get(nm);
                 if (a == null) {
                     a = new CAttr(nm, base, comp);
@@ -154,20 +154,20 @@ public class Glob {
         }
     }
 
-    public void buffmsg(Message msg) {
-        String name = msg.string().intern();
+    public void buffmsg(final Message msg) {
+        final String name = msg.string().intern();
         synchronized (buffs) {
             if (name.equals("clear")) {
                 buffs.clear();
             } else if (name.equals("set")) {
-                int id = msg.int32();
-                Indir<Resource> res = sess.getres(msg.uint16());
-                String tt = msg.string();
-                int ameter = msg.int32();
-                int nmeter = msg.int32();
-                int cmeter = msg.int32();
-                int cticks = msg.int32();
-                boolean major = msg.uint8() != 0;
+                final int id = msg.int32();
+                final Indir<Resource> res = sess.getres(msg.uint16());
+                final String tt = msg.string();
+                final int ameter = msg.int32();
+                final int nmeter = msg.int32();
+                final int cmeter = msg.int32();
+                final int cticks = msg.int32();
+                final boolean major = msg.uint8() != 0;
                 Buff buff;
                 if ((buff = buffs.get(id)) == null) {
                     buff = new Buff(id, res);
@@ -187,7 +187,7 @@ public class Glob {
                 buff.gettime = System.currentTimeMillis();
                 buffs.put(id, buff);
             } else if (name.equals("rm")) {
-                int id = msg.int32();
+                final int id = msg.int32();
                 buffs.remove(id);
             }
         }

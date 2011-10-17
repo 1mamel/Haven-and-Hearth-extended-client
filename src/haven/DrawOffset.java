@@ -29,7 +29,7 @@ package haven;
 public class DrawOffset extends GAttrib {
     Coord off;
 
-    public DrawOffset(Gob gob, Coord off) {
+    public DrawOffset(final Gob gob, final Coord off) {
         super(gob);
         this.off = off;
     }

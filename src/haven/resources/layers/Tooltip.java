@@ -15,7 +15,7 @@ import java.io.UnsupportedEncodingException;
 public class Tooltip extends Layer {
     public final String t;
 
-    public Tooltip(byte[] buf) {
+    public Tooltip(final byte[] buf) {
         try {
             t = new String(buf, "UTF-8");
         } catch (UnsupportedEncodingException e) {

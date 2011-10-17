@@ -39,7 +39,7 @@ public class MapProvider {
         return CustomConfig.glob;
     }
 
-    public static Gob getGob(int id) {
+    public static Gob getGob(final int id) {
         synchronized (glob().oc) {
             return glob().oc.getgob(id);
         }
@@ -52,41 +52,41 @@ public class MapProvider {
      * @param radius searching radius
      * @return object id of nearest object of that type, 0 otherwise
      */
-    public static int findObjectByType(String type, int radius) {
-        Coord my = Player.getPosition();
+    public static int findObjectByType(final String type, final int radius) {
+        final Coord my = Player.getPosition();
         double foundedDistance = radius * 11;
         foundedDistance *= foundedDistance; // Used suqare becase sqrt are slow operation
         Gob foundedObject = null;
 
         // Creting rectangle.
-        int left = Math.abs(my.x) - radius;
-        int right = Math.abs(my.x) + radius;
-        int top = Math.abs(my.y) - radius;
-        int bottom = Math.abs(my.y) + radius;
+        final int left = Math.abs(my.x) - radius;
+        final int right = Math.abs(my.x) + radius;
+        final int top = Math.abs(my.y) - radius;
+        final int bottom = Math.abs(my.y) + radius;
 
         synchronized (glob().oc) {
-            for (Gob gob : glob().oc) {
-                Coord gobPos = gob.getc();
+            for (final Gob gob : glob().oc) {
+                final Coord gobPos = gob.getc();
                 // First. Check that the rectangle contains the gobPos
-                int x = Math.abs(gobPos.x);
-                int y = Math.abs(gobPos.y);
+                final int x = Math.abs(gobPos.x);
+                final int y = Math.abs(gobPos.y);
                 if (x < left || x > right || y > top || y < bottom) {
                     continue;
                 }
                 // First check faster than second.
                 // Second. Check is gobPos in circle.
-                double len = gobPos.distSq(my);
+                final double len = gobPos.distSq(my);
                 if (len > foundedDistance) {
                     continue;
                 }
                 // Thrid. Checking type
-                boolean matched;
+                final boolean matched;
                 if (type.equals("tree")) {
                     // searching for trees with growth stage 0
-                    String resName = gob.getResName();
+                    final String resName = gob.getResName();
                     matched = resName.contains("trees") && resName.indexOf('0') >= 0;
                 } else {
-                    String resName = gob.getResName();
+                    final String resName = gob.getResName();
                     matched = resName.contains(type);
                 }
 
@@ -113,13 +113,13 @@ public class MapProvider {
      * @param offY   offset by Y in tiles
      * @return object id of nearest object of that type, 0 otherwise
      */
-    public static int findObjectByName(String name, int radius, int offX, int offY) {
-        Coord my = Player.getPosition();
+    public static int findObjectByName(final String name, final int radius, final int offX, final int offY) {
+        final Coord my = Player.getPosition();
         if (my == null) {
             return 0;
         }
-        Coord offset = tilesz.mul(offX, offY);
-        Coord start = offset.add(MapView.tilify(my));
+        final Coord offset = tilesz.mul(offX, offY);
+        final Coord start = offset.add(MapView.tilify(my));
 
         double foundedDistance = radius;
         foundedDistance *= foundedDistance;
@@ -127,23 +127,23 @@ public class MapProvider {
 
 
         // Creting rectangle.
-        int left = Math.abs(start.x) - radius;
-        int right = Math.abs(start.x) + radius;
-        int top = Math.abs(start.y) - radius;
-        int bottom = Math.abs(start.y) + radius;
+        final int left = Math.abs(start.x) - radius;
+        final int right = Math.abs(start.x) + radius;
+        final int top = Math.abs(start.y) - radius;
+        final int bottom = Math.abs(start.y) + radius;
 
         synchronized (glob().oc) {
-            for (Gob gob : glob().oc) {
-                Coord gobPos = gob.getc();
+            for (final Gob gob : glob().oc) {
+                final Coord gobPos = gob.getc();
                 // First. Check that the rectangle contains the gobPos
-                int x = Math.abs(gobPos.x);
-                int y = Math.abs(gobPos.y);
+                final int x = Math.abs(gobPos.x);
+                final int y = Math.abs(gobPos.y);
                 if (x < left || x > right || y > top || y < bottom) {
                     continue;
                 }
                 // First check faster than second.
                 // Second. Check is gobPos in circle.
-                double len = gobPos.distSq(start);
+                final double len = gobPos.distSq(start);
                 if (len > foundedDistance) {
                     continue;
                 }
@@ -168,12 +168,12 @@ public class MapProvider {
      * @param buttons
      * @param mode
      */
-    public static void click(int objectId, int buttons, int mode) {
-        Gob o = getGob(objectId);
+    public static void click(final int objectId, final int buttons, final int mode) {
+        final Gob o = getGob(objectId);
         if (o == null) {
             return;
         }
-        Coord oc = o.getc();
+        final Coord oc = o.getc();
         getMV().wdgmsg("click", getCenterR(), oc, buttons, mode, objectId, oc);
     }
 
@@ -187,12 +187,12 @@ public class MapProvider {
      * @param buttons
      * @param mode
      */
-    public static void click(int dx, int dy, int buttons, int mode) {
+    public static void click(final int dx, final int dy, final int buttons, final int mode) {
         Coord mc = Player.getPosition();
         if (mc == null) {
             return;
         }
-        Coord offset = tilesz.mul(dx, dy);
+        final Coord offset = tilesz.mul(dx, dy);
         mc = MapView.tilify(mc).add(offset);
         getMV().wdgmsg("click", getCenterR(), mc, buttons, mode);
     }
@@ -208,34 +208,34 @@ public class MapProvider {
      * @param buttons
      * @param mode
      */
-    public static void clickAbs(int x, int y, int buttons, int mode) {
-        Coord mc = new Coord(x, y);
+    public static void clickAbs(final int x, final int y, final int buttons, final int mode) {
+        final Coord mc = new Coord(x, y);
         getMV().wdgmsg("click", getCenterR(), mc, buttons, mode);
     }
 
     // клик взаимодействия по карте с объектом. координаты относительные.
-    public static void interactClick(int x, int y, int mode) {
+    public static void interactClick(final int x, final int y, final int mode) {
         Coord mc = Player.getPosition();
         if (mc == null) {
             return;
         }
-        Coord offset = new Coord(x, y).mul(tilesz);
+        final Coord offset = new Coord(x, y).mul(tilesz);
         mc = MapView.tilify(mc).add(offset);
         getMV().wdgmsg("itemact", getCenterR(), mc, mode);
     }
 
-    public static void interactClickObj(int id, int mode) {
-        Gob pgob = Player.getGob();
-        Gob gob = getGob(id);
+    public static void interactClickObj(final int id, final int mode) {
+        final Gob pgob = Player.getGob();
+        final Gob gob = getGob(id);
         if (pgob == null || gob == null) {
             return;
         }
-        Coord mc = gob.getc();
+        final Coord mc = gob.getc();
         getMV().wdgmsg("itemact", getCenterR(), mc, mode, id, mc);
     }
 
-    public static void interactClickAbs(int x, int y, int mode) {
-        Coord mc = new Coord(x, y);
+    public static void interactClickAbs(final int x, final int y, final int mode) {
+        final Coord mc = new Coord(x, y);
         getMV().wdgmsg("itemact", getCenterR(), mc, mode);
     }
 
@@ -248,25 +248,25 @@ public class MapProvider {
      * @param button
      * @param mode
      */
-    public static void place(int dx, int dy, int button, int mode) {
+    public static void place(final int dx, final int dy, final int button, final int mode) {
         Coord mc = Player.getPosition();
         if (getMV().plob == null || mc == null) {
             return;
         }
-        Coord offset = new Coord(dx, dy).mul(tilesz);
+        final Coord offset = new Coord(dx, dy).mul(tilesz);
         mc = MapView.tilify(mc).add(offset);
         getMV().wdgmsg("place", mc, button, mode);
     }
 
 
     // дропнуть вещь которую держим в руках
-    public static void drop(int mode) {
+    public static void drop(final int mode) {
         getMV().wdgmsg("drop", mode);
     }
 
 
-    public static int getObjectBlob(int id, int index) {
-        Gob gob = glob().oc.getgob(id);
+    public static int getObjectBlob(final int id, final int index) {
+        final Gob gob = glob().oc.getgob(id);
         if (gob == null) return -1;
         return gob.getBlob(index);
     }

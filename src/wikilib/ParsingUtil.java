@@ -94,26 +94,26 @@ public class ParsingUtil {
                 } else if (hasName(node, "h3")) {
                     stack.peek().add(new Header(node.getTextContent(), -1));
                 } else if (hasName(node, "ol")) {
-                    List ol = new List(true);
+                    final List ol = new List(true);
                     stack.peek().add(ol);
                     stack.push(ol);
                 } else if (hasName(node, "ul")) {
-                    List ol = new List(false);
+                    final List ol = new List(false);
                     stack.peek().add(ol);
                     stack.push(ol);
                 } else if (hasName(node, "table")) {
-                    Table t = new Table();
+                    final Table t = new Table();
                     stack.peek().add(t);
                     stack.push(t);
                 } else if (hasName(node, "tr")) {
-                    Table.Line l = new Table.Line();
+                    final Table.Line l = new Table.Line();
                     stack.peek().add(l);
                     stack.push(l);
                 } else if (hasName(node, "th")) {
-                    Table.Cell c = new Table.Cell(node.getTextContent(), true);
+                    final Table.Cell c = new Table.Cell(node.getTextContent(), true);
                     stack.peek().add(c);
                 } else if (hasName(node, "td")) {
-                    Table.Cell c = new Table.Cell(node.getTextContent(), false);
+                    final Table.Cell c = new Table.Cell(node.getTextContent(), false);
                     stack.peek().add(c);
                 } else if (hasName(node, "li")) {
                     stack.peek().add(new LI(node.getTextContent()));
@@ -157,7 +157,7 @@ public class ParsingUtil {
     }
 
     @Nullable
-    private static Node filterNodesById(NodeList nlist, String id) {
+    private static Node filterNodesById(final NodeList nlist, final String id) {
         for (int i = 0; i < nlist.getLength(); i++) {
             final Node node = nlist.item(i);
             if (id.equals(getAttribute(node, "id"))) return node;
@@ -165,10 +165,10 @@ public class ParsingUtil {
         return null;
     }
 
-    public static void parseSearchResultsPage(@NotNull Page page, @NotNull Document dom) throws PageParsingException {
+    public static void parseSearchResultsPage(@NotNull final Page page, @NotNull final Document dom) throws PageParsingException {
         final Node searchResults;
         {
-            java.util.List<Node> sr = filterNodesByClass(dom.getElementsByTagName("div"), "searchresults");
+            final java.util.List<Node> sr = filterNodesByClass(dom.getElementsByTagName("div"), "searchresults");
             if (sr.isEmpty()) {
                 throw new PageParsingException("Does not contains <div class='searchresults'>");
             }
@@ -201,7 +201,7 @@ public class ParsingUtil {
     }
 
     @Nullable
-    private static String getAttribute(@NotNull Node node, @NotNull String key) {
+    private static String getAttribute(@NotNull final Node node, @NotNull final String key) {
         final NamedNodeMap attributes = node.getAttributes();
         if (attributes == null) {
             return null;
@@ -210,24 +210,24 @@ public class ParsingUtil {
         return namedItem == null ? null : namedItem.getTextContent();
     }
 
-    private static boolean hasClass(@NotNull Node node, @NotNull String className) {
+    private static boolean hasClass(@NotNull final Node node, @NotNull final String className) {
         return className.equals(getAttribute(node, "class"));
     }
 
-    private static boolean hasName(@NotNull Node node, @NotNull String name) {
+    private static boolean hasName(@NotNull final Node node, @NotNull final String name) {
         return name.equals(node.getNodeName());
     }
 
     @NotNull
-    private static java.util.List<Node> filterNodesByClass(@NotNull NodeList nlist, @NotNull String className) {
+    private static java.util.List<Node> filterNodesByClass(@NotNull final NodeList nlist, @NotNull final String className) {
         final java.util.List<Node> ret = new LinkedList<Node>();
         for (int i = 0; i < nlist.getLength(); i++) {
             final Node node = nlist.item(i);
-            NamedNodeMap a = node.getAttributes();
+            final NamedNodeMap a = node.getAttributes();
             if (a != null) {
-                Node b = a.getNamedItem("class");
+                final Node b = a.getNamedItem("class");
                 if (b != null) {
-                    String c = b.getNodeValue();
+                    final String c = b.getNodeValue();
                     if (className.equals(c)) {
                         ret.add(node);
                     }

@@ -16,19 +16,19 @@ public class GLLine {
     public final Text.Foundry fnd = new Text.Foundry(new Font("SansSerif", Font.PLAIN, 9), Color.BLACK);
     public final BufferedImage img;
 
-    public GLLine(String line, Color col, int y) {
+    public GLLine(final String line, final Color col, final int y) {
         this.y = y;
         GLCharacter tGLChar;
-        String[] words = Utils.whitespacePattern.split(line.trim());
+        final String[] words = Utils.whitespacePattern.split(line.trim());
         int nextCharLoc = 3;
-        Coord strSize = fnd.strsize(line);
+        final Coord strSize = fnd.strsize(line);
         fnd.defcol = col;
         img = new BufferedImage(strSize.x, strSize.y, BufferedImage.TYPE_INT_ARGB);
         Matcher match;
-        Graphics g = img.getGraphics();
+        final Graphics g = img.getGraphics();
         for (int i = 0; i < words.length; i++) {
             match = pat.matcher(words[i]);
-            boolean isLink = match.find();
+            final boolean isLink = match.find();
 
             for (int j = 0; j < words[i].length(); j++) {
                 tGLChar = new GLCharacter(words[i].charAt(j), nextCharLoc, fnd, false);

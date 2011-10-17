@@ -26,6 +26,8 @@
 
 package haven;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,18 +58,18 @@ public class Equipory extends Window implements DTarget {
 
     static {
         Widget.addtype("epry", new WidgetFactory() {
-            public Widget create(Coord c, Widget parent, Object[] args) {
+            public Widget create(final Coord c, final Widget parent, final Object[] args) {
                 return (new Equipory(c, parent));
             }
         });
     }
 
-    public Equipory(Coord c, Widget parent) {
+    public Equipory(final Coord c, final Widget parent) {
         super(c, new Coord(0, 0), parent, "Equipment");
         canhastrash = false;
         //new Img(new Coord(32, 0), bg, this);
-        Coord singleItem = new Coord(1, 1);
-        for (Coord ecoord : ecoords) {
+        final Coord singleItem = new Coord(1, 1);
+        for (final Coord ecoord : ecoords) {
             epoints.add(new Inventory(ecoord, singleItem, this));
             equed.add(null);
         }
@@ -75,7 +77,7 @@ public class Equipory extends Window implements DTarget {
         UI.equipory.set(this);
     }
 
-    public void uimsg(String msg, Object... args) {
+    public void uimsg(@NotNull final String msg, final Object... args) {
         if (msg.equals("set")) {
             //noinspection SynchronizeOnNonFinalField
             synchronized (ui) {
@@ -83,10 +85,10 @@ public class Equipory extends Window implements DTarget {
                 while (i < equed.size()) {
                     if (equed.get(i) != null)
                         equed.get(i).unlink();
-                    int res = (Integer) args[o++];
+                    final int res = (Integer) args[o++];
                     if (res >= 0) {
-                        int q = (Integer) args[o++];
-                        Item ni = new Item(Coord.z, res, q, epoints.get(i), null);
+                        final int q = (Integer) args[o++];
+                        final Item ni = new Item(Coord.z, res, q, epoints.get(i), null);
                         equed.set(i++, ni);
                         if ((o < args.length) && (args[o] instanceof String))
                             ni.tooltip = (String) args[o++];
@@ -96,11 +98,11 @@ public class Equipory extends Window implements DTarget {
                 }
             }
         } else if (msg.equals("setres")) {
-            int i = (Integer) args[0];
-            Indir<Resource> res = ui.sess.getres((Integer) args[1]);
+            final int i = (Integer) args[0];
+            final Indir<Resource> res = ui.sess.getres((Integer) args[1]);
             equed.get(i).chres(res, (Integer) args[2]);
         } else if (msg.equals("settt")) {
-            int i = (Integer) args[0];
+            final int i = (Integer) args[0];
             equed.get(i).tooltip = (String) args[1];
         } else if (msg.equals("ava")) {
             avagob = (Integer) args[0];
@@ -108,7 +110,7 @@ public class Equipory extends Window implements DTarget {
     }
 
     @SuppressWarnings({"SuspiciousMethodCalls"})
-    public void wdgmsg(Widget sender, String msg, Object... args) {
+    public void wdgmsg(final Widget sender, final String msg, final Object... args) {
         int ep;
         if ((ep = epoints.indexOf(sender)) != -1) {
             if (msg.equals("drop")) {
@@ -132,24 +134,24 @@ public class Equipory extends Window implements DTarget {
         super.wdgmsg(sender, msg, args);
     }
 
-    public boolean drop(Coord cc, Coord ul, Item item) {
+    public boolean drop(final Coord cc, final Coord ul, final Item item) {
         wdgmsg("drop", -1);
         return (true);
     }
 
-    public boolean iteminteract(Coord cc, Coord ul) {
+    public boolean iteminteract(final Coord cc, final Coord ul) {
         return (false);
     }
 
-    public void cdraw(GOut g) {
+    public void cdraw(final GOut g) {
         if (folded)
             return;
-        Coord avac = new Coord(32, 0);
+        final Coord avac = new Coord(32, 0);
         g.image(bg, avac);
         if (avagob != -1) {
-            Gob gob = ui.sess.glob.oc.getgob(avagob);
+            final Gob gob = ui.sess.glob.oc.getgob(avagob);
             if (gob != null) {
-                Avatar ava = gob.getattr(Avatar.class);
+                final Avatar ava = gob.getattr(Avatar.class);
                 if (ava != null)
                     g.image(ava.rend, avac);
             }

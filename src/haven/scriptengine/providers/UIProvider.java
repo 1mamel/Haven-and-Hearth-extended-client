@@ -34,7 +34,7 @@ public class UIProvider {
         ars.set(null);
         final Callback<String> callback = new Callback<String>() {
             @Override
-            public void result(String result) {
+            public void result(final String result) {
                 synchronized (ab) {
                     ars.set(result);
                     ab.set(true);
@@ -55,23 +55,23 @@ public class UIProvider {
         return ars.get();
     }
 
-    public static MessageBox dialog(final String message, int buttons, final Callback<Integer> callback) {
+    public static MessageBox dialog(final String message, final int buttons, final Callback<Integer> callback) {
         return dialog("Dialog", message, buttons, callback);
     }
 
-    public static MessageBox dialog(final String capture, final String message, int buttons, final Callback<Integer> callback) {
+    public static MessageBox dialog(final String capture, final String message, final int buttons, final Callback<Integer> callback) {
         return new MessageBox(MessageBox.DC, MessageBox.DS, UI.instance.root, capture, message, buttons, callback);
     }
 
-    public static int dialog(final String message, int buttons) {
+    public static int dialog(final String message, final int buttons) {
         return dialog("Dialog", message, buttons);
     }
 
-    public static int dialog(final String capture, final String message, int buttons) {
+    public static int dialog(final String capture, final String message, final int buttons) {
         final AtomicInteger ai = new AtomicInteger(-1);
         final Callback<Integer> callback = new Callback<Integer>() {
             @Override
-            public void result(Integer result) {
+            public void result(final Integer result) {
                 synchronized (ai) {
                     ai.set(result);
                     ai.notifyAll();
@@ -113,7 +113,7 @@ public class UIProvider {
     }
 
     // выбрать пункт в контекстном меню действий
-    public static void selectFlowerMenuOpt(String name) {
+    public static void selectFlowerMenuOpt(final String name) {
         if (!haveFlowerMenu()) {
 //            LogPrint("ERROR: flower menu does not exist!");
             return;
@@ -127,7 +127,7 @@ public class UIProvider {
     }
 
     // послать действие на сервер из меню действий внизу справа
-    public static void sendAction(String name) {
+    public static void sendAction(final String name) {
         if (UI.menuGrid.get() == null) {
             return;
         }
@@ -139,7 +139,7 @@ public class UIProvider {
     }
 
     // послать действие на сервер из меню действий внизу справа
-    public static void sendAction(String name1, String name2) {
+    public static void sendAction(final String name1, final String name2) {
         if (name2.isEmpty()) {
             sendAction(name1);
             return;
@@ -152,12 +152,12 @@ public class UIProvider {
 
 
     // сказать пользователю выбрать объект мышью
-    public static int inputObject(String msg) {
-        MapView mapview = MapProvider.getMV();
+    public static int inputObject(final String msg) {
+        final MapView mapview = MapProvider.getMV();
         if (mapview == null) {
             return 0;
         }
-        MessageBox inform = inform("Select map object", msg);
+        final MessageBox inform = inform("Select map object", msg);
         mapview.modeSelectObject.set(true);
         synchronized (mapview.modeSelectObject) {
             mapview.modeSelectObject.notifyAll();
@@ -195,12 +195,12 @@ public class UIProvider {
         private int type;
         static ItemMode DEFAULT = INVENTORY;
 
-        ItemMode(int type) {
+        ItemMode(final int type) {
             this.type = type;
         }
 
-        static ItemMode fromType(int type) {
-            for (ItemMode mode : values()) {
+        static ItemMode fromType(final int type) {
+            for (final ItemMode mode : values()) {
                 if (mode.type == type) {
                     return mode;
                 }
@@ -209,7 +209,7 @@ public class UIProvider {
         }
     }
 
-    public static void equipAction(int slot, String action) {
+    public static void equipAction(final int slot, final String action) {
         if (UI.equipory.get() == null || !InventoriesProvider.actions.contains(action)) {
             return;
         }
@@ -221,7 +221,7 @@ public class UIProvider {
     }
 
 
-    public static void setRenderMode(boolean enabled) {
+    public static void setRenderMode(final boolean enabled) {
         CustomConfig.setRender(enabled);
     }
 
@@ -229,10 +229,10 @@ public class UIProvider {
     // Building
 
     public static void buildClick() {
-        ISBox b = UI.instance.root.findchild(ISBox.class);
+        final ISBox b = UI.instance.root.findchild(ISBox.class);
         if (b != null) {
-            Widget w = b.parent;
-            Button btn = w.findchild(Button.class);
+            final Widget w = b.parent;
+            final Button btn = w.findchild(Button.class);
             if (btn != null) {
                 btn.click();
             }
@@ -240,7 +240,7 @@ public class UIProvider {
     }
 
     public static boolean haveBuildWindow() {
-        ISBox b = UI.instance.root.findchild(ISBox.class);
+        final ISBox b = UI.instance.root.findchild(ISBox.class);
         return (b != null);
     }
 

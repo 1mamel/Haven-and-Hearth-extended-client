@@ -26,10 +26,12 @@
 
 package haven;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Used left child-right sibling tree.
@@ -48,7 +50,7 @@ public class Widget {
     private Widget prevtt;
     public boolean isui = true;
 
-    static final Map<String, WidgetFactory> types = new HashMap<String, WidgetFactory>(); // HashMap are really faster!
+    static final Map<String, WidgetFactory> types = new ConcurrentHashMap<String, WidgetFactory>(); // HashMap are really faster!
     static final Class<?>[] barda = {Img.class, TextEntry.class, SlenConsole.class, MapView.class, FlowerMenu.class,
             Window.class, Button.class, Inventory.class, Item.class, Listbox.class,
             Makewindow.class, Chatwindow.class, Textlog.class, Equipory.class, IButton.class,
@@ -61,7 +63,7 @@ public class Widget {
 
     static {
         addtype("cnt", new WidgetFactory() {
-            public Widget create(Coord c, Widget parent, Object[] args) {
+            public Widget create(final Coord c, final Widget parent, final Object[] args) {
                 return (new Widget(c, (Coord) args[0], parent));
             }
         });
@@ -69,32 +71,28 @@ public class Widget {
 
     public static void initbardas() {
         try {
-            for (Class<?> c : barda)
+            for (final Class<?> c : barda)
                 Class.forName(c.getName(), true, c.getClassLoader());
         } catch (ClassNotFoundException e) {
             throw (new Error(e));
         }
     }
 
-    public static void addtype(String name, WidgetFactory fct) {
-        synchronized (types) {
-            types.put(name, fct);
-        }
+    public static void addtype(@NotNull final String name,@NotNull final WidgetFactory fct) {
+        types.put(name, fct);
     }
 
-    public static WidgetFactory gettype(String name) {
-        synchronized (types) {
-            return (types.get(name));
-        }
+    public static WidgetFactory gettype(@NotNull final String name) {
+        return (types.get(name));
     }
 
-    public Widget(UI ui, Coord c, Coord sz) {
+    public Widget(final UI ui, final Coord c, final Coord sz) {
         this.ui = ui;
         this.c = c;
         this.sz = sz;
     }
 
-    public Widget(Coord c, Coord sz, Widget parent) {
+    public Widget(final Coord c, final Coord sz, final Widget parent) {
         synchronized (parent.ui) {
             this.ui = parent.ui;
             this.c = c;
@@ -130,7 +128,7 @@ public class Widget {
         }
     }
 
-    public Coord xlate(Coord c, boolean in) {
+    public Coord xlate(final Coord c, final boolean in) {
         return (c);
     }
 
@@ -140,7 +138,7 @@ public class Widget {
         return (xlate(parent.rootpos().add(c), true));
     }
 
-    public boolean hasparent(Widget w2) {
+    public boolean hasparent(final Widget w2) {
         for (Widget w = this; w != null; w = w.parent) {
             if (w == w2)
                 return (true);
@@ -168,10 +166,10 @@ public class Widget {
         }
     }
 
-    public void setfocus(Widget w) {
+    public void setfocus(final Widget w) {
         if (focusctl) {
             if (w != focused) {
-                Widget last = focused;
+                final Widget last = focused;
                 focused = w;
                 if (last != null) {
                     last.hasfocus = false;
@@ -199,7 +197,7 @@ public class Widget {
         }
     }
 
-    public void setcanfocus(boolean canfocus) {
+    public void setcanfocus(final boolean canfocus) {
         this.autofocus = this.canfocus = canfocus;
         if (parent != null) {
             if (canfocus) {
@@ -210,7 +208,7 @@ public class Widget {
         }
     }
 
-    public void newfocusable(Widget w) {
+    public void newfocusable(final Widget w) {
         if (focusctl) {
             if (focused == null) {
                 setfocus(w);
@@ -220,7 +218,7 @@ public class Widget {
         }
     }
 
-    public void delfocusable(Widget w) {
+    public void delfocusable(final Widget w) {
         if (focusctl) {
             if (focused == w) {
                 findfocus();
@@ -243,21 +241,21 @@ public class Widget {
         }
     }
 
-    public void setfocusctl(boolean focusctl) {
+    public void setfocusctl(final boolean focusctl) {
         if (this.focusctl = focusctl) {
             findfocus();
             setcanfocus(true);
         }
     }
 
-    public void setfocustab(boolean focustab) {
+    public void setfocustab(final boolean focustab) {
         if (focustab && !focusctl) {
             setfocusctl(true);
         }
         this.focustab = focustab;
     }
 
-    public void uimsg(String msg, Object... args) {
+    public void uimsg(@NotNull final String msg, final Object... args) {
         if (msg.equals("tabfocus")) {
             setfocustab(((Integer) args[0] != 0));
         } else if (msg.equals("act")) {
@@ -267,11 +265,9 @@ public class Widget {
         } else if (msg.equals("autofocus")) {
             autofocus = (Integer) args[0] != 0;
         } else if (msg.equals("focus")) {
-            Widget w = ui.widgets.get(args[0]);
-            if (w != null) {
-                if (w.canfocus) {
-                    setfocus(w);
-                }
+            final Widget w = ui.widgets.get((Integer) args[0]);
+            if (w != null && w.canfocus) {
+                setfocus(w);
             }
         } else if (msg.equals("curs")) {
             if (args.length == 0)
@@ -287,18 +283,18 @@ public class Widget {
 
     }
 
-    public void wdgmsg(String msg, Object... args) {
+    public void wdgmsg(final String msg, final Object... args) {
         wdgmsg(this, msg, args);
     }
 
-    public void wdgmsg(Widget sender, String msg, Object... args) {
+    public void wdgmsg(final Widget sender, final String msg, final Object... args) {
         if (parent == null)
             ui.wdgmsg(sender, msg, args);
         else
             parent.wdgmsg(sender, msg, args);
     }
 
-    public void draw(GOut g) {
+    public void draw(final GOut g) {
         try {
             Widget next;
 
@@ -306,7 +302,7 @@ public class Widget {
                 next = wdg.next;
                 if (!wdg.visible || (!ui.root.visible && wdg.isui))
                     continue;
-                Coord cc = xlate(wdg.c, true);
+                final Coord cc = xlate(wdg.c, true);
                 wdg.draw(g.reclip(cc, wdg.sz));
             }
         } catch (IllegalAccessError e) {
@@ -314,11 +310,11 @@ public class Widget {
         }
     }
 
-    public boolean mousedown(Coord c, int button) {
+    public boolean mousedown(final Coord c, final int button) {
         for (Widget wdg = lchild; wdg != null; wdg = wdg.prev) {
             if (!wdg.visible)
                 continue;
-            Coord cc = xlate(wdg.c, true);
+            final Coord cc = xlate(wdg.c, true);
             if (c.isect(cc, (wdg.hsz == null) ? wdg.sz : wdg.hsz)) {
                 if (wdg.mousedown(c.sub(cc), button)) {
                     return (true);
@@ -328,11 +324,11 @@ public class Widget {
         return (false);
     }
 
-    public boolean mouseup(Coord c, int button) {
+    public boolean mouseup(final Coord c, final int button) {
         for (Widget wdg = lchild; wdg != null; wdg = wdg.prev) {
             if (!wdg.visible)
                 continue;
-            Coord cc = xlate(wdg.c, true);
+            final Coord cc = xlate(wdg.c, true);
             if (c.isect(cc, (wdg.hsz == null) ? wdg.sz : wdg.hsz)) {
                 if (wdg.mouseup(c.sub(cc), button)) {
                     return (true);
@@ -342,11 +338,11 @@ public class Widget {
         return (false);
     }
 
-    public boolean mousewheel(Coord c, int amount) {
+    public boolean mousewheel(final Coord c, final int amount) {
         for (Widget wdg = lchild; wdg != null; wdg = wdg.prev) {
             if (!wdg.visible)
                 continue;
-            Coord cc = xlate(wdg.c, true);
+            final Coord cc = xlate(wdg.c, true);
             if (c.isect(cc, (wdg.hsz == null) ? wdg.sz : wdg.hsz)) {
                 if (wdg.mousewheel(c.sub(cc), amount)) {
                     return (true);
@@ -356,16 +352,16 @@ public class Widget {
         return (false);
     }
 
-    public void mousemove(Coord c) {
+    public void mousemove(final Coord c) {
         for (Widget wdg = lchild; wdg != null; wdg = wdg.prev) {
             if (!wdg.visible)
                 continue;
-            Coord cc = xlate(wdg.c, true);
+            final Coord cc = xlate(wdg.c, true);
             wdg.mousemove(c.sub(cc));
         }
     }
 
-    public boolean globtype(char key, KeyEvent ev) {
+    public boolean globtype(final char key, final KeyEvent ev) {
         for (Widget wdg = child; wdg != null; wdg = wdg.next) {
             if (wdg.globtype(key, ev))
                 return (true);
@@ -373,7 +369,7 @@ public class Widget {
         return (false);
     }
 
-    public boolean type(char key, KeyEvent ev) {
+    public boolean type(final char key, final KeyEvent ev) {
         if (canactivate) {
             if (key == 10) {
                 wdgmsg("activate");
@@ -421,7 +417,7 @@ public class Widget {
         }
     }
 
-    public boolean keydown(KeyEvent ev) {
+    public boolean keydown(final KeyEvent ev) {
         if (focusctl) {
             if (focused != null) {
                 if (focused.keydown(ev))
@@ -439,7 +435,7 @@ public class Widget {
         return (false);
     }
 
-    public boolean keyup(KeyEvent ev) {
+    public boolean keyup(final KeyEvent ev) {
 //        if ((ev.getKeyCode() == KeyEvent.VK_X) && ((ev.getModifiers() & InputEvent.CTRL_MASK) != 0)) {
 //            CustomConfig.toggleXray();
 //            return (true);
@@ -487,24 +483,24 @@ public class Widget {
      * @deprecated this function is very slow, and may finds not expected widget (because DFS)
      */
     @Deprecated
-    public <T extends Widget> T findchild(Class<T> cl) {
+    public <T extends Widget> T findchild(final Class<T> cl) {
         for (Widget wdg = child; wdg != null; wdg = wdg.next) {
             if (cl.isInstance(wdg))
                 return (cl.cast(wdg));
-            T ret = wdg.findchild(cl);
+            final T ret = wdg.findchild(cl);
             if (ret != null)
                 return (ret);
         }
         return (null);
     }
 
-    public Resource getcurs(Coord c) {
+    public Resource getcurs(final Coord c) {
         Resource ret;
 
         for (Widget wdg = lchild; wdg != null; wdg = wdg.prev) {
             if (!wdg.visible)
                 continue;
-            Coord cc = xlate(wdg.c, true);
+            final Coord cc = xlate(wdg.c, true);
             if (c.isect(cc, wdg.sz)) {
                 if ((ret = wdg.getcurs(c.sub(cc))) != null)
                     return (ret);
@@ -522,7 +518,7 @@ public class Widget {
         setfocus(null);
     }
 
-    public Object tooltip(Coord c, boolean again) {
+    public Object tooltip(final Coord c, final boolean again) {
         if (tooltip != null) {
             prevtt = null;
             return (tooltip);
@@ -530,9 +526,9 @@ public class Widget {
         for (Widget wdg = lchild; wdg != null; wdg = wdg.prev) {
             if (!wdg.visible)
                 continue;
-            Coord cc = xlate(wdg.c, true);
+            final Coord cc = xlate(wdg.c, true);
             if (c.isect(cc, wdg.sz)) {
-                Object ret = wdg.tooltip(c.sub(cc), again && (wdg == prevtt));
+                final Object ret = wdg.tooltip(c.sub(cc), again && (wdg == prevtt));
                 if (ret != null) {
                     prevtt = wdg;
                     return (ret);
@@ -562,7 +558,7 @@ public class Widget {
      *
      * @param dt time delta in milliseconds
      */
-    public void update(long dt) {
+    public void update(final long dt) {
         for (Widget wdg = child; wdg != null; wdg = wdg.next) {
             wdg.update(dt);
         }

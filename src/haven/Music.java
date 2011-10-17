@@ -39,12 +39,12 @@ public class Music {
         enabled = Utils.parsebool(Utils.getpref("bgmen", "true"), true);
     }
 
-    private static void debug(String str) {
+    private static void debug(final String str) {
         if (debug)
             System.out.println(str);
     }
 
-    public static void setVolume(int vol) {
+    public static void setVolume(final int vol) {
         if (player != null)
             player.setVolume(vol);
     }
@@ -57,7 +57,7 @@ public class Music {
         private boolean done;
         private boolean loop = false;
 
-        private Player(Resource res, Thread waitfor, boolean loop) {
+        private Player(final Resource res, final Thread waitfor, final boolean loop) {
             super("Music player");
             setDaemon(true);
             this.res = res;
@@ -65,12 +65,12 @@ public class Music {
             this.loop = loop;
         }
 
-        public void setVolume(int vol) {
+        public void setVolume(final int vol) {
             // Changes the music volume
-            MidiChannel[] channels = synth.getChannels();
+            final MidiChannel[] channels = synth.getChannels();
 
             // gain is a value between 0 and 1 (loudest)
-            double gain = Math.sqrt((double) vol / 100);
+            final double gain = Math.sqrt((double) vol / 100);
             for (int i = 0; i < channels.length; i++) {
                 channels[i].controlChange(7, (int) (gain * 127));
                 channels[i].setMute(vol == 0);
@@ -104,7 +104,7 @@ public class Music {
                     throw (e);
                 }
                 seq.addMetaEventListener(new MetaEventListener() {
-                    public void meta(MetaMessage msg) {
+                    public void meta(final MetaMessage msg) {
                         debug("Meta " + msg.getType());
                         if (msg.getType() == 47) {
                             synchronized (Player.this) {
@@ -157,7 +157,7 @@ public class Music {
         }
     }
 
-    public static synchronized void play(Resource res, boolean loop) {
+    public static synchronized void play(final Resource res, final boolean loop) {
         stop();
         if (res == null) return;
         player = new Player(res, player, loop);
@@ -170,7 +170,7 @@ public class Music {
         player = null;
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(final String[] args) throws Exception {
         if (args.length < 1) return;
         Resource.addurl(new java.net.URL("https://www.havenandhearth.com/res/"));
         debug = true;
@@ -178,7 +178,7 @@ public class Music {
         player.join();
     }
 
-    public static void enable(boolean enabled) {
+    public static void enable(final boolean enabled) {
         if (!enabled)
             stop();
         Music.enabled = enabled;
@@ -187,7 +187,7 @@ public class Music {
 
     static {
         Console.setscmd("bgm", new Console.Command() {
-            public void run(Console cons, String[] args) {
+            public void run(final Console cons, final String[] args) {
                 int i = 1;
                 String opt;
                 boolean loop = false;
@@ -197,7 +197,7 @@ public class Music {
                         if (opt.equals("-l"))
                             loop = true;
                     }
-                    String resnm = args[i++];
+                    final String resnm = args[i++];
                     int ver = -1;
                     if (i < args.length) {
                         ver = Integer.parseInt(args[i]);
@@ -209,7 +209,7 @@ public class Music {
             }
         });
         Console.setscmd("bgmsw", new Console.Command() {
-            public void run(Console cons, String[] args) {
+            public void run(final Console cons, final String[] args) {
                 if (args.length < 2)
                     enable(!enabled);
                 else

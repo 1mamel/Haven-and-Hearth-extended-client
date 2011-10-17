@@ -18,7 +18,7 @@ import java.io.IOException;
 public class AudioL extends Layer {
     transient public byte[] clip;
 
-    public AudioL(byte[] buf) {
+    public AudioL(final byte[] buf) {
         try {
             clip = Utils.readall(new VorbisDecoder(new ByteArrayInputStream(buf)));
         } catch (IOException e) {

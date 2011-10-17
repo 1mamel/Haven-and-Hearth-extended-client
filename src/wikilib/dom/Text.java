@@ -34,7 +34,7 @@ public class Text implements Node {
         this.text = cleanText(text);
     }
 
-    private String cleanText(String text) {
+    private String cleanText(final String text) {
         String s = removeSpaces.matcher(text).replaceAll(" ");
         s = clean.matcher(s).replaceAll("");
         //s.replaceAll("<br/>","\n");

@@ -33,13 +33,13 @@ public class Profwnd extends HWindow {
     public long mt = 50000000;
     private static final int h = 80;
 
-    public Profwnd(Widget parent, Profile prof, String title) {
+    public Profwnd(final Widget parent, final Profile prof, final String title) {
         super(parent, title, true);
         this.prof = prof;
     }
 
-    public void draw(GOut g) {
-        long[] ttl = new long[prof.hist.length];
+    public void draw(final GOut g) {
+        final long[] ttl = new long[prof.hist.length];
         for (int i = 0; i < prof.hist.length; i++) {
             if (prof.hist[i] != null)
                 ttl[i] = prof.hist[i].total;
@@ -59,12 +59,12 @@ public class Profwnd extends HWindow {
         g.image(prof.draw(h, mt / h), new Coord(10, 10));
     }
 
-    public String tooltip(Coord c, boolean again) {
+    public String tooltip(final Coord c, final boolean again) {
         if ((c.x >= 10) && (c.x < 10 + prof.hist.length) && (c.y >= 10) && (c.y < 10 + h)) {
-            int x = c.x - 10;
-            int y = c.y - 10;
+            final int x = c.x - 10;
+            final int y = c.y - 10;
             long t = (h - y) * (mt / h);
-            Profile.Frame f = prof.hist[x];
+            final Profile.Frame f = prof.hist[x];
             if (f != null) {
                 for (int i = 0; i < f.prt.length; i++) {
                     if ((t -= f.prt[i]) < 0)
@@ -75,7 +75,7 @@ public class Profwnd extends HWindow {
         return ("");
     }
 
-    public void wdgmsg(Widget sender, String msg, Object... args) {
+    public void wdgmsg(final Widget sender, final String msg, final Object... args) {
         if (sender == cbtn) {
             ui.destroy(this);
         } else {

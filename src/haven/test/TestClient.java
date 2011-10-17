@@ -44,7 +44,7 @@ public class TestClient implements Runnable {
     public final Collection<Robot> robots = new HashSet<Robot>();
     private final static Object errsync = new Object();
 
-    public TestClient(String user) {
+    public TestClient(final String user) {
         try {
             addr = InetAddress.getByName("localhost");
         } catch (java.net.UnknownHostException e) {
@@ -53,7 +53,7 @@ public class TestClient implements Runnable {
         this.user = user;
         this.cookie = new byte[64];
         tg = new ThreadGroup(HackThread.tg(), "Test client") {
-            public void uncaughtException(Thread t, Throwable e) {
+            public void uncaughtException(final Thread t, final Throwable e) {
                 synchronized (errsync) {
                     System.err.println("Exception in test client: " + TestClient.this.user);
                     e.printStackTrace(System.err);
@@ -75,49 +75,49 @@ public class TestClient implements Runnable {
         }
     }
 
-    public void addbot(Robot bot) {
+    public void addbot(final Robot bot) {
         synchronized (robots) {
             robots.add(bot);
         }
     }
 
-    public void rembot(Robot bot) {
+    public void rembot(final Robot bot) {
         synchronized (robots) {
             robots.remove(bot);
         }
     }
 
     public class TestUI extends UI {
-        public TestUI(Coord sz, Session sess) {
+        public TestUI(final Coord sz, final Session sess) {
             super(sz, sess);
         }
 
-        public void newwidget(int id, String type, Coord c, int parent, Object... args) throws InterruptedException {
+        public void newwidget(final int id, final String type, final Coord c, final int parent, final Object... args) throws InterruptedException {
             super.newwidget(id, type, c, parent, args);
-            Widget w = widgets.get(id);
+            final Widget w = widgets.get(id);
             synchronized (robots) {
-                for (Robot r : robots)
+                for (final Robot r : robots)
                     r.newwdg(id, w, args);
             }
         }
 
-        public void destroy(Widget w) {
-            int id;
+        public void destroy(final Widget w) {
+            final int id;
             if (!rwidgets.containsKey(w))
                 id = -1;
             else
                 id = rwidgets.get(w);
             synchronized (robots) {
-                for (Robot r : robots)
+                for (final Robot r : robots)
                     r.dstwdg(id, w);
             }
             super.destroy(w);
         }
 
-        public void uimsg(int id, String msg, Object... args) {
-            Widget w = widgets.get(id);
+        public void uimsg(final int id, final String msg, final Object... args) {
+            final Widget w = widgets.get(id);
             synchronized (robots) {
-                for (Robot r : robots)
+                for (final Robot r : robots)
                     r.uimsg(id, w, msg, args);
             }
             super.uimsg(id, msg, args);
@@ -129,7 +129,7 @@ public class TestClient implements Runnable {
             try {
                 do {
                     connect();
-                    RemoteUI rui = new RemoteUI(sess);
+                    final RemoteUI rui = new RemoteUI(sess);
                     ui = new TestUI(new Coord(800, 600), sess);
                     rui.run(ui);
                 } while (loop);

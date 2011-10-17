@@ -37,14 +37,15 @@ public class ILM extends TexRT {
     Color amb;
 
     static {
-        int sz = 200, min = 50;
-        BufferedImage lb = new BufferedImage(sz, sz, BufferedImage.TYPE_INT_ARGB);
-        Graphics g = lb.createGraphics();
+        final int sz = 200;
+        final int min = 50;
+        final BufferedImage lb = new BufferedImage(sz, sz, BufferedImage.TYPE_INT_ARGB);
+        final Graphics g = lb.createGraphics();
         for (int y = 0; y < sz; y++) {
             for (int x = 0; x < sz; x++) {
-                double dx = sz / 2 - x;
-                double dy = sz / 2 - y;
-                double d = Math.sqrt(dx * dx + dy * dy);
+                final double dx = sz / 2 - x;
+                final double dy = sz / 2 - y;
+                final double d = Math.sqrt(dx * dx + dy * dy);
                 int gs;
                 if (d > sz / 2)
                     gs = 255;
@@ -53,7 +54,7 @@ public class ILM extends TexRT {
                 else
                     gs = (int) (((d - min) / ((sz / 2) - min)) * 255);
                 gs /= 2;
-                Color c = new Color(gs, gs, gs, 128 - gs);
+                final Color c = new Color(gs, gs, gs, 128 - gs);
                 g.setColor(c);
                 g.fillRect(x, y, 1, 1);
             }
@@ -65,35 +66,35 @@ public class ILM extends TexRT {
 //        dim = sz;
 //    }
 
-    public ILM(Coord sz, OCache oc) {
+    public ILM(final Coord sz, final OCache oc) {
         super(sz);
         this.oc = oc;
         amb = new Color(0, 0, 0, 0);
         lbtex = new TexI(ljusboll);
     }
 
-    protected Color setenv(GL gl) {
+    protected Color setenv(final GL gl) {
         gl.glTexEnvi(GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, GL.GL_MODULATE);
         return (amb);
     }
 
-    protected boolean subrend(GOut g) {
+    protected boolean subrend(final GOut g) {
         if (CustomConfig.hasNightVision) {
             return false;
         }
-        GL gl = g.gl;
+        final GL gl = g.gl;
         gl.glClearColor(255, 255, 255, 255);
         gl.glClear(GL.GL_COLOR_BUFFER_BIT);
         synchronized (oc) {
-            for (Gob gob : oc) {
+            for (final Gob gob : oc) {
                 if (gob.sc == null) {
                     /* Might not have been set up by the MapView yet */
                     continue;
                 }
-                Lumin lum = gob.getattr(Lumin.class);
+                final Lumin lum = gob.getattr(Lumin.class);
                 if (lum == null)
                     continue;
-                Coord sc = gob.sc.add(lum.off).add(-lum.sz, -lum.sz);
+                final Coord sc = gob.sc.add(lum.off).add(-lum.sz, -lum.sz);
                 g.image(lbtex, sc, new Coord(lum.sz * 2, lum.sz * 2));
             }
         }

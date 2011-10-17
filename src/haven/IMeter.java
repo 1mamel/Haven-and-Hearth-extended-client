@@ -27,6 +27,7 @@
 package haven;
 
 import haven.scriptengine.providers.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.util.LinkedList;
@@ -41,21 +42,21 @@ public class IMeter extends Widget {
 
     static {
         Widget.addtype("im", new WidgetFactory() {
-            public Widget create(Coord c, Widget parent, Object[] args) {
-                Resource bg = Resource.load((String) args[0]);
-                List<Meter> meters = new LinkedList<Meter>();
+            public Widget create(final Coord c, final Widget parent, final Object[] args) {
+                final Resource bg = Resource.load((String) args[0]);
+                final List<Meter> meters = new LinkedList<Meter>();
                 for (int i = 1; i < args.length; i += 2) {
                     //noinspection ObjectAllocationInLoop
                     meters.add(new Meter((Color) args[i], (Integer) args[i + 1]));
                 }
-                IMeter res = new IMeter(c, parent, bg, meters);
+                final IMeter res = new IMeter(c, parent, bg, meters);
                 Player.iMeterGenerated(res, (String) args[0]);
                 return res;
             }
         });
     }
 
-    public IMeter(Coord c, Widget parent, Resource bg, List<Meter> meters) {
+    public IMeter(final Coord c, final Widget parent, final Resource bg, final List<Meter> meters) {
         super(c, fsz, parent);
         this.bg = bg;
         this.meters = meters;
@@ -65,19 +66,19 @@ public class IMeter extends Widget {
         final Color c;
         final int a;
 
-        public Meter(Color c, int a) {
+        public Meter(final Color c, final int a) {
             this.c = c;
             this.a = a;
         }
     }
 
-    public void draw(GOut g) {
+    public void draw(final GOut g) {
         if (!bg.loading.get()) {
-            Tex bg = this.bg.layer(Resource.imgc).tex();
+            final Tex bg = this.bg.layer(Resource.imgc).tex();
             g.chcolor(0, 0, 0, 255);
             g.frect(off, msz);
             g.chcolor();
-            for (Meter m : meters) {
+            for (final Meter m : meters) {
                 int w = msz.x;
                 w = (w * m.a) / 100;
                 g.chcolor(m.c);
@@ -88,9 +89,9 @@ public class IMeter extends Widget {
         }
     }
 
-    public void uimsg(String msg, Object... args) {
+    public void uimsg(@NotNull final String msg, final Object... args) {
         if (msg.equals("set")) {
-            List<Meter> meters = new LinkedList<Meter>();
+            final List<Meter> meters = new LinkedList<Meter>();
             for (int i = 0; i < args.length; i += 2) {
                 //noinspection ObjectAllocationInLoop
                 meters.add(new Meter((Color) args[i], (Integer) args[i + 1]));

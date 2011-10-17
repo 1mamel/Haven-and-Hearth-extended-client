@@ -47,7 +47,7 @@ public class RichText extends Text {
     public List<Part> parts;
 
     static {
-        Map<Attribute, Object> a = new HashMap<Attribute, Object>();
+        final Map<Attribute, Object> a = new HashMap<Attribute, Object>();
         a.put(TextAttribute.FAMILY, "SansSerif");
         a.put(TextAttribute.SIZE, 10);
         std = new Parser(a);
@@ -62,16 +62,16 @@ public class RichText extends Text {
         }
     }
 
-    private RichText(String text) {
+    private RichText(final String text) {
         super(text);
     }
 
-    public String actionat(Coord c) {
-        for (Part part : parts) {
+    public String actionat(final Coord c) {
+        for (final Part part : parts) {
             if (c.isect(new Coord(part.x, part.y), new Coord(part.width(), part.height()))) {
                 String action = null;
                 if (part instanceof TextPart) {
-                    TextPart tp = (TextPart) part;
+                    final TextPart tp = (TextPart) part;
                     action = tp.getAction(tp.charAt(c.x - part.x));
                 }
                 return action;
@@ -83,7 +83,7 @@ public class RichText extends Text {
     private static class RState {
         final FontRenderContext frc;
 
-        RState(FontRenderContext frc) {
+        RState(final FontRenderContext frc) {
             this.frc = frc;
         }
     }
@@ -91,13 +91,13 @@ public class RichText extends Text {
     private static class PState {
         final PeekReader in;
 
-        PState(PeekReader in) {
+        PState(final PeekReader in) {
             this.in = in;
         }
     }
 
     public static class FormatException extends RuntimeException {
-        public FormatException(String msg) {
+        public FormatException(final String msg) {
             super(msg);
         }
     }
@@ -107,14 +107,14 @@ public class RichText extends Text {
         public int x, y;
         public RState rs;
 
-        public void append(Part p) {
+        public void append(final Part p) {
             if (next == null)
                 next = p;
             else
                 next.append(p);
         }
 
-        public void prepare(RState rs) {
+        public void prepare(final RState rs) {
             this.rs = rs;
             if (next != null)
                 next.prepare(rs);
@@ -132,10 +132,10 @@ public class RichText extends Text {
             return (0);
         }
 
-        public void render(Graphics2D g) {
+        public void render(final Graphics2D g) {
         }
 
-        public Part split(int w) {
+        public Part split(final int w) {
             return (null);
         }
     }
@@ -143,13 +143,13 @@ public class RichText extends Text {
     public static class Image extends Part {
         public BufferedImage img;
 
-        public Image(BufferedImage img) {
+        public Image(final BufferedImage img) {
             this.img = img;
         }
 
-        public Image(Resource res, int id) {
+        public Image(final Resource res, final int id) {
             res.loadwait();
-            for (haven.resources.layers.Image img : res.layers(Resource.imgc)) {
+            for (final haven.resources.layers.Image img : res.layers(Resource.imgc)) {
                 if (img.id == id) {
                     this.img = img.img;
                     break;
@@ -171,7 +171,7 @@ public class RichText extends Text {
             return (img.getHeight() - 1);
         }
 
-        public void render(Graphics2D g) {
+        public void render(final Graphics2D g) {
             g.drawImage(img, x, y, null);
         }
     }
@@ -180,7 +180,7 @@ public class RichText extends Text {
         private final Map<? extends Attribute, ?> attrs;
         private LineMetrics lm;
 
-        public Newline(Map<? extends Attribute, ?> attrs) {
+        public Newline(final Map<? extends Attribute, ?> attrs) {
             this.attrs = attrs;
         }
 
@@ -211,17 +211,17 @@ public class RichText extends Text {
         private TextMeasurer tm = null;
         private TextLayout tl = null;
 
-        public TextPart(AttributedString str, int start, int end) {
+        public TextPart(final AttributedString str, final int start, final int end) {
             this.str = str;
             this.start = start;
             this.end = end;
         }
 
-        public TextPart(String str, Map<? extends Attribute, ?> attrs) {
+        public TextPart(final String str, final Map<? extends Attribute, ?> attrs) {
             this((str.length() == 0) ? (new AttributedString(str)) : (new AttributedString(str, attrs)), 0, str.length());
         }
 
-        public TextPart(String str) {
+        public TextPart(final String str) {
             this(new AttributedString(str), 0, str.length());
         }
 
@@ -229,8 +229,8 @@ public class RichText extends Text {
             return getAction(0);
         }
 
-        public String getAction(int index) {
-            AttributedCharacterIterator aci = str.getIterator();
+        public String getAction(final int index) {
+            final AttributedCharacterIterator aci = str.getIterator();
             aci.setIndex(start + index);
             return (String) aci.getAttributes().get(ActionAttribute.ACTION);
         }
@@ -239,10 +239,10 @@ public class RichText extends Text {
             return (str.getIterator(null, start, end));
         }
 
-        public void append(Part p) {
+        public void append(final Part p) {
             if (next == null) {
                 if (p instanceof TextPart) {
-                    TextPart tp = (TextPart) p;
+                    final TextPart tp = (TextPart) p;
                     str = AttributedStringBuffer.concat(ti(), tp.ti());
                     end = (end - start) + (tp.end - tp.start);
                     start = 0;
@@ -272,7 +272,7 @@ public class RichText extends Text {
             return ((int) tm().getAdvanceBetween(start, end));
         }
 
-        public int charAt(int x) {
+        public int charAt(final int x) {
             for (int i = start + 1; i < end; i++) {
                 if (x < tm().getAdvanceBetween(start, i))
                     return i - start - 1;
@@ -290,23 +290,23 @@ public class RichText extends Text {
             return ((int) tl().getAscent());
         }
 
-        private Part split2(int e1, int s2) {
-            TextPart p1 = new TextPart(str, start, e1);
-            TextPart p2 = new TextPart(str, s2, end);
+        private Part split2(final int e1, final int s2) {
+            final TextPart p1 = new TextPart(str, start, e1);
+            final TextPart p2 = new TextPart(str, s2, end);
             p1.next = p2;
             p2.next = next;
             p1.rs = p2.rs = rs;
             return (p1);
         }
 
-        public Part split(int w) {
+        public Part split(final int w) {
             if ((end - start) <= 1) {
                 return null;
             }
             int l = start, r = end;
             while (true) {
-                int t = l + ((r - l) / 2);
-                int tw;
+                final int t = l + ((r - l) / 2);
+                final int tw;
                 if (t == l)
                     tw = 0;
                 else
@@ -319,7 +319,7 @@ public class RichText extends Text {
                 if (l >= r - 1)
                     break;
             }
-            CharacterIterator it = str.getIterator();
+            final CharacterIterator it = str.getIterator();
             for (int i = l; i >= start; i--) {
                 if (Character.isWhitespace(it.setIndex(i))) {
                     return (split2(i, i + 1));
@@ -331,14 +331,14 @@ public class RichText extends Text {
             return (split2(l, l));
         }
 
-        public void render(Graphics2D g) {
+        public void render(final Graphics2D g) {
             if (start == end) return;
             tl().draw(g, x, y + tl().getAscent());
         }
     }
 
-    private static Map<? extends Attribute, ?> fillattrs(Object... attrs) {
-        Map<Attribute, Object> a = new HashMap<Attribute, Object>(std.defattrs);
+    private static Map<? extends Attribute, ?> fillattrs(final Object... attrs) {
+        final Map<Attribute, Object> a = new HashMap<Attribute, Object>(std.defattrs);
         for (int i = 0; i < attrs.length; i += 2)
             a.put((Attribute) attrs[i], attrs[i + 1]);
         return (a);
@@ -354,9 +354,9 @@ public class RichText extends Text {
     * in the rest of the code, so this function gets to collect all
     * the ugliness of conversion in itself.
     */
-    private static Map<? extends Attribute, ?> fixattrs(Map<? extends Attribute, ?> attrs) {
-        Map<Attribute, Object> ret = new HashMap<Attribute, Object>();
-        for (Map.Entry<? extends Attribute, ?> e : attrs.entrySet()) {
+    private static Map<? extends Attribute, ?> fixattrs(final Map<? extends Attribute, ?> attrs) {
+        final Map<Attribute, Object> ret = new HashMap<Attribute, Object>();
+        for (final Map.Entry<? extends Attribute, ?> e : attrs.entrySet()) {
             if (e.getKey() == TextAttribute.SIZE) {
                 ret.put(e.getKey(), ((Number) e.getValue()).floatValue());
             } else {
@@ -369,22 +369,22 @@ public class RichText extends Text {
     public static class Parser {
         private final Map<? extends Attribute, ?> defattrs;
 
-        public Parser(Map<? extends Attribute, ?> defattrs) {
+        public Parser(final Map<? extends Attribute, ?> defattrs) {
             this.defattrs = fixattrs(defattrs);
         }
 
-        public Parser(Object... attrs) {
+        public Parser(final Object... attrs) {
             this(fillattrs(attrs));
         }
 
-        private static boolean namechar(char c) {
+        private static boolean namechar(final char c) {
             return ((c == ':') || (c == '_') || (c == '$') || (c == '.') || (c == '-') || ((c >= '0') && (c <= '9')) || ((c >= 'A') && (c <= 'Z')) || ((c >= 'a') && (c <= 'z')));
         }
 
-        private static String name(PeekReader in) throws IOException {
-            StringBuilder buf = new StringBuilder();
+        private static String name(final PeekReader in) throws IOException {
+            final StringBuilder buf = new StringBuilder();
             while (true) {
-                int c = in.peek();
+                final int c = in.peek();
                 if (c < 0) {
                     break;
                 } else if (namechar((char) c)) {
@@ -398,25 +398,25 @@ public class RichText extends Text {
             return (buf.toString());
         }
 
-        private static Color a2col(String[] args) {
-            int r = Integer.parseInt(args[0]);
-            int g = Integer.parseInt(args[1]);
-            int b = Integer.parseInt(args[2]);
+        private static Color a2col(final String[] args) {
+            final int r = Integer.parseInt(args[0]);
+            final int g = Integer.parseInt(args[1]);
+            final int b = Integer.parseInt(args[2]);
             int a = 255;
             if (args.length > 3)
                 a = Integer.parseInt(args[3]);
             return (new Color(r, g, b, a));
         }
 
-        private static Part tag(PState s, Map<? extends Attribute, ?> attrs) throws IOException {
+        private static Part tag(final PState s, final Map<? extends Attribute, ?> attrs) throws IOException {
             s.in.peek(true);
-            String tn = name(s.in).intern();
-            String[] args;
+            final String tn = name(s.in).intern();
+            final String[] args;
             if (s.in.peek(true) == '[') {
                 s.in.read();
-                StringBuilder buf = new StringBuilder();
+                final StringBuilder buf = new StringBuilder();
                 while (true) {
-                    int c = s.in.peek();
+                    final int c = s.in.peek();
                     if (c < 0) {
                         throw (new FormatException("Unexpected end-of-input when reading tag arguments"));
                     } else if (c == ']') {
@@ -431,13 +431,13 @@ public class RichText extends Text {
                 args = new String[0];
             }
             if (tn.equals("img")) {
-                Resource res = Resource.load(args[0]);
+                final Resource res = Resource.load(args[0]);
                 int id = -1;
                 if (args.length > 1)
                     id = Integer.parseInt(args[1]);
                 return (new Image(res, id));
             } else {
-                Map<Attribute, Object> na = new HashMap<Attribute, Object>(attrs);
+                final Map<Attribute, Object> na = new HashMap<Attribute, Object>(attrs);
                 if (tn.equals("font")) {
                     na.put(TextAttribute.FAMILY, args[0]);
                     if (args.length > 1)
@@ -464,8 +464,8 @@ public class RichText extends Text {
             }
         }
 
-        private static Part text(PState s, Map<? extends Attribute, ?> attrs) throws IOException {
-            Part buf = new TextPart("");
+        private static Part text(final PState s, final Map<? extends Attribute, ?> attrs) throws IOException {
+            final Part buf = new TextPart("");
             StringBuilder tbuf = new StringBuilder();
             while (true) {
                 int c = s.in.read();
@@ -496,17 +496,17 @@ public class RichText extends Text {
             return (buf);
         }
 
-        private static Part parse(PState s, Map<? extends Attribute, ?> attrs) throws IOException {
-            Part res = text(s, attrs);
+        private static Part parse(final PState s, final Map<? extends Attribute, ?> attrs) throws IOException {
+            final Part res = text(s, attrs);
             if (s.in.peek() >= 0)
                 throw (new FormatException("Junk left after the end of input: " + (char) s.in.peek()));
             return (res);
         }
 
-        public Part parse(Reader in, Map<? extends Attribute, ?> extra) throws IOException {
-            PState s = new PState(new PeekReader(in));
+        public Part parse(final Reader in, final Map<? extends Attribute, ?> extra) throws IOException {
+            final PState s = new PState(new PeekReader(in));
             if (extra != null) {
-                Map<Attribute, Object> attrs = new HashMap<Attribute, Object>();
+                final Map<Attribute, Object> attrs = new HashMap<Attribute, Object>();
                 attrs.putAll(defattrs);
                 attrs.putAll(extra);
                 return (parse(s, attrs));
@@ -515,11 +515,11 @@ public class RichText extends Text {
             }
         }
 
-        public Part parse(Reader in) throws IOException {
+        public Part parse(final Reader in) throws IOException {
             return (parse(in, null));
         }
 
-        public Part parse(String text, Map<? extends Attribute, ?> extra) {
+        public Part parse(final String text, final Map<? extends Attribute, ?> extra) {
             try {
                 return (parse(new StringReader(text), extra));
             } catch (IOException e) {
@@ -527,14 +527,14 @@ public class RichText extends Text {
             }
         }
 
-        public Part parse(String text) {
+        public Part parse(final String text) {
             return (parse(text, null));
         }
 
-        public static String quote(String in) {
-            StringBuilder buf = new StringBuilder();
+        public static String quote(final String in) {
+            final StringBuilder buf = new StringBuilder();
             for (int i = 0; i < in.length(); i++) {
-                char c = in.charAt(i);
+                final char c = in.charAt(i);
                 if ((c == '$') || (c == '{') || (c == '}')) {
                     buf.append('$');
                     buf.append(c);
@@ -551,45 +551,45 @@ public class RichText extends Text {
         private final RState rs;
         public boolean aa = false;
 
-        private Foundry(Parser parser) {
+        private Foundry(final Parser parser) {
             this.parser = parser;
-            BufferedImage junk = TexI.mkbuf(new Coord(10, 10));
-            Graphics2D g = junk.createGraphics();
+            final BufferedImage junk = TexI.mkbuf(new Coord(10, 10));
+            final Graphics2D g = junk.createGraphics();
             rs = new RState(g.getFontRenderContext());
         }
 
-        public Foundry(Map<? extends Attribute, ?> defattrs) {
+        public Foundry(final Map<? extends Attribute, ?> defattrs) {
             this(new Parser(defattrs));
         }
 
-        public Foundry(Object... attrs) {
+        public Foundry(final Object... attrs) {
             this(new Parser(attrs));
         }
 
-        private static Map<? extends Attribute, ?> xlate(Font f, Color defcol) {
-            Map<Attribute, Object> attrs = new HashMap<Attribute, Object>();
+        private static Map<? extends Attribute, ?> xlate(final Font f, final Color defcol) {
+            final Map<Attribute, Object> attrs = new HashMap<Attribute, Object>();
             attrs.put(TextAttribute.FONT, f);
             attrs.put(TextAttribute.FOREGROUND, defcol);
             return (attrs);
         }
 
-        public Foundry(Font f, Color defcol) {
+        public Foundry(final Font f, final Color defcol) {
             this(xlate(f, defcol));
         }
 
-        private static void aline/* Hurrhurr, pun intended*/(List<Part> line, int y) {
+        private static void aline/* Hurrhurr, pun intended*/(final List<Part> line, final int y) {
             int mb = 0;
-            for (Part p : line) {
-                int cb = p.baseline();
+            for (final Part p : line) {
+                final int cb = p.baseline();
                 if (cb > mb) mb = cb;
             }
-            for (Part p : line) {
+            for (final Part p : line) {
                 p.y = y + mb - p.baseline();
             }
         }
 
-        private static List<Part> layout(Part fp, int w) {
-            List<Part> ret = new LinkedList<Part>();
+        private static List<Part> layout(final Part fp, final int w) {
+            final List<Part> ret = new LinkedList<Part>();
             List<Part> line = new LinkedList<Part>();
             int x = 0, y = 0;
             int mw = 0, lh = 0;
@@ -603,7 +603,7 @@ public class RichText extends Text {
                     if (w > 0) {
                         if (p.x + pw > w) {
                             lb = true;
-                            Part tmp = p.split(w - x);
+                            final Part tmp = p.split(w - x);
                             if (tmp != null) {
                                 p = tmp;
                                 continue;
@@ -631,57 +631,57 @@ public class RichText extends Text {
             return (ret);
         }
 
-        private static Coord bounds(Collection<Part> parts) {
-            Coord sz = new Coord(0, 0);
-            for (Part p : parts) {
-                int x = p.x + p.width();
-                int y = p.y + p.height();
+        private static Coord bounds(final Collection<Part> parts) {
+            final Coord sz = new Coord(0, 0);
+            for (final Part p : parts) {
+                final int x = p.x + p.width();
+                final int y = p.y + p.height();
                 if (x > sz.x) sz.setX(x);
                 if (y > sz.y) sz.setY(y);
             }
             return (sz);
         }
 
-        public RichText render(String text, int width, Object... extra) {
-            RichText rt = new RichText(text);
+        public RichText render(final String text, final int width, final Object... extra) {
+            final RichText rt = new RichText(text);
             Map<? extends Attribute, ?> extram = null;
             if (extra.length > 0) {
                 extram = fillattrs(extra);
             }
-            Part fp = parser.parse(text, extram);
+            final Part fp = parser.parse(text, extram);
             fp.prepare(rs);
             rt.parts = layout(fp, width);
             Coord sz = bounds(rt.parts);
             if ((width > 0) && (sz.x > width)) sz.setX(width);
             if (sz.x < 1) sz = sz.add(1, 0);
             if (sz.y < 1) sz = sz.add(0, 1);
-            BufferedImage img = TexI.mkbuf(sz);
-            Graphics2D g = img.createGraphics();
+            final BufferedImage img = TexI.mkbuf(sz);
+            final Graphics2D g = img.createGraphics();
             if (aa)
                 Utils.AA(g);
             rt.img = img;
-            for (Part p : rt.parts)
+            for (final Part p : rt.parts)
                 p.render(g);
             return (rt);
         }
 
-        public RichText render(String text) {
+        public RichText render(final String text) {
             return (render(text, 0));
         }
     }
 
-    public static RichText render(String text, int width, Object... extra) {
+    public static RichText render(final String text, final int width, final Object... extra) {
         return (stdf.render(text, width, extra));
     }
 
-    public static void main(String[] args) throws Exception {
-        String cmd = args[0].intern();
+    public static void main(final String[] args) throws Exception {
+        final String cmd = args[0].intern();
         if (cmd.equals("render")) {
-            Map<Attribute, Object> a = new HashMap<Attribute, Object>(std.defattrs);
-            PosixArgs opt = PosixArgs.getopt(args, 1, "aw:f:s:");
+            final Map<Attribute, Object> a = new HashMap<Attribute, Object>(std.defattrs);
+            final PosixArgs opt = PosixArgs.getopt(args, 1, "aw:f:s:");
             boolean aa = false;
             int width = 0;
-            for (char c : opt.parsed()) {
+            for (final char c : opt.parsed()) {
                 if (c == 'a') {
                     aa = true;
                 } else if (c == 'f') {
@@ -692,32 +692,32 @@ public class RichText extends Text {
                     a.put(TextAttribute.SIZE, Integer.parseInt(opt.arg));
                 }
             }
-            Foundry fnd = new Foundry(a);
+            final Foundry fnd = new Foundry(a);
             fnd.aa = aa;
-            RichText t = fnd.render(opt.rest[0], width);
-            java.io.OutputStream out = new java.io.FileOutputStream(opt.rest[1]);
+            final RichText t = fnd.render(opt.rest[0], width);
+            final java.io.OutputStream out = new java.io.FileOutputStream(opt.rest[1]);
             javax.imageio.ImageIO.write(t.img, "PNG", out);
             out.close();
         } else if (cmd.equals("pagina")) {
-            PosixArgs opt = PosixArgs.getopt(args, 1, "aw:");
+            final PosixArgs opt = PosixArgs.getopt(args, 1, "aw:");
             boolean aa = false;
             int width = 0;
-            for (char c : opt.parsed()) {
+            for (final char c : opt.parsed()) {
                 if (c == 'a') {
                     aa = true;
                 } else if (c == 'w') {
                     width = Integer.parseInt(opt.arg);
                 }
             }
-            Foundry fnd = new Foundry();
+            final Foundry fnd = new Foundry();
             fnd.aa = aa;
-            Resource res = Resource.load(opt.rest[0]);
+            final Resource res = Resource.load(opt.rest[0]);
             res.loadwaitint();
-            Pagina p = res.layer(Resource.pagina);
+            final Pagina p = res.layer(Resource.pagina);
             if (p == null)
                 throw (new Exception("No pagina in " + res + ", loaded from " + res.source));
-            RichText t = fnd.render(p.text, width);
-            java.io.OutputStream out = new java.io.FileOutputStream(opt.rest[1]);
+            final RichText t = fnd.render(p.text, width);
+            final java.io.OutputStream out = new java.io.FileOutputStream(opt.rest[1]);
             javax.imageio.ImageIO.write(t.img, "PNG", out);
             out.close();
         }

@@ -11,7 +11,7 @@ import java.util.List;
 
 public class HavenTextureResExtractor {
 
-    public static List<Image> load(InputStream in, ResourceMetaData meta) throws Exception {
+    public static List<Image> load(final InputStream in, final ResourceMetaData meta) throws Exception {
         final String sig = "Haven Resource 1";
         final byte[] sigBuf = new byte[sig.length()];
         readall(in, sigBuf);
@@ -27,8 +27,8 @@ public class HavenTextureResExtractor {
         while (true) {
             final StringBuilder tbuf = new StringBuilder();
             while (true) {
-                byte bb;
-                int ib;
+                final byte bb;
+                final int ib;
                 if ((ib = in.read()) == -1) {
                     if (tbuf.length() == 0)
                         break outer;
@@ -41,7 +41,7 @@ public class HavenTextureResExtractor {
             }
             final byte[] lenBuf = new byte[4];
             readall(in, lenBuf);
-            int len = Utils.int32d(lenBuf, 0);
+            final int len = Utils.int32d(lenBuf, 0);
             TestTextureExtractor.log("len=" + len);
             final byte[] layerBuf = new byte[len];
             readall(in, layerBuf);
@@ -57,22 +57,22 @@ public class HavenTextureResExtractor {
                 meta.imgFlags.put(img, imgFlags.toByteArray());
             } else {
                 TestTextureExtractor.log("non image layer found:" + layerTypeName);
-                byte[] layerNameBytes = layerTypeName.getBytes();
-                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                final byte[] layerNameBytes = layerTypeName.getBytes();
+                final ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                 bytes.write(layerNameBytes);//layer name
-                byte nullByte = 0;
+                final byte nullByte = 0;
                 bytes.write(nullByte);//null terminator
                 bytes.write(lenBuf);//byte length
                 bytes.write(layerBuf);//byte data
                 meta.nonImgLayers.add(bytes.toByteArray());
             }
         }
-        for (Layer l : layers)
+        for (final Layer l : layers)
             l.init();
         return layers;
     }
 
-    private static void readall(InputStream in, byte[] buf) throws Exception {
+    private static void readall(final InputStream in, final byte[] buf) throws Exception {
         int ret, off = 0;
         while (off < buf.length) {
             ret = in.read(buf, off, buf.length - off);

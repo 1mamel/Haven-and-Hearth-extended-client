@@ -24,9 +24,9 @@ public class CodeEntry extends Layer {
     final transient private Map<Class<?>, Object> ipe = new HashMap<Class<?>, Object>();
     private Resource resource;
 
-    public CodeEntry(Resource resource, byte[] buf) {
+    public CodeEntry(final Resource resource, final byte[] buf) {
         this.resource = resource;
-        int[] off = new int[1];
+        final int[] off = new int[1];
         off[0] = 0;
         while (off[0] < buf.length) {
             pe.put(Utils.strd(buf, off), Utils.strd(buf, off));
@@ -34,12 +34,12 @@ public class CodeEntry extends Layer {
     }
 
     public void init() {
-        for (Code c : resource.layers(Code.class)) {
+        for (final Code c : resource.layers(Code.class)) {
             clmap.put(c.name, c);
         }
-        ClassLoader loader = new ResClassLoader(Resource.class.getClassLoader(), resource) {
-            public Class<?> findClass(String name) throws ClassNotFoundException {
-                Code c = clmap.get(name);
+        final ClassLoader loader = new ResClassLoader(Resource.class.getClassLoader(), resource) {
+            public Class<?> findClass(final String name) throws ClassNotFoundException {
+                final Code c = clmap.get(name);
                 if (c == null) {
                     throw (new ClassNotFoundException("Could not find class " + name + " in resource (" + resource + ')'));
                 }
@@ -47,10 +47,10 @@ public class CodeEntry extends Layer {
             }
         };
         try {
-            for (Map.Entry<String, String> e : pe.entrySet()) {
-                String name = e.getKey();
-                String clnm = e.getValue();
-                Class<?> cl = loader.loadClass(clnm);
+            for (final Map.Entry<String, String> e : pe.entrySet()) {
+                final String name = e.getKey();
+                final String clnm = e.getValue();
+                final Class<?> cl = loader.loadClass(clnm);
                 lpe.put(name, cl);
             }
         } catch (ClassNotFoundException e) {
@@ -58,11 +58,11 @@ public class CodeEntry extends Layer {
         }
     }
 
-    public <T> T get(Class<T> cl) {
-        Resource.PublishedCode entry = cl.getAnnotation(Resource.PublishedCode.class);
+    public <T> T get(final Class<T> cl) {
+        final Resource.PublishedCode entry = cl.getAnnotation(Resource.PublishedCode.class);
         if (entry == null)
             throw (new RuntimeException("Tried to fetch non-published res-loaded class " + cl.getName() + " from " + resource.name));
-        Class<?> acl;
+        final Class<?> acl;
         synchronized (lpe) {
             if (lpe.get(entry.name()) == null) {
                 throw (new RuntimeException("Tried to fetch non-present res-loaded class " + cl.getName() + " from " + resource.name));
@@ -75,7 +75,7 @@ public class CodeEntry extends Layer {
                 if (ipe.get(acl) != null) {
                     return (cl.cast(ipe.get(acl)));
                 } else {
-                    T inst;
+                    final T inst;
                     if (entry.instancer() != Resource.PublishedCode.Instancer.class)
                         inst = cl.cast(entry.instancer().newInstance().make(acl));
                     else

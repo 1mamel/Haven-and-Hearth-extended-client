@@ -38,7 +38,7 @@ public interface ErrorStatus {
     public void senderror(Exception e);
 
     public static class Simple implements ErrorStatus {
-        public boolean goterror(Throwable t) {
+        public boolean goterror(final Throwable t) {
             System.err.println("Caught error: " + t);
             return (true);
         }
@@ -55,7 +55,7 @@ public interface ErrorStatus {
             System.err.println("Done");
         }
 
-        public void senderror(Exception e) {
+        public void senderror(final Exception e) {
             System.err.println("Error while sending error:");
             e.printStackTrace(System.err);
         }

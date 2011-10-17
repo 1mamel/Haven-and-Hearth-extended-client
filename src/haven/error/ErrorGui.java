@@ -41,7 +41,7 @@ public abstract class ErrorGui extends JDialog implements ErrorStatus {
     private Thread reporter;
     private boolean done;
 
-    public ErrorGui(java.awt.Frame parent) {
+    public ErrorGui(final java.awt.Frame parent) {
         super(parent, "Haven error!", true);
         setMinimumSize(new Dimension(300, 100));
         setResizable(false);
@@ -54,7 +54,7 @@ public abstract class ErrorGui extends JDialog implements ErrorStatus {
                 setAlignmentX(0);
                 add(closebtn = new JButton("Close") {{
                     addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent ev) {
+                        public void actionPerformed(final ActionEvent ev) {
                             ErrorGui.this.dispose();
                             synchronized (ErrorGui.this) {
                                 done = true;
@@ -65,7 +65,7 @@ public abstract class ErrorGui extends JDialog implements ErrorStatus {
                 }});
                 add(detbtn = new JButton("Details >>>") {{
                     addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent ev) {
+                        public void actionPerformed(final ActionEvent ev) {
                             if (details.isVisible()) {
                                 details.setVisible(false);
                                 detbtn.setText("Details >>>");
@@ -88,7 +88,7 @@ public abstract class ErrorGui extends JDialog implements ErrorStatus {
             }});
         }});
         addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent ev) {
+            public void windowClosing(final WindowEvent ev) {
                 ErrorGui.this.dispose();
                 synchronized (ErrorGui.this) {
                     done = true;
@@ -100,9 +100,9 @@ public abstract class ErrorGui extends JDialog implements ErrorStatus {
         pack();
     }
 
-    public boolean goterror(Throwable t) {
+    public boolean goterror(final Throwable t) {
         reporter = Thread.currentThread();
-        java.io.StringWriter w = new java.io.StringWriter();
+        final java.io.StringWriter w = new java.io.StringWriter();
         t.printStackTrace(new java.io.PrintWriter(w));
         final String tr = w.toString();
         SwingUtilities.invokeLater(new Runnable() {
@@ -155,7 +155,7 @@ public abstract class ErrorGui extends JDialog implements ErrorStatus {
         errorsent();
     }
 
-    public void senderror(Exception e) {
+    public void senderror(final Exception e) {
         e.printStackTrace();
         done = false;
         SwingUtilities.invokeLater(new Runnable() {

@@ -17,11 +17,11 @@ public class AButton extends Layer {
     public final char hk;
     public final String[] ad;
 
-    public AButton(byte[] buf) {
-        int[] off = new int[1];
+    public AButton(final byte[] buf) {
+        final int[] off = new int[1];
         off[0] = 0;
-        String pr = Utils.strd(buf, off);
-        int pver = Utils.uint16d(buf, off[0]);
+        final String pr = Utils.strd(buf, off);
+        final int pver = Utils.uint16d(buf, off[0]);
         off[0] += 2;
         if (pr.length() == 0) {
             parent = null;

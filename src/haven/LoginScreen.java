@@ -27,6 +27,8 @@
 package haven;
 
 
+import org.jetbrains.annotations.NotNull;
+
 public class LoginScreen extends Widget {
     Login cur;
     Text error;
@@ -46,7 +48,7 @@ public class LoginScreen extends Widget {
         textfs = new Text.Foundry(new java.awt.Font("Sans", java.awt.Font.PLAIN, 14));
     }
 
-    public LoginScreen(Widget parent) {
+    public LoginScreen(final Widget parent) {
         super(Coord.z, CustomConfig.getWindowSize(), parent);
         setfocustab(true);
         parent.setfocus(this);
@@ -57,7 +59,7 @@ public class LoginScreen extends Widget {
     }
 
     private static abstract class Login extends Widget {
-        private Login(Coord c, Coord sz, Widget parent) {
+        private Login(final Coord c, final Coord sz, final Widget parent) {
             super(c, sz, parent);
         }
 
@@ -73,7 +75,7 @@ public class LoginScreen extends Widget {
         final TextEntry pass;
         final CheckBox savepass;
 
-        private Pwbox(String username, boolean save) {
+        private Pwbox(final String username, final boolean save) {
             super(CustomConfig.getWindowCenter().add(-55, 10), new Coord(150, 150), LoginScreen.this);
             setfocustab(true);
             new Label(new Coord(0, 0), this, "Player name", textf);
@@ -89,7 +91,7 @@ public class LoginScreen extends Widget {
                 setfocus(pass);
         }
 
-        public void wdgmsg(Widget sender, String name, Object... args) {
+        public void wdgmsg(final Widget sender, final String name, final Object... args) {
         }
 
         public String get_username() {
@@ -118,7 +120,7 @@ public class LoginScreen extends Widget {
         final Button btn;
         private String acc;
 
-        private Tokenbox(String username) {
+        private Tokenbox(final String username) {
             super(CustomConfig.getWindowCenter().add(-105, 10), new Coord(250, 100), LoginScreen.this);
             acc = username;
             label = textfs.render("Identity is saved for " + username, java.awt.Color.WHITE);
@@ -138,7 +140,7 @@ public class LoginScreen extends Widget {
             return (true);
         }
 
-        public void wdgmsg(Widget sender, String name, Object... args) {
+        public void wdgmsg(final Widget sender, final String name, final Object... args) {
             if (sender == btn) {
                 LoginScreen.this.wdgmsg("forget");
                 return;
@@ -146,7 +148,7 @@ public class LoginScreen extends Widget {
             super.wdgmsg(sender, name, args);
         }
 
-        public void draw(GOut g) {
+        public void draw(final GOut g) {
             g.image(label.tex(), new Coord((sz.x / 2) - (label.sz().x / 2), 0));
             super.draw(g);
         }
@@ -159,7 +161,7 @@ public class LoginScreen extends Widget {
         }
     }
 
-    private void error(String error) {
+    private void error(final String error) {
         logging = false;
         time_to_reconnect = RECONNECT_TIME;
         synchronized (ui) {
@@ -170,7 +172,7 @@ public class LoginScreen extends Widget {
         }
     }
 
-    private void progress(String p) {
+    private void progress(final String p) {
         synchronized (ui) {
             if (progress != null)
                 progress = null;
@@ -189,7 +191,7 @@ public class LoginScreen extends Widget {
         progress(null);
     }
 
-    public void wdgmsg(Widget sender, String msg, Object... args) {
+    public void wdgmsg(final Widget sender, final String msg, final Object... args) {
         if (sender == btn) {
             if (cur.enter())
                 super.wdgmsg("login", cur.data());
@@ -198,7 +200,7 @@ public class LoginScreen extends Widget {
         super.wdgmsg(sender, msg, args);
     }
 
-    public void uimsg(String msg, Object... args) {
+    public void uimsg(@NotNull final String msg, final Object... args) {
         synchronized (ui) {
             if (msg.equals("passwd")) {
                 clear();
@@ -218,7 +220,7 @@ public class LoginScreen extends Widget {
         }
     }
 
-    public void draw(GOut g) {
+    public void draw(final GOut g) {
         c = CustomConfig.getWindowCenter().sub(400, 300);
         super.draw(g);
 
@@ -235,7 +237,7 @@ public class LoginScreen extends Widget {
         g.text("quick login=" + Config.quick_login, new Coord(20, 260));
     }
 
-    public boolean type(char k, java.awt.event.KeyEvent ev) {
+    public boolean type(final char k, final java.awt.event.KeyEvent ev) {
         if (k == 10) {
             if ((cur != null) && cur.enter())
                 wdgmsg("login", cur.data());
@@ -244,7 +246,7 @@ public class LoginScreen extends Widget {
         return (super.type(k, ev));
     }
 
-    public void update(long dt) {
+    public void update(final long dt) {
         if (time_to_reconnect > 0)
             time_to_reconnect = time_to_reconnect - dt;
         if (time_to_reconnect < 0)

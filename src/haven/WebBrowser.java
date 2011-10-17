@@ -38,7 +38,7 @@ public abstract class WebBrowser {
 
     static {
         Console.setscmd("browse", new Console.Command() {
-            public void run(Console cons, String[] args) throws Exception {
+            public void run(final Console cons, final String[] args) throws Exception {
                 if (WebBrowser.self != null) {
                     WebBrowser.self.show(new java.net.URL(args[1]));
                 } else {

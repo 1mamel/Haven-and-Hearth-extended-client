@@ -32,7 +32,7 @@ public class InventoryExt extends Inventory {
 
     public class InvItem extends Item {
 
-        public InvItem(Coord c, Indir<Resource> res, int q, Widget parent, Coord drag, int num) {
+        public InvItem(final Coord c, final Indir<Resource> res, final int q, final Widget parent, final Coord drag, final int num) {
             super(c, res, q, parent, drag, num);
 //            1,32,63,94,..  step == 31
 //            Coord locInInv = new Coord(c.x / 31, c.y / 31);
@@ -40,20 +40,20 @@ public class InventoryExt extends Inventory {
             InventoryExt.this.addItem(this);
         }
 
-        public InvItem(Coord c, int res, int q, Widget parent, Coord drag, int num) {
+        public InvItem(final Coord c, final int res, final int q, final Widget parent, final Coord drag, final int num) {
             this(c, parent.ui.sess.getres(res), q, parent, drag, num);
         }
 
-        public InvItem(Coord c, Indir<Resource> res, int q, Widget parent, Coord drag) {
+        public InvItem(final Coord c, final Indir<Resource> res, final int q, final Widget parent, final Coord drag) {
             this(c, res, q, parent, drag, -1);
         }
 
-        public InvItem(Coord c, int res, int q, Widget parent, Coord drag) {
+        public InvItem(final Coord c, final int res, final int q, final Widget parent, final Coord drag) {
             this(c, parent.ui.sess.getres(res), q, parent, drag);
         }
 
         @Override
-        public void uimsg(String name, Object... args) {
+        public void uimsg(@NotNull final String name, final Object... args) {
             super.uimsg(name, args);
             if (name.equals("num")) {
             } else if (name.equals("chres")) {
@@ -76,11 +76,11 @@ public class InventoryExt extends Inventory {
             if (tooltip == null) return;
             try {
                 final Pattern water = Pattern.compile("(\\d+\\.?\\d*)/(\\d+\\.?\\d*) l of quality (\\d+) water");
-                Matcher nm = water.matcher(tooltip);
+                final Matcher nm = water.matcher(tooltip);
                 if (nm.find() && nm.groupCount() == 3) {
-                    int nowCount = Integer.parseInt(nm.group(1));
-                    int maxCount = Integer.parseInt(nm.group(2));
-                    int q = Integer.parseInt(nm.group(3));
+                    final int nowCount = Integer.parseInt(nm.group(1));
+                    final int maxCount = Integer.parseInt(nm.group(2));
+                    final int q = Integer.parseInt(nm.group(3));
                 }
             } catch (NumberFormatException ignored) {
             }
@@ -139,7 +139,7 @@ public class InventoryExt extends Inventory {
         return items.get(position);
     }
 
-    public InventoryExt(@NotNull Coord c, @NotNull Coord sz, @NotNull Widget parent) {
+    public InventoryExt(@NotNull final Coord c, @NotNull final Coord sz, @NotNull final Widget parent) {
         super(c, sz, parent);
         this.busy = new boolean[isz.x][isz.y];
         updateBusy();
@@ -153,7 +153,7 @@ public class InventoryExt extends Inventory {
     }
 
     @Override
-    public void uimsg(String msg, Object... args) {
+    public void uimsg(@NotNull final String msg, final Object... args) {
         if (msg.equals("sz")) {
             onSizeChange((Coord) args[0]);
         }
@@ -230,7 +230,7 @@ public class InventoryExt extends Inventory {
             return myInventory.items.size();
         }
 
-        public void set(int index) {
+        public void set(final int index) {
             reset();
             for (int i = 0; i <= index && hasNext(); ++i) {
                 next();
@@ -240,16 +240,16 @@ public class InventoryExt extends Inventory {
 
     private boolean[][] busy;
 
-    private synchronized void onSizeChange(Coord newSize) {
+    private synchronized void onSizeChange(final Coord newSize) {
         busy = new boolean[newSize.x][newSize.y];
         updateBusy();
     }
 
     private synchronized void updateBusy() {
         freeCount = isz.x * isz.y;
-        for (Map.Entry<Coord, InvItem> entry : items.entrySet()) {
-            Coord loc = entry.getKey();
-            Coord iSize = entry.getValue().getSizeInCells();
+        for (final Map.Entry<Coord, InvItem> entry : items.entrySet()) {
+            final Coord loc = entry.getKey();
+            final Coord iSize = entry.getValue().getSizeInCells();
             if (loc.x + iSize.x <= isz.x && loc.y + iSize.y <= isz.y) {
                 for (int x = 0; x < iSize.x; ++x) {
                     for (int y = 0; y < iSize.y; ++y) {
@@ -276,8 +276,8 @@ public class InventoryExt extends Inventory {
 
     static List<InventoryExt> openedInventories = new ArrayList<InventoryExt>();
 
-    public InvItem getItemByName(String str) {
-        for (InvItem item : items.values()) {
+    public InvItem getItemByName(final String str) {
+        for (final InvItem item : items.values()) {
             if (item.getResName().contains(str)) {
                 return item;
             }

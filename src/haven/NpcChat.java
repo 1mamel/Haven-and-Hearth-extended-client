@@ -26,6 +26,8 @@
 
 package haven;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.awt.*;
 import java.util.LinkedList;
 import java.util.List;
@@ -36,18 +38,18 @@ public class NpcChat extends Window {
 
     static {
         Widget.addtype("npc", new WidgetFactory() {
-            public Widget create(Coord c, Widget parent, Object[] args) {
+            public Widget create(final Coord c, final Widget parent, final Object[] args) {
                 return (new NpcChat(c, (Coord) args[0], parent, (String) args[1]));
             }
         });
     }
 
-    public NpcChat(Coord c, Coord sz, Widget parent, String title) {
+    public NpcChat(final Coord c, final Coord sz, final Widget parent, final String title) {
         super(c, sz, parent, title);
         out = new Textlog(Coord.z, new Coord(sz.x, sz.y), this);
     }
 
-    public void uimsg(String msg, Object... args) {
+    public void uimsg(@NotNull final String msg, final Object... args) {
         if (msg.equals("log")) {
             Color col = null;
             if (args.length > 1)
@@ -55,14 +57,14 @@ public class NpcChat extends Window {
             out.append((String) args[0], col);
         } else if (msg.equals("btns")) {
             if (!btns.isEmpty()) {
-                for (Button b : btns)
+                for (final Button b : btns)
                     ui.destroy(b);
             }
             btns.clear();
             if (args.length > 0) {
                 int y = out.sz.y + 3;
-                for (Object text : args) {
-                    Button b = Button.wrapped(new Coord(0, y), out.sz.x, this, (String) text);
+                for (final Object text : args) {
+                    final Button b = Button.wrapped(new Coord(0, y), out.sz.x, this, (String) text);
                     btns.add(b);
                     y += b.sz.y + 3;
                 }
@@ -73,10 +75,10 @@ public class NpcChat extends Window {
         }
     }
 
-    public void wdgmsg(Widget sender, String msg, Object... args) {
+    public void wdgmsg(final Widget sender, final String msg, final Object... args) {
         if (sender instanceof Button) {
-            Button b = (Button) sender;
-            int i = btns.indexOf(b);
+            final Button b = (Button) sender;
+            final int i = btns.indexOf(b);
             if (i != -1) {
                 wdgmsg("btn", i);
                 return;

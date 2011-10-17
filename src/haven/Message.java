@@ -57,26 +57,26 @@ public class Message implements java.io.Serializable {
     public int seq;
     int off = 0;
 
-    public Message(int type, byte[] blob) {
+    public Message(final int type, final byte[] blob) {
         this.type = type;
         this.blob = blob;
     }
 
-    public Message(int type, byte[] blob, int offset, int len) {
+    public Message(final int type, final byte[] blob, final int offset, final int len) {
         this.type = type;
         this.blob = new byte[len];
         System.arraycopy(blob, offset, this.blob, 0, len);
     }
 
-    public Message(int type) {
+    public Message(final int type) {
         this.type = type;
         blob = new byte[0];
     }
 
-    public boolean equals(Object o2) {
+    public boolean equals(final Object o2) {
         if (!(o2 instanceof Message))
             return (false);
-        Message m2 = (Message) o2;
+        final Message m2 = (Message) o2;
         if (m2.blob.length != blob.length)
             return (false);
         for (int i = 0; i < blob.length; i++) {
@@ -91,41 +91,41 @@ public class Message implements java.io.Serializable {
         return (new Message(type, blob));
     }
 
-    public Message derive(int type, int len) {
-        int ooff = off;
+    public Message derive(final int type, final int len) {
+        final int ooff = off;
         off += len;
         return (new Message(type, blob, ooff, len));
     }
 
-    public void addbytes(byte[] src, int off, int len) {
-        byte[] n = new byte[blob.length + len];
+    public void addbytes(final byte[] src, final int off, final int len) {
+        final byte[] n = new byte[blob.length + len];
         System.arraycopy(blob, 0, n, 0, blob.length);
         System.arraycopy(src, off, n, blob.length, len);
         blob = n;
     }
 
-    public void addbytes(byte[] src) {
+    public void addbytes(final byte[] src) {
         addbytes(src, 0, src.length);
     }
 
-    public void adduint8(int num) {
+    public void adduint8(final int num) {
         addbytes(new byte[]{Utils.sb(num)});
     }
 
-    public void adduint16(int num) {
-        byte[] buf = new byte[2];
+    public void adduint16(final int num) {
+        final byte[] buf = new byte[2];
         Utils.uint16e(num, buf, 0);
         addbytes(buf);
     }
 
-    public void addint32(int num) {
-        byte[] buf = new byte[4];
+    public void addint32(final int num) {
+        final byte[] buf = new byte[4];
         Utils.int32e(num, buf, 0);
         addbytes(buf);
     }
 
-    public void addstring2(String str) {
-        byte[] buf;
+    public void addstring2(final String str) {
+        final byte[] buf;
         try {
             buf = str.getBytes("utf-8");
         } catch (java.io.UnsupportedEncodingException e) {
@@ -134,18 +134,18 @@ public class Message implements java.io.Serializable {
         addbytes(buf);
     }
 
-    public void addstring(String str) {
+    public void addstring(final String str) {
         addstring2(str);
         addbytes(new byte[]{0});
     }
 
-    public void addcoord(Coord c) {
+    public void addcoord(final Coord c) {
         addint32(c.x);
         addint32(c.y);
     }
 
-    public void addlist(Object... args) {
-        for (Object o : args) {
+    public void addlist(final Object... args) {
+        for (final Object o : args) {
             if (o instanceof Integer) {
                 adduint8(T_INT);
                 addint32((Integer) o);
@@ -182,8 +182,8 @@ public class Message implements java.io.Serializable {
     }
 
     public String string() {
-        int[] ob = new int[]{off};
-        String ret = Utils.strd(blob, ob);
+        final int[] ob = new int[]{off};
+        final String ret = Utils.strd(blob, ob);
         off = ob[0];
         return (ret);
     }
@@ -197,11 +197,11 @@ public class Message implements java.io.Serializable {
     }
 
     public Object[] list() {
-        ArrayList<Object> ret = new ArrayList<Object>();
+        final ArrayList<Object> ret = new ArrayList<Object>();
         while (true) {
             if (off >= blob.length)
                 break;
-            int t = uint8();
+            final int t = uint8();
             if (t == T_END)
                 break;
             else if (t == T_INT)
@@ -217,8 +217,8 @@ public class Message implements java.io.Serializable {
     }
 
     public String toString() {
-        StringBuilder ret = new StringBuilder();
-        for (byte b : blob) {
+        final StringBuilder ret = new StringBuilder();
+        for (final byte b : blob) {
             ret.append(String.format("%02x ", b));
         }
         return ("Message(" + type + "): " + ret.toString());

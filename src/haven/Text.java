@@ -45,7 +45,7 @@ public class Text {
     public static class Line extends Text {
         private FontMetrics m;
 
-        private Line(String text) {
+        private Line(final String text) {
             super(text);
         }
 
@@ -53,15 +53,15 @@ public class Text {
             return (new Coord(0, m.getAscent()));
         }
 
-        public int advance(int pos) {
+        public int advance(final int pos) {
             return (m.stringWidth(text.substring(0, pos)));
         }
 
-        public int charat(int x) {
+        public int charat(final int x) {
             int l = 0, r = text.length() + 1;
             while (true) {
-                int p = (l + r) / 2;
-                int a = advance(p);
+                final int p = (l + r) / 2;
+                final int a = advance(p);
                 if ((a < x) && (l < p)) {
                     l = p;
                 } else if ((a > x) && (r > p)) {
@@ -73,14 +73,14 @@ public class Text {
         }
     }
 
-    public static int[] findspaces(String text) {
-        java.util.List<Integer> l = new ArrayList<Integer>();
+    public static int[] findspaces(final String text) {
+        final java.util.List<Integer> l = new ArrayList<Integer>();
         for (int i = 0; i < text.length(); i++) {
-            char c = text.charAt(i);
+            final char c = text.charAt(i);
             if (Character.isWhitespace(c))
                 l.add(i);
         }
-        int[] ret = new int[l.size()];
+        final int[] ret = new int[l.size()];
         for (int i = 0; i < ret.length; i++)
             ret[i] = l.get(i);
         return (ret);
@@ -93,20 +93,20 @@ public class Text {
         public boolean aa = false;
         private RichText.Foundry wfnd = null;
 
-        public Foundry(Font f, Color defcol) {
+        public Foundry(final Font f, final Color defcol) {
             font = f;
             this.defcol = defcol;
-            BufferedImage junk = TexI.mkbuf(new Coord(10, 10));
-            Graphics tmpl = junk.getGraphics();
+            final BufferedImage junk = TexI.mkbuf(new Coord(10, 10));
+            final Graphics tmpl = junk.getGraphics();
             tmpl.setFont(f);
             m = tmpl.getFontMetrics();
         }
 
-        public Foundry(Font f) {
+        public Foundry(final Font f) {
             this(f, Color.WHITE);
         }
 
-        public Foundry(String font, int psz) {
+        public Foundry(final String font, final int psz) {
             this(new Font(font, Font.PLAIN, psz));
         }
 
@@ -116,15 +116,15 @@ public class Text {
             return (m.getAscent() + m.getDescent());
         }
 
-        public Coord strsize(String text) {
+        public Coord strsize(final String text) {
             return (new Coord(m.stringWidth(text), height()));
         }
 
-        public Coord charsize(char c) {
+        public Coord charsize(final char c) {
             return new Coord(m.charWidth(c), height());
         }
 
-        public Text renderwrap(String text, Color c, int width) {
+        public Text renderwrap(String text, final Color c, final int width) {
             if (wfnd == null)
                 wfnd = new RichText.Foundry(font, defcol);
             wfnd.aa = aa;
@@ -134,17 +134,17 @@ public class Text {
             return (wfnd.render(text, width));
         }
 
-        public Text renderwrap(String text, int width) {
+        public Text renderwrap(final String text, final int width) {
             return (renderwrap(text, null, width));
         }
 
-        public Line render(String text, Color c) {
-            Line t = new Line(text);
+        public Line render(final String text, final Color c) {
+            final Line t = new Line(text);
             Coord sz = strsize(text);
             if (sz.x < 1)
                 sz = sz.add(1, 0);
             t.img = TexI.mkbuf(sz);
-            Graphics g = t.img.createGraphics();
+            final Graphics g = t.img.createGraphics();
             if (aa)
                 Utils.AA(g);
             g.setFont(font);
@@ -155,16 +155,16 @@ public class Text {
             return (t);
         }
 
-        public Line render(String text) {
+        public Line render(final String text) {
             return (render(text, defcol));
         }
 
-        public Line renderf(String fmt, Object... args) {
+        public Line renderf(final String fmt, final Object... args) {
             return (render(String.format(fmt, args)));
         }
     }
 
-    protected Text(String text) {
+    protected Text(final String text) {
         this.text = text;
     }
 
@@ -172,15 +172,15 @@ public class Text {
         return (Utils.imgsz(img));
     }
 
-    public static Line render(String text, Color c) {
+    public static Line render(final String text, final Color c) {
         return (std.render(text, c));
     }
 
-    public static Line renderf(Color c, String text, Object... args) {
+    public static Line renderf(final Color c, final String text, final Object... args) {
         return (std.render(String.format(text, args), c));
     }
 
-    public static Line render(String text) {
+    public static Line render(final String text) {
         return (render(text, Color.WHITE));
     }
 
@@ -190,14 +190,14 @@ public class Text {
         return (tex);
     }
 
-    public static void main(String[] args) throws Exception {
-        String cmd = args[0].intern();
+    public static void main(final String[] args) throws Exception {
+        final String cmd = args[0].intern();
         if (cmd.equals("render")) {
-            PosixArgs opt = PosixArgs.getopt(args, 1, "aw:f:s:");
+            final PosixArgs opt = PosixArgs.getopt(args, 1, "aw:f:s:");
             boolean aa = false;
             String font = "SansSerif";
             int width = 100, size = 10;
-            for (char c : opt.parsed()) {
+            for (final char c : opt.parsed()) {
                 if (c == 'a') {
                     aa = true;
                 } else if (c == 'f') {
@@ -208,10 +208,10 @@ public class Text {
                     size = Integer.parseInt(opt.arg);
                 }
             }
-            Foundry f = new Foundry(font, size);
+            final Foundry f = new Foundry(font, size);
             f.aa = aa;
-            Text t = f.renderwrap(opt.rest[0], width);
-            java.io.OutputStream out = new java.io.FileOutputStream(opt.rest[1]);
+            final Text t = f.renderwrap(opt.rest[0], width);
+            final java.io.OutputStream out = new java.io.FileOutputStream(opt.rest[1]);
             javax.imageio.ImageIO.write(t.img, "PNG", out);
             out.close();
         }

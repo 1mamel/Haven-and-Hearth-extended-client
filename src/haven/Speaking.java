@@ -35,7 +35,7 @@ public class Speaking extends GAttrib {
     final Tex svans;
     static final int sx = 3;
 
-    public Speaking(Gob gob, Coord off, String text) {
+    public Speaking(final Gob gob, final Coord off, final String text) {
         super(gob);
         if (sb == null)
             sb = new IBox("gfx/hud/emote", "tl", "tr", "bl", "br", "el", "er", "et", "eb");
@@ -44,16 +44,16 @@ public class Speaking extends GAttrib {
         this.text = Text.render(text, Color.BLACK);
     }
 
-    public void update(String text) {
+    public void update(final String text) {
         this.text = Text.render(text, Color.BLACK);
     }
 
-    public void draw(GOut g, Coord c) {
-        Coord sz = text.sz();
+    public void draw(final GOut g, final Coord c) {
+        final Coord sz = text.sz();
         if (sz.x < 10)
             sz.setX(10);
-        Coord tl = c.sub(new Coord(sx, sb.bsz().y + sz.y + svans.sz().y - 1));
-        Coord ftl = tl.add(sb.tloff());
+        final Coord tl = c.sub(new Coord(sx, sb.bsz().y + sz.y + svans.sz().y - 1));
+        final Coord ftl = tl.add(sb.tloff());
         g.chcolor(Color.WHITE);
         g.frect(ftl, sz);
         sb.draw(g, tl, sz.add(sb.bsz()));

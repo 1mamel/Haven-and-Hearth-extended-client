@@ -39,12 +39,12 @@ public class Coord implements Comparable<Coord>, java.io.Serializable, Cloneable
     public int x;
     public int y;
 
-    public Coord(int x, int y) {
+    public Coord(final int x, final int y) {
         this.x = x;
         this.y = y;
     }
 
-    public Coord(Coord c) {
+    public Coord(final Coord c) {
         this(c.x, c.y);
     }
 
@@ -53,8 +53,8 @@ public class Coord implements Comparable<Coord>, java.io.Serializable, Cloneable
         this(0, 0);
     }
 
-    public Coord(String str) {
-        Matcher m = parsePattern.matcher(str);
+    public Coord(final String str) {
+        final Matcher m = parsePattern.matcher(str);
         if (m.find()) {
             x = Integer.parseInt(m.group(1));
             y = Integer.parseInt(m.group(2));
@@ -63,7 +63,7 @@ public class Coord implements Comparable<Coord>, java.io.Serializable, Cloneable
         }
     }
 
-    public Coord(Dimension d) {
+    public Coord(final Dimension d) {
         this(d.width, d.height);
     }
 
@@ -74,18 +74,18 @@ public class Coord implements Comparable<Coord>, java.io.Serializable, Cloneable
      * @param r radius
      * @return decart coordinates
      */
-    public static Coord sc(double a, double r) {
+    public static Coord sc(final double a, final double r) {
         return (new Coord((int) (Math.cos(a) * r), -(int) (Math.sin(a) * r)));
     }
 
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (!(o instanceof Coord))
             return (false);
-        Coord c = (Coord) o;
+        final Coord c = (Coord) o;
         return ((c.x == x) && (c.y == y));
     }
 
-    public int compareTo(Coord c) {
+    public int compareTo(final Coord c) {
         if (c.y != y)
             return (c.y - y);
         if (c.x != x)
@@ -93,27 +93,27 @@ public class Coord implements Comparable<Coord>, java.io.Serializable, Cloneable
         return (0);
     }
 
-    public Coord add(int ax, int ay) {
+    public Coord add(final int ax, final int ay) {
         return (new Coord(x + ax, y + ay));
     }
 
-    public Coord add(Coord b) {
+    public Coord add(final Coord b) {
         return (add(b.x, b.y));
     }
 
-    public Coord sub(int ax, int ay) {
+    public Coord sub(final int ax, final int ay) {
         return (new Coord(x - ax, y - ay));
     }
 
-    public Coord sub(Coord b) {
+    public Coord sub(final Coord b) {
         return (sub(b.x, b.y));
     }
 
-    public Coord mul(int f) {
+    public Coord mul(final int f) {
         return (new Coord(x * f, y * f));
     }
 
-    public Coord mul(double f) {
+    public Coord mul(final double f) {
         return (new Coord((int) (x * f), (int) (y * f)));
     }
 
@@ -121,7 +121,7 @@ public class Coord implements Comparable<Coord>, java.io.Serializable, Cloneable
         return (new Coord(-x, -y));
     }
 
-    public Coord mul(Coord f) {
+    public Coord mul(final Coord f) {
         return (new Coord(x * f.x, y * f.y));
     }
 
@@ -150,11 +150,11 @@ public class Coord implements Comparable<Coord>, java.io.Serializable, Cloneable
         return (new Coord(v, w));
     }
 
-    public Coord div(double f) {
+    public Coord div(final double f) {
         return (new Coord((int) (x / f), (int) (y / f)));
     }
 
-    public Coord mod(Coord d) {
+    public Coord mod(final Coord d) {
         int v, w;
 
         v = x % d.x;
@@ -179,7 +179,7 @@ public class Coord implements Comparable<Coord>, java.io.Serializable, Cloneable
         return x + y;
     }
 
-    public boolean isect(Coord c, Coord s) {
+    public boolean isect(final Coord c, final Coord s) {
         return ((x >= c.x) && (y >= c.y) && (x < c.x + s.x) && (y < c.y + s.y));
     }
 
@@ -187,8 +187,8 @@ public class Coord implements Comparable<Coord>, java.io.Serializable, Cloneable
         return ("(" + x + ", " + y + ')');
     }
 
-    public double angle(Coord o) {
-        Coord c = o.sub(this);
+    public double angle(final Coord o) {
+        final Coord c = o.sub(this);
         if (c.x == 0) {
             if (c.y < 0)
                 return (-PI / 2);
@@ -206,15 +206,15 @@ public class Coord implements Comparable<Coord>, java.io.Serializable, Cloneable
         }
     }
 
-    public double dist(Coord o) {
-        long dx = o.x - x;
-        long dy = o.y - y;
+    public double dist(final Coord o) {
+        final long dx = o.x - x;
+        final long dy = o.y - y;
         return (Math.sqrt((dx * dx) + (dy * dy)));
     }
 
-    public double distSq(Coord o) {
-        long dx = o.x - x;
-        long dy = o.y - y;
+    public double distSq(final Coord o) {
+        final long dx = o.x - x;
+        final long dy = o.y - y;
         return dx * dx + dy * dy;
     }
 
@@ -235,7 +235,7 @@ public class Coord implements Comparable<Coord>, java.io.Serializable, Cloneable
         return x;
     }
 
-    public void setX(int x) {
+    public void setX(final int x) {
         this.x = x;
     }
 
@@ -243,7 +243,7 @@ public class Coord implements Comparable<Coord>, java.io.Serializable, Cloneable
         return y;
     }
 
-    public void setY(int y) {
+    public void setY(final int y) {
         this.y = y;
     }
 
@@ -251,12 +251,12 @@ public class Coord implements Comparable<Coord>, java.io.Serializable, Cloneable
         return new Point(x, y);
     }
 
-    public void set(int x, int y) {
+    public void set(final int x, final int y) {
         this.x = x;
         this.y = y;
     }
 
-    public boolean equals(int x, int y) {
+    public boolean equals(final int x, final int y) {
         return this.x == x && this.y == y;
     }
 }

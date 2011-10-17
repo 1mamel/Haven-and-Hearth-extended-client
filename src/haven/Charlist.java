@@ -26,6 +26,8 @@
 
 package haven;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -44,7 +46,7 @@ public class Charlist extends Widget {
         Avaview ava;
         Button plb;
 
-        public Char(String name) {
+        public Char(final String name) {
             this.name = name;
             nt = tf.render(name);
         }
@@ -52,13 +54,13 @@ public class Charlist extends Widget {
 
     static {
         Widget.addtype("charlist", new WidgetFactory() {
-            public Widget create(Coord c, Widget parent, Object[] args) {
+            public Widget create(final Coord c, final Widget parent, final Object[] args) {
                 return (new Charlist(c, parent, (Integer) args[0]));
             }
         });
     }
 
-    public Charlist(Coord c, Widget parent, int height) {
+    public Charlist(final Coord c, final Widget parent, final int height) {
         super(c, new Coord(bg.sz().x, 40 + (bg.sz().y * height) + (margin * (height - 1))), parent);
         this.height = height;
         y = 0;
@@ -75,7 +77,7 @@ public class Charlist extends Widget {
         sau.visible = sad.visible = false;
     }
 
-    public void scroll(int amount) {
+    public void scroll(final int amount) {
         y += amount;
         synchronized (chars) {
             if (y > chars.size() - height)
@@ -85,19 +87,19 @@ public class Charlist extends Widget {
             y = 0;
     }
 
-    public void draw(GOut g) {
+    public void draw(final GOut g) {
         int y = 20;
         synchronized (chars) {
-            for (Char c : chars) {
+            for (final Char c : chars) {
                 c.ava.visible = false;
                 c.plb.visible = false;
             }
             for (int i = 0; (i < height) && (i + this.y < chars.size()); i++) {
-                Char c = chars.get(i + this.y);
+                final Char c = chars.get(i + this.y);
                 g.image(bg, new Coord(0, y));
                 c.ava.visible = true;
                 c.plb.visible = true;
-                int off = (bg.sz().y - c.ava.sz.y) / 2;
+                final int off = (bg.sz().y - c.ava.sz.y) / 2;
                 c.ava.c = new Coord(off, off + y);
                 c.plb.c = bg.sz().add(-105, -24 + y);
                 g.image(c.nt.tex(), new Coord(off + c.ava.sz.x + 5, off + y));
@@ -111,20 +113,20 @@ public class Charlist extends Widget {
         }
     }
 
-    public boolean mousewheel(Coord c, int amount) {
+    public boolean mousewheel(final Coord c, final int amount) {
         scroll(amount);
         return (true);
     }
 
-    public void wdgmsg(Widget sender, String msg, Object... args) {
+    public void wdgmsg(final Widget sender, final String msg, final Object... args) {
         if (sender instanceof Button) {
             synchronized (chars) {
-                for (Char c : chars) {
+                for (final Char c : chars) {
                     if (sender == c.plb) {
                         wdgmsg("play", c.name);
                         CustomConfig.setActiveCharacter(c.name);
                         MainFrame.setWindowTitle(c.name);
-                        SlenHud hud = ui.slen;//parent.findchild(SlenHud.class);
+                        final SlenHud hud = ui.slen;//parent.findchild(SlenHud.class);
                         if (hud != null) {
                             hud.initBelt();
                         }
@@ -137,10 +139,10 @@ public class Charlist extends Widget {
         }
     }
 
-    public void uimsg(String msg, Object... args) {
+    public void uimsg(@NotNull final String msg, final Object... args) {
         if (msg.equals("add")) {
-            Char c = new Char((String) args[0]);
-            List<Indir<Resource>> resl = new LinkedList<Indir<Resource>>();
+            final Char c = new Char((String) args[0]);
+            final List<Indir<Resource>> resl = new LinkedList<Indir<Resource>>();
             for (int i = 1; i < args.length; i++)
                 resl.add(ui.sess.getres((Integer) args[i]));
             c.ava = new Avaview(new Coord(0, 0), this, resl);

@@ -19,7 +19,7 @@ public class Neg extends Layer {
     public Coord sz;
     public Coord[][] ep;
 
-    public Neg(byte[] buf) {
+    public Neg(final byte[] buf) {
         int off;
 
         cc = Resource.cdec(buf, 0);
@@ -29,11 +29,11 @@ public class Neg extends Layer {
         bc = MapView.s2m(bc);
         bs = MapView.s2m(bs).sub(bc);
         ep = new Coord[8][0];
-        int en = buf[16];
+        final int en = buf[16];
         off = 17;
         for (int i = 0; i < en; i++) {
-            int epid = buf[off];
-            int cn = Utils.uint16d(buf, off + 1);
+            final int epid = buf[off];
+            final int cn = Utils.uint16d(buf, off + 1);
             off += 3;
             ep[epid] = new Coord[cn];
             for (int o = 0; o < cn; o++) {

@@ -14,20 +14,20 @@ public class TextInputBox extends Window {
     private final Callback<String> callback;
     private final TextEntry input;
 
-    public TextInputBox(Coord position, Coord size, Widget parent, String capture, String message, final Callback<String> callback) {
+    public TextInputBox(final Coord position, final Coord size, final Widget parent, final String capture, final String message, final Callback<String> callback) {
         super(position, size, parent, capture, true, false);
         this.justclose = true;
         this.callback = callback;
-        Label message1 = new Label(new Coord(10, 6), this, message);
+        final Label message1 = new Label(new Coord(10, 6), this, message);
         input = new TextEntry(new Coord(10, 23), new Coord(sz.x, 30), this, "");
 
         int width = Math.max(message1.sz.x, sz.x);
 
-        int allButtonsWidth = 10 + 2 * (BUTTONWIDTH + 5) + 5;
+        final int allButtonsWidth = 10 + 2 * (BUTTONWIDTH + 5) + 5;
 
         width = Math.max(width, allButtonsWidth);
 
-        int buttonsY = 58;
+        final int buttonsY = 58;
         if (sz.y < buttonsY + 18) {
             sz.y = buttonsY + 18;
         }
@@ -53,7 +53,7 @@ public class TextInputBox extends Window {
     }
 
     @Override
-    public void wdgmsg(Widget sender, String msg, Object... args) {
+    public void wdgmsg(final Widget sender, final String msg, final Object... args) {
         if (checkIsCloseButton(sender)) {
             callback.result(null);
         }

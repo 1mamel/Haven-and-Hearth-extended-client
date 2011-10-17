@@ -37,12 +37,12 @@ public class I2<T> implements Iterator<T> {
     private T co;
     private boolean hco;
 
-    public I2(Iterator<T>... is) {
+    public I2(final Iterator<T>... is) {
         this.is = Arrays.asList(is).iterator();
         f();
     }
 
-    public I2(Collection<Iterator<T>> is) {
+    public I2(final Collection<Iterator<T>> is) {
         this.is = is.iterator();
         f();
     }
@@ -70,7 +70,7 @@ public class I2<T> implements Iterator<T> {
     public T next() {
         if (!hco)
             throw (new NoSuchElementException());
-        T ret = co;
+        final T ret = co;
         f();
         return (ret);
     }

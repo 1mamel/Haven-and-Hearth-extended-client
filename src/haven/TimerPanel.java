@@ -29,13 +29,13 @@ public class TimerPanel extends Window {
         }
     }
 
-    public TimerPanel(Widget parent) {
+    public TimerPanel(final Widget parent) {
         super(new Coord(250, 100), Coord.z, parent, "Timers");
         justclose = true;
         btnnew = new Button(Coord.z, 100, this, "Add timer");
 
-        Collection<Timer> timers = new ArrayList<Timer>(TimersController.timers);
-        for (Timer timer : timers) {
+        final Collection<Timer> timers = new ArrayList<Timer>(TimersController.timers);
+        for (final Timer timer : timers) {
             new TimerWdg(Coord.z, this, timer);
         }
         pack();
@@ -59,7 +59,7 @@ public class TimerPanel extends Window {
     }
 
     @Override
-    public void wdgmsg(Widget sender, String msg, Object... args) {
+    public void wdgmsg(final Widget sender, final String msg, final Object... args) {
         if (sender == btnnew) {
             new TimerAddWdg(c, ui.root, this);
         } else {
@@ -79,7 +79,7 @@ public class TimerPanel extends Window {
         private Button btnadd;
         private TimerPanel panel;
 
-        public TimerAddWdg(Coord c, Widget parent, TimerPanel panel) {
+        public TimerAddWdg(final Coord c, final Widget parent, final TimerPanel panel) {
             super(c, Coord.z, parent, "Add timer");
             justclose = true;
             this.panel = panel;
@@ -95,14 +95,14 @@ public class TimerPanel extends Window {
         }
 
         @Override
-        public void wdgmsg(Widget sender, String msg, Object... args) {
+        public void wdgmsg(final Widget sender, final String msg, final Object... args) {
             if (sender == btnadd) {
                 try {
                     long time = 0;
                     time += Integer.parseInt(seconds.text);
                     time += Integer.parseInt(minutes.text) * 60;
                     time += Integer.parseInt(hours.text) * 3600;
-                    Timer timer = new Timer(time, name.text);
+                    final Timer timer = new Timer(time, name.text);
                     TimersController.save();
                     new TimerWdg(Coord.z, panel, timer);
                     panel.pack();

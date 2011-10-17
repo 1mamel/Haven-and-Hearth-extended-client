@@ -34,12 +34,12 @@ public class Prioritized {
         return myPriority;
     }
 
-    public synchronized void setPriority(int p) {
+    public synchronized void setPriority(final int p) {
         myPriority = p;
         if (myQueue != null) myQueue.update(this);
     }
 
-    public synchronized void setQueue(PrioQueue queue) {
+    public synchronized void setQueue(final PrioQueue queue) {
         myQueue = queue;
     }
 }

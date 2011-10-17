@@ -44,9 +44,9 @@ public class IdentServer implements Runnable {
     /**
      * Construct identity server for a specified user name.
      */
-    public IdentServer(String userName) {
+    public IdentServer(final String userName) {
         _userName = userName;
-        Thread t = new Thread(this);
+        final Thread t = new Thread(this);
         t.start();
     }
     //------------------------------------------------------------------
@@ -75,8 +75,8 @@ public class IdentServer implements Runnable {
     public void run() {
 
         String line;
-        BufferedReader is;
-        DataOutputStream os;
+        final BufferedReader is;
+        final DataOutputStream os;
 
         try {
             // Start listening on port 113
@@ -121,7 +121,7 @@ public class IdentServer implements Runnable {
             while (true) {
                 line = is.readLine();
                 if (line != null) {
-                    String resp = line + " : USERID : UNIX : " + _userName;
+                    final String resp = line + " : USERID : UNIX : " + _userName;
                     Debug.println("IdentServer: responding to query with: " + resp);
                     os.writeBytes(resp);
                     stop();

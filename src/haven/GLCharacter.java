@@ -20,7 +20,7 @@ class GLCharacter {
     private boolean aa;
     private boolean selected = false;
 
-    GLCharacter(char letter, int x, Text.Foundry foundry, boolean aa) {
+    GLCharacter(final char letter, final int x, final Text.Foundry foundry, final boolean aa) {
         this.letter = letter;
         this.x = x;
         this.foundry = foundry;
@@ -32,8 +32,8 @@ class GLCharacter {
     private void init() {
         if (size.x <= 0) size.setX(1);
         img = TexI.mkbuf(size);
-        Graphics g = img.createGraphics();
-        Graphics bkgndG;
+        final Graphics g = img.createGraphics();
+        final Graphics bkgndG;
         if (background == null) {
             background = new BufferedImage(size.x, size.y, BufferedImage.TYPE_INT_ARGB);
         }
@@ -54,7 +54,7 @@ class GLCharacter {
         g.drawString(String.valueOf(letter), 0, size.y - 2);
     }
 
-    public boolean setLink(String address) {
+    public boolean setLink(final String address) {
         if (address == null || address.trim().length() == 0)
             return false;
         try {
@@ -80,7 +80,7 @@ class GLCharacter {
         return false;
     }
 
-    public void setSelected(boolean selected) {
+    public void setSelected(final boolean selected) {
         this.selected = selected;
         init();
     }

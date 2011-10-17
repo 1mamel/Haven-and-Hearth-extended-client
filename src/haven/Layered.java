@@ -46,7 +46,7 @@ public class Layered extends Drawable {
         final Coord cc;
         Tex ol = null;
 
-        public Layer(BufferedImage img, Coord cc) {
+        public Layer(final BufferedImage img, final Coord cc) {
             this.img = img;
             this.cc = cc;
         }
@@ -76,13 +76,13 @@ public class Layered extends Drawable {
         private final LinkedList<Object[]> recency = new LinkedList<Object[]>();
         private int cached;
 
-        public LayerCache(int cachesz) {
+        public LayerCache(final int cachesz) {
             this.cachesz = cachesz;
         }
 
-        private synchronized void usecache(Object[] id) {
+        private synchronized void usecache(final Object[] id) {
             for (Iterator<Object[]> i = recency.iterator(); i.hasNext();) {
-                Object[] cid = (Object[]) i.next();
+                final Object[] cid = (Object[]) i.next();
                 if (cid == id) {
                     i.remove();
                     recency.addFirst(id);
@@ -100,8 +100,8 @@ public class Layered extends Drawable {
             return (cached);
         }
 
-        public synchronized Layer get(Object[] id) {
-            Layer l = cache.get(id);
+        public synchronized Layer get(final Object[] id) {
+            final Layer l = cache.get(id);
             if (l != null)
                 usecache(id);
             return (l);
@@ -109,12 +109,12 @@ public class Layered extends Drawable {
 
         private synchronized void cleancache() {
             while (recency.size() > cachesz) {
-                Object[] id = recency.removeLast();
+                final Object[] id = recency.removeLast();
                 cache.remove(id).dispose();
             }
         }
 
-        public synchronized void put(Object[] id, Layer l) {
+        public synchronized void put(final Object[] id, final Layer l) {
             cache.put(id, l);
             recency.addFirst(id);
             cleancache();
@@ -122,13 +122,13 @@ public class Layered extends Drawable {
         }
     }
 
-    public Layered(Gob gob, Indir<Resource> base) {
+    public Layered(final Gob gob, final Indir<Resource> base) {
         super(gob);
         this.base = base;
         layers = new ArrayList<Indir<Resource>>();
     }
 
-    public synchronized void setlayers(List<Indir<Resource>> layers) {
+    public synchronized void setlayers(final List<Indir<Resource>> layers) {
         Collections.sort(layers);
         if (layers.equals(this.layers))
             return;
@@ -136,16 +136,16 @@ public class Layered extends Drawable {
         this.layers = layers;
         delays = new TreeMap<Indir<Resource>, Integer>();
         sprites = new TreeMap<Indir<Resource>, Sprite>();
-        for (Indir<Resource> r : layers) {
+        for (final Indir<Resource> r : layers) {
             delays.put(r, 0);
             sprites.put(r, null);
         }
     }
 
-    public synchronized boolean checkhit(Coord c) {
+    public synchronized boolean checkhit(final Coord c) {
         if (base.get() == null)
             return (false);
-        for (Sprite spr : sprites.values()) {
+        for (final Sprite spr : sprites.values()) {
             if (spr == null)
                 continue;
             if (spr.checkhit(c))
@@ -154,12 +154,12 @@ public class Layered extends Drawable {
         return (false);
     }
 
-    public synchronized void setup(Sprite.Drawer drw, final Coord cc, final Coord off) {
+    public synchronized void setup(final Sprite.Drawer drw, final Coord cc, final Coord off) {
         if (base.get() == null)
             return;
         if (loading) {
             loading = false;
-            for (Indir<Resource> r : layers) {
+            for (final Indir<Resource> r : layers) {
                 if (sprites.get(r) == null) {
                     if (r.get() == null)
                         loading = true;
@@ -179,10 +179,10 @@ public class Layered extends Drawable {
         drw.addpart(me);
     }
 
-    private synchronized Object[] stateid(Object... extra) {
-        Object[] ret = new Object[layers.size() + extra.length];
+    private synchronized Object[] stateid(final Object... extra) {
+        final Object[] ret = new Object[layers.size() + extra.length];
         for (int i = 0; i < layers.size(); i++) {
-            Sprite spr = sprites.get(layers.get(i));
+            final Sprite spr = sprites.get(layers.get(i));
             if (spr == null)
                 ret[i] = null;
             else
@@ -195,20 +195,20 @@ public class Layered extends Drawable {
 
     private Layer redraw(final int z) {
         final ArrayList<Sprite.Part> parts = new ArrayList<Sprite.Part>();
-        Sprite.Drawer drw = new Sprite.Drawer() {
-            public void addpart(Sprite.Part p) {
+        final Sprite.Drawer drw = new Sprite.Drawer() {
+            public void addpart(final Sprite.Part p) {
                 if (p.z == z)
                     parts.add(p);
             }
         };
-        for (Sprite spr : sprites.values()) {
+        for (final Sprite spr : sprites.values()) {
             if (spr != null)
                 spr.setup(drw, Coord.z, Coord.z);
         }
         Collections.sort(parts, Sprite.partcmp);
-        Coord ul = new Coord(0, 0);
-        Coord lr = new Coord(0, 0);
-        for (Sprite.Part part : parts) {
+        final Coord ul = new Coord(0, 0);
+        final Coord lr = new Coord(0, 0);
+        for (final Sprite.Part part : parts) {
             if (part.ul.x < ul.x)
                 ul.setX(part.ul.x);
             if (part.ul.y < ul.y)
@@ -218,13 +218,13 @@ public class Layered extends Drawable {
             if (part.lr.y > lr.y)
                 lr.setY(part.lr.y);
         }
-        BufferedImage buf = TexI.mkbuf(lr.sub(ul).add(1, 1));
-        Graphics g = buf.getGraphics();
+        final BufferedImage buf = TexI.mkbuf(lr.sub(ul).add(1, 1));
+        final Graphics g = buf.getGraphics();
         /*
       g.setColor(java.awt.Color.RED);
       g.fillRect(0, 0, buf.getWidth(), buf.getHeight());
       */
-        for (Sprite.Part part : parts) {
+        for (final Sprite.Part part : parts) {
             part.cc = part.cc.sub(ul);
             part.draw(buf, g);
         }
@@ -232,10 +232,10 @@ public class Layered extends Drawable {
         return (new Layer(buf, ul.inv()));
     }
 
-    private Sprite.Part makepart(int z) {
+    private Sprite.Part makepart(final int z) {
         final Layer l;
         synchronized (Layered.this) {
-            Object[] id = stateid(z);
+            final Object[] id = stateid(z);
             synchronized (cache) {
                 Layer ll = cache.get(id);
                 if (ll == null) {
@@ -249,25 +249,25 @@ public class Layered extends Drawable {
             Sprite.Part p = pcache.get(l);
             if (p == null) {
                 p = new Sprite.Part(z) {
-                    public void draw(BufferedImage buf, Graphics g) {
+                    public void draw(final BufferedImage buf, final Graphics g) {
                         g.drawImage(l.img, -l.cc.x, -l.cc.y, null);
                     }
 
-                    public void draw(GOut g) {
+                    public void draw(final GOut g) {
                         g.image(l.tex(), cc.sub(l.cc).add(off));
                     }
 
-                    public void drawol(GOut g) {
+                    public void drawol(final GOut g) {
                         g.image(l.ol(), cc.sub(l.cc).add(off).add(-1, -1));
                     }
 
-                    public void setup(Coord cc, Coord off) {
+                    public void setup(final Coord cc, final Coord off) {
                         super.setup(cc, off);
                         ul = cc.sub(l.cc);
                         lr = ul.add(l.tex().sz());
                     }
 
-                    public boolean checkhit(Coord c) {
+                    public boolean checkhit(final Coord c) {
                         return (Layered.this.checkhit(c));
                     }
                 };
@@ -277,10 +277,10 @@ public class Layered extends Drawable {
         }
     }
 
-    public synchronized void ctick(int dt) {
-        for (Map.Entry<Indir<Resource>, Sprite> e : sprites.entrySet()) {
-            Indir<Resource> r = e.getKey();
-            Sprite spr = e.getValue();
+    public synchronized void ctick(final int dt) {
+        for (final Map.Entry<Indir<Resource>, Sprite> e : sprites.entrySet()) {
+            final Indir<Resource> r = e.getKey();
+            final Sprite spr = e.getValue();
             if (spr != null) {
                 int ldt = dt;
                 if (delays.get(r) != null) {

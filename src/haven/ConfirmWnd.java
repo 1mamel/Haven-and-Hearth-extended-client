@@ -4,7 +4,7 @@ public class ConfirmWnd extends Window {
 
     private Callback clbk;
 
-    public ConfirmWnd(Coord c, Widget parent, String msg, final Callback callback) {
+    public ConfirmWnd(final Coord c, final Widget parent, final String msg, final Callback callback) {
         super(c, Coord.z, parent, "Confirmation");
         clbk = callback;
         new Label(Coord.z, this, msg);
@@ -32,7 +32,7 @@ public class ConfirmWnd extends Window {
         super.destroy();
     }
 
-    public void wdgmsg(Widget sender, String msg, Object... args) {
+    public void wdgmsg(final Widget sender, final String msg, final Object... args) {
         if (checkIsCloseButton(sender)) {
             clbk.result(false);
             close();
@@ -41,7 +41,7 @@ public class ConfirmWnd extends Window {
         super.wdgmsg(sender, msg, args);
     }
 
-    public boolean type(char key, java.awt.event.KeyEvent ev) {
+    public boolean type(final char key, final java.awt.event.KeyEvent ev) {
         if (key == 27) {
             clbk.result(false);
             close();

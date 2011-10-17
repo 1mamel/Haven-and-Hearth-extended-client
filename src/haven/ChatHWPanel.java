@@ -43,7 +43,7 @@ public class ChatHWPanel extends Widget implements IHWindowParent {
         cap = cf.render("Chat", Color.YELLOW);
     }
 
-    public ChatHWPanel(Coord c, Coord sz, Widget parent) {
+    public ChatHWPanel(final Coord c, final Coord sz, final Widget parent) {
         super(c, sz, parent);
         instance = this;
         btnc = sz.sub(sz.x, btnh);
@@ -66,7 +66,7 @@ public class ChatHWPanel extends Widget implements IHWindowParent {
 
     private void loadOpts() {
 	synchronized (Config.window_props) {
-        String str = Config.window_props.getProperty("chat_pos_folded", "null");
+        final String str = Config.window_props.getProperty("chat_pos_folded", "null");
         if (!str.equals("null")) {
             sc = new Coord(str);
         }
@@ -85,7 +85,7 @@ public class ChatHWPanel extends Widget implements IHWindowParent {
         updbtns();
     }
 
-    public void draw(GOut g) {
+    public void draw(final GOut g) {
         if (recalcsz) {
             recalcsz = false;
             deltasz(Coord.z);
@@ -95,8 +95,8 @@ public class ChatHWPanel extends Widget implements IHWindowParent {
                 g.chcolor(SlenHud.urgcols[urgency]);
             g.image(icon, Coord.z.add(cl.sz()));
             g.chcolor();
-            int w = cap.tex().sz().x;
-            int x0 = (isz.x / 2) - (w / 2) + cl.sz().x;
+            final int w = cap.tex().sz().x;
+            final int x0 = (isz.x / 2) - (w / 2) + cl.sz().x;
             g.image(cl, new Coord(x0 - cl.sz().x, 0));
             g.image(cm, new Coord(x0, 0), new Coord(w, cm.sz().y));
             g.image(cr, new Coord(x0 + w, 0));
@@ -120,8 +120,8 @@ public class ChatHWPanel extends Widget implements IHWindowParent {
             if ((wnds.size() % 2) != 0)
                 k++;
         }
-        int bw = Math.min((sz.x - sbtnw) / k, maxbtnw);
-        int bpp = 2 * k;
+        final int bw = Math.min((sz.x - sbtnw) / k, maxbtnw);
+        final int bpp = 2 * k;
 
         if (wnds.size() <= bpp) {
             woff = 0;
@@ -131,11 +131,11 @@ public class ChatHWPanel extends Widget implements IHWindowParent {
             if (woff > wnds.size() - bpp)
                 woff = wnds.size() - bpp;
         }
-        for (Button b : btns.values())
+        for (final Button b : btns.values())
             b.visible = false;
         sub.visible = sdb.visible = false;
         for (int i = 0; i < bpp; i++) {
-            int wi = i + woff;
+            final int wi = i + woff;
             if (wi >= wnds.size())
                 continue;
             if (woff > 0) {
@@ -146,8 +146,8 @@ public class ChatHWPanel extends Widget implements IHWindowParent {
                 sdb.visible = true;
                 sdb.c = btnc.add(sz.x - sbtnw, 20);
             }
-            HWindow w = wnds.get(wi);
-            Button b = btns.get(w);
+            final HWindow w = wnds.get(wi);
+            final Button b = btns.get(w);
             w.sz = sz.sub(0, btnh);
             b.change(w.title, w.visible ? Color.WHITE
                     : SlenHud.urgcols[w.urgent]);
@@ -157,7 +157,7 @@ public class ChatHWPanel extends Widget implements IHWindowParent {
         }
     }
 
-    public void wdgmsg(Widget sender, String msg, Object... args) {
+    public void wdgmsg(final Widget sender, final String msg, final Object... args) {
         if ((sender == fbtn)) {
             setfold(true);
         } else {
@@ -165,11 +165,11 @@ public class ChatHWPanel extends Widget implements IHWindowParent {
         }
     }
 
-    public void setfold(Boolean value) {
+    public void setfold(final Boolean value) {
         if (folded != value) {
             if (sc == null)
                 sc = c;
-            Coord tc = c;
+            final Coord tc = c;
             c = sc;
             sc = tc;
         }
@@ -196,9 +196,9 @@ public class ChatHWPanel extends Widget implements IHWindowParent {
         recalcsz = true;
     }
 
-    public void remwnd(HWindow wnd) {
+    public void remwnd(final HWindow wnd) {
         if (wnd == awnd) {
-            int i = wnds.indexOf(wnd);
+            final int i = wnds.indexOf(wnd);
             if (wnds.size() == 1)
                 setawnd(null);
             else if (i < 0)
@@ -214,7 +214,7 @@ public class ChatHWPanel extends Widget implements IHWindowParent {
         updbtns();
     }
 
-    public void updurgency(HWindow wnd, int level) {
+    public void updurgency(final HWindow wnd, int level) {
         if ((wnd == awnd) && !folded)
             level = -1;
         if (level == -1) {
@@ -226,26 +226,26 @@ public class ChatHWPanel extends Widget implements IHWindowParent {
                 return;
             wnd.urgent = level;
         }
-        Button b = btns.get(wnd);
+        final Button b = btns.get(wnd);
         b.change(wnd.title, SlenHud.urgcols[wnd.urgent]);
         int max = 0;
-        for (HWindow w : wnds) {
+        for (final HWindow w : wnds) {
             if (w.urgent > max)
                 max = w.urgent;
         }
         urgency = (level > 0) ? level : 0;
     }
 
-    public void setawnd(HWindow wnd) {
+    public void setawnd(final HWindow wnd) {
         setawnd(wnd, false);
     }
 
-    public void setawnd(HWindow wnd, boolean focus) {
+    public void setawnd(final HWindow wnd, final boolean focus) {
         if (focus) {
             setfold(false);
         }
         awnd = wnd;
-        for (HWindow w : wnds)
+        for (final HWindow w : wnds)
             w.visible = false;
         if (wnd != null) {
             wnd.visible = !folded;
@@ -254,7 +254,7 @@ public class ChatHWPanel extends Widget implements IHWindowParent {
         updbtns();
     }
 
-    public boolean mousedown(Coord c, int button) {
+    public boolean mousedown(final Coord c, final int button) {
         if (folded) {
             if (!c.isect(Coord.z, isz.add(cl.sz())))
                 return false;
@@ -278,7 +278,7 @@ public class ChatHWPanel extends Widget implements IHWindowParent {
         return (true);
     }
 
-    public boolean mouseup(Coord c, int button) {
+    public boolean mouseup(final Coord c, final int button) {
         if ((folded) && (c.isect(Coord.z.add(cl.sz()), isz))) {
             setfold(false);
             return true;
@@ -298,11 +298,11 @@ public class ChatHWPanel extends Widget implements IHWindowParent {
         return (true);
     }
 
-    public void mousemove(Coord c) {
+    public void mousemove(final Coord c) {
         if (dm) {
             this.c = this.c.add(c.add(doff.inv()));
         } else if (rsm) {
-            Coord d = c.sub(doff);
+            final Coord d = c.sub(doff);
             deltasz(d);
             doff = c.add(0, d.y);
         } else {
@@ -310,7 +310,7 @@ public class ChatHWPanel extends Widget implements IHWindowParent {
         }
     }
 
-    private void deltasz(Coord d) {
+    private void deltasz(final Coord d) {
         d.setY(-d.y);
         sz = sz.add(d);
         if (sz.x < minsz.x)
@@ -320,14 +320,14 @@ public class ChatHWPanel extends Widget implements IHWindowParent {
         else
             this.c.setY(this.c.y - d.y);
         btnc = sz.sub(sz.x, btnh);
-        Coord s = sz.sub(0, btnh + gzsz.y);
-        for (HWindow wnd : wnds) {
+        final Coord s = sz.sub(0, btnh + gzsz.y);
+        for (final HWindow wnd : wnds) {
             wnd.setsz(s);
         }
         updbtns();
     }
 
-    public boolean type(char key, KeyEvent ev) {
+    public boolean type(final char key, final KeyEvent ev) {
         if (!folded) {
             if (key == KeyEvent.VK_ESCAPE) {
                 setfold(true);

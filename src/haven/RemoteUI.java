@@ -32,20 +32,20 @@ public class RemoteUI implements UI.Receiver {
     final Session sess;
     UI ui;
 
-    public RemoteUI(Session sess) {
+    public RemoteUI(final Session sess) {
         this.sess = sess;
         Widget.initbardas();
     }
 
-    public void rcvmsg(int id, String name, Object... args) {
-        Message msg = new Message(Message.RMSG_WDGMSG);
+    public void rcvmsg(final int id, final String name, final Object... args) {
+        final Message msg = new Message(Message.RMSG_WDGMSG);
         msg.adduint16(id);
         msg.addstring(name);
         msg.addlist(args);
         sess.queuemsg(msg);
     }
 
-    public void run(UI ui) throws InterruptedException {
+    public void run(final UI ui) throws InterruptedException {
         this.ui = ui;
         CustomConfig.ui = ui;
         ui.setreceiver(this);
@@ -53,17 +53,17 @@ public class RemoteUI implements UI.Receiver {
             Message msg;
             while ((msg = sess.getuimsg()) != null) {
                 if (msg.type == Message.RMSG_NEWWDG) {
-                    int id = msg.uint16(); // New widget Id
+                    final int id = msg.uint16(); // New widget Id
                     String type = msg.string(); // New widget Type
                     Coord c = msg.coord(); // New widget coordinates
-                    int parent = msg.uint16(); //Parent Id for new widget
-                    Object[] args = msg.list(); // Arguments for widget creator (WidgetFactory)
+                    final int parent = msg.uint16(); //Parent Id for new widget
+                    final Object[] args = msg.list(); // Arguments for widget creator (WidgetFactory)
 
                     // UI fixes START
                     if (type.equals("cnt")) { // Central welcome widget
                         args[0] = CustomConfig.getWindowSize();
                     } else if (type.equals("img") && args.length >= 1 && (args[0] instanceof String)) {
-                        String arg0 = (String) args[0];
+                        final String arg0 = (String) args[0];
                         if (arg0.startsWith("gfx/hud/prog/")) { // Hourglass (progress bar) at center of screen and change widget type
                             c = CustomConfig.getWindowCenter();
                             type = "progressbar";
@@ -91,16 +91,16 @@ public class RemoteUI implements UI.Receiver {
                     ui.newwidget(id, type, c, parent, args);
 
                 } else if (msg.type == Message.RMSG_WDGMSG) {
-                    int id = msg.uint16();
-                    String type = msg.string();
-                    Object[] args = msg.list();
+                    final int id = msg.uint16();
+                    final String type = msg.string();
+                    final Object[] args = msg.list();
                     if (CustomConfig.isDebugLogging()) {
                         CustomConfig.logger.debug("Message (type='" + type + "') for widget (id=" + id + ')' + "\n\tcontains: " + Arrays.toString(args));
                     }
                     ui.uimsg(id, type, args);
 
                 } else if (msg.type == Message.RMSG_DSTWDG) {
-                    int id = msg.uint16();
+                    final int id = msg.uint16();
                     if (CustomConfig.isDebugLogging()) {
                         CustomConfig.logger.debug("Deleting widget id=" + id);
                     }

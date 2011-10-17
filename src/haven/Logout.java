@@ -30,7 +30,7 @@ public class Logout extends Window {
     final Button y;
     final Button n;
 
-    public Logout(Coord c, Widget parent) {
+    public Logout(final Coord c, final Widget parent) {
         super(c, new Coord(125, 50), parent, "Haven & Hearth");
         new Label(Coord.z, this, "Do you want to log out?");
         y = new Button(new Coord(0, 30), 50, this, "Yes");
@@ -38,7 +38,7 @@ public class Logout extends Window {
         canactivate = true;
     }
 
-    public void wdgmsg(Widget sender, String msg, Object... args) {
+    public void wdgmsg(final Widget sender, final String msg, final Object... args) {
         if (sender == y) {
             ui.sess.close();
         } else if (sender == n) {

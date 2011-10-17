@@ -25,7 +25,7 @@ public class Tile extends Layer {
     int w;
     char t;
 
-    public Tile(byte[] buf) {
+    public Tile(final byte[] buf) {
         t = (char) Utils.ub(buf[0]);
         id = Utils.ub(buf[1]);
         w = Utils.uint16d(buf, 2);

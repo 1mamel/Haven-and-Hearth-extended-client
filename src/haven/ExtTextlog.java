@@ -1,5 +1,7 @@
 package haven;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
@@ -34,13 +36,13 @@ public class ExtTextlog extends Widget implements ClipboardOwner {
 
     static {
         Widget.addtype("extlog", new WidgetFactory() {
-            public Widget create(Coord c, Widget parent, Object[] args) {
+            public Widget create(final Coord c, final Widget parent, final Object[] args) {
                 return (new ExtTextlog(c, (Coord) args[0], parent));
             }
         });
     }
 
-    public void draw(GOut g) {
+    public void draw(final GOut g) {
         for (int y = 0; y < sz.y; y += texpap.sz().y) {
             for (int x = 0;x < sz.x; x += texpap.sz().x) {
                 g.image(texpap, x, y);
@@ -57,7 +59,7 @@ public class ExtTextlog extends Widget implements ClipboardOwner {
         super.draw(g);
     }
 
-    public ExtTextlog(Coord c, Coord sz, Widget parent) {
+    public ExtTextlog(final Coord c, final Coord sz, final Widget parent) {
         super(c, sz, parent);
         lines = new LinkedList<GLLine>();
         setcanfocus(true);
@@ -65,20 +67,20 @@ public class ExtTextlog extends Widget implements ClipboardOwner {
     }
 
     @SuppressWarnings({"UnusedAssignment"})
-    public synchronized void append(String text, Color col) {
+    public synchronized void append(String text, final Color col) {
         if (text == null || text.length() == 0) text = ".";
 
         //	Splits at obvious line breaks
         if (text.contains("\n")) {
-            String[] lines = Utils.eoLinePattern.split(text.trim());
-            for (String line : lines) {
+            final String[] lines = Utils.eoLinePattern.split(text.trim());
+            for (final String line : lines) {
                 append(line, col);
             }
             return;
         }
 
-        GLLine tGLLine;
-        String[] words = Utils.whitespacePattern.split(text.trim());
+        final GLLine tGLLine;
+        final String[] words = Utils.whitespacePattern.split(text.trim());
 
         Graphics g = drawnCharacters.getGraphics();
 
@@ -108,7 +110,7 @@ public class ExtTextlog extends Widget implements ClipboardOwner {
         }
 
         //	Splits lines at the width of the widget
-        StringBuilder line = new StringBuilder();
+        final StringBuilder line = new StringBuilder();
         boolean hasExtraLines = false;
         for (int i = 0, lineWidth = 0, wordchars = 0;
              i < words.length;
@@ -132,26 +134,26 @@ public class ExtTextlog extends Widget implements ClipboardOwner {
             append(text, col);
     }
 
-    public synchronized void append(String line) {
+    public synchronized void append(final String line) {
         append(line, Color.BLACK);
     }
 
-    public void uimsg(String msg, Object... args) {
+    public void uimsg(@NotNull final String msg, final Object... args) {
         if (msg.equals("apnd")) {
             append((String) args[0]);
         }
     }
 
     public void updateDrawData() {
-        BufferedImage background = ((TexI) texpap).back;
-        Graphics g = visibleCharacters.createGraphics();
+        final BufferedImage background = ((TexI) texpap).back;
+        final Graphics g = visibleCharacters.createGraphics();
         g.clearRect(0, 0, sz.x, sz.y);
         g.drawImage(background, 0, 0, sz.x, sz.y, null);
         if (scrollBar != null)
             g.drawImage(drawnCharacters, 0, 0 - (lineHeight * (scrollBar.val)), null);
     }
 
-    public boolean mousewheel(Coord c, int amount) {
+    public boolean mousewheel(final Coord c, final int amount) {
         if (scrollBar.mousewheel(c, amount)) {
             updateDrawData();
             return true;
@@ -159,7 +161,7 @@ public class ExtTextlog extends Widget implements ClipboardOwner {
         return super.mousewheel(c, amount);
     }
 
-    public boolean mousedown(Coord c, int button) {
+    public boolean mousedown(final Coord c, final int button) {
         ui.grabmouse(this);
         if (c.x >= sz.x - 5 && c.x <= sz.x && scrollBar.mousedown(c, button)) {
             updateDrawData();
@@ -176,7 +178,7 @@ public class ExtTextlog extends Widget implements ClipboardOwner {
         return (super.mousedown(c, button));
     }
 
-    public void mousemove(Coord c) {
+    public void mousemove(final Coord c) {
         if (c.x >= sz.x - 5 && c.x <= sz.x) {
             scrollBar.mousemove(c);
             updateDrawData();
@@ -189,7 +191,7 @@ public class ExtTextlog extends Widget implements ClipboardOwner {
         }
     }
 
-    public boolean mouseup(Coord c, int button) {
+    public boolean mouseup(final Coord c, final int button) {
         ui.ungrabmouse();
         if (c.x >= sz.x - 5 && c.x <= sz.x && scrollBar.mouseup(c, button)) {
             updateDrawData();
@@ -269,7 +271,7 @@ public class ExtTextlog extends Widget implements ClipboardOwner {
         updateDrawData();
     }
 
-    public boolean type(char ch, KeyEvent ev) {
+    public boolean type(char ch, final KeyEvent ev) {
         ch += 96;
         if ((ch == 'c' || ch == 'C') && ev.isControlDown()) {
             setClipboardContents();
@@ -286,13 +288,13 @@ public class ExtTextlog extends Widget implements ClipboardOwner {
      * @param contents
      */
     @SuppressWarnings({"JavaDoc"})
-    public void lostOwnership(Clipboard clipboard, Transferable contents) {
+    public void lostOwnership(final Clipboard clipboard, final Transferable contents) {
         // TODO: Add your code here
     }
 
     public void setClipboardContents() {
         if (selectedText.trim().length() == 0) return;
-        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        final Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         clipboard.setContents(new StringSelection(selectedText), this);
     }
 }

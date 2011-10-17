@@ -31,19 +31,19 @@ import java.io.*;
 public class FileCache implements ResCache {
     private final File base;
 
-    public FileCache(File base) {
+    public FileCache(final File base) {
         this.base = base;
     }
 
     public static FileCache foruser() {
         try {
-            String path = System.getProperty("user.home", null);
+            final String path = System.getProperty("user.home", null);
             if (path == null)
                 return (null);
-            File home = new File(path);
+            final File home = new File(path);
             if (!home.exists() || !home.isDirectory() || !home.canRead() || !home.canWrite())
                 return (null);
-            File base = new File(new File(home, ".haven"), "cache");
+            final File base = new File(new File(home, ".haven"), "cache");
             if (!base.exists() && !base.mkdirs())
                 return (null);
             return (new FileCache(base));
@@ -52,9 +52,9 @@ public class FileCache implements ResCache {
         }
     }
 
-    private File forres(String nm) {
+    private File forres(final String nm) {
         File res = base;
-        String[] comp = Utils.slashPattern.split(nm);
+        final String[] comp = Utils.slashPattern.split(nm);
         for (int i = 0; i < comp.length - 1; i++) {
             res = new File(res, comp[i]);
         }
@@ -62,13 +62,13 @@ public class FileCache implements ResCache {
     }
 
     @SuppressWarnings({"ResultOfMethodCallIgnored"})
-    public OutputStream store(String name) throws IOException {
+    public OutputStream store(final String name) throws IOException {
         final File nm = forres(name);
-        File dir = nm.getParentFile();
+        final File dir = nm.getParentFile();
         final File tmp = new File(dir, nm.getName() + ".new");
         dir.mkdirs();
         tmp.delete();
-        OutputStream ret = new FilterOutputStream(new FileOutputStream(tmp)) {
+        final OutputStream ret = new FilterOutputStream(new FileOutputStream(tmp)) {
             public void close() throws IOException {
                 super.close();
                 if (!tmp.renameTo(nm)) {
@@ -82,7 +82,7 @@ public class FileCache implements ResCache {
         return (ret);
     }
 
-    public InputStream fetch(String name) throws IOException {
+    public InputStream fetch(final String name) throws IOException {
         return (new FileInputStream(forres(name)));
     }
 }

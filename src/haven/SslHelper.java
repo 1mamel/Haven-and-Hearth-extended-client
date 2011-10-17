@@ -58,8 +58,8 @@ public class SslHelper {
 
     private synchronized SSLContext ctx() {
         if (ctx == null) {
-            TrustManagerFactory tmf;
-            KeyManagerFactory kmf;
+            final TrustManagerFactory tmf;
+            final KeyManagerFactory kmf;
             try {
                 ctx = SSLContext.getInstance("TLS");
                 tmf = TrustManagerFactory.getInstance("PKIX");
@@ -97,7 +97,7 @@ public class SslHelper {
         sfac = null;
     }
 
-    public synchronized void trust(Certificate cert) {
+    public synchronized void trust(final Certificate cert) {
         clear();
         try {
             trusted.setCertificateEntry("cert-" + tserial++, cert);
@@ -109,12 +109,12 @@ public class SslHelper {
         }
     }
 
-    public static Certificate loadX509(InputStream in) throws CertificateException {
-        CertificateFactory fac = CertificateFactory.getInstance("X.509");
+    public static Certificate loadX509(final InputStream in) throws CertificateException {
+        final CertificateFactory fac = CertificateFactory.getInstance("X.509");
         return (fac.generateCertificate(in));
     }
 
-    public synchronized void loadCredsPkcs12(InputStream in, char[] pw) throws IOException, CertificateException {
+    public synchronized void loadCredsPkcs12(final InputStream in, final char[] pw) throws IOException, CertificateException {
         clear();
         try {
             creds = KeyStore.getInstance("PKCS12");
@@ -127,34 +127,34 @@ public class SslHelper {
         }
     }
 
-    public HttpsURLConnection connect(URL url) throws IOException {
+    public HttpsURLConnection connect(final URL url) throws IOException {
         if (!url.getProtocol().equals("https"))
             throw (new MalformedURLException("Can only be used to connect to HTTPS servers"));
-        HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+        final HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
         conn.setSSLSocketFactory(sfac());
         if (ver != null)
             conn.setHostnameVerifier(ver);
         return (conn);
     }
 
-    public HttpsURLConnection connect(String url) throws IOException {
+    public HttpsURLConnection connect(final String url) throws IOException {
         return (connect(new URL(url)));
     }
 
     public void ignoreName() {
         ver = new HostnameVerifier() {
-            public boolean verify(String hostname, SSLSession sess) {
+            public boolean verify(final String hostname, final SSLSession sess) {
                 return (true);
             }
         };
     }
 
-    public SSLSocket connect(Socket sk, String host, int port, boolean autoclose) throws IOException {
+    public SSLSocket connect(final Socket sk, final String host, final int port, final boolean autoclose) throws IOException {
         return ((SSLSocket) sfac().createSocket(sk, host, port, autoclose));
     }
 
-    public SSLSocket connect(String host, int port) throws IOException {
-        Socket sk = new HackSocket();
+    public SSLSocket connect(final String host, final int port) throws IOException {
+        final Socket sk = new HackSocket();
         sk.connect(new InetSocketAddress(host, port));
         return (connect(sk, host, port, true));
     }

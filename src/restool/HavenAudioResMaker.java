@@ -14,18 +14,18 @@ public class HavenAudioResMaker {
     private static final String MAGIC_HAVEN_AUDIO_TYPE_NAME = "audio";
     private static final byte[] HAVEN_AUDIO_TYPE_NAME = MAGIC_HAVEN_AUDIO_TYPE_NAME.getBytes(CHARSET);
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         try {
             System.out.println("making file...");
-            FileOutputStream out = new FileOutputStream("test.res");
+            final FileOutputStream out = new FileOutputStream("test.res");
             try {
                 System.out.println("writing sig...");
                 out.write(HAVEN_SIG);
 
                 System.out.println("writing version...");
-                int version = 0xFFFF;
+                final int version = 0xFFFF;
                 System.out.println("version:" + version);
-                byte[] versionBytes = new byte[2];
+                final byte[] versionBytes = new byte[2];
                 collectBytesViaTruncate(version, versionBytes);
 
                 out.write(versionBytes);
@@ -69,13 +69,13 @@ public class HavenAudioResMaker {
         System.out.println("fin");
     }
 
-    private static void collectBytesViaTruncate(int version, byte[] versionBytes) {
+    private static void collectBytesViaTruncate(final int version, final byte[] versionBytes) {
         for (int i = 0; i < versionBytes.length; i++) {
             versionBytes[versionBytes.length - 1 - i] = collectSignificantByte(version, i);
         }
     }
 
-    private static byte collectSignificantByte(int version, final int shifts) {
+    private static byte collectSignificantByte(final int version, final int shifts) {
         return (byte) ((version >> 8 * shifts) & 0xFF);
     }
 

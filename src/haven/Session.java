@@ -101,7 +101,7 @@ public class Session {
     public static class MessageException extends RuntimeException {
         public Message msg;
 
-        public MessageException(String text, Message msg) {
+        public MessageException(final String text, final Message msg) {
             super(text);
             this.msg = msg;
         }
@@ -126,11 +126,11 @@ public class Session {
                     return (res);
                 }
 
-                public void set(Resource r) {
+                public void set(final Resource r) {
                     res = r;
                 }
 
-                public int compareTo(Indir<Resource> x) {
+                public int compareTo(final Indir<Resource> x) {
                     return ((this.getClass().cast(x)).resid - resid);
                 }
 
@@ -156,7 +156,7 @@ public class Session {
         long recv;
         long sent;
 
-        ObjAck(int id, int frame, long recv) {
+        ObjAck(final int id, final int frame, final long recv) {
             this.id = id;
             this.frame = frame;
             this.recv = recv;
@@ -174,7 +174,8 @@ public class Session {
             try {
                 //noinspection InfiniteLoopStatement
                 while (true) {
-                    long now, then;
+                    final long now;
+                    final long then;
                     then = System.currentTimeMillis();
                     glob.oc.tick();
                     now = System.currentTimeMillis();
@@ -195,37 +196,37 @@ public class Session {
             setDaemon(true);
         }
 
-        private void gotack(int seq) {
+        private void gotack(final int seq) {
             synchronized (pending) {
                 for (ListIterator<Message> i = pending.listIterator(); i.hasNext(); ) {
-                    Message msg = i.next();
+                    final Message msg = i.next();
                     if (msg.seq <= seq)
                         i.remove();
                 }
             }
         }
 
-        private void getobjdata(Message msg) {
-            OCache oc = glob.oc;
+        private void getobjdata(final Message msg) {
+            final OCache oc = glob.oc;
             while (msg.off < msg.blob.length) {
-                int fl = msg.uint8();
-                int id = msg.int32();
-                int frame = msg.int32();
+                final int fl = msg.uint8();
+                final int id = msg.int32();
+                final int frame = msg.int32();
                 if ((fl & 1) != 0) {
                     oc.remove(id, frame - 1);
                 }
                 //noinspection SynchronizationOnLocalVariableOrMethodParameter
                 synchronized (oc) {
                     while (true) {
-                        int type = msg.uint8();
+                        final int type = msg.uint8();
                         if (type == OD_REM) {
                             oc.remove(id, frame);
                         } else if (type == OD_MOVE) {
-                            Coord c = msg.coord();
+                            final Coord c = msg.coord();
                             oc.move(id, frame, c);
                         } else if (type == OD_RES) {
                             int resid = msg.uint16();
-                            Message sdt;
+                            final Message sdt;
                             if ((resid & 0x8000) != 0) {
                                 resid &= ~0x8000;
                                 sdt = msg.derive(0, msg.uint8());
@@ -234,24 +235,24 @@ public class Session {
                             }
                             oc.cres(id, frame, getres(resid), sdt);
                         } else if (type == OD_LINBEG) {
-                            Coord s = msg.coord();
-                            Coord t = msg.coord();
-                            int c = msg.int32();
+                            final Coord s = msg.coord();
+                            final Coord t = msg.coord();
+                            final int c = msg.int32();
                             oc.linbeg(id, frame, s, t, c);
                         } else if (type == OD_LINSTEP) {
-                            int l = msg.int32();
+                            final int l = msg.int32();
                             oc.linstep(id, frame, l);
                         } else if (type == OD_SPEECH) {
-                            Coord off = msg.coord();
-                            String text = msg.string();
+                            final Coord off = msg.coord();
+                            final String text = msg.string();
                             oc.speak(id, frame, off, text);
                         } else if ((type == OD_LAYERS) || (type == OD_AVATAR)) {
                             Indir<Resource> baseres = null;
                             if (type == OD_LAYERS)
                                 baseres = getres(msg.uint16());
-                            List<Indir<Resource>> layers = new LinkedList<Indir<Resource>>();
+                            final List<Indir<Resource>> layers = new LinkedList<Indir<Resource>>();
                             while (true) {
-                                int layer = msg.uint16();
+                                final int layer = msg.uint16();
                                 if (layer == 65535)
                                     break;
                                 layers.add(getres(layer));
@@ -261,12 +262,12 @@ public class Session {
                             else
                                 oc.avatar(id, frame, layers);
                         } else if (type == OD_DRAWOFF) {
-                            Coord off = msg.coord();
+                            final Coord off = msg.coord();
                             oc.drawoff(id, frame, off);
                         } else if (type == OD_LUMIN) {
                             oc.lumin(id, frame, msg.coord(), msg.uint16(), msg.uint8());
                         } else if (type == OD_FOLLOW) {
-                            int oid = msg.int32();
+                            final int oid = msg.int32();
                             Coord off = Coord.z;
                             int szo = 0;
                             if (oid != -1) {
@@ -275,25 +276,25 @@ public class Session {
                             }
                             oc.follow(id, frame, oid, off, szo);
                         } else if (type == OD_HOMING) {
-                            int oid = msg.int32();
+                            final int oid = msg.int32();
                             if (oid == -1) {
                                 oc.homostop(id, frame);
                             } else if (oid == -2) {
-                                Coord tgtc = msg.coord();
-                                int v = msg.uint16();
+                                final Coord tgtc = msg.coord();
+                                final int v = msg.uint16();
                                 oc.homocoord(id, frame, tgtc, v);
                             } else {
-                                Coord tgtc = msg.coord();
-                                int v = msg.uint16();
+                                final Coord tgtc = msg.coord();
+                                final int v = msg.uint16();
                                 oc.homing(id, frame, oid, tgtc, v);
                             }
                         } else if (type == OD_OVERLAY) {
                             int olid = msg.int32();
-                            boolean prs = (olid & 1) != 0;
+                            final boolean prs = (olid & 1) != 0;
                             olid >>= 1;
                             int resid = msg.uint16();
-                            Indir<Resource> res;
-                            Message sdt;
+                            final Indir<Resource> res;
+                            final Message sdt;
                             if (resid == 65535) {
                                 res = null;
                                 sdt = null;
@@ -308,12 +309,12 @@ public class Session {
                             }
                             oc.overlay(id, frame, olid, prs, res, sdt);
                         } else if (type == OD_HEALTH) {
-                            int hp = msg.uint8();
+                            final int hp = msg.uint8();
                             oc.health(id, frame, hp);
                         } else if (type == OD_BUDDY) {
-                            String name = msg.string();
-                            int group = msg.uint8();
-                            int btype = msg.uint8();
+                            final String name = msg.string();
+                            final int group = msg.uint8();
+                            final int btype = msg.uint8();
                             oc.buddy(id, frame, name, group, btype);
                         } else if (type == OD_END) {
                             break;
@@ -321,13 +322,13 @@ public class Session {
                             throw (new MessageException("Unknown objdelta type: " + type, msg));
                         }
                     }
-                    Gob g = oc.getgob(id, frame);
+                    final Gob g = oc.getgob(id, frame);
                     if (g != null)
                         g.frame = frame;
                 }
                 synchronized (objacks) {
                     if (objacks.containsKey(id)) {
-                        ObjAck a = objacks.get(id);
+                        final ObjAck a = objacks.get(id);
                         a.frame = frame;
                         a.recv = System.currentTimeMillis();
                     } else {
@@ -341,14 +342,14 @@ public class Session {
         }
 
         @SuppressWarnings({"UnusedAssignment"})
-        private void handlerel(Message msg) {
+        private void handlerel(final Message msg) {
             //	New Widget
             Message msgClone;
-            int id = -1;
-            String type = "";
-            Coord c = Coord.z;
-            int parent = -1;
-            Object[] args = null;
+            final int id = -1;
+            final String type = "";
+            final Coord c = Coord.z;
+            final int parent = -1;
+            final Object[] args = null;
 
             if (CustomConfig.logServerMessages) {
 //                msgClone = msg.clone();
@@ -409,9 +410,9 @@ public class Session {
             } else if (msg.type == Message.RMSG_RESID) {
 //                if (CustomConfig.logServerMessages)
 //                    CustomConsole.log("\nRESID\tID: " + id + "\tName: " + type + "\tVer: " + parent);
-                int resid = msg.uint16();
-                String resname = msg.string();
-                int resver = msg.uint16();
+                final int resid = msg.uint16();
+                final String resname = msg.string();
+                final int resver = msg.uint16();
                 synchronized (rescache) {
                     getres(resid).set(Resource.load(resname, resver, -5));
                 }
@@ -419,9 +420,9 @@ public class Session {
                 glob.party.msg(msg);
             } else if (msg.type == Message.RMSG_SFX) {
                 if (!CustomConfig.isSoundOn) return;        //	Sound effects disabled
-                Indir<Resource> res = getres(msg.uint16());
-                double vol = ((double) msg.uint16()) / 256.0;
-                double spd = ((double) msg.uint16()) / 256.0;
+                final Indir<Resource> res = getres(msg.uint16());
+                final double vol = ((double) msg.uint16()) / 256.0;
+                final double spd = ((double) msg.uint16()) / 256.0;
                 Audio.play(res);
             } else if (msg.type == Message.RMSG_CATTR) {
                 glob.cattr(msg);
@@ -429,9 +430,9 @@ public class Session {
 //                if (CustomConfig.logServerMessages) {
 //                    CustomConsole.log("\nMUSIC\tName: " + type + "\tVer: " + id);
 //                }
-                String resnm = msg.string();
-                int resver = msg.uint16();
-                boolean loop = !msg.eom() && (msg.uint8() != 0);
+                final String resnm = msg.string();
+                final int resver = msg.uint16();
+                final boolean loop = !msg.eom() && (msg.uint8() != 0);
                 if (Music.enabled) {
                     if (resnm.length() == 0)
                         Music.stop();
@@ -447,7 +448,7 @@ public class Session {
             }
         }
 
-        private void getrel(int seq, Message msg) {
+        private void getrel(final int seq, final Message msg) {
             if (seq == rseq) {
                 synchronized (uimsgs) {
                     handlerel(msg);
@@ -478,7 +479,7 @@ public class Session {
                 }
                 while (alive) {
                     try {
-                        DatagramPacket p = new DatagramPacket(new byte[65536], 65536);
+                        final DatagramPacket p = new DatagramPacket(new byte[65536], 65536);
                         try {
                             sk.receive(p);
                         } catch (java.nio.channels.ClosedByInterruptException e) {
@@ -491,10 +492,10 @@ public class Session {
                         }
                         if (!p.getAddress().equals(server))
                             continue;
-                        Message msg = new Message(p.getData()[0], p.getData(), 1, p.getLength() - 1);
+                        final Message msg = new Message(p.getData()[0], p.getData(), 1, p.getLength() - 1);
                         if (state == Session.State.CONN) {
                             if (msg.type == MSG_SESS) {
-                                int error = msg.uint8();
+                                final int error = msg.uint8();
                                 synchronized (Session.this) {
                                     if (error == 0) {
                                         state = Session.State.ERROR;
@@ -511,7 +512,7 @@ public class Session {
                                 int seq = msg.uint16();
                                 while (!msg.eom()) {
                                     int type = msg.uint8();
-                                    int len;
+                                    final int len;
                                     if ((type & 0x80) != 0) {
                                         type &= 0x7f;
                                         len = msg.uint16();
@@ -582,7 +583,7 @@ public class Session {
                                     return;
                                 }
                             }
-                            Message msg = new Message(MSG_SESS);
+                            final Message msg = new Message(MSG_SESS);
                             msg.adduint16(1);
                             msg.addstring("Haven");
                             msg.adduint16(PVER);
@@ -621,8 +622,8 @@ public class Session {
                   */
                         synchronized (pending) {
                             if (!pending.isEmpty()) {
-                                for (Message msg : pending) {
-                                    int txtime;
+                                for (final Message msg : pending) {
+                                    final int txtime;
                                     if (msg.retx == 0)
                                         txtime = 0;
                                     else if (msg.retx == 1)
@@ -636,7 +637,7 @@ public class Session {
                                     if (now - msg.last > txtime) { /* XXX */
                                         msg.last = now;
                                         msg.retx++;
-                                        Message rmsg = new Message(MSG_REL);
+                                        final Message rmsg = new Message(MSG_REL);
                                         rmsg.adduint16(msg.seq);
                                         rmsg.adduint8(msg.type);
                                         rmsg.addbytes(msg.blob);
@@ -649,7 +650,7 @@ public class Session {
                         synchronized (objacks) {
                             Message msg = null;
                             for (Iterator<ObjAck> i = objacks.values().iterator(); i.hasNext(); ) {
-                                ObjAck a = i.next();
+                                final ObjAck a = i.next();
                                 boolean send = false, del = false;
                                 if (now - a.sent > 200)
                                     send = true;
@@ -672,7 +673,7 @@ public class Session {
                         }
                         synchronized (this) {
                             if ((acktime > 0) && (now - acktime >= ackthresh)) {
-                                byte[] msg = {MSG_ACK, 0, 0};
+                                final byte[] msg = {MSG_ACK, 0, 0};
                                 Utils.uint16e(ackseq, msg, 1);
                                 sendmsg(msg);
                                 acktime = -1;
@@ -690,7 +691,7 @@ public class Session {
             } catch (InterruptedException e) {
                 for (int i = 0; i < 5; i++) {
                     sendmsg(new Message(MSG_CLOSE));
-                    long f = System.currentTimeMillis();
+                    final long f = System.currentTimeMillis();
                     while (true) {
                         synchronized (Session.this) {
                             if (state == Session.State.CONN || state == Session.State.FIN || state == Session.State.DEAD) {
@@ -699,7 +700,7 @@ public class Session {
                             }
                             state = Session.State.CLOSE;
 //                            state = "close";
-                            long now = System.currentTimeMillis();
+                            final long now = System.currentTimeMillis();
                             if (now - f > 500)
                                 break;
                             try {
@@ -716,7 +717,7 @@ public class Session {
         }
     }
 
-    public Session(InetAddress server, String username, byte[] cookie) {
+    public Session(final InetAddress server, final String username, final byte[] cookie) {
         this.server = server;
         this.username = username;
         this.cookie = cookie;
@@ -734,7 +735,7 @@ public class Session {
         ticker.start();
     }
 
-    private void sendack(int seq) {
+    private void sendack(final int seq) {
         synchronized (sworker) {
             if (acktime < 0)
                 acktime = System.currentTimeMillis();
@@ -756,7 +757,7 @@ public class Session {
         return (state != State.DEAD);
     }
 
-    public void queuemsg(Message msg) {
+    public void queuemsg(final Message msg) {
         msg.seq = tseq;
         tseq = (tseq + 1) % 65536;
         synchronized (pending) {
@@ -775,14 +776,14 @@ public class Session {
         }
     }
 
-    public void sendmsg(Message msg) {
-        byte[] buf = new byte[msg.blob.length + 1];
+    public void sendmsg(final Message msg) {
+        final byte[] buf = new byte[msg.blob.length + 1];
         buf[0] = (byte) msg.type;
         System.arraycopy(msg.blob, 0, buf, 1, msg.blob.length);
         sendmsg(buf);
     }
 
-    public void sendmsg(byte[] msg) {
+    public void sendmsg(final byte[] msg) {
         try {
             sk.send(new DatagramPacket(msg, msg.length, server, 1870));
         } catch (IOException ignored) {

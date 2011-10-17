@@ -35,13 +35,13 @@ public class Tabs {
     public Tab curtab = null;
     public final List<Tab> tabs = new LinkedList<Tab>();
 
-    public Tabs(Coord c, Coord sz, Widget parent) {
+    public Tabs(final Coord c, final Coord sz, final Widget parent) {
         this.c = c;
         this.sz = sz;
         this.parent = parent;
     }
 
-    void add(Tab t) {
+    void add(final Tab t) {
         if (curtab == null) {
             curtab = t;
         } else {
@@ -50,7 +50,7 @@ public class Tabs {
         tabs.add(t);
     }
 
-    void remove(Tab t) {
+    void remove(final Tab t) {
         tabs.remove(t);
         if (curtab == t) {
             if (tabs.isEmpty()) {
@@ -71,7 +71,7 @@ public class Tabs {
             add(this);
         }
 
-        public Tab(Coord bc, int bw, String text) {
+        public Tab(final Coord bc, final int bw, final String text) {
             this();
             this.btn = new TabButton(bc, bw, text, this);
         }
@@ -86,7 +86,7 @@ public class Tabs {
     public class TabButton extends Button {
         public final Tab tab;
 
-        private TabButton(Coord c, Integer w, String text, Tab tab) {
+        private TabButton(final Coord c, final Integer w, final String text, final Tab tab) {
             super(c, w, Tabs.this.parent, text);
             this.tab = tab;
         }
@@ -96,8 +96,8 @@ public class Tabs {
         }
     }
 
-    public void showtab(Tab tab) {
-        Tab old = curtab;
+    public void showtab(final Tab tab) {
+        final Tab old = curtab;
         if (old != null)
             old.hide();
         if ((curtab = tab) != null)
@@ -105,6 +105,6 @@ public class Tabs {
         changed(old, tab);
     }
 
-    public void changed(Tab from, Tab to) {
+    public void changed(final Tab from, final Tab to) {
     }
 }

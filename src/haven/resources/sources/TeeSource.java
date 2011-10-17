@@ -18,12 +18,12 @@ import java.io.Serializable;
 public abstract class TeeSource implements ResSource, Serializable {
     public ResSource back;
 
-    public TeeSource(ResSource back) {
+    public TeeSource(final ResSource back) {
         this.back = back;
     }
 
-    public InputStream get(String name) throws IOException {
-        StreamTee tee = new StreamTee(back.get(name));
+    public InputStream get(final String name) throws IOException {
+        final StreamTee tee = new StreamTee(back.get(name));
         tee.setncwe();
         tee.attach(fork(name));
         return (tee);

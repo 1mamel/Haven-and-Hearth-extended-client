@@ -51,13 +51,13 @@ public class ComMeter extends Widget {
             scales[i] = Resource.loadtex(String.format("gfx/hud/combat/com/%02d", i));
     }
 
-    public ComMeter(Coord c, Widget parent, Fightview fv) {
+    public ComMeter(final Coord c, final Widget parent, final Fightview fv) {
         super(c, sword.sz(), parent);
         this.fv = fv;
     }
 
-    public void draw(GOut g) {
-        Fightview.Relation rel = fv.current;
+    public void draw(final GOut g) {
+        final Fightview.Relation rel = fv.current;
         if (rel != null)
             g.image(scales[(-rel.bal) + 5], Coord.z);
         g.image(sword, Coord.z);

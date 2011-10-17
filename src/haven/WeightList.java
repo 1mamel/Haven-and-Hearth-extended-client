@@ -40,7 +40,7 @@ public class WeightList<T> implements java.io.Serializable {
         w = new ArrayList<Integer>();
     }
 
-    public void add(T c, int w) {
+    public void add(final T c, final int w) {
         this.c.add(c);
         this.w.add(w);
         tw += w;
@@ -57,7 +57,7 @@ public class WeightList<T> implements java.io.Serializable {
         return (c.get(i));
     }
 
-    public T pick(Random gen) {
+    public T pick(final Random gen) {
         return (pick(gen.nextInt(tw)));
     }
 

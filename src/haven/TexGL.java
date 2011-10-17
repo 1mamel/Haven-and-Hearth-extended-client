@@ -43,16 +43,16 @@ public abstract class TexGL extends Tex {
     protected static final Map<GL, Collection<Integer>> disposed = new HashMap<GL, Collection<Integer>>();
     public static boolean disableall = false;
 
-    public TexGL(Coord sz) {
+    public TexGL(final Coord sz) {
         super(sz);
         tdim = new Coord(nextp2(sz.x), nextp2(sz.y));
     }
 
     protected abstract void fill(GOut gl);
 
-    private void create(GOut g) {
-        GL gl = g.gl;
-        int[] buf = new int[1];
+    private void create(final GOut g) {
+        final GL gl = g.gl;
+        final int[] buf = new int[1];
         gl.glGenTextures(1, buf, 0);
         id = buf[0];
         mygl = gl;
@@ -63,22 +63,22 @@ public abstract class TexGL extends Tex {
         checkerr(gl);
     }
 
-    protected Color setenv(GL gl) {
+    protected Color setenv(final GL gl) {
         gl.glTexEnvi(GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, GL.GL_MODULATE);
         return (Color.WHITE);
     }
 
-    static Color blend(GOut g, Color amb) {
-        Color c = g.getcolor();
-        Color n = new Color((c.getRed() * amb.getRed()) / 255,
+    static Color blend(final GOut g, final Color amb) {
+        final Color c = g.getcolor();
+        final Color n = new Color((c.getRed() * amb.getRed()) / 255,
                 (c.getGreen() * amb.getGreen()) / 255,
                 (c.getBlue() * amb.getBlue()) / 255,
                 (c.getAlpha() * amb.getAlpha()) / 255);
         return (n);
     }
 
-    public void render(GOut g, Coord c, Coord ul, Coord br, Coord sz) {
-        GL gl = g.gl;
+    public void render(final GOut g, final Coord c, final Coord ul, final Coord br, final Coord sz) {
+        final GL gl = g.gl;
         synchronized (idmon) {
             if ((id != -1) && (mygl != gl)) {
                 dispose(mygl, id);
@@ -88,14 +88,14 @@ public abstract class TexGL extends Tex {
                 create(g);
             g.texsel(id);
         }
-        Color amb = blend(g, setenv(gl));
+        final Color amb = blend(g, setenv(gl));
         checkerr(gl);
         if (!disableall) {
             gl.glBegin(GL.GL_QUADS);
-            float l = ((float) ul.x) / ((float) tdim.x);
-            float t = ((float) ul.y) / ((float) tdim.y);
-            float r = ((float) br.x) / ((float) tdim.x);
-            float b = ((float) br.y) / ((float) tdim.y);
+            final float l = ((float) ul.x) / ((float) tdim.x);
+            final float t = ((float) ul.y) / ((float) tdim.y);
+            final float r = ((float) br.x) / ((float) tdim.x);
+            final float b = ((float) br.y) / ((float) tdim.y);
             gl.glColor4f((float) amb.getRed() / 255.0f,
                     (float) amb.getGreen() / 255.0f,
                     (float) amb.getBlue() / 255.0f,
@@ -113,7 +113,7 @@ public abstract class TexGL extends Tex {
         }
     }
 
-    private static void dispose(GL gl, int id) {
+    private static void dispose(final GL gl, final int id) {
         Collection<Integer> dc;
         synchronized (disposed) {
             dc = disposed.get(gl);
@@ -140,8 +140,8 @@ public abstract class TexGL extends Tex {
         dispose();
     }
 
-    public static void disposeall(GL gl) {
-        Collection<Integer> dc;
+    public static void disposeall(final GL gl) {
+        final Collection<Integer> dc;
         synchronized (disposed) {
             dc = disposed.get(gl);
             if (dc == null)
@@ -150,9 +150,9 @@ public abstract class TexGL extends Tex {
         synchronized (dc) {
             if (dc.isEmpty())
                 return;
-            int[] da = new int[dc.size()];
+            final int[] da = new int[dc.size()];
             int i = 0;
-            for (int id : dc)
+            for (final int id : dc)
                 da[i++] = id;
             dc.clear();
             gl.glDeleteTextures(da.length, da, 0);
@@ -161,7 +161,7 @@ public abstract class TexGL extends Tex {
 
     static {
         Console.setscmd("texdis", new Console.Command() {
-            public void run(Console cons, String[] args) {
+            public void run(final Console cons, final String[] args) {
                 disableall = (Integer.parseInt(args[1]) != 0);
             }
         });

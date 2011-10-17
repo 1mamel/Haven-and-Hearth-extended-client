@@ -27,6 +27,7 @@
 package haven;
 
 import haven.scriptengine.InventoryExt;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.image.BufferedImage;
 import java.util.HashSet;
@@ -54,7 +55,7 @@ public class Inventory extends Widget implements DTarget {
 
     static {
         Widget.addtype("inv", new WidgetFactory() {
-            public Widget create(Coord c, Widget parent, Object[] args) {
+            public Widget create(final Coord c, final Widget parent, final Object[] args) {
                 if (parent instanceof StudyWidget) {
                     return new CuriositiesInventory(c ,(Coord) args[0], parent);
                 }
@@ -63,9 +64,9 @@ public class Inventory extends Widget implements DTarget {
         });
     }
 
-    public void draw(GOut g) {
-        Coord c = new Coord(0,0);
-        Coord sz = invSqSizeSubOne;
+    public void draw(final GOut g) {
+        final Coord c = new Coord(0,0);
+        final Coord sz = invSqSizeSubOne;
         for (c.y=0; c.y < isz.y; ++c.y) {
             for (c.x=0; c.x < isz.x; ++c.x) {
                 g.image(invsq, c.mul(sz));
@@ -81,7 +82,7 @@ public class Inventory extends Widget implements DTarget {
      * @param sz     size of cells
      * @param parent parent widget
      */
-    public Inventory(Coord c, Coord sz, Widget parent) {
+    public Inventory(final Coord c, final Coord sz, final Widget parent) {
         super(c, invSqSizeSubOne.mul(sz).add(17, 1), parent);
         isz = sz;
         if (parent.canhastrash) {
@@ -93,7 +94,7 @@ public class Inventory extends Widget implements DTarget {
         recalculateSize();
     }
 
-    public boolean mousewheel(Coord c, int amount) {
+    public boolean mousewheel(final Coord c, final int amount) {
         if (amount < 0)
             wdgmsg("xfer", -1, ui.modflags());
         else if (amount > 0)
@@ -101,30 +102,30 @@ public class Inventory extends Widget implements DTarget {
         return (true);
     }
 
-    public boolean drop(Coord cc, Coord ul, Item item) {
+    public boolean drop(final Coord cc, final Coord ul, final Item item) {
         wdgmsg("drop", ul.add(15, 15).div(Inventory.invSqSize));
         return (true);
     }
 
-    public boolean iteminteract(Coord cc, Coord ul) {
+    public boolean iteminteract(final Coord cc, final Coord ul) {
         return (false);
     }
 
-    public void uimsg(String msg, Object... args) {
+    public void uimsg(@NotNull final String msg, final Object... args) {
         if (msg.equals("sz")) {
             isz = (Coord) args[0];
             recalculateSize();
         }
     }
 
-    public void wdgmsg(Widget sender, String msg, Object... args) {
+    public void wdgmsg(final Widget sender, final String msg, final Object... args) {
         if (checkTrashButton(sender)) {
             if (wait.get()) {
                 return;
             }
             wait.set(true);
             new ConfirmWnd(parent.c.add(c).add(trashButton.c), ui.root, getmsg(), new ConfirmWnd.Callback() {
-                public void result(Boolean res) {
+                public void result(final Boolean res) {
                     wait.set(false);
                     if (res) {
                         empty();
@@ -152,7 +153,7 @@ public class Inventory extends Widget implements DTarget {
 
     private String getmsg() {
         if (parent instanceof Window) {
-            String str = ((Window) parent).cap.text;
+            final String str = ((Window) parent).cap.text;
             return "Drop all items from the " + str.toLowerCase() + " to ground?";
         }
         return "Drop all items to ground?";
@@ -185,9 +186,9 @@ public class Inventory extends Widget implements DTarget {
      */
     private boolean isSmall() {
         if (parent instanceof Window) {
-            Window wnd = (Window) parent;
+            final Window wnd = (Window) parent;
             if (wnd.cap != null) {
-                String str = wnd.cap.text;
+                final String str = wnd.cap.text;
                 if (smallInventoriesNames.contains(str)) {
                     return true;
                 }
@@ -213,7 +214,7 @@ public class Inventory extends Widget implements DTarget {
         }
     }
 
-    protected boolean checkTrashButton(Widget w) {
+    protected boolean checkTrashButton(final Widget w) {
         return trashButton != null && w == trashButton;
     }
 }

@@ -61,7 +61,7 @@ public class Resource extends Prioritized implements Comparable<Resource>, Seria
 
     static {
         try {
-            File file = new File("./custom_res");
+            final File file = new File("./custom_res");
             if (file.exists()) {
                 chainloader(new ResourceLoader(new FileSource(file)));
             }
@@ -69,7 +69,7 @@ public class Resource extends Prioritized implements Comparable<Resource>, Seria
             CustomConfig.logger.error("Cannot load ./custom_res repo", e);
         }
         try {
-            File file = new File("./res");
+            final File file = new File("./res");
             if (file.exists()) {
                 chainloader(new ResourceLoader(new FileSource(file)));
             }
@@ -81,7 +81,7 @@ public class Resource extends Prioritized implements Comparable<Resource>, Seria
             if (dir == null)
                 dir = System.getenv("HAVEN_RESDIR");
             if (dir != null) {
-                File base = new File(dir);
+                final File base = new File(dir);
                 if (base.exists()) {
                     chainloader(new ResourceLoader(new FileSource(base)));
                 }
@@ -103,27 +103,27 @@ public class Resource extends Prioritized implements Comparable<Resource>, Seria
     public ResSource source;
     private transient Indir<Resource> indir = null;
 
-    private Resource(String name, int ver) {
+    private Resource(final String name, final int ver) {
         this.name = name;
         this.ver = ver;
         error = null;
         loading = new AtomicBoolean(true);
     }
 
-    public static void addcache(ResCache cache) {
+    public static void addcache(final ResCache cache) {
         if (cache == null) return;
-        CacheSource src = new CacheSource(cache);
+        final CacheSource src = new CacheSource(cache);
         prscache = src;
         chainloader(new ResourceLoader(src));
     }
 
-    public static void addurl(URL url) {
+    public static void addurl(final URL url) {
         if (url == null) return;
         ResSource src = new HttpSource(url);
         final CacheSource mc = prscache;
         if (mc != null) {
             src = new TeeSource(src) {
-                public OutputStream fork(String name) throws IOException {
+                public OutputStream fork(final String name) throws IOException {
                     return (mc.cache.store("res/" + name));
                 }
             };
@@ -131,7 +131,7 @@ public class Resource extends Prioritized implements Comparable<Resource>, Seria
         chainloader(new ResourceLoader(src));
     }
 
-    private static void chainloader(ResourceLoader nl) {
+    private static void chainloader(final ResourceLoader nl) {
         synchronized (Resource.class) {
             if (loader == null) {
                 loader = nl;
@@ -144,7 +144,7 @@ public class Resource extends Prioritized implements Comparable<Resource>, Seria
         }
     }
 
-    public static Resource load(String name, int ver, int prio) {
+    public static Resource load(final String name, final int ver, final int prio) {
         Resource res;
         synchronized (cache) {
             res = cache.get(name);
@@ -183,7 +183,7 @@ public class Resource extends Prioritized implements Comparable<Resource>, Seria
         return (cache.values());
     }
 
-    public static Resource load(String name, int ver) {
+    public static Resource load(final String name, final int ver) {
         return (load(name, ver, 0));
     }
 
@@ -194,11 +194,11 @@ public class Resource extends Prioritized implements Comparable<Resource>, Seria
         return (ret);
     }
 
-    public static Resource load(String name) {
+    public static Resource load(final String name) {
         return (load(name, -1));
     }
 
-    public void boostprio(int newprio) {
+    public void boostprio(final int newprio) {
         if (getPriority() < newprio)
             setPriority(newprio);
     }
@@ -223,7 +223,7 @@ public class Resource extends Prioritized implements Comparable<Resource>, Seria
     }
 
     public String basename() {
-        int p = name.lastIndexOf('/');
+        final int p = name.lastIndexOf('/');
         if (p < 0)
             return (name);
         return (name.substring(p + 1));
@@ -260,24 +260,24 @@ public class Resource extends Prioritized implements Comparable<Resource>, Seria
 
     public static class LoadException extends RuntimeException {
 
-        public LoadException(String msg, Throwable cause) {
+        public LoadException(final String msg, final Throwable cause) {
             super(msg, cause);
         }
 
-        public LoadException(Throwable cause, Resource res) {
+        public LoadException(final Throwable cause, final Resource res) {
             super("Load error in resource " + res.toString() + ", from " + res.source, cause);
         }
 
-        public LoadException(Throwable cause) {
+        public LoadException(final Throwable cause) {
             super("Load error in resource", cause);
         }
 
-        public LoadException(String msg) {
+        public LoadException(final String msg) {
             super(msg);
         }
     }
 
-    public static Coord cdec(byte[] buf, int off) {
+    public static Coord cdec(final byte[] buf, final int off) {
         return (new Coord(Utils.int16d(buf, off), Utils.int16d(buf, off + 2)));
     }
 
@@ -308,7 +308,7 @@ public class Resource extends Prioritized implements Comparable<Resource>, Seria
         }
     }
 
-    private void readall(InputStream in, byte[] buf) throws IOException {
+    private void readall(final InputStream in, final byte[] buf) throws IOException {
         int ret, off = 0;
         while (off < buf.length) {
             ret = in.read(buf, off, buf.length - off);
@@ -318,28 +318,28 @@ public class Resource extends Prioritized implements Comparable<Resource>, Seria
         }
     }
 
-    public <L extends Layer> Collection<L> layers(Class<L> cl) {
+    public <L extends Layer> Collection<L> layers(final Class<L> cl) {
         checkerr();
-        Collection<L> ret = new LinkedList<L>();
-        for (Layer l : layers) {
+        final Collection<L> ret = new LinkedList<L>();
+        for (final Layer l : layers) {
             if (cl.isInstance(l))
                 ret.add(cl.cast(l));
         }
         return (ret);
     }
 
-    public <L extends Layer> L layer(Class<L> cl) {
+    public <L extends Layer> L layer(final Class<L> cl) {
         checkerr();
-        for (Layer l : layers) {
+        for (final Layer l : layers) {
             if (cl.isInstance(l))
                 return (cl.cast(l));
         }
         return (null);
     }
 
-    public int compareTo(Resource other) {
+    public int compareTo(final Resource other) {
         checkerr();
-        int nc = name.compareTo(other.name);
+        final int nc = name.compareTo(other.name);
         if (nc != 0)
             return (nc);
         if (ver != other.ver)
@@ -349,38 +349,38 @@ public class Resource extends Prioritized implements Comparable<Resource>, Seria
         return (0);
     }
 
-    public boolean equals(Object other) {
+    public boolean equals(final Object other) {
         if (other instanceof Resource) {
             return (compareTo((Resource) other) == 0);
         }
         return (false);
     }
 
-    void load(InputStream in) throws IOException {
-        String sig = "Haven Resource 1";
+    void load(final InputStream in) throws IOException {
+        final String sig = "Haven Resource 1";
         byte buf[] = new byte[sig.length()];
         readall(in, buf);
         if (!sig.equals(new String(buf)))
             throw (new LoadException("Invalid res signature"));
         buf = new byte[2];
         readall(in, buf);
-        int ver = Utils.uint16d(buf, 0);
-        List<Layer> layers = new LinkedList<Layer>();
+        final int ver = Utils.uint16d(buf, 0);
+        final List<Layer> layers = new LinkedList<Layer>();
         if (this.ver == -1) {
             this.ver = ver;
         } else {
             if (ver != this.ver)
                 throw (new LoadException("Wrong res version (" + ver + " != " + this.ver + ')'));
         }
-        StringBuilder tbuf = new StringBuilder();
-        byte[] lenBuf = new byte[4];
+        final StringBuilder tbuf = new StringBuilder();
+        final byte[] lenBuf = new byte[4];
 
         outer:
         while (true) {
             tbuf.setLength(0);
             while (true) {
-                byte bb;
-                int ib;
+                final byte bb;
+                final int ib;
                 if ((ib = in.read()) == -1) {
                     if (tbuf.length() == 0)
                         break outer;
@@ -392,10 +392,10 @@ public class Resource extends Prioritized implements Comparable<Resource>, Seria
                 tbuf.append((char) bb);
             }
             readall(in, lenBuf);
-            int len = Utils.int32d(lenBuf, 0);
+            final int len = Utils.int32d(lenBuf, 0);
             buf = new byte[len];
             readall(in, buf);
-            Class<? extends Layer> lc = ltypes.get(tbuf.toString());
+            final Class<? extends Layer> lc = ltypes.get(tbuf.toString());
             if (lc == null)
                 continue;
             Constructor<? extends Layer> cons;
@@ -411,14 +411,14 @@ public class Resource extends Prioritized implements Comparable<Resource>, Seria
                     throw (new LoadException(e2, Resource.this));
                 }
             }
-            Layer l;
+            final Layer l;
             try {
                 //noinspection PrimitiveArrayArgumentToVariableArgMethod
                 l = (isStaticLayerClass) ? cons.newInstance(buf) : cons.newInstance(this, buf);
             } catch (InstantiationException e) {
                 throw (new LoadException(e, Resource.this));
             } catch (InvocationTargetException e) {
-                Throwable c = e.getCause();
+                final Throwable c = e.getCause();
                 if (c instanceof RuntimeException)
                     throw ((RuntimeException) c);
                 else
@@ -429,7 +429,7 @@ public class Resource extends Prioritized implements Comparable<Resource>, Seria
             layers.add(l);
         }
         this.layers = layers;
-        for (Layer l : layers)
+        for (final Layer l : layers)
             l.init();
     }
 
@@ -445,11 +445,11 @@ public class Resource extends Prioritized implements Comparable<Resource>, Seria
                 return (Resource.this);
             }
 
-            public void set(Resource r) {
+            public void set(final Resource r) {
                 throw (new RuntimeException());
             }
 
-            public int compareTo(Indir<Resource> x) {
+            public int compareTo(final Indir<Resource> x) {
                 return (Resource.this.compareTo(this.getClass().cast(x).res));
             }
         };
@@ -461,14 +461,14 @@ public class Resource extends Prioritized implements Comparable<Resource>, Seria
             throw (new RuntimeException("Delayed error in resource " + name + " (v" + ver + "), from " + source, error));
     }
 
-    public static BufferedImage loadimg(String name) {
-        Resource res = load(name);
+    public static BufferedImage loadimg(final String name) {
+        final Resource res = load(name);
         res.loadwait();
         return (res.layer(imgc).img);
     }
 
-    public static Tex loadtex(String name) {
-        Resource res = load(name);
+    public static Tex loadtex(final String name) {
+        final Resource res = load(name);
         res.loadwait();
         return (res.layer(imgc).tex());
     }
@@ -477,15 +477,15 @@ public class Resource extends Prioritized implements Comparable<Resource>, Seria
         return (name + "(v" + ver + ')');
     }
 
-    public static void loadlist(InputStream list, int prio) throws IOException {
-        BufferedReader in = new BufferedReader(new InputStreamReader(list, "us-ascii"));
+    public static void loadlist(final InputStream list, final int prio) throws IOException {
+        final BufferedReader in = new BufferedReader(new InputStreamReader(list, "us-ascii"));
         String ln;
         while ((ln = in.readLine()) != null) {
-            int pos = ln.indexOf(':');
+            final int pos = ln.indexOf(':');
             if (pos < 0)
                 continue;
-            String nm = ln.substring(0, pos);
-            int ver;
+            final String nm = ln.substring(0, pos);
+            final int ver;
             try {
                 ver = Integer.parseInt(ln.substring(pos + 1));
             } catch (NumberFormatException e) {
@@ -499,54 +499,54 @@ public class Resource extends Prioritized implements Comparable<Resource>, Seria
         in.close();
     }
 
-    public static void dumplist(Collection<Resource> list, Writer dest) {
-        PrintWriter out = new PrintWriter(dest);
-        List<Resource> sorted = new ArrayList<Resource>(list);
+    public static void dumplist(final Collection<Resource> list, final Writer dest) {
+        final PrintWriter out = new PrintWriter(dest);
+        final List<Resource> sorted = new ArrayList<Resource>(list);
         Collections.sort(sorted);
-        for (Resource res : sorted) {
+        for (final Resource res : sorted) {
             if (res.loading.get())
                 continue;
             out.println(res.name + ':' + res.ver);
         }
     }
 
-    public static void updateloadlist(File file) throws Exception {
-        BufferedReader r = new BufferedReader(new FileReader(file));
-        Map<String, Integer> orig = new HashMap<String, Integer>();
+    public static void updateloadlist(final File file) throws Exception {
+        final BufferedReader r = new BufferedReader(new FileReader(file));
+        final Map<String, Integer> orig = new HashMap<String, Integer>();
         String ln;
         while ((ln = r.readLine()) != null) {
-            int pos = ln.indexOf(':');
+            final int pos = ln.indexOf(':');
             if (pos < 0) {
                 System.err.println("Weird line: " + ln);
                 continue;
             }
-            String nm = ln.substring(0, pos);
-            int ver = Integer.parseInt(ln.substring(pos + 1));
+            final String nm = ln.substring(0, pos);
+            final int ver = Integer.parseInt(ln.substring(pos + 1));
             orig.put(nm, ver);
         }
         r.close();
-        for (String nm : orig.keySet())
+        for (final String nm : orig.keySet())
             load(nm);
         while (true) {
-            int d = qdepth();
+            final int d = qdepth();
             if (d == 0)
                 break;
             System.out.print("\033[1GLoading... " + d + "\033[K");
             Thread.sleep(500);
         }
         System.out.println();
-        Collection<Resource> cur = new LinkedList<Resource>();
-        for (Map.Entry<String, Integer> e : orig.entrySet()) {
-            String nm = e.getKey();
-            int ver = e.getValue();
-            Resource res = load(nm);
+        final Collection<Resource> cur = new LinkedList<Resource>();
+        for (final Map.Entry<String, Integer> e : orig.entrySet()) {
+            final String nm = e.getKey();
+            final int ver = e.getValue();
+            final Resource res = load(nm);
             res.loadwait();
             res.checkerr();
             if (res.ver != ver)
                 System.out.println(nm + ": " + ver + " -> " + res.ver);
             cur.add(res);
         }
-        Writer w = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
+        final Writer w = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
         try {
             dumplist(cur, w);
         } finally {
@@ -554,8 +554,8 @@ public class Resource extends Prioritized implements Comparable<Resource>, Seria
         }
     }
 
-    public static void main(String[] args) throws Exception {
-        String cmd = args[0].intern();
+    public static void main(final String[] args) throws Exception {
+        final String cmd = args[0].intern();
         if (cmd.equals("update")) {
             updateloadlist(new File(args[1]));
         }

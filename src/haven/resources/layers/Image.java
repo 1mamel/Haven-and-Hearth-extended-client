@@ -26,7 +26,7 @@ public class Image extends Layer implements Comparable<Image> {
     public Coord sz;
     public Coord o;
 
-    public Image(byte[] buf) {
+    public Image(final byte[] buf) {
         z = Utils.int16d(buf, 0);
         subz = Utils.int16d(buf, 2);
         /* Obsolete flag 1: Layered */
@@ -66,7 +66,7 @@ public class Image extends Layer implements Comparable<Image> {
         return (gay == 1);
     }
 
-    public int compareTo(Image other) {
+    public int compareTo(final Image other) {
         return (z - other.z);
     }
 

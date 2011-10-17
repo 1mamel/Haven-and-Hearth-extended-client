@@ -44,7 +44,7 @@ public class Bootstrap implements UI.Receiver {
         final String name;
         final Object[] args;
 
-        public Message(int id, String name, Object... args) {
+        public Message(final int id, final String name, final Object... args) {
             this.id = id;
             this.name = name;
             this.args = args;
@@ -55,16 +55,16 @@ public class Bootstrap implements UI.Receiver {
         address = "127.0.0.1";
     }
 
-    public void setinitcookie(String username, byte[] cookie) {
+    public void setinitcookie(final String username, final byte[] cookie) {
         inituser = username;
         initcookie = cookie;
     }
 
-    public void setaddr(String addr) {
+    public void setaddr(final String addr) {
         address = addr;
     }
 
-    public Session run(HavenPanel hp) throws InterruptedException {
+    public Session run(final HavenPanel hp) throws InterruptedException {
         ui = hp.newui(null);
         ui.setreceiver(this);
         ui.bind(new LoginScreen(ui.root), 1);
@@ -75,7 +75,7 @@ public class Bootstrap implements UI.Receiver {
         if (Utils.getpref("savedtoken", "").length() == 64)
             token = Utils.hex2byte(Utils.getpref("savedtoken", null));
         username = Utils.getpref("username", "");
-        String authserver = (Config.authserv == null) ? address : Config.authserv;
+        final String authserver = (Config.authserv == null) ? address : Config.authserv;
         retry:
         do {
             byte[] cookie;
@@ -189,7 +189,7 @@ public class Bootstrap implements UI.Receiver {
                     ui.destroy(1);
                     break retry;
                 } else if (sess.connfailed != 0) {
-                    String error;
+                    final String error;
                     switch (sess.connfailed) {
                         case 1:
                             error = "Invalid authentication token";
@@ -225,7 +225,7 @@ public class Bootstrap implements UI.Receiver {
         //(new RemoteUI(sess, ui)).start();
     }
 
-    public void rcvmsg(int widget, String msg, Object... args) {
+    public void rcvmsg(final int widget, final String msg, final Object... args) {
         synchronized (msgs) {
             msgs.add(new Message(widget, msg, args));
             msgs.notifyAll();

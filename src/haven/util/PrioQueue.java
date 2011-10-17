@@ -32,15 +32,15 @@ import java.util.concurrent.PriorityBlockingQueue;
 public class PrioQueue<E extends Prioritized> extends PriorityBlockingQueue<E> {
     public PrioQueue() {
         super(11, new Comparator<Prioritized>() {
-            public int compare(Prioritized o1, Prioritized o2) {
+            public int compare(final Prioritized o1, final Prioritized o2) {
                 if (o1 == null) {
                     return (o2 == null) ? 0 : 1;
                 }
                 if (o2 == null) {
                     return -1;
                 }
-                int thisVal = o1.getPriority();
-                int anotherVal = o2.getPriority();
+                final int thisVal = o1.getPriority();
+                final int anotherVal = o2.getPriority();
                 return (thisVal < anotherVal ? 1 : (thisVal == anotherVal ? 0 : -1));
             }
         });
@@ -90,13 +90,13 @@ public class PrioQueue<E extends Prioritized> extends PriorityBlockingQueue<E> {
 //    }
 
     @Override
-    public boolean add(E e) {
+    public boolean add(final E e) {
         if (e == null) return false;
         e.setQueue(this);
         return super.add(e);
     }
 
-    public void update(E e) {
+    public void update(final E e) {
         if (e == null) return;
         this.remove(e);
         this.add(e);

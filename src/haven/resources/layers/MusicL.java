@@ -17,7 +17,7 @@ import java.io.IOException;
 public class MusicL extends Layer {
     private transient javax.sound.midi.Sequence seq;
 
-    public MusicL(byte[] buf) {
+    public MusicL(final byte[] buf) {
         try {
             seq = javax.sound.midi.MidiSystem.getSequence(new ByteArrayInputStream(buf));
         } catch (javax.sound.midi.InvalidMidiDataException e) {

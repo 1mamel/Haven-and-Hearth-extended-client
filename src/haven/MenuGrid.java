@@ -28,6 +28,7 @@ package haven;
 
 import haven.resources.layers.AButton;
 import haven.resources.layers.Pagina;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.event.KeyEvent;
 import java.awt.font.TextAttribute;
@@ -49,7 +50,7 @@ public class MenuGrid extends Widget {
 
     static {
         Widget.addtype("scm", new WidgetFactory() {
-            public Widget create(Coord c, Widget parent, Object[] args) {
+            public Widget create(final Coord c, final Widget parent, final Object[] args) {
                 return (new MenuGrid(c, parent));
             }
         });
@@ -58,25 +59,25 @@ public class MenuGrid extends Widget {
     public static class PaginaException extends RuntimeException {
         public final Resource res;
 
-        public PaginaException(Resource r) {
+        public PaginaException(final Resource r) {
             super("Invalid pagina: " + r.name);
             res = r;
         }
     }
 
-    private Resource[] cons(Resource p) {
-        Resource[] cp = new Resource[0];
-        Resource[] all;
+    private Resource[] cons(final Resource p) {
+        final Resource[] cp = new Resource[0];
+        final Resource[] all;
         {
-            Collection<Resource> ta = new HashSet<Resource>();
-            Collection<Resource> open;
+            final Collection<Resource> ta = new HashSet<Resource>();
+            final Collection<Resource> open;
             synchronized (ui.sess.glob.paginae) {
                 open = new HashSet<Resource>(ui.sess.glob.paginae);
             }
             while (!open.isEmpty()) {
-                for (Resource r : open.toArray(cp)) {
+                for (final Resource r : open.toArray(cp)) {
                     if (!r.loading.get()) {
-                        AButton ad = r.layer(Resource.action);
+                        final AButton ad = r.layer(Resource.action);
                         if (ad == null)
                             throw (new PaginaException(r));
                         if ((ad.parent != null) && !ta.contains(ad.parent))
@@ -88,15 +89,15 @@ public class MenuGrid extends Widget {
             }
             all = ta.toArray(cp);
         }
-        Collection<Resource> tobe = new HashSet<Resource>();
-        for (Resource r : all) {
+        final Collection<Resource> tobe = new HashSet<Resource>();
+        for (final Resource r : all) {
             if (r.layer(Resource.action).parent == p)
                 tobe.add(r);
         }
         return (tobe.toArray(cp));
     }
 
-    public MenuGrid(Coord c, Widget parent) {
+    public MenuGrid(final Coord c, final Widget parent) {
         super(c, bgsz.mul(gsz).add(1, 1), parent);
         cons(null);
         ui.mnu = this;
@@ -113,8 +114,9 @@ public class MenuGrid extends Widget {
     }
 
     private static final Comparator<Resource> sorter = new Comparator<Resource>() {
-        public int compare(Resource a, Resource b) {
-            AButton aa = a.layer(Resource.action), ab = b.layer(Resource.action);
+        public int compare(final Resource a, final Resource b) {
+            final AButton aa = a.layer(Resource.action);
+            final AButton ab = b.layer(Resource.action);
             if ((aa.ad.length == 0) && (ab.ad.length > 0))
                 return (-1);
             if ((aa.ad.length > 0) && (ab.ad.length == 0))
@@ -124,13 +126,13 @@ public class MenuGrid extends Widget {
     };
 
     private void updlayout() {
-        Resource[] cur = cons(this.cur);
+        final Resource[] cur = cons(this.cur);
         Arrays.sort(cur, sorter);
         int i;
 //	int i = curoff;
         hotmap.clear();
         for (i = 0; i < cur.length; i++) {
-            AButton ad = cur[i].layer(Resource.action);
+            final AButton ad = cur[i].layer(Resource.action);
             if (ad.hk != 0)
                 hotmap.put(Character.toUpperCase(ad.hk), cur[i]);
         }
@@ -153,11 +155,11 @@ public class MenuGrid extends Widget {
         }
     }
 
-    private static Text rendertt(Resource res, boolean withpg) {
-        AButton ad = res.layer(Resource.action);
-        Pagina pg = res.layer(Resource.pagina);
+    private static Text rendertt(final Resource res, final boolean withpg) {
+        final AButton ad = res.layer(Resource.action);
+        final Pagina pg = res.layer(Resource.pagina);
         String tt = ad.name;
-        int pos = tt.toUpperCase().indexOf(Character.toUpperCase(ad.hk));
+        final int pos = tt.toUpperCase().indexOf(Character.toUpperCase(ad.hk));
         if (pos >= 0)
             tt = tt.substring(0, pos) + "$col[255,255,0]{" + tt.charAt(pos) + '}' + tt.substring(pos + 1);
         else if (ad.hk != 0)
@@ -168,15 +170,15 @@ public class MenuGrid extends Widget {
         return (ttfnd.render(tt, 0));
     }
 
-    public void draw(GOut g) {
+    public void draw(final GOut g) {
         updlayout();
         for (int y = 0; y < gsz.y; y++) {
             for (int x = 0; x < gsz.x; x++) {
-                Coord p = bgsz.mul(x, y);
+                final Coord p = bgsz.mul(x, y);
                 g.image(bg, p);
-                Resource btn = layout[x][y];
+                final Resource btn = layout[x][y];
                 if (btn != null) {
-                    Tex btex = btn.layer(Resource.imgc).tex();
+                    final Tex btex = btn.layer(Resource.imgc).tex();
                     g.image(btex, p.add(1, 1));
                     if (btn == pressed) {
                         g.chcolor(0, 0, 0, 128);
@@ -189,7 +191,7 @@ public class MenuGrid extends Widget {
         if (dragging != null) {
             final Tex dt = dragging.layer(Resource.imgc).tex();
             ui.drawafter(new UI.AfterDraw() {
-                public void draw(GOut g) {
+                public void draw(final GOut g) {
                     g.image(dt, ui.mc.sub(dt.sz().div(2)));
                 }
             });
@@ -201,13 +203,13 @@ public class MenuGrid extends Widget {
     private Text curtt = null;
     private long hoverstart;
 
-    public Object tooltip(Coord c, boolean again) {
-        Resource res = bhit(c);
-        long now = System.currentTimeMillis();
+    public Object tooltip(final Coord c, final boolean again) {
+        final Resource res = bhit(c);
+        final long now = System.currentTimeMillis();
         if ((res != null) && (res.layer(Resource.action) != null)) {
             if (!again)
                 hoverstart = now;
-            boolean ttl = (now - hoverstart) > 500;
+            final boolean ttl = (now - hoverstart) > 500;
             if ((res != curttr) || (ttl != curttl)) {
                 curtt = rendertt(res, ttl);
                 curttr = res;
@@ -220,16 +222,16 @@ public class MenuGrid extends Widget {
         }
     }
 
-    private Resource bhit(Coord c) {
-        Coord bc = c.div(bgsz);
+    private Resource bhit(final Coord c) {
+        final Coord bc = c.div(bgsz);
         if ((bc.x >= 0) && (bc.y >= 0) && (bc.x < gsz.x) && (bc.y < gsz.y))
             return (layout[bc.x][bc.y]);
         else
             return (null);
     }
 
-    public boolean mousedown(Coord c, int button) {
-        Resource h = bhit(c);
+    public boolean mousedown(final Coord c, final int button) {
+        final Resource h = bhit(c);
         if ((button == 1) && (h != null)) {
             pressed = h;
             ui.grabmouse(this);
@@ -237,15 +239,15 @@ public class MenuGrid extends Widget {
         return (true);
     }
 
-    public void mousemove(Coord c) {
+    public void mousemove(final Coord c) {
         if ((dragging == null) && (pressed != null)) {
-            Resource h = bhit(c);
+            final Resource h = bhit(c);
             if (h != pressed)
                 dragging = pressed;
         }
     }
 
-    protected void use(Resource r) {
+    protected void use(final Resource r) {
         if (cons(r).length > 0) {
             cur = r;
             curoff = 0;
@@ -258,7 +260,7 @@ public class MenuGrid extends Widget {
             else
                 curoff += 14;
         } else {
-            String[] ad = r.layer(Resource.action).ad;
+            final String[] ad = r.layer(Resource.action).ad;
             if (ad[0].equals("@")) {
                 usecustom(ad);
 //	    } else if (ad[0].equals("declaim")){
@@ -279,7 +281,7 @@ public class MenuGrid extends Widget {
                         if (ui.sess.glob.buffs.containsKey(k)) {
                             ui.sess.glob.buffs.remove(k);
                         } else {
-                            Buff buff = new Buff(k, r.indir());
+                            final Buff buff = new Buff(k, r.indir());
                             buff.major = true;
                             ui.sess.glob.buffs.put(k, buff);
                         }
@@ -291,22 +293,22 @@ public class MenuGrid extends Widget {
         }
     }
 
-    private void usecustom(String[] list) {
+    private void usecustom(final String[] list) {
         if (list[1].equals("radius")) {
             Config.showRadius = !Config.showRadius;
-            String str = "Radius highlight is turned " + ((Config.showRadius) ? "ON" : "OFF");
+            final String str = "Radius highlight is turned " + ((Config.showRadius) ? "ON" : "OFF");
             ui.cons.out.println(str);
             ui.slen.error(str);
             Config.saveOptions();
         } else if (list[1].equals("hidden")) {
             Config.showHidden = !Config.showHidden;
-            String str = "Hidden object highlight is turned " + ((Config.showHidden) ? "ON" : "OFF");
+            final String str = "Hidden object highlight is turned " + ((Config.showHidden) ? "ON" : "OFF");
             ui.cons.out.println(str);
             ui.slen.error(str);
             Config.saveOptions();
         } else if (list[1].equals("hide")) {
             for (int i = 2; i < list.length; i++) {
-                String item = list[i];
+                final String item = list[i];
                 if (Config.hideObjectList.contains(item)) {
                     Config.hideObjectList.remove(item);
                 } else {
@@ -315,7 +317,7 @@ public class MenuGrid extends Widget {
             }
         } else if (list[1].equals("simple plants")) {
             Config.simple_plants = !Config.simple_plants;
-            String str = "Simplified plants is turned " + ((Config.simple_plants) ? "ON" : "OFF");
+            final String str = "Simplified plants is turned " + ((Config.simple_plants) ? "ON" : "OFF");
             ui.cons.out.println(str);
             ui.slen.error(str);
             Config.saveOptions();
@@ -323,7 +325,7 @@ public class MenuGrid extends Widget {
             TimerPanel.toggleS();
         } else if (list[1].equals("animal")) {
             Config.showBeast = !Config.showBeast;
-            String str = "Animal highlight is turned " + ((Config.showBeast) ? "ON" : "OFF");
+            final String str = "Animal highlight is turned " + ((Config.showBeast) ? "ON" : "OFF");
             ui.cons.out.println(str);
             ui.slen.error(str);
             Config.saveOptions();
@@ -339,8 +341,8 @@ public class MenuGrid extends Widget {
         use(null);
     }
 
-    public boolean mouseup(Coord c, int button) {
-        Resource h = bhit(c);
+    public boolean mouseup(final Coord c, final int button) {
+        final Resource h = bhit(c);
         if (button == 1) {
             if (dragging != null) {
                 UI.dropthing(ui.root, ui.mc, dragging);
@@ -356,9 +358,9 @@ public class MenuGrid extends Widget {
         return (true);
     }
 
-    public void uimsg(String msg, Object... args) {
+    public void uimsg(@NotNull final String msg, final Object... args) {
         if (msg.equals("goto")) {
-            String res = (String) args[0];
+            final String res = (String) args[0];
             if (res.length() == 0)
                 cur = null;
             else
@@ -367,7 +369,7 @@ public class MenuGrid extends Widget {
         }
     }
 
-    public boolean globtype(char k, KeyEvent ev) {
+    public boolean globtype(final char k, final KeyEvent ev) {
         if ((k == 27) && (this.cur != null)) {
             this.cur = null;
             curoff = 0;
@@ -377,7 +379,7 @@ public class MenuGrid extends Widget {
             use(next);
             return (true);
         }
-        Resource r = hotmap.get(Character.toUpperCase(k));
+        final Resource r = hotmap.get(Character.toUpperCase(k));
         if (r != null) {
             use(r);
             return (true);

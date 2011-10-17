@@ -41,24 +41,24 @@ public class AvaRender extends TexRT {
     boolean loading;
     public static final Coord sz = new Coord(212, 249);
 
-    public AvaRender(List<Indir<Resource>> layers) {
+    public AvaRender(final List<Indir<Resource>> layers) {
         super(sz);
         setlay(layers);
     }
 
-    public void setlay(List<Indir<Resource>> layers) {
+    public void setlay(final List<Indir<Resource>> layers) {
         Collections.sort(layers);
         this.layers = layers;
         loading = true;
     }
 
-    public boolean subrend(GOut g) {
+    public boolean subrend(final GOut g) {
         if (!loading)
             return (false);
 
-        List<Image> images = new ArrayList<Image>();
+        final List<Image> images = new ArrayList<Image>();
         loading = false;
-        for (Indir<Resource> r : layers) {
+        for (final Indir<Resource> r : layers) {
             if (r.get() == null)
                 loading = true;
             else
@@ -71,7 +71,7 @@ public class AvaRender extends TexRT {
 
         g.gl.glClearColor(255, 255, 255, 0);
         g.gl.glClear(GL.GL_COLOR_BUFFER_BIT);
-        for (Image i : images)
+        for (final Image i : images)
             g.image(i.tex(), i.o);
         return (true);
     }

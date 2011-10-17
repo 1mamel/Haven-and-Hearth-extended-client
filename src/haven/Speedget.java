@@ -26,14 +26,16 @@
 
 package haven;
 
+import org.jetbrains.annotations.NotNull;
+
 public class Speedget extends Widget {
     public static final Tex imgs[][];
     public static final Coord tsz;
     private int cur, max;
 
     static {
-        String[] names = {"crawl", "walk", "run", "sprint"};
-        String[] vars = {"dis", "off", "on"};
+        final String[] names = {"crawl", "walk", "run", "sprint"};
+        final String[] vars = {"dis", "off", "on"};
         imgs = new Tex[names.length][vars.length];
         int w = 0;
         for (int i = 0; i < names.length; i++) {
@@ -44,25 +46,25 @@ public class Speedget extends Widget {
         tsz = new Coord(w, imgs[0][0].sz().y);
 
         Widget.addtype("speedget", new WidgetFactory() {
-            public Widget create(Coord c, Widget parent, Object[] args) {
-                int cur = (Integer) args[0];
-                int max = (Integer) args[1];
+            public Widget create(final Coord c, final Widget parent, final Object[] args) {
+                final int cur = (Integer) args[0];
+                final int max = (Integer) args[1];
                 return (new Speedget(c, parent, cur, max));
             }
         });
     }
 
-    public Speedget(Coord c, Widget parent, int cur, int max) {
+    public Speedget(final Coord c, final Widget parent, final int cur, final int max) {
         super(c, tsz, parent);
         this.cur = cur;
         this.max = max;
         UI.speedget.set(this);
     }
 
-    public void draw(GOut g) {
+    public void draw(final GOut g) {
         int x = 0;
         for (int i = 0; i < 4; i++) {
-            Tex t;
+            final Tex t;
             if (i == cur)
                 t = imgs[i][2];
             else if (i > max)
@@ -74,7 +76,7 @@ public class Speedget extends Widget {
         }
     }
 
-    public void uimsg(String msg, Object... args) {
+    public void uimsg(@NotNull final String msg, final Object... args) {
         if (msg.equals("cur")) {
             cur = (Integer) args[0];
         } else if (msg.equals("max")) {
@@ -90,13 +92,13 @@ public class Speedget extends Widget {
         return max;
     }
 
-    public boolean changeSpeed(int speed) {
+    public boolean changeSpeed(final int speed) {
         if (speed < 0 || speed > max) return false;
         wdgmsg("set", speed);
         return true;
     }
 
-    public boolean mousedown(Coord c, int button) {
+    public boolean mousedown(final Coord c, final int button) {
         int x = 0;
         for (int i = 0; i < imgs.length; i++) {
             x += imgs[i][0].sz().x;
@@ -108,7 +110,7 @@ public class Speedget extends Widget {
         return (true);
     }
 
-    public boolean mousewheel(Coord c, int amount) {
+    public boolean mousewheel(final Coord c, final int amount) {
         if (max >= 0) {
             wdgmsg("set", (cur + max + 1 + amount) % (max + 1));
         }

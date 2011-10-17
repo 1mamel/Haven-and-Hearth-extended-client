@@ -39,13 +39,13 @@ public class PartyView extends Widget {
 
     static {
         Widget.addtype("pv", new WidgetFactory() {
-            public Widget create(Coord c, Widget parent, Object[] args) {
+            public Widget create(final Coord c, final Widget parent, final Object[] args) {
                 return (new PartyView(c, parent, (Integer) args[0]));
             }
         });
     }
 
-    PartyView(Coord c, Widget parent, int ign) {
+    PartyView(final Coord c, final Widget parent, final int ign) {
         super(c, new Coord(84, 140), parent);
         this.ign = ign;
         update();
@@ -53,7 +53,7 @@ public class PartyView extends Widget {
 
     private void update() {
         if (party.membersMapChanged) {
-            Collection<Member> old = new HashSet<Member>(avs.keySet());
+            final Collection<Member> old = new HashSet<Member>(avs.keySet());
             for (final Member m : party.memb.values()) {
                 if (m.gobid == ign)
                     continue;
@@ -62,11 +62,11 @@ public class PartyView extends Widget {
                     w = new Avaview(Coord.z, this, m.gobid, Avaview.smallSize) {
                         private Tex tooltip = null;
 
-                        public Object tooltip(Coord c, boolean again) {
-                            Gob gob = m.getgob();
+                        public Object tooltip(final Coord c, final boolean again) {
+                            final Gob gob = m.getgob();
                             if (gob == null)
                                 return (tooltip);
-                            KinInfo ki = gob.getattr(KinInfo.class);
+                            final KinInfo ki = gob.getattr(KinInfo.class);
                             if (ki == null)
                                 return (null);
                             return (tooltip = ki.rendered());
@@ -77,23 +77,23 @@ public class PartyView extends Widget {
                     old.remove(m);
                 }
             }
-            for (Member m : old) {
+            for (final Member m : old) {
                 ui.destroy(avs.get(m));
                 avs.remove(m);
             }
-            List<Map.Entry<Member, Avaview>> wl = new ArrayList<Map.Entry<Member, Avaview>>(avs.entrySet());
+            final List<Map.Entry<Member, Avaview>> wl = new ArrayList<Map.Entry<Member, Avaview>>(avs.entrySet());
             Collections.sort(wl, new Comparator<Map.Entry<Member, Avaview>>() {
-                public int compare(Entry<Member, Avaview> a, Entry<Member, Avaview> b) {
+                public int compare(final Entry<Member, Avaview> a, final Entry<Member, Avaview> b) {
                     return (a.getKey().gobid - b.getKey().gobid);
                 }
             });
             int i = 0;
-            for (Map.Entry<Member, Avaview> e : wl) {
+            for (final Map.Entry<Member, Avaview> e : wl) {
                 e.getValue().c = getAvavievCoordinates(i); // Performance improved ;)
                 i++;
             }
         }
-        for (Map.Entry<Member, Avaview> e : avs.entrySet()) {
+        for (final Map.Entry<Member, Avaview> e : avs.entrySet()) {
             e.getValue().color = e.getKey().col;
         }
         if ((!avs.isEmpty()) && (leaveButton == null)) {
@@ -113,7 +113,7 @@ public class PartyView extends Widget {
         assumeAvaviewCoordinates(20);
     }
 
-    private static void generateAvaviewCoordinates(int toInclusive) {
+    private static void generateAvaviewCoordinates(final int toInclusive) {
         synchronized (avaviewCoordinates) {
             for (int i = avaviewCoordinates.size(); i <= toInclusive; ++i) {
                 //noinspection ObjectAllocationInLoop
@@ -122,7 +122,7 @@ public class PartyView extends Widget {
         }
     }
 
-    private static void assumeAvaviewCoordinates(int i) {
+    private static void assumeAvaviewCoordinates(final int i) {
         if (avaviewCoordinates.size() < i) {
             synchronized (avaviewCoordinates) {
                 if (avaviewCoordinates.size() < i) {
@@ -132,17 +132,17 @@ public class PartyView extends Widget {
         }
     }
 
-    private static Coord getAvavievCoordinates(int i) {
+    private static Coord getAvavievCoordinates(final int i) {
         assumeAvaviewCoordinates(i);
         return avaviewCoordinates.get(i);
     }
 
-    public void wdgmsg(Widget sender, String msg, Object... args) {
+    public void wdgmsg(final Widget sender, final String msg, final Object... args) {
         if (sender == leaveButton) {
             wdgmsg("leave");
             return;
         }
-        for (Entry<Member, Avaview> memberAvaviewEntry : avs.entrySet()) {
+        for (final Entry<Member, Avaview> memberAvaviewEntry : avs.entrySet()) {
             if (sender == memberAvaviewEntry.getValue()) {
                 wdgmsg("click", memberAvaviewEntry.getKey().gobid, args[0]);
                 return;
@@ -151,7 +151,7 @@ public class PartyView extends Widget {
         super.wdgmsg(sender, msg, args);
     }
 
-    public void draw(GOut g) {
+    public void draw(final GOut g) {
         update();
         super.draw(g);
     }

@@ -37,14 +37,14 @@ public class KinInfo extends GAttrib {
     public long seen = 0;
     private Tex rnm = null;
 
-    public KinInfo(Gob g, String name, int group, int type) {
+    public KinInfo(final Gob g, final String name, final int group, final int type) {
         super(g);
         this.name = name;
         this.group = group;
         this.type = type;
     }
 
-    public void update(String name, int group, int type) {
+    public void update(final String name, final int group, final int type) {
         this.name = name;
         this.group = group;
         this.type = type;
@@ -53,7 +53,7 @@ public class KinInfo extends GAttrib {
 
     public Tex rendered() {
         if (rnm == null) {
-            boolean hv = (type & 2) != 0;
+            final boolean hv = (type & 2) != 0;
             BufferedImage nm = null;
             if (name.length() > 0)
                 nm = Utils.outline2(nfnd.render(name, BuddyWnd.gc[group]).img, Utils.contrast(BuddyWnd.gc[group]));
@@ -71,8 +71,8 @@ public class KinInfo extends GAttrib {
             if (w == 0) {
                 rnm = new TexIM(new Coord(1, 1));
             } else {
-                BufferedImage buf = TexI.mkbuf(new Coord(w, h));
-                Graphics g = buf.getGraphics();
+                final BufferedImage buf = TexI.mkbuf(new Coord(w, h));
+                final Graphics g = buf.getGraphics();
                 int x = 0;
                 if (hv) {
                     g.drawImage(vlg, x, (h / 2) - (vlg.getHeight() / 2), null);

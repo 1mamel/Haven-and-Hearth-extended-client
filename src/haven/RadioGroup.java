@@ -36,16 +36,16 @@ public class RadioGroup {
     private final HashMap<RadioButton, String> rmap = new HashMap<RadioButton, String>();
     private RadioButton checked;
 
-    public RadioGroup(Widget parent) {
+    public RadioGroup(final Widget parent) {
         this.parent = parent;
     }
 
     public class RadioButton extends CheckBox {
-        RadioButton(Coord c, Widget parent, String lbl) {
+        RadioButton(final Coord c, final Widget parent, final String lbl) {
             super(c, parent, lbl);
         }
 
-        public boolean mousedown(Coord c, int button) {
+        public boolean mousedown(final Coord c, final int button) {
             if (a || button != 1 || c.y < 16 || c.y > sz.y - 10) {
                 return (false);
             }
@@ -53,15 +53,15 @@ public class RadioGroup {
             return (true);
         }
 
-        public void changed(boolean val) {
+        public void changed(final boolean val) {
             a = val;
             super.changed(val);
             lbl = Text.std.render(lbl.text, a ? java.awt.Color.YELLOW : java.awt.Color.WHITE);
         }
     }
 
-    public RadioButton add(String lbl, Coord c) {
-        RadioButton rb = new RadioButton(c, parent, lbl);
+    public RadioButton add(final String lbl, final Coord c) {
+        final RadioButton rb = new RadioButton(c, parent, lbl);
         btns.add(rb);
         map.put(lbl, rb);
         rmap.put(rb, lbl);
@@ -71,13 +71,13 @@ public class RadioGroup {
         return (rb);
     }
 
-    public void check(String lbl) {
+    public void check(final String lbl) {
         if (map.containsKey(lbl)) {
             check(map.get(lbl));
         }
     }
 
-    public void check(RadioButton rb) {
+    public void check(final RadioButton rb) {
         if (checked != null) {
             checked.changed(false);
         }
@@ -87,17 +87,17 @@ public class RadioGroup {
     }
 
     public void hide() {
-        for (RadioButton rb : btns) {
+        for (final RadioButton rb : btns) {
             rb.hide();
         }
     }
 
     public void show() {
-        for (RadioButton rb : btns) {
+        for (final RadioButton rb : btns) {
             rb.show();
         }
     }
 
-    public void changed(int btn, String lbl) {
+    public void changed(final int btn, final String lbl) {
     }
 }

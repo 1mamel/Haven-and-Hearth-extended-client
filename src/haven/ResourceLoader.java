@@ -20,16 +20,16 @@ class ResourceLoader implements Runnable {
     private final PrioQueue<Resource> queue = new PrioQueue<Resource>();
     private transient Thread th = null;
 
-    ResourceLoader(ResSource src) {
+    ResourceLoader(final ResSource src) {
         this.src = src;
         checkThread();
     }
 
-    public void chain(ResourceLoader next) {
+    public void chain(final ResourceLoader next) {
         this.next = next;
     }
 
-    public void load(Resource res) {
+    public void load(final Resource res) {
         synchronized (queue) {
             queue.notifyAll();
             queue.add(res);
@@ -80,7 +80,7 @@ class ResourceLoader implements Runnable {
         }
     }
 
-    private void handle(Resource res) {
+    private void handle(final Resource res) {
         InputStream in = null;
         try {
             res.error = null;

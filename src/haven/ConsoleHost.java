@@ -43,7 +43,7 @@ public abstract class ConsoleHost extends Widget {
             super();
         }
 
-        private CommandLine(String line) {
+        private CommandLine(final String line) {
             super(line);
         }
 
@@ -52,7 +52,7 @@ public abstract class ConsoleHost extends Widget {
             ui.ungrabkeys();
         }
 
-        protected void done(String line) {
+        protected void done(final String line) {
             history.add(line);
             try {
                 ui.cons.run(line);
@@ -63,7 +63,7 @@ public abstract class ConsoleHost extends Widget {
             cancel();
         }
 
-        public boolean key(char c, int code, int mod) {
+        public boolean key(final char c, final int code, final int mod) {
             if (c == 27) {
                 cancel();
             } else if ((c == 8) && (mod == 0) && (line.length() == 0) && (point == 0)) {
@@ -88,20 +88,20 @@ public abstract class ConsoleHost extends Widget {
         }
     }
 
-    public ConsoleHost(Coord c, Coord sz, Widget parent) {
+    public ConsoleHost(final Coord c, final Coord sz, final Widget parent) {
         super(c, sz, parent);
     }
 
-    public ConsoleHost(UI ui, Coord c, Coord sz) {
+    public ConsoleHost(final UI ui, final Coord c, final Coord sz) {
         super(ui, c, sz);
     }
 
-    public void drawcmd(GOut g, Coord c) {
+    public void drawcmd(final GOut g, final Coord c) {
         if (cmdline != null) {
             if ((cmdtext == null) || (!cmdtext.text.equals(cmdline.line)))
                 cmdtext = cmdfoundry.render(':' + cmdline.line);
             g.image(cmdtext.tex(), c);
-            int lx = cmdtext.advance(cmdline.point + 1);
+            final int lx = cmdtext.advance(cmdline.point + 1);
             g.line(c.add(lx + 1, 2), c.add(lx + 1, 14), 1);
         }
     }
@@ -112,7 +112,7 @@ public abstract class ConsoleHost extends Widget {
         cmdline = new CommandLine();
     }
 
-    public boolean type(char ch, KeyEvent ev) {
+    public boolean type(final char ch, final KeyEvent ev) {
         if (cmdline == null) {
             return (super.type(ch, ev));
         } else {
@@ -121,7 +121,7 @@ public abstract class ConsoleHost extends Widget {
         }
     }
 
-    public boolean keydown(KeyEvent ev) {
+    public boolean keydown(final KeyEvent ev) {
         if (cmdline != null) {
             cmdline.key(ev);
             return (true);

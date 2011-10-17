@@ -15,12 +15,12 @@ import java.io.*;
 public class FileSource implements ResSource, Serializable {
     File base;
 
-    public FileSource(File base) {
+    public FileSource(final File base) {
         this.base = base;
     }
 
-    public InputStream get(String name) {
-        File cur = new File(base, name + ".res");
+    public InputStream get(final String name) {
+        final File cur = new File(base, name + ".res");
 //        System.out.println("trying to load " + cur.getAbsolutePath());
         if (!cur.exists()) {
 //            System.out.println("No such file " + cur.getAbsolutePath());

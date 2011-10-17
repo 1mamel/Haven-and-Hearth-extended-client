@@ -43,14 +43,14 @@ public class VorbisDecoder extends InputStream {
     private int bufp;
     public final int chn, rate;
 
-    public VorbisDecoder(InputStream in) throws IOException {
+    public VorbisDecoder(final InputStream in) throws IOException {
         this.in = new VorbisStream(in);
         chn = this.in.chn;
         rate = this.in.rate;
     }
 
     private boolean decode() throws IOException {
-        float[][] inb = in.decode();
+        final float[][] inb = in.decode();
         if (inb == null) {
             buf = new byte[0];
             return (false);
@@ -59,7 +59,7 @@ public class VorbisDecoder extends InputStream {
         int p = 0;
         for (int i = 0; i < inb[0].length; i++) {
             for (int c = 0; c < chn; c++) {
-                int s = (int) (inb[c][i] * 32767);
+                final int s = (int) (inb[c][i] * 32767);
                 buf[p++] = (byte) s;
                 buf[p++] = (byte) (s >> 8);
             }
@@ -69,7 +69,7 @@ public class VorbisDecoder extends InputStream {
     }
 
     public int read() throws IOException {
-        byte[] rb = new byte[1];
+        final byte[] rb = new byte[1];
         int ret;
         do {
             ret = read(rb);
@@ -79,7 +79,7 @@ public class VorbisDecoder extends InputStream {
         return (rb[0]);
     }
 
-    public int read(byte[] dst, int off, int len) throws IOException {
+    public int read(final byte[] dst, final int off, int len) throws IOException {
         if ((buf == null) && !decode())
             return (-1);
         if (buf.length - bufp < len)
@@ -94,9 +94,9 @@ public class VorbisDecoder extends InputStream {
         in.close();
     }
 
-    public static void main(String[] args) throws Exception {
-        InputStream dec = new VorbisDecoder(new FileInputStream(args[0]));
-        byte[] buf = new byte[4096];
+    public static void main(final String[] args) throws Exception {
+        final InputStream dec = new VorbisDecoder(new FileInputStream(args[0]));
+        final byte[] buf = new byte[4096];
         int ret;
         while ((ret = dec.read(buf)) >= 0)
             System.out.write(buf, 0, ret);

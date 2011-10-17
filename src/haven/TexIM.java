@@ -34,7 +34,7 @@ public class TexIM extends TexI {
     Graphics2D cg = null;
     Throwable cgc;
 
-    public TexIM(Coord sz) {
+    public TexIM(final Coord sz) {
         super(sz);
         clear();
     }

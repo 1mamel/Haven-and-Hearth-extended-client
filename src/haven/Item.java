@@ -28,6 +28,7 @@ package haven;
 
 import haven.resources.layers.Pagina;
 import haven.scriptengine.InventoryExt;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -60,9 +61,9 @@ public class Item extends Widget implements DTarget {
 
     static {
         Widget.addtype("item", new WidgetFactory() {
-            public Widget create(Coord c, Widget parent, Object[] args) {
-                int res = (Integer) args[0]; // Resource id
-                int q = (Integer) args[1]; // Quality
+            public Widget create(final Coord c, final Widget parent, final Object[] args) {
+                final int res = (Integer) args[0]; // Resource id
+                final int q = (Integer) args[1]; // Quality
                 int num = -1; // Quantity
                 String tooltip = null;
                 int ca = 3; // Arguments count
@@ -76,7 +77,7 @@ public class Item extends Widget implements DTarget {
                 if (args.length > ca)
                     //noinspection UnusedAssignment
                     num = (Integer) args[ca++];
-                Item item;
+                final Item item;
                 if (parent instanceof InventoryExt) // Item in inventory
                     item = ((InventoryExt) parent).new InvItem(c, res, q, parent, drag, num);
                 else if (parent instanceof RootWidget) // Item at cursor
@@ -92,7 +93,7 @@ public class Item extends Widget implements DTarget {
                 item.innerLiquidQuality = -1;
                 if (tooltip != null) {
                     try {
-                        Matcher m = patt.matcher(tooltip);
+                        final Matcher m = patt.matcher(tooltip);
                         if (m.find()) {
                             item.innerLiquidQuality = Integer.parseInt(m.group(1));
                         }
@@ -108,14 +109,14 @@ public class Item extends Widget implements DTarget {
 
     private void fixsize() {
         if (res.get() != null) {
-            Tex tex = res.get().layer(Resource.imgc).tex();
+            final Tex tex = res.get().layer(Resource.imgc).tex();
             sz = tex.sz().add(shoff);
         } else {
             sz = new Coord(30, 30);
         }
     }
 
-    public void draw(GOut g) {
+    public void draw(final GOut g) {
         final Resource ttres;
         if (res.get() == null) {
             sz = new Coord(30, 30);
@@ -137,17 +138,17 @@ public class Item extends Widget implements DTarget {
                 g.aimage(getNumberTex(quantity), Coord.z, 0, 0);
             }
             if (completedPercents > 0) {
-                double a = ((double) completedPercents) / 100.0;
-                int r = (int) ((1 - a) * 255);
-                int gr = (int) (a * 255);
-                int b = 0;
+                final double a = ((double) completedPercents) / 100.0;
+                final int r = (int) ((1 - a) * 255);
+                final int gr = (int) (a * 255);
+                final int b = 0;
                 g.chcolor(r, gr, b, 255);
                 //g.fellipse(sz.div(2), new Coord(15, 15), 90, (int)(90 + (360 * a)));
-                int h = (int) Math.floor(a * sz.y);
+                final int h = (int) Math.floor(a * sz.y);
                 g.frect(new Coord(sz.x - 5, sz.y - h), new Coord(5, h));
                 g.chcolor();
             }
-            int tq = (innerLiquidQuality > 0) ? innerLiquidQuality : quality;
+            final int tq = (innerLiquidQuality > 0) ? innerLiquidQuality : quality;
             if (Config.showq && (tq > 0)) {
                 tex = getNumberTex(tq);
                 g.aimage(tex, sz.sub(1, 1), 1, 1);
@@ -155,7 +156,7 @@ public class Item extends Widget implements DTarget {
             ttres = res.get();
         }
         if (olcol != null) {
-            Tex bg = ttres.layer(Resource.imgc).tex();
+            final Tex bg = ttres.layer(Resource.imgc).tex();
             if ((mask == null) && (bg instanceof TexI)) {
                 mask = ((TexI) bg).mkmask();
             }
@@ -167,7 +168,7 @@ public class Item extends Widget implements DTarget {
         }
     }
 
-    static Tex getNumberTex(int num) {
+    static Tex getNumberTex(final int num) {
         if (numbersMap.containsKey(num)) {
             return numbersMap.get(num);
         }
@@ -177,20 +178,20 @@ public class Item extends Widget implements DTarget {
             }
             BufferedImage img = Text.render(Integer.toString(num)).img;
             img = Utils.outline2(img, outcol);
-            Tex tex = new TexI(img);
+            final Tex tex = new TexI(img);
             numbersMap.put(num, tex);
             return tex;
         }
     }
 
-    static Tex makesh(Resource res) {
-        BufferedImage img = res.layer(Resource.imgc).img;
-        Coord sz = Utils.imgsz(img);
-        BufferedImage sh = new BufferedImage(sz.x, sz.y, BufferedImage.TYPE_INT_ARGB);
+    static Tex makesh(final Resource res) {
+        final BufferedImage img = res.layer(Resource.imgc).img;
+        final Coord sz = Utils.imgsz(img);
+        final BufferedImage sh = new BufferedImage(sz.x, sz.y, BufferedImage.TYPE_INT_ARGB);
         for (int y = 0; y < sz.y; y++) {
             for (int x = 0; x < sz.x; x++) {
-                long c = img.getRGB(x, y) & 0x00000000ffffffffL;
-                int a = (int) ((c & 0xff000000) >> 24);
+                final long c = img.getRGB(x, y) & 0x00000000ffffffffL;
+                final int a = (int) ((c & 0xff000000) >> 24);
                 sh.setRGB(x, y, (a / 2) << 24);
             }
         }
@@ -200,7 +201,7 @@ public class Item extends Widget implements DTarget {
     public String name() {
         if (this.tooltip != null)
             return (this.tooltip);
-        Resource res = this.res.get();
+        final Resource res = this.res.get();
         if ((res != null) && (res.layer(Resource.tooltip) != null)) {
             return res.layer(Resource.tooltip).t;
         }
@@ -210,7 +211,7 @@ public class Item extends Widget implements DTarget {
     String shorttip() {
         if (this.tooltip != null)
             return (this.tooltip);
-        Resource res = this.res.get();
+        final Resource res = this.res.get();
         if ((res != null) && (res.layer(Resource.tooltip) != null)) {
             String tt = res.layer(Resource.tooltip).t;
             if (tt != null) {
@@ -232,8 +233,8 @@ public class Item extends Widget implements DTarget {
     private Text shorttip = null;
     private Text longtip = null;
 
-    public Object tooltip(Coord c, boolean again) {
-        long now = System.currentTimeMillis();
+    public Object tooltip(final Coord c, final boolean again) {
+        final long now = System.currentTimeMillis();
         if (!again)
             hoverstart = now;
         if ((now - hoverstart) < 500) {
@@ -248,10 +249,10 @@ public class Item extends Widget implements DTarget {
             }
             return (shorttip);
         } else {
-            Resource res = this.res.get();
+            final Resource res = this.res.get();
             if ((longtip == null) && (res != null)) {
-                Pagina pg = res.layer(Resource.pagina);
-                String tip = shorttip();
+                final Pagina pg = res.layer(Resource.pagina);
+                final String tip = shorttip();
                 if (tip == null)
                     return (null);
                 String tt = RichText.Parser.quote(tip);
@@ -271,7 +272,7 @@ public class Item extends Widget implements DTarget {
         longtip = null;
     }
 
-    private void decodeQuality(int q) {
+    private void decodeQuality(final int q) {
         if (q < 0) {
             this.quality = q;
             isHighQuality = false;
@@ -281,7 +282,7 @@ public class Item extends Widget implements DTarget {
         }
     }
 
-    public Item(Coord c, Indir<Resource> res, int quality, Widget parent, Coord drag, int quantity) {
+    public Item(final Coord c, final Indir<Resource> res, final int quality, final Widget parent, final Coord drag, final int quantity) {
         super(c, Coord.z, parent);
         this.res = res;
         decodeQuality(quality);
@@ -299,19 +300,19 @@ public class Item extends Widget implements DTarget {
         }
     }
 
-    public Item(Coord c, int res, int quality, Widget parent, Coord drag, int quantity) {
+    public Item(final Coord c, final int res, final int quality, final Widget parent, final Coord drag, final int quantity) {
         this(c, parent.ui.sess.getres(res), quality, parent, drag, quantity);
     }
 
-    private Item(Coord c, Indir<Resource> res, int quality, Widget parent, Coord drag) {
+    private Item(final Coord c, final Indir<Resource> res, final int quality, final Widget parent, final Coord drag) {
         this(c, res, quality, parent, drag, -1);
     }
 
-    public Item(Coord c, int res, int quality, Widget parent, Coord drag) {
+    public Item(final Coord c, final int res, final int quality, final Widget parent, final Coord drag) {
         this(c, parent.ui.sess.getres(res), quality, parent, drag);
     }
 
-    boolean dropon(Widget w, Coord c) {
+    boolean dropon(final Widget w, final Coord c) {
 //        if (w != UI.instance.root) {
 //            System.err.println("Item dropon. w is not root, " + w.getClass().getSimpleName());
 //        }
@@ -319,7 +320,7 @@ public class Item extends Widget implements DTarget {
             if (wdg == this) {
                 continue;
             }
-            Coord cc = w.xlate(wdg.c, true);
+            final Coord cc = w.xlate(wdg.c, true);
             if (c.isect(cc, (wdg.hsz == null) ? wdg.sz : wdg.hsz)) {
                 if (dropon(wdg, c.sub(cc))) {
                     return (true);
@@ -334,7 +335,7 @@ public class Item extends Widget implements DTarget {
         return (false);
     }
 
-    boolean interact(Widget w, Coord c) {
+    boolean interact(final Widget w, final Coord c) {
 //        if (w != UI.instance.root) {
 //            System.err.println("Item interact. w is not root, " + w.getClass().getSimpleName());
 //        }
@@ -342,7 +343,7 @@ public class Item extends Widget implements DTarget {
             if (wdg == this) {
                 continue;
             }
-            Coord cc = w.xlate(wdg.c, true);
+            final Coord cc = w.xlate(wdg.c, true);
             if (c.isect(cc, (wdg.hsz == null) ? wdg.sz : wdg.hsz)) {
                 if (interact(wdg, c.sub(cc))) {
                     return (true);
@@ -357,12 +358,12 @@ public class Item extends Widget implements DTarget {
         return (false);
     }
 
-    public void chres(Indir<Resource> res, int q) {
+    public void chres(final Indir<Resource> res, final int q) {
         this.res = res;
         decodeQuality(q);
     }
 
-    public void uimsg(String name, Object... args) {
+    public void uimsg(@NotNull final String name, final Object... args) {
         if (name.equals("num")) { // Change quantity
             quantity = (Integer) args[0];
         } else if (name.equals("chres")) { // Change resource (by id) and quality
@@ -377,12 +378,12 @@ public class Item extends Widget implements DTarget {
                 tooltip = null;
             resetToolTip();
         } else if (name.equals("meter")) { // may be completion indicator on dying fur, etc.
-            int ncp = (Integer) args[0];
-            int deltaCP = Math.abs(ncp - completedPercents);
+            final int ncp = (Integer) args[0];
+            final int deltaCP = Math.abs(ncp - completedPercents);
             completedPercents = ncp;
             try {
-            long nowTime = System.currentTimeMillis();
-            long deltaTime = lastCPUpdateTime - nowTime;
+            final long nowTime = System.currentTimeMillis();
+            final long deltaTime = lastCPUpdateTime - nowTime;
             // Reapproximates deltaTime
             if (approximateDelta != -1) {
                 approximateDelta = (approximateDelta + 3 * deltaTime) / 4;
@@ -399,7 +400,7 @@ public class Item extends Widget implements DTarget {
         }
     }
 
-    public boolean mousedown(Coord c, int button) {
+    public boolean mousedown(final Coord c, final int button) {
         if (!dm) {
             if (button == 1) {
                 if (ui.modshift)
@@ -424,17 +425,17 @@ public class Item extends Widget implements DTarget {
         return (false);
     }
 
-    public void mousemove(Coord c) {
+    public void mousemove(final Coord c) {
         if (dm) {
             this.c = this.c.add(c.sub(doff));
         }
     }
 
-    public boolean drop(Coord cc, Coord ul, Item item) {
+    public boolean drop(final Coord cc, final Coord ul, final Item item) {
         return (false);
     }
 
-    public boolean iteminteract(Coord cc, Coord ul) {
+    public boolean iteminteract(final Coord cc, final Coord ul) {
         wdgmsg("itemact", ui.modflags());
         return (true);
     }
@@ -449,7 +450,7 @@ public class Item extends Widget implements DTarget {
 
     // arksu: съедобная ли вещь
     public boolean isEatable() {
-        String s = getResName();
+        final String s = getResName();
         if (s.contains("gfx/invobjs/bread")) return true;
         if (s.contains("gfx/invobjs/meat")) return true;
         if (s.contains("gfx/invobjs/mussel-boiled")) return true;

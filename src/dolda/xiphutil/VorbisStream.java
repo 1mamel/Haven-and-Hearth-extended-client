@@ -80,23 +80,23 @@ public class VorbisStream {
      * @throws FormatException     if a format
      *                             error is found in the input.
      */
-    public VorbisStream(PacketStream in) throws IOException {
+    public VorbisStream(final PacketStream in) throws IOException {
         this.in = in;
         info.init();
         cmt.init();
         for (int i = 0; i < 3; i++) {
-            Packet pkt = in.packet();
+            final Packet pkt = in.packet();
             if (pkt == null)
                 throw (new VorbisException());
             if (info.synthesis_headerin(cmt, pkt) < 0)
                 throw (new VorbisException());
         }
         vnd = new String(cmt.vendor, 0, cmt.vendor.length - 1, "UTF-8");
-        HashMap<String, String> uc = new HashMap<String, String>();
+        final HashMap<String, String> uc = new HashMap<String, String>();
         for (int i = 0; i < cmt.user_comments.length - 1; i++) {
-            byte[] cb = cmt.user_comments[i];
-            String cs = new String(cb, 0, cb.length - 1, "UTF-8");
-            int ep;
+            final byte[] cb = cmt.user_comments[i];
+            final String cs = new String(cb, 0, cb.length - 1, "UTF-8");
+            final int ep;
             if ((ep = cs.indexOf('=')) < 1)
                 throw (new VorbisException());
             uc.put(cs.substring(0, ep).toLowerCase().intern(), cs.substring(ep + 1));
@@ -122,7 +122,7 @@ public class VorbisStream {
      * @throws FormatException     if a format error is found in
      *                             the input.
      */
-    public VorbisStream(InputStream in) throws IOException {
+    public VorbisStream(final InputStream in) throws IOException {
         this(new PacketStream(new PageStream(in)));
     }
 
@@ -149,9 +149,9 @@ public class VorbisStream {
      */
     public float[][] decode() throws IOException {
         while (true) {
-            int len = dsp.synthesis_pcmout(pcmp, idxp);
+            final int len = dsp.synthesis_pcmout(pcmp, idxp);
             if (len > 0) {
-                float[][] ret = new float[chn][];
+                final float[][] ret = new float[chn][];
                 for (int i = 0; i < chn; i++) {
                     ret[i] = new float[len];
                     System.arraycopy(pcmp[0][i], idxp[i], ret[i], 0, len);
@@ -159,7 +159,7 @@ public class VorbisStream {
                 dsp.synthesis_read(len);
                 return (ret);
             }
-            Packet pkt = in.packet();
+            final Packet pkt = in.packet();
             if (pkt == null)
                 return (null);
             if ((blk.synthesis(pkt) != 0) || (dsp.synthesis_blockin(blk) != 0))
@@ -184,7 +184,7 @@ public class VorbisStream {
             private int bufp;
 
             private boolean convert() throws IOException {
-                float[][] inb = decode();
+                final float[][] inb = decode();
                 if (inb == null) {
                     buf = new byte[0];
                     return (false);
@@ -193,7 +193,7 @@ public class VorbisStream {
                 int p = 0;
                 for (int i = 0; i < inb[0].length; i++) {
                     for (int c = 0; c < chn; c++) {
-                        int s = (int) (inb[c][i] * 32767);
+                        final int s = (int) (inb[c][i] * 32767);
                         buf[p++] = (byte) s;
                         buf[p++] = (byte) (s >> 8);
                     }
@@ -203,7 +203,7 @@ public class VorbisStream {
             }
 
             public int read() throws IOException {
-                byte[] rb = new byte[1];
+                final byte[] rb = new byte[1];
                 int ret;
                 do {
                     ret = read(rb);
@@ -213,7 +213,7 @@ public class VorbisStream {
                 return (rb[0]);
             }
 
-            public int read(byte[] dst, int off, int len) throws IOException {
+            public int read(final byte[] dst, final int off, int len) throws IOException {
                 if ((buf == null) && !convert())
                     return (-1);
                 if (buf.length - bufp < len)
@@ -252,10 +252,10 @@ public class VorbisStream {
      * </pre>
      */
     @SuppressWarnings({"UnusedAssignment", "UnusedDeclaration"})
-    public static void main(String[] args) throws Exception {
-        VorbisStream vs = new VorbisStream(new FileInputStream(args[0]));
-        InputStream pcm = vs.pcmstream();
-        byte[] buf = new byte[4096];
+    public static void main(final String[] args) throws Exception {
+        final VorbisStream vs = new VorbisStream(new FileInputStream(args[0]));
+        final InputStream pcm = vs.pcmstream();
+        final byte[] buf = new byte[4096];
         int ret;
         while ((ret = pcm.read(buf)) >= 0)
             System.out.write(buf);

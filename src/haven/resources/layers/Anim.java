@@ -19,7 +19,7 @@ public class Anim extends Layer {
     public Image[][] f;
     private Resource resource;
 
-    public Anim(Resource resource, byte[] buf) {
+    public Anim(final Resource resource, final byte[] buf) {
         this.resource = resource;
         id = Utils.int16d(buf, 0);
         d = Utils.uint16d(buf, 2);
@@ -32,10 +32,10 @@ public class Anim extends Layer {
 
     public void init() {
         f = new Image[ids.length][];
-        Image[] typeinfo = new Image[0];
+        final Image[] typeinfo = new Image[0];
         for (int i = 0; i < ids.length; i++) {
-            LinkedList<Image> buf = new LinkedList<Image>();
-            for (Image img : resource.layers(Image.class)) {
+            final LinkedList<Image> buf = new LinkedList<Image>();
+            for (final Image img : resource.layers(Image.class)) {
                 if (img.id == ids[i])
                     buf.add(img);
             }

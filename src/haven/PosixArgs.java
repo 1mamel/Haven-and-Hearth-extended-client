@@ -40,7 +40,7 @@ public class PosixArgs {
         private final char ch;
         private final String arg;
 
-        private Arg(char ch, String arg) {
+        private Arg(final char ch, final String arg) {
             this.ch = ch;
             this.arg = arg;
         }
@@ -50,12 +50,13 @@ public class PosixArgs {
         parsed = new ArrayList<Arg>();
     }
 
-    public static PosixArgs getopt(String[] argv, int start, String desc) {
-        PosixArgs ret = new PosixArgs();
-        List<Character> fl = new ArrayList<Character>(), fla = new ArrayList<Character>();
-        List<String> rest = new ArrayList<String>();
+    public static PosixArgs getopt(final String[] argv, final int start, final String desc) {
+        final PosixArgs ret = new PosixArgs();
+        final List<Character> fl = new ArrayList<Character>();
+        final List<Character> fla = new ArrayList<Character>();
+        final List<String> rest = new ArrayList<String>();
         for (int i = 0; i < desc.length();) {
-            char ch = desc.charAt(i++);
+            final char ch = desc.charAt(i++);
             if ((i < desc.length()) && (desc.charAt(i) == ':')) {
                 i++;
                 fla.add(ch);
@@ -65,13 +66,13 @@ public class PosixArgs {
         }
         boolean acc = true;
         for (int i = start; i < argv.length;) {
-            String arg = argv[i++];
+            final String arg = argv[i++];
             if (acc && arg.equals("--")) {
                 acc = false;
             }
             if (acc && (arg.charAt(0) == '-')) {
                 for (int o = 1; o < arg.length();) {
-                    char ch = arg.charAt(o++);
+                    final char ch = arg.charAt(o++);
                     if (fl.contains(ch)) {
                         ret.parsed.add(new Arg(ch, null));
                     } else if (fla.contains(ch)) {
@@ -98,7 +99,7 @@ public class PosixArgs {
         return (ret);
     }
 
-    public static PosixArgs getopt(String[] argv, String desc) {
+    public static PosixArgs getopt(final String[] argv, final String desc) {
         return (getopt(argv, 0, desc));
     }
 
@@ -115,7 +116,7 @@ public class PosixArgs {
                     public Character next() {
                         if (i >= parsed.size())
                             throw (new NoSuchElementException());
-                        Arg a = parsed.get(i++);
+                        final Arg a = parsed.get(i++);
                         arg = a.arg;
                         return (a.ch);
                     }
