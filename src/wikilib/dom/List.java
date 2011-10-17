@@ -8,10 +8,10 @@ package wikilib.dom;
  *
  * @author Vlad.Rassokhin@gmail.com
  */
-public class List extends BranchingNode {
+public class List extends BranchingNode<Node> {
     private boolean ordered;
 
-    public List(boolean ordered) {
+    public  List(boolean ordered) {
         this.ordered = ordered;
     }
 

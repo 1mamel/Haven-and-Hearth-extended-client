@@ -24,33 +24,39 @@ import java.util.Stack;
  * @author Vlad.Rassokhin@gmail.com
  */
 public class ParsingUtil {
-    static void parseDom(final Request request, final InputStream is) throws ParserConfigurationException, IOException, SAXException, PageParsingException {
-        final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        dbf.setValidating(false);
-        dbf.setNamespaceAware(true);
-        dbf.setIgnoringComments(false);
-        dbf.setIgnoringElementContentWhitespace(false);
-        dbf.setExpandEntityReferences(false);
 
-        final DocumentBuilder db = dbf.newDocumentBuilder();
-        final Document dom = db.parse(is);
-        final String title = getTitle(dom);
+    private static final DocumentBuilderFactory DOCUMENT_BUILDER_FACTORY;
 
-
-        final Page resultPage = new Page(title == null ? "<No title>" : title);
-
-        if (title == null) {
-            resultPage.add(new Header("Strange result", 13));
-        } else if (title.contains("Search result")) {
-            parseSearchResultsPage(resultPage, dom);
-        } else {
-            parseWikiPage(resultPage, dom);
-        }
-        request.setResult(resultPage);
-
+    static {
+        DOCUMENT_BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
+        DOCUMENT_BUILDER_FACTORY.setValidating(false);
+        DOCUMENT_BUILDER_FACTORY.setNamespaceAware(true);
+        DOCUMENT_BUILDER_FACTORY.setIgnoringComments(false);
+        DOCUMENT_BUILDER_FACTORY.setIgnoringElementContentWhitespace(false);
+        DOCUMENT_BUILDER_FACTORY.setExpandEntityReferences(false);
     }
 
-    public static void parseWikiPage(@NotNull Page page, @NotNull Document dom) throws PageParsingException {
+    private static DocumentBuilder createBuilder() throws ParserConfigurationException {
+        return DOCUMENT_BUILDER_FACTORY.newDocumentBuilder();
+    }
+
+    static Page parseHtml(final InputStream is) throws ParserConfigurationException, IOException, SAXException, PageParsingException {
+        final Document dom = createBuilder().parse(is);
+        final String title = getTitle(dom);
+
+        final Page page = new Page(title == null ? "<No title>" : title);
+
+        if (title == null) {
+            page.add(new Header("Strange result", 13));
+        } else if (title.contains("Search result")) {
+            parseSearchResultsPage(page, dom);
+        } else {
+            parseWikiPage(page, dom);
+        }
+        return page;
+    }
+
+    public static void parseWikiPage(@NotNull final Page page, @NotNull final Document dom) throws PageParsingException {
         final Node bodyContent = filterNodesById(dom.getElementsByTagName("div"), "bodyContent");
         if (bodyContent == null) {
             throw new PageParsingException("Does not contains body");
@@ -75,15 +81,12 @@ public class ParsingUtil {
             }
         });
 
-
-        // TODO: format tables  & page generating
-
         final Stack<BranchingNode> stack = new Stack<BranchingNode>();
         stack.push(page);
 
         deepDo(bodyContent, new Functor() {
             @Override
-            public void processOnEnter(@NotNull Node node) {
+            public void processOnEnter(@NotNull final Node node) {
                 if (hasName(node, "a")) {
                     stack.peek().add(new Link(getAttribute(node, "href"), node.getTextContent()));
                 } else if (hasName(node, "h2")) {
@@ -98,6 +101,20 @@ public class ParsingUtil {
                     List ol = new List(false);
                     stack.peek().add(ol);
                     stack.push(ol);
+                } else if (hasName(node, "table")) {
+                    Table t = new Table();
+                    stack.peek().add(t);
+                    stack.push(t);
+                } else if (hasName(node, "tr")) {
+                    Table.Line l = new Table.Line();
+                    stack.peek().add(l);
+                    stack.push(l);
+                } else if (hasName(node, "th")) {
+                    Table.Cell c = new Table.Cell(node.getTextContent(), true);
+                    stack.peek().add(c);
+                } else if (hasName(node, "td")) {
+                    Table.Cell c = new Table.Cell(node.getTextContent(), false);
+                    stack.peek().add(c);
                 } else if (hasName(node, "li")) {
                     stack.peek().add(new LI(node.getTextContent()));
                 } else if (node instanceof Element) {
@@ -108,24 +125,30 @@ public class ParsingUtil {
             }
 
             @Override
-            public void processOnLeave(@NotNull Node node) {
+            public void processOnLeave(@NotNull final Node node) {
                 if (hasName(node, "ol")) {
                     stack.pop();
                 } else if (hasName(node, "ul")) {
                     stack.pop();
+                } else if (hasName(node, "table")) {
+                    if (stack.peek() instanceof Table) {
+                        stack.pop();
+                    }
+                } else if (hasName(node, "tr")) {
+                    if (stack.peek() instanceof Table.Line) {
+                        stack.pop();
+                    }
                 }
             }
 
             @Override
-            public boolean needProcessChilds(@NotNull Node node) {
+            public boolean needProcessChilds(@NotNull final Node node) {
                 if (hasName(node, "a")) {
                     return false;
                 } else if (hasName(node, "h2")) {
                     return false;
                 } else if (hasName(node, "h3")) {
                     return false;
-                } else if (hasName(node, "ol")) {
-                    return true;
                 }
                 return true;
             }

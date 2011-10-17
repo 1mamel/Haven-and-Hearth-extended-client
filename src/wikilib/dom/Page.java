@@ -8,11 +8,18 @@ package wikilib.dom;
  *
  * @author Vlad.Rassokhin@gmail.com
  */
-public class Page extends BranchingNode {
+public class Page extends BranchingNode<Node> {
+    public static final Page FAILED_TO_PARSE = new Page("Failed to parse HTML");
+    
+    
     private final String title;
 
     public Page(final String title) {
         super();
         this.title = title;
+    }
+
+    public String getTitle() {
+        return title;
     }
 }

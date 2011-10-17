@@ -1,5 +1,7 @@
 package wikilib;
 
+import wikilib.dom.Page;
+
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -48,5 +50,27 @@ public class Request {
     public void complete() {
         if (callback != null)
             callback.run(this);
+    }
+
+    public void setResult(final Page result) {
+        setTitle(result.getTitle());
+        this.result = result.toString();
+        complete();
+    }
+
+    public String getResult() {
+        return result;
+    }
+
+    public URL getUrl() {
+        return url;
+    }
+
+    public void setTitle(final String title) {
+        this.title = title;
+    }
+
+    public String getTitle() {
+        return title;
     }
 }

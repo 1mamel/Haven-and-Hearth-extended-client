@@ -13,29 +13,25 @@ import java.util.List;
  *
  * @author Vlad.Rassokhin@gmail.com
  */
-public abstract class BranchingNode implements Node {
+public abstract class BranchingNode<E extends Node> implements Node {
     @NotNull
-    final List<Node> childs;
+    final List<E> childs;
 
     @NotNull
-    public List<Node> getChilds() {
+    public List<E> getChilds() {
         return childs;
     }
 
-    protected BranchingNode(@NotNull final List<Node> childs) {
-        this.childs = childs;
-    }
-
     protected BranchingNode() {
-        this.childs = new LinkedList<Node>();
+        this.childs = new LinkedList<E>();
     }
 
-    public BranchingNode add(@NotNull final Node node) {
+    public BranchingNode<E> add(@NotNull final E node) {
         childs.add(node);
         return this;
     }
 
-    public BranchingNode remove(@NotNull final Node node) {
+    public BranchingNode<E> remove(@NotNull final E node) {
         childs.remove(node);
         return this;
     }
@@ -43,7 +39,7 @@ public abstract class BranchingNode implements Node {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
-        for (final Node child : childs) {
+        for (final E child : childs) {
             sb.append(child.toString());
         }
         return sb.toString();
