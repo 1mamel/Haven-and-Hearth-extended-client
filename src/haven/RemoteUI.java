@@ -26,11 +26,15 @@
 
 package haven;
 
+import org.apache.log4j.Logger;
+
 import java.util.Arrays;
 
 public class RemoteUI implements UI.Receiver {
     final Session sess;
     UI ui;
+
+    protected static final Logger LOG = Logger.getLogger(RemoteUI.class);
 
     public RemoteUI(final Session sess) {
         this.sess = sess;
@@ -80,29 +84,28 @@ public class RemoteUI implements UI.Receiver {
                             c = CustomConfig.getWindowCenter().add(86, 214);
                         }
                     } else if (type.equals("wnd") && c.x == 400 && c.y == 200) {
-                        CustomConfig.logger.info("Strange window name=" + args[1].toString());
+                        LOG.info("Strange window name=" + args[1].toString());
                         c = CustomConfig.getWindowCenter().add(0, -100);
                     }
                     // UI fixes END
-                    if (CustomConfig.isDebugLogging()) {
-                        CustomConfig.logger.debug("Creating Widget id=" + id + " parentId=" + parent + " type='" + type + "' in coord " + c.toString() + "\n\twith args: " + Arrays.toString(args));
+                    if (LOG.isInfoEnabled()) {
+                        LOG.info("Creating Widget id=" + id + " parentId=" + parent + " type='" + type + "' in coord " + c.toString() + "\n\twith args: " + Arrays.toString(args));
                     }
-
                     ui.newwidget(id, type, c, parent, args);
 
                 } else if (msg.type == Message.RMSG_WDGMSG) {
                     final int id = msg.uint16();
                     final String type = msg.string();
                     final Object[] args = msg.list();
-                    if (CustomConfig.isDebugLogging()) {
-                        CustomConfig.logger.debug("Message (type='" + type + "') for widget (id=" + id + ')' + "\n\tcontains: " + Arrays.toString(args));
+                    if (LOG.isInfoEnabled()) {
+                        LOG.info("Message (type='" + type + "') for widget (id=" + id + ')' + "\n\tcontains: " + Arrays.toString(args));
                     }
                     ui.uimsg(id, type, args);
 
                 } else if (msg.type == Message.RMSG_DSTWDG) {
                     final int id = msg.uint16();
-                    if (CustomConfig.isDebugLogging()) {
-                        CustomConfig.logger.debug("Deleting widget id=" + id);
+                    if (LOG.isInfoEnabled()) {
+                        LOG.info("Deleting widget id=" + id);
                     }
                     ui.destroy(id);
                 }
