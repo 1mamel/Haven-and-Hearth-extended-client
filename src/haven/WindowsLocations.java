@@ -1,5 +1,9 @@
 package haven;
 
+import com.google.gson.Gson;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,28 +15,34 @@ import java.util.Map;
  */
 public class WindowsLocations {
 
-    public static Coord getLocationByName(String name, Coord defLocation) {
+    @NotNull
+    public static Coord getLocationByName(@Nullable final String name, @NotNull final Coord defLocation) {
         if (name == null) return defLocation;
-        Coord nc = ourLocations.get(name);
+        Coord nc = ourContainer.locations.get(name);
         if (nc == null) {
             nc = defLocation;
-            ourLocations.put(name,nc);
+            ourContainer.locations.put(name, nc);
         }
         return nc;
     }
 
-    public static void coordChanged(Window wnd, Coord newCoords) {
+    public static void coordChanged(@Nullable final Window wnd, @NotNull final Coord newCoords) {
         if (wnd == null || wnd.cap == null || wnd.cap.text == null) return;
-        ourLocations.put(wnd.cap.text, newCoords);
+        ourContainer.locations.put(wnd.cap.text, newCoords);
     }
 
-    public static void loadFromFile() {
-        // TODO: implement with json
+    static class LocationsContainer {
+        final Map<String, Coord> locations = new HashMap<String, Coord>();
+
+        public static LocationsContainer deserialize(@NotNull final String string) {
+            return new Gson().fromJson(string, LocationsContainer.class);
+        }
+
+        public static String serialize(@NotNull final LocationsContainer lc) {
+            return new Gson().toJson(lc);
+        }
     }
 
-    public static void saveToFile() {
-        // TODO: implement with json
-    }
-
-    static final Map<String, Coord> ourLocations = new HashMap<String, Coord>();
+    @NotNull
+    static LocationsContainer ourContainer = new LocationsContainer();
 }

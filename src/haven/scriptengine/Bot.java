@@ -9,16 +9,20 @@ package haven.scriptengine;
  * @author Vlad.Rassokhin@gmail.com
  */
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Main script engine class.
  * Must be overrided in scripts.
  */
 @SuppressWarnings({"UnusedDeclaration", "MethodMayBeStatic"})
 public abstract class Bot implements Runnable {
+    @NotNull
     public String about() {
         return "No information provided";
     }
 
+    @NotNull
     public String author() {
         return "No information about author provided";
     }

@@ -14,8 +14,8 @@ import haven.UI;
 public class CraftProvider {
 
     // есть ли окно крафта с заданным заголовком
-    public static boolean isOpened(String wnd) {
-        Makewindow mw = UI.makeWindow.get();
+    public static boolean isOpened(final String wnd) {
+        final Makewindow mw = UI.makeWindow.get();
         return mw != null && mw.receiptName.equals(wnd) && mw.isReady();
     }
 
@@ -28,7 +28,7 @@ public class CraftProvider {
      * Starts crafting
      * @param cont continue crafting if can
      */
-    public static void craft(boolean cont) {
+    public static void craft(final boolean cont) {
         if (UI.makeWindow.get() != null) {
             UI.instance.wdgmsg(UI.makeWindow.get(), "make", cont ? 1 : 0);
         }

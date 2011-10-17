@@ -1,6 +1,7 @@
 package haven.scriptengine.providers;
 
 import haven.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -76,7 +77,7 @@ public class Player {
         return UI.speedget.get().changeSpeed(speed);
     }
 
-    public static void iMeterGenerated(IMeter meter, String resName) {
+    public static void iMeterGenerated(@NotNull final IMeter meter, @NotNull final String resName) {
         newMeter(meter, resName);
     }
 
@@ -84,7 +85,7 @@ public class Player {
         meterUp(meter, tooltip);
     }
 
-    private static void meterUp(IMeter meter, String tooltip) {
+    private static void meterUp(@NotNull final IMeter meter, @NotNull final String tooltip) {
         try {
             if (meter == hpMeter) updateHp(tooltip);
             if (meter == energyMeter) updateEnergy(tooltip);
@@ -96,7 +97,7 @@ public class Player {
         }
     }
 
-    private static void newMeter(IMeter meter, String resName) {
+    private static void newMeter(@NotNull final IMeter meter, @NotNull final String resName) {
         if (resName.equals("gfx/hud/meter/hp")) //HP meter
             hpMeter = meter;
         else if (resName.equals("gfx/hud/meter/nrj")) // Energy Meter
@@ -111,22 +112,22 @@ public class Player {
             System.err.println("Unexpected IMeter with imagename=" + resName);
     }
 
-    private static void updateAuthority(String tooltip) {
-        Matcher makeMatch = intsOnly.matcher(tooltip);
+    private static void updateAuthority(@NotNull final String tooltip) {
+        final Matcher makeMatch = intsOnly.matcher(tooltip);
         makeMatch.find();
         authorityNow = Integer.parseInt(makeMatch.group());
         makeMatch.find();
         authorityMax = Integer.parseInt(makeMatch.group());
     }
 
-    private static void updateHungry(String tooltip) {
-        Matcher makeMatch = intsOnly.matcher(tooltip);
+    private static void updateHungry(@NotNull final String tooltip) {
+        final Matcher makeMatch = intsOnly.matcher(tooltip);
         makeMatch.find();
         makeMatch.find();
         hungry = Integer.parseInt(makeMatch.group());
     }
 
-    private static void updateHappy(String tooltip) {
+    private static void updateHappy(@NotNull final String tooltip) {
         Matcher makeMatch = intsOnly.matcher(tooltip);
         makeMatch.find();
         happy = Integer.parseInt(makeMatch.group());
@@ -138,15 +139,15 @@ public class Player {
         if (tooltip.startsWith("Un")) happy *= -1;
     }
 
-    private static void updateEnergy(String tooltip) {
-        Matcher makeMatch = intsOnly.matcher(tooltip);
+    private static void updateEnergy(final String tooltip) {
+        final Matcher makeMatch = intsOnly.matcher(tooltip);
         makeMatch.find();
         stamina = Integer.parseInt(makeMatch.group());
     }
 
 
-    public static void updateHp(String tooltip) {
-        Matcher makeMatch = intsOnly.matcher(tooltip);
+    public static void updateHp(final String tooltip) {
+        final Matcher makeMatch = intsOnly.matcher(tooltip);
         makeMatch.find();
         hp = Integer.parseInt(makeMatch.group());
         makeMatch.find();

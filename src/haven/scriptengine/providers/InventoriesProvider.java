@@ -36,12 +36,12 @@ public class InventoriesProvider {
     }
 
     // проверить наличие инвентаря по имени
-    public static boolean haveInventory(String name) {
+    public static boolean haveInventory(final String name) {
         return InventoryExt.hasInventory(name);
     }
 
     // вернуть инвентарь по имени
-    public static InventoryExt getInventory(String name) {
+    public static InventoryExt getInventory(final String name) {
         return InventoryExt.getInventory(name);
     }
 
@@ -54,7 +54,7 @@ public class InventoriesProvider {
     }
 
     // поставить текущий инвентарь, после автоматически сбрасывается итератор
-    public static int setInventory(String name) {
+    public static int setInventory(final String name) {
         currentInventory = InventoryExt.getInventory(name);
         if (currentInventory != null) {
             resetInventoryIter();

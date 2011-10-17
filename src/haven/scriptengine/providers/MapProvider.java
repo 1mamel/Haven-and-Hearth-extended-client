@@ -25,9 +25,9 @@ public class MapProvider {
     }
 
     public static Coord getCenterR() {
-        Coord center = UI.instance.mainview.sz.div(2);
-        int dx = (int) ((Math.random() - 0.5) * 200);
-        int dy = (int) ((Math.random() - 0.5) * 200);
+        final Coord center = UI.instance.mainview.sz.div(2);
+        final int dx = (int) ((Math.random() - 0.5) * 200);
+        final int dy = (int) ((Math.random() - 0.5) * 200);
         return center.add(dx, dy);
     }
 

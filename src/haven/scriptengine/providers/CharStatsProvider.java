@@ -26,7 +26,7 @@ public class CharStatsProvider {
     }
 
     public static int getAttentionLimit() {
-        StudyWidget sw = StudyWidget.instance.get();
+        final StudyWidget sw = StudyWidget.instance.get();
         if (sw == null) {
             return -1;
         }
@@ -34,7 +34,7 @@ public class CharStatsProvider {
     }
 
     public static int getAttention() {
-        StudyWidget sw = StudyWidget.instance.get();
+        final StudyWidget sw = StudyWidget.instance.get();
         if (sw == null) {
             return -1;
         }

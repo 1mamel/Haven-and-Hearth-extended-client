@@ -2,6 +2,8 @@ package haven.scriptengine;
 
 import haven.*;
 import haven.scriptengine.providers.MapProvider;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -18,10 +20,12 @@ public class InventoryExt extends Inventory {
 
     private int freeCount;
 
+    @NotNull
     public String getName() {
         return (parent instanceof Window) ? ((Window) parent).getCaption() : "";
     }
 
+    @NotNull
     public ItemsIterator getItemsIterator() {
         return new ItemsIterator(this);
     }
@@ -99,10 +103,10 @@ public class InventoryExt extends Inventory {
 
     protected TreeMap<Coord, InvItem> items = new TreeMap<Coord, InvItem>();
 
-    private synchronized void addItem(InvItem item) {
-        Coord loc = item.getInInvLocation();
+    private synchronized void addItem(@NotNull final InvItem item) {
+        final Coord loc = item.getInInvLocation();
         items.put(loc, item);
-        Coord iSize = item.getSizeInCells();
+        final Coord iSize = item.getSizeInCells();
         if (loc.x + iSize.x <= isz.x && loc.y + iSize.y <= isz.y) {
             for (int x = 0; x < iSize.x; ++x) {
                 for (int y = 0; y < iSize.y; ++y) {
@@ -115,10 +119,10 @@ public class InventoryExt extends Inventory {
 //        System.err.println("Inv " + getName() + " new item loc = " + loc + " size = " + item.getSizeInCells() + " fc = " + getFreeCellsCount() + " meter="+ item.getCompletedPercent());
     }
 
-    private synchronized void deleteItem(InvItem item) {
+    private synchronized void deleteItem(@NotNull final InvItem item) {
         items.values().remove(item);
-        Coord loc = item.getInInvLocation();
-        Coord iSize = item.getSizeInCells();
+        final Coord loc = item.getInInvLocation();
+        final Coord iSize = item.getSizeInCells();
         if (loc.x + iSize.x <= isz.x && loc.y + iSize.y <= isz.y) {
             for (int x = 0; x < iSize.x; ++x) {
                 for (int y = 0; y < iSize.y; ++y) {
@@ -131,11 +135,11 @@ public class InventoryExt extends Inventory {
 //        System.err.println("Inv " + getName() + " remove item loc = " + item.getCoord().div(31) + " size = " + item.getSizeInCells() + " fc = " + getFreeCellsCount());
     }
 
-    public InvItem getItem(Coord position) {
+    public InvItem getItem(@NotNull final Coord position) {
         return items.get(position);
     }
 
-    public InventoryExt(Coord c, Coord sz, Widget parent) {
+    public InventoryExt(@NotNull Coord c, @NotNull Coord sz, @NotNull Widget parent) {
         super(c, sz, parent);
         this.busy = new boolean[isz.x][isz.y];
         updateBusy();
@@ -156,7 +160,7 @@ public class InventoryExt extends Inventory {
         super.uimsg(msg, args);
     }
 
-    private static void registerInventory(InventoryExt inv) {
+    private static void registerInventory(@NotNull final InventoryExt inv) {
 //        System.err.println("Registering Inventory. name = " + inv.getName() + " parent type is " + inv.parent.getClass().getSimpleName());
         if (inv instanceof CuriositiesInventory) {
             CuriositiesInventory.instance.set((CuriositiesInventory) inv);
@@ -165,7 +169,7 @@ public class InventoryExt extends Inventory {
         }
     }
 
-    private static void unregisterInventory(InventoryExt inv) {
+    private static void unregisterInventory(@NotNull final InventoryExt inv) {
 //        System.err.println("Unregistering Inventory. name = " + inv.getName() + " parent type is " + inv.parent.getClass().getSimpleName());
         if (inv instanceof CuriositiesInventory) {
             CuriositiesInventory.instance.compareAndSet((CuriositiesInventory) inv, null);
@@ -174,12 +178,13 @@ public class InventoryExt extends Inventory {
     }
 
 
-    public static boolean hasInventory(String str) {
+    public static boolean hasInventory(final String str) {
         return getInventory(str) != null;
     }
 
-    public static InventoryExt getInventory(String str) {
-        for (InventoryExt inv : openedInventories) {
+    @Nullable
+    public static InventoryExt getInventory(final String str) {
+        for (final InventoryExt inv : openedInventories) {
             if (inv.getName().equals(str)) {
                 return inv;
             }
@@ -189,11 +194,11 @@ public class InventoryExt extends Inventory {
 
 
     public static class ItemsIterator {
-        private InventoryExt myInventory;
+        private final InventoryExt myInventory;
         private Iterator<InvItem> myItemsIterator;
         private InvItem myCurrentItem;
 
-        public ItemsIterator(InventoryExt inventory) {
+        public ItemsIterator(@NotNull final InventoryExt inventory) {
             this.myInventory = inventory;
             reset();
         }
@@ -236,7 +241,7 @@ public class InventoryExt extends Inventory {
     private boolean[][] busy;
 
     private synchronized void onSizeChange(Coord newSize) {
-        boolean[][] busy = new boolean[newSize.x][newSize.y];
+        busy = new boolean[newSize.x][newSize.y];
         updateBusy();
     }
 
@@ -280,11 +285,11 @@ public class InventoryExt extends Inventory {
         return null;
     }
 
-    public void drop(int x, int y) {
+    public void drop(final int x, final int y) {
         wdgmsg("drop", new Coord(x, y));
     }
 
-    public Coord getPositionForItem(int sizeX, int sizeY) {
+    public Coord getPositionForItem(final int sizeX, final int sizeY) {
         if (sizeX * sizeY > freeCount) return null;
 
         for (int i = 0; i < busy.length - (sizeX - 1); ++i) {
@@ -304,7 +309,7 @@ public class InventoryExt extends Inventory {
         return null;
     }
 
-    public Coord getPositionForItem(Coord size) {
+    public Coord getPositionForItem(@NotNull final Coord size) {
         return getPositionForItem(size.x, size.y);
     }
 

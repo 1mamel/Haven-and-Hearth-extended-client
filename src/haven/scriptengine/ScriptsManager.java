@@ -16,6 +16,8 @@ import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.Logger;
 import org.apache.log4j.SimpleLayout;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.python.core.Py;
 import org.python.core.PyException;
 import org.python.core.PySystemState;
@@ -35,7 +37,7 @@ public class ScriptsManager {
 
     public static void exec(final String line) {
         try {
-            Thread thread = new Thread(tg, new Runnable() {
+            final Thread thread = new Thread(tg, new Runnable() {
                 @Override
                 public void run() {
                     interpreter.exec(line);
@@ -56,7 +58,7 @@ public class ScriptsManager {
     private static HashMap<String, String> commands = new HashMap<String, String>();
 
     @SuppressWarnings({"UnusedDeclaration"})
-    public static boolean registerBot(String name, Class<? extends Bot> clazz) {
+    public static boolean registerBot(@NotNull final String name, @NotNull final Class<? extends Bot> clazz) {
         botsMap.put(name, clazz);
         return true;
     }
@@ -83,7 +85,7 @@ public class ScriptsManager {
         }
         logger.addAppender(new ConsoleAppender(new SimpleLayout()));
         try {
-            PySystemState pySysState = new PySystemState();
+            final PySystemState pySysState = new PySystemState();
             pySysState.path.append(Py.newString("scripts"));
             pySysState.path.append(Py.newString("../scripts"));
             Py.setSystemState(pySysState);
@@ -103,32 +105,35 @@ public class ScriptsManager {
         }
     }
 
-    private static Class<? extends Bot> getBotClass(String name) {
+    @Nullable
+    private static Class<? extends Bot> getBotClass(@NotNull final String name) {
         return botsMap.get(name);
     }
 
     static final Map<Bot, Thread> runningBots = new ConcurrentHashMap<Bot, Thread>();
     static final ThreadGroup tg = new ThreadGroup("Scripts thread groop");
 
-    static boolean runWait(String name) {
-        Bot bot = createBot(name);
-        if (bot == null) return false;
+    static boolean runWait(@NotNull final String name) {
+        final Bot bot = createBot(name);
+        if (bot == null) {
+            return false;
+        }
 
         runningBots.put(bot, Thread.currentThread());
         bot.run();
         return true;
     }
 
-    public static void alias(String command, String botName) {
+    public static void alias(@NotNull final String command, @NotNull final String botName) {
         commands.put(command, botName);
         interpreter.exec("def " + command + "(): manager.run(" + botName + ");");
     }
 
-    public static boolean runBot(String name) {
-        Bot bot = createBot(name);
+    public static boolean runBot(@NotNull final String name) {
+        final Bot bot = createBot(name);
         if (bot == null) return false;
 
-        Thread thread = new Thread(tg, bot);
+        final Thread thread = new Thread(tg, bot);
         thread.setDaemon(true);
         runningBots.put(bot, thread);
 
@@ -136,21 +141,22 @@ public class ScriptsManager {
         return true;
     }
 
-    public static boolean run(String name) {
+    public static boolean run(@NotNull final String name) {
         return runBot(name);
     }
 
-    public static void kill(Bot bot) {
+    public static void kill(@NotNull final Bot bot) {
         killBot(bot);
     }
 
-    public static void killBot(Bot bot) {
+    public static void killBot(@NotNull final Bot bot) {
         if (!runningBots.containsKey(bot)) return;
         runningBots.get(bot).interrupt();
         CustomConfig.setRender(true);
     }
 
-    static Bot createBot(String name) {
+    @Nullable
+    static Bot createBot(@NotNull final String name) {
         if (!botsMap.containsKey(name)) return null;
         try {
             return botsMap.get(name).newInstance();
@@ -162,28 +168,28 @@ public class ScriptsManager {
         return null;
     }
 
-    public static boolean containsBot(String name) {
+    public static boolean containsBot(@NotNull final String name) {
         return botsMap.containsKey(name);
     }
 
-    public static boolean containsBot(Class<? extends Bot> clazz) {
+    public static boolean containsBot(@NotNull final Class<? extends Bot> clazz) {
         return botsMap.containsValue(clazz);
     }
 
-    public static void registerOut(Writer w) {
+    public static void registerOut(@NotNull final Writer w) {
         interpreter.setOut(w);
     }
 
-    public static void registerErr(Writer w) {
+    public static void registerErr(@NotNull final Writer w) {
         interpreter.setErr(w);
     }
 
     public static void scanDirectory() {
-        File dir = new File("scripts");
+        final File dir = new File("scripts");
         if (!dir.isDirectory()) return;
-        for (String file : dir.list(new FilenameFilter() {
+        for (final String file : dir.list(new FilenameFilter() {
             @Override
-            public boolean accept(File dir, String name) {
+            public boolean accept(final File dir, final String name) {
                 return name.endsWith("bot.py");
             }
         })) {

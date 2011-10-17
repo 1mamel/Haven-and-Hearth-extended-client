@@ -30,7 +30,7 @@ public class BuffsProvider {
         synchronized (UI.instance.sess.glob.buffs) {
             if (current_buff_index < UI.instance.sess.glob.buffs.values().size() && current_buff_index >= 0) {
                 int i = 0;
-                for (Buff b : UI.instance.sess.glob.buffs.values()) {
+                for (final Buff b : UI.instance.sess.glob.buffs.values()) {
                     if (i == current_buff_index) {
                         return b.ameter;
                     }
@@ -45,7 +45,7 @@ public class BuffsProvider {
         synchronized (UI.instance.sess.glob.buffs) {
             if (current_buff_index < UI.instance.sess.glob.buffs.values().size() && current_buff_index >= 0) {
                 int i = 0;
-                for (Buff b : UI.instance.sess.glob.buffs.values()) {
+                for (final Buff b : UI.instance.sess.glob.buffs.values()) {
                     if (i == current_buff_index) {
                         return b.getTimeLeft();
                     }
@@ -56,11 +56,11 @@ public class BuffsProvider {
         return 0;
     }
 
-    public static boolean isBuffNameContains(String str) {
+    public static boolean isBuffNameContains(final String str) {
         synchronized (UI.instance.sess.glob.buffs) {
             if (current_buff_index < UI.instance.sess.glob.buffs.values().size()) {
                 int i = 0;
-                for (Buff b : UI.instance.sess.glob.buffs.values()) {
+                for (final Buff b : UI.instance.sess.glob.buffs.values()) {
                     if (i == current_buff_index) {
                         return (b.getName().contains(str));
                     }

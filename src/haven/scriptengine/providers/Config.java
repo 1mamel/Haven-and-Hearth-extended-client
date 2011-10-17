@@ -17,19 +17,19 @@ public class Config {
     private static String bot1;
     private static String bot2;
 
-    public static void setNightvision(boolean nightvision) {
+    public static void setNightvision(final boolean nightvision) {
         CustomConfig.hasNightVision = nightvision;
     }
 
-    public static void setIrc(boolean irc) {
+    public static void setIrc(final boolean irc) {
         CustomConfig.isIRCOn = irc;
     }
 
-    public static void setDebugLogging(boolean dm) {
+    public static void setDebugLogging(final boolean dm) {
         CustomConfig.setDebugLogging(dm);
     }
 
-    public static void setScreenSize(int width, int height) {
+    public static void setScreenSize(final int width, final int height) {
         CustomConfig.setWindowSize(Math.max(width, 800), Math.max(height, 600));
         CustomConfigProcessor.saveSettings();
         CustomConsole.logger.warn("Client must be restarted for new settings to take effect.");
@@ -41,7 +41,7 @@ public class Config {
         CustomConfig.sfxVol = vol;
     }
 
-    public static void setSound(boolean state) {
+    public static void setSound(final boolean state) {
         CustomConfig.isSoundOn = state;
     }
 
@@ -51,7 +51,7 @@ public class Config {
         CustomConfig.musicVol = vol;
     }
 
-    public static void setMusic(boolean state) {
+    public static void setMusic(final boolean state) {
         CustomConfig.isMusicOn = state;
     }
 
@@ -124,7 +124,7 @@ public class Config {
         return bot1;
     }
 
-    public static void setBot1(String bot1) {
+    public static void setBot1(final String bot1) {
         Config.bot1 = bot1;
     }
 
@@ -132,7 +132,7 @@ public class Config {
         return bot2;
     }
 
-    public static void setBot2(String bot2) {
+    public static void setBot2(final String bot2) {
         Config.bot2 = bot2;
     }
 }
