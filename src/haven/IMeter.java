@@ -42,7 +42,7 @@ public class IMeter extends Widget {
 
     static {
         Widget.addtype("im", new WidgetFactory() {
-            public Widget create(final Coord c, final Widget parent, final Object[] args) {
+            public Widget create(@NotNull final Coord c, @NotNull final Widget parent, final Object[] args) {
                 final Resource bg = Resource.load((String) args[0]);
                 final List<Meter> meters = new LinkedList<Meter>();
                 for (int i = 1; i < args.length; i += 2) {

@@ -8,6 +8,8 @@
 
 package haven;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +30,7 @@ public class SlenChat extends ChatHW {
 
         static {
             Widget.addtype("ircuserlist", new WidgetFactory() {
-                public Widget create(final Coord c, final Widget parent, final Object[] args) {
+                public Widget create(@NotNull final Coord c, @NotNull final Widget parent, final Object[] args) {
                     return (new UserList((SlenChat) parent));
                 }
             });
@@ -124,7 +126,7 @@ public class SlenChat extends ChatHW {
 
     static {
         Widget.addtype("ircchat", new WidgetFactory() {
-            public Widget create(final Coord c, final Widget parent, final Object[] args) {
+            public Widget create(@NotNull final Coord c, @NotNull final Widget parent, final Object[] args) {
                 final String channel = (String) args[0];
                 return (new SlenChat((SlenConsole) parent, channel, null));
             }

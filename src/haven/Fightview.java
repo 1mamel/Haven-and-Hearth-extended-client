@@ -90,7 +90,7 @@ public class Fightview extends Widget {
 
     static {
         Widget.addtype("frv", new WidgetFactory() {
-            public Widget create(final Coord c, final Widget parent, final Object[] args) {
+            public Widget create(@NotNull final Coord c, @NotNull final Widget parent, final Object[] args) {
                 return (new Fightview(new Coord(CustomConfig.getWindowWidth() - 10, c.y), parent));
             }
         });

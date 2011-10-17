@@ -61,7 +61,7 @@ public class Item extends Widget implements DTarget {
 
     static {
         Widget.addtype("item", new WidgetFactory() {
-            public Widget create(final Coord c, final Widget parent, final Object[] args) {
+            public Widget create(@NotNull final Coord c, @NotNull final Widget parent, final Object[] args) {
                 final int res = (Integer) args[0]; // Resource id
                 final int q = (Integer) args[1]; // Quality
                 int num = -1; // Quantity

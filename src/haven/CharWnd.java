@@ -67,7 +67,7 @@ public class CharWnd extends Window {
 
     static {
         Widget.addtype("chr", new WidgetFactory() {
-            public Widget create(final Coord c, final Widget parent, final Object[] args) {
+            public Widget create(@NotNull final Coord c, @NotNull final Widget parent, final Object[] args) {
                 int studyid = -1;
                 if (args.length > 0)
                     studyid = (Integer) args[0];

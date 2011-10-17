@@ -43,7 +43,7 @@ public class Makewindow extends HWindow {
 
     static {
         Widget.addtype("make", new WidgetFactory() {
-            public Widget create(final Coord c, final Widget parent, final Object[] args) {
+            public Widget create(@NotNull final Coord c, @NotNull final Widget parent, final Object[] args) {
                 return (new Makewindow(parent, (String) args[0]));
             }
         });

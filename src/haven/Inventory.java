@@ -55,7 +55,7 @@ public class Inventory extends Widget implements DTarget {
 
     static {
         Widget.addtype("inv", new WidgetFactory() {
-            public Widget create(final Coord c, final Widget parent, final Object[] args) {
+            public Widget create(@NotNull final Coord c, @NotNull final Widget parent, final Object[] args) {
                 if (parent instanceof StudyWidget) {
                     return new CuriositiesInventory(c ,(Coord) args[0], parent);
                 }

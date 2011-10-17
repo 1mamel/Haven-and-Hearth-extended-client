@@ -27,6 +27,9 @@
 package haven;
 
 import haven.resources.layers.CodeEntry;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -59,6 +62,7 @@ public class UI {
     public final Console cons = new WidgetConsole();
     private final Collection<AfterDraw> afterdraws = new ConcurrentLinkedQueue<AfterDraw>();
 
+    protected static final Logger LOG = Logger.getLogger(UI.class);
 
     // Some references
     public static AtomicReference<FlowerMenu> flowerMenu = new AtomicReference<FlowerMenu>(null);
@@ -171,7 +175,7 @@ public class UI {
         }
     }
 
-    public void newwidget(final int id, String type, final Coord c, final int parent, final Object... args) throws InterruptedException {
+    public void newwidget(final int id, @NotNull String type, @NotNull final Coord c, final int parent, final Object... args) throws InterruptedException {
         final WidgetFactory f;
         last_newwidget_time = System.currentTimeMillis();
         if (type.indexOf('/') >= 0) {
@@ -184,6 +188,9 @@ public class UI {
             final Resource res = Resource.load(type, ver);
             res.loadwaitint();
             f = res.layer(CodeEntry.class).get(WidgetFactory.class);
+            if (LOG.isEnabledFor(Level.WARN)) {
+                LOG.warn("Creating CodeEntry based widget with type " + type);
+            }
         } else {
             f = Widget.gettype(type);
         }
@@ -254,7 +261,7 @@ public class UI {
             rcvr.rcvmsg(id, msg, args);
     }
 
-    public void uimsg(final int id, final String msg, final Object... args) {
+    public void uimsg(final int id, @NotNull final String msg, final Object... args) {
         final Widget wdg;
         synchronized (this) {
             wdg = widgets.get(id);

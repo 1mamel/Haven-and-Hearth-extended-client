@@ -26,6 +26,8 @@
 
 package haven;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.awt.*;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -40,7 +42,7 @@ public class Listbox extends Widget {
 
     static {
         Widget.addtype("lb", new WidgetFactory() {
-            public Widget create(final Coord c, final Widget parent, final Object[] args) {
+            public Widget create(@NotNull final Coord c, @NotNull final Widget parent, final Object[] args) {
                 final List<Option> opts = new LinkedList<Option>();
                 for (int i = 1; i < args.length; i += 2)
                     opts.add(new Option((String) args[i], (String) args[i + 1]));
@@ -51,14 +53,13 @@ public class Listbox extends Widget {
 
     public static class Option {
         public String name, disp;
-        int y1, y2;
 
         public Option(final String name, final String disp) {
             this.name = name;
             this.disp = disp;
         }
 
-        public boolean containsString(final String data) {
+        public boolean containsString(@NotNull final String data) {
             return (data.equals(name) || data.equals(disp));
         }
 

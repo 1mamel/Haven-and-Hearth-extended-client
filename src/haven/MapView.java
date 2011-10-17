@@ -113,7 +113,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
 
     static {
         Widget.addtype("mapview", new WidgetFactory() {
-            public Widget create(final Coord c, final Widget parent, final Object[] args) {
+            public Widget create(@NotNull final Coord c, @NotNull final Widget parent, final Object[] args) {
                 final Coord sz = CustomConfig.getWindowSize().clone(); //(Coord)args[0];
                 final Coord mc = (Coord) args[1];
                 int pgob = -1;

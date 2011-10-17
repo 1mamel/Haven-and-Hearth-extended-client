@@ -38,7 +38,7 @@ public class NpcChat extends Window {
 
     static {
         Widget.addtype("npc", new WidgetFactory() {
-            public Widget create(final Coord c, final Widget parent, final Object[] args) {
+            public Widget create(@NotNull final Coord c, @NotNull final Widget parent, final Object[] args) {
                 return (new NpcChat(c, (Coord) args[0], parent, (String) args[1]));
             }
         });

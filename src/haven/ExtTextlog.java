@@ -36,7 +36,7 @@ public class ExtTextlog extends Widget implements ClipboardOwner {
 
     static {
         Widget.addtype("extlog", new WidgetFactory() {
-            public Widget create(final Coord c, final Widget parent, final Object[] args) {
+            public Widget create(@NotNull final Coord c, @NotNull final Widget parent, final Object[] args) {
                 return (new ExtTextlog(c, (Coord) args[0], parent));
             }
         });

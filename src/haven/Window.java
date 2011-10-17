@@ -78,7 +78,7 @@ public class Window extends Widget implements DTarget {
 
     static {
         Widget.addtype("wnd", new WidgetFactory() {
-            public Widget create(Coord c, final Widget parent, final Object[] args) {
+            public Widget create(@NotNull Coord c, @NotNull final Widget parent, final Object[] args) {
                 if (args.length < 2)
                     return (new Window(c, (Coord) args[0], parent, null));
                 else {

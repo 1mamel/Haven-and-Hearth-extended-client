@@ -72,12 +72,12 @@ public class Button extends Widget {
 
     static {
         Widget.addtype("btn", new WidgetFactory() {
-            public Widget create(final Coord c, final Widget parent, final Object[] args) {
+            public Widget create(@NotNull final Coord c, @NotNull final Widget parent, final Object[] args) {
                 return (new Button(c, (Integer) args[0], parent, (String) args[1]));
             }
         });
         Widget.addtype("ltbtn", new WidgetFactory() {
-            public Widget create(final Coord c, final Widget parent, final Object[] args) {
+            public Widget create(@NotNull final Coord c, @NotNull final Widget parent, final Object[] args) {
                 return (wrapped(c, (Integer) args[0], parent, (String) args[1]));
             }
         });

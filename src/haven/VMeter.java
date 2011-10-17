@@ -38,7 +38,7 @@ public class VMeter extends Widget {
 
     static {
         Widget.addtype("vm", new WidgetFactory() {
-            public Widget create(final Coord c, final Widget parent, final Object[] args) {
+            public Widget create(@NotNull final Coord c, @NotNull final Widget parent, final Object[] args) {
                 final Color cl;
                 if (args.length > 4) {
                     cl = new Color((Integer) args[1],

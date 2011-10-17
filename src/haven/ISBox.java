@@ -41,7 +41,7 @@ public class ISBox extends Widget implements DTarget {
 
     static {
         Widget.addtype("isbox", new WidgetFactory() {
-            public Widget create(final Coord c, final Widget parent, final Object[] args) {
+            public Widget create(@NotNull final Coord c, @NotNull final Widget parent, final Object[] args) {
                 return (new ISBox(c, parent, Resource.load((String) args[0]), (Integer) args[1], (Integer) args[2], (Integer) args[3]));
             }
         });

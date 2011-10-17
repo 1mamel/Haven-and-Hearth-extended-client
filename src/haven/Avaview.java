@@ -45,12 +45,12 @@ public class Avaview extends Widget {
 
     static {
         Widget.addtype("av", new WidgetFactory() {
-            public Widget create(final Coord c, final Widget parent, final Object[] args) {
+            public Widget create(@NotNull final Coord c, @NotNull final Widget parent, final Object[] args) {
                 return (new Avaview(c, parent, (Integer) args[0]));
             }
         });
         Widget.addtype("av2", new WidgetFactory() {
-            public Widget create(final Coord c, final Widget parent, final Object[] args) {
+            public Widget create(@NotNull final Coord c, @NotNull final Widget parent, final Object[] args) {
                 final List<Indir<Resource>> rl = new LinkedList<Indir<Resource>>();
                 for (final Object arg : args)
                     rl.add(parent.ui.sess.getres((Integer) arg));

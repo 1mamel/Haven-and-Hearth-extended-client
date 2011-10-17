@@ -39,7 +39,7 @@ public class ChatHW extends HWindow {
 
     static {
         Widget.addtype("slenchat", new WidgetFactory() {
-            public Widget create(final Coord c, final Widget parent, final Object[] args) {
+            public Widget create(@NotNull final Coord c, @NotNull final Widget parent, final Object[] args) {
                 final String t = (String) args[0];
                 boolean cl = false;
                 if (args.length > 1)

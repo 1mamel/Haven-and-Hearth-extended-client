@@ -34,7 +34,7 @@ public class Img extends Widget {
 
     static {
         Widget.addtype("img", new WidgetFactory() {
-            public Widget create(final Coord c, final Widget parent, final Object[] args) {
+            public Widget create(@NotNull final Coord c, @NotNull final Widget parent, final Object[] args) {
                 final Tex tex;
                 if (args.length > 1) {
                     final Resource res = Resource.load((String) args[0], (Integer) args[1]);

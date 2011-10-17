@@ -58,7 +58,7 @@ public class Equipory extends Window implements DTarget {
 
     static {
         Widget.addtype("epry", new WidgetFactory() {
-            public Widget create(final Coord c, final Widget parent, final Object[] args) {
+            public Widget create(@NotNull final Coord c, @NotNull final Widget parent, final Object[] args) {
                 return (new Equipory(c, parent));
             }
         });

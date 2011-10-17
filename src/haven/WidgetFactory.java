@@ -26,7 +26,9 @@
 
 package haven;
 
+import org.jetbrains.annotations.NotNull;
+
 @Resource.PublishedCode(name = "wdg")
 public interface WidgetFactory {
-    public Widget create(Coord c, Widget parent, Object[] par);
+    public Widget create(@NotNull Coord c, @NotNull Widget parent, Object[] par);
 }

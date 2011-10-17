@@ -76,7 +76,7 @@ public class BuddyWnd extends Window {
 
     static {
         Widget.addtype("buddy", new WidgetFactory() {
-            public Widget create(final Coord c, final Widget parent, final Object[] args) {
+            public Widget create(@NotNull final Coord c, @NotNull final Widget parent, final Object[] args) {
                 return (new BuddyWnd(c, parent));
             }
         });

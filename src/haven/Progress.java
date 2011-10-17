@@ -33,7 +33,7 @@ public class Progress extends Widget {
 
     static {
         Widget.addtype("prog", new WidgetFactory() {
-            public Widget create(final Coord c, final Widget parent, final Object[] args) {
+            public Widget create(@NotNull final Coord c, @NotNull final Widget parent, final Object[] args) {
                 return (new Progress(c, parent, (Integer) args[0]));
             }
         });

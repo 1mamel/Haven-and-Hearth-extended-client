@@ -59,11 +59,11 @@ public class Widget {
             MenuGrid.class, SlenHud.class, HWindow.class, CheckBox.class, Logwindow.class,
             MapMod.class, ISBox.class, ComMeter.class, Fightview.class, IMeter.class,
             GiveButton.class, Charlist.class, ComWin.class, CharWnd.class, BuddyWnd.class,
-            ChatHW.class, Speedget.class, Bufflist.class, ProgressBar.class};
+            ChatHW.class, Speedget.class, Bufflist.class, ProgressBar.class, Progress.class};
 
     static {
         addtype("cnt", new WidgetFactory() {
-            public Widget create(final Coord c, final Widget parent, final Object[] args) {
+            public Widget create(@NotNull final Coord c, @NotNull final Widget parent, final Object[] args) {
                 return (new Widget(c, (Coord) args[0], parent));
             }
         });

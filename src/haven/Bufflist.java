@@ -28,6 +28,7 @@ package haven;
 
 import haven.resources.layers.AButton;
 import haven.resources.layers.Tooltip;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 
@@ -51,7 +52,7 @@ public class Bufflist extends Widget {
 
     static {
         Widget.addtype("buffs", new WidgetFactory() {
-            public Widget create(final Coord c, final Widget parent, final Object[] args) {
+            public Widget create(@NotNull final Coord c, @NotNull final Widget parent, final Object[] args) {
                 return (new Bufflist(c, parent));
             }
         });

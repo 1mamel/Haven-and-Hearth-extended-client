@@ -26,6 +26,8 @@
 
 package haven;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -48,7 +50,7 @@ public class Cal extends SSWidget {
         for (int i = 0; i < moon.length; i++)
             moon[i] = Resource.loadimg(String.format("gfx/hud/calendar/m%02d", i));
         Widget.addtype("cal", new WidgetFactory() {
-            public Widget create(final Coord c, final Widget parent, final Object[] args) {
+            public Widget create(@NotNull final Coord c, @NotNull final Widget parent, final Object[] args) {
                 return (new Cal(c, parent));
             }
         });

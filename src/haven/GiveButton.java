@@ -38,7 +38,7 @@ public class GiveButton extends Widget {
 
     static {
         Widget.addtype("give", new WidgetFactory() {
-            public Widget create(final Coord c, final Widget parent, final Object[] args) {
+            public Widget create(@NotNull final Coord c, @NotNull final Widget parent, final Object[] args) {
                 return (new GiveButton(c, parent, (Integer) args[0]));
             }
         });

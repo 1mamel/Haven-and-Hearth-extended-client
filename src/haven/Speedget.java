@@ -46,7 +46,7 @@ public class Speedget extends Widget {
         tsz = new Coord(w, imgs[0][0].sz().y);
 
         Widget.addtype("speedget", new WidgetFactory() {
-            public Widget create(final Coord c, final Widget parent, final Object[] args) {
+            public Widget create(@NotNull final Coord c, @NotNull final Widget parent, final Object[] args) {
                 final int cur = (Integer) args[0];
                 final int max = (Integer) args[1];
                 return (new Speedget(c, parent, cur, max));

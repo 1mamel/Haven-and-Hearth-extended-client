@@ -20,7 +20,7 @@ public class SlenConsole extends ChatHW implements IRCConnectionListener {
 
     static {
         Widget.addtype("slenlog", new WidgetFactory() {
-            public Widget create(final Coord c, final Widget parent, final Object[] args) {
+            public Widget create(@NotNull final Coord c, @NotNull final Widget parent, final Object[] args) {
                 final String t = (String) args[0];
                 final SlenConsole wnd = new SlenConsole((SlenHud) parent);
                 wnd.out.append(t);

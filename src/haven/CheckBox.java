@@ -26,6 +26,8 @@
 
 package haven;
 
+import org.jetbrains.annotations.NotNull;
+
 public class CheckBox extends Widget {
     static final Tex box;
     static final Tex mark;
@@ -34,7 +36,7 @@ public class CheckBox extends Widget {
 
     static {
         Widget.addtype("chk", new WidgetFactory() {
-            public Widget create(final Coord c, final Widget parent, final Object[] args) {
+            public Widget create(@NotNull final Coord c, @NotNull final Widget parent, final Object[] args) {
                 return (new CheckBox(c, parent, (String) args[0]));
             }
         });

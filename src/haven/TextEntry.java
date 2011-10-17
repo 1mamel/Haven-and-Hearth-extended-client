@@ -51,7 +51,7 @@ public class TextEntry extends Widget {
 
     static {
         Widget.addtype("text", new WidgetFactory() {
-            public Widget create(final Coord c, final Widget parent, final Object[] args) {
+            public Widget create(@NotNull final Coord c, @NotNull final Widget parent, final Object[] args) {
                 return (new TextEntry(c, (Coord) args[0], parent, (String) args[1]));
             }
         });

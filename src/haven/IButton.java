@@ -26,6 +26,8 @@
 
 package haven;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -37,7 +39,7 @@ public class IButton extends SSWidget {
 
     static {
         Widget.addtype("ibtn", new WidgetFactory() {
-            public Widget create(final Coord c, final Widget parent, final Object[] args) {
+            public Widget create(@NotNull final Coord c, @NotNull final Widget parent, final Object[] args) {
                 return (new IButton(c, parent, Resource.loadimg((String) args[0]), Resource.loadimg((String) args[1])));
             }
         });

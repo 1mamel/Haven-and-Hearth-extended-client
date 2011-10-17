@@ -54,7 +54,7 @@ public class Charlist extends Widget {
 
     static {
         Widget.addtype("charlist", new WidgetFactory() {
-            public Widget create(final Coord c, final Widget parent, final Object[] args) {
+            public Widget create(@NotNull final Coord c, @NotNull final Widget parent, final Object[] args) {
                 return (new Charlist(c, parent, (Integer) args[0]));
             }
         });

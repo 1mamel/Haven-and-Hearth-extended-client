@@ -15,7 +15,7 @@ import static haven.MCache.tilesz;
  * Time: 19:15
  */
 @SuppressWarnings({"UnusedDeclaration"})
-public class Player {
+public class Player implements ProgressBar.ProgressListener {
 
     private static Coord position;
 
@@ -186,7 +186,7 @@ public class Player {
     }
 
     public static boolean isInProgress() {
-        return progress > 0;
+        return progress >= 0;
     }
 
     public static Coord getPosition() {
@@ -236,4 +236,18 @@ public class Player {
         return MapProvider.getMV().player_moving;
     }
 
+    @Override
+    public void onChanged(final int percents) {
+        updateProgress(percents);
+    }
+
+    @Override
+    public void onFinished() {
+        updateProgress(-1);
+    }
+
+    @Override
+    public void onStarted() {
+        updateProgress(0);
+    }
 }

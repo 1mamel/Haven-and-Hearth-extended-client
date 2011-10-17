@@ -27,6 +27,7 @@
 package haven;
 
 import haven.Party.Member;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -39,7 +40,7 @@ public class PartyView extends Widget {
 
     static {
         Widget.addtype("pv", new WidgetFactory() {
-            public Widget create(final Coord c, final Widget parent, final Object[] args) {
+            public Widget create(@NotNull final Coord c, @NotNull final Widget parent, final Object[] args) {
                 return (new PartyView(c, parent, (Integer) args[0]));
             }
         });

@@ -26,6 +26,8 @@
 
 package haven;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.awt.image.BufferedImage;
 
 public class HWindow extends Widget {
@@ -40,7 +42,7 @@ public class HWindow extends Widget {
 
     static {
         Widget.addtype("hwnd", new WidgetFactory() {
-            public Widget create(final Coord c, final Widget parent, final Object[] args) {
+            public Widget create(@NotNull final Coord c, @NotNull final Widget parent, final Object[] args) {
                 final String t = (String) args[0];
                 boolean cl = false;
                 if (args.length > 1)

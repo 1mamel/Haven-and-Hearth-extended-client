@@ -26,6 +26,8 @@
 
 package haven;
 
+import org.jetbrains.annotations.NotNull;
+
 public class MapMod extends Window implements MapView.Grabber {
     MCache.Overlay ol;
     final MCache map;
@@ -39,7 +41,7 @@ public class MapMod extends Window implements MapView.Grabber {
 
     static {
         Widget.addtype("mapmod", new WidgetFactory() {
-            public Widget create(final Coord c, final Widget parent, final Object[] args) {
+            public Widget create(@NotNull final Coord c, @NotNull final Widget parent, final Object[] args) {
                 return (new MapMod(c, parent));
             }
         });

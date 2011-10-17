@@ -27,6 +27,7 @@
 package haven.test;
 
 import haven.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.net.InetAddress;
 import java.util.Collection;
@@ -92,7 +93,7 @@ public class TestClient implements Runnable {
             super(sz, sess);
         }
 
-        public void newwidget(final int id, final String type, final Coord c, final int parent, final Object... args) throws InterruptedException {
+        public void newwidget(final int id, @NotNull final String type, @NotNull final Coord c, final int parent, final Object... args) throws InterruptedException {
             super.newwidget(id, type, c, parent, args);
             final Widget w = widgets.get(id);
             synchronized (robots) {
@@ -114,7 +115,7 @@ public class TestClient implements Runnable {
             super.destroy(w);
         }
 
-        public void uimsg(final int id, final String msg, final Object... args) {
+        public void uimsg(final int id, @NotNull final String msg, final Object... args) {
             final Widget w = widgets.get(id);
             synchronized (robots) {
                 for (final Robot r : robots)

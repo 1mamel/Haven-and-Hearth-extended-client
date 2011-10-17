@@ -26,6 +26,8 @@
 
 package haven;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -124,7 +126,7 @@ public class Message implements java.io.Serializable {
         addbytes(buf);
     }
 
-    public void addstring2(final String str) {
+    public void addstring2(@NotNull final String str) {
         final byte[] buf;
         try {
             buf = str.getBytes("utf-8");
@@ -134,7 +136,7 @@ public class Message implements java.io.Serializable {
         addbytes(buf);
     }
 
-    public void addstring(final String str) {
+    public void addstring(@NotNull final String str) {
         addstring2(str);
         addbytes(new byte[]{0});
     }
@@ -181,6 +183,7 @@ public class Message implements java.io.Serializable {
         return (Utils.int32d(blob, off - 4));
     }
 
+    @NotNull
     public String string() {
         final int[] ob = new int[]{off};
         final String ret = Utils.strd(blob, ob);
@@ -188,14 +191,17 @@ public class Message implements java.io.Serializable {
         return (ret);
     }
 
+    @NotNull
     public Coord coord() {
         return (new Coord(int32(), int32()));
     }
 
+    @NotNull
     public Color color() {
         return (new Color(uint8(), uint8(), uint8(), uint8()));
     }
 
+    @NotNull
     public Object[] list() {
         final ArrayList<Object> ret = new ArrayList<Object>();
         while (true) {

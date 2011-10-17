@@ -1,9 +1,10 @@
 package haven;
 
-import haven.scriptengine.providers.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
+import java.util.Collection;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,16 +14,18 @@ import java.util.regex.Pattern;
  * Date: 11.01.11
  * Time: 15:55
  */
-public class ProgressBar extends Widget {
+public class ProgressBar extends Widget{
     final Text.Foundry textFoundry = new Text.Foundry(new Font("SansSerif", Font.BOLD, 18));
     final Img myImage;
     final Label myLabel;
     int myProgress;
     String myLastPrStr;
 
+    private static final Collection<ProgressListener> ourListeners = new CopyOnWriteArraySet<ProgressListener>();
+
     static {
         Widget.addtype("progressbar", new WidgetFactory() {
-            public Widget create(final Coord c, final Widget parent, final Object[] args) {
+            public Widget create(@NotNull final Coord c, @NotNull final Widget parent, final Object[] args) {
                 // Parent id is always 0, then parent is always same ;)
                 final Tex tex;
                 if (args.length > 1) {
@@ -39,6 +42,7 @@ public class ProgressBar extends Widget {
                 }
                 if (args.length > 2)
                     ourInstance.myImage.hit = (Integer) args[2] != 0;
+                emitStarted();
                 ourInstance.setProgress((String) args[0]);
                 return (ourInstance);
             }
@@ -72,18 +76,12 @@ public class ProgressBar extends Widget {
         final int progress = Integer.parseInt(m.group());
         myProgress = progress * 5;
         myLabel.settext(String.valueOf(myProgress) + '%');
-        Player.updateProgress(myProgress);
-    }
-
-    @Override
-    protected void finalize() throws Throwable {
-        Player.updateProgress(-1);
-        super.finalize();
+        emitChanged(myProgress);
     }
 
     @Override
     public void destroy() {
-        Player.updateProgress(-1);
+        emitFinished();
         super.destroy();    //TODO: implement
     }
 
@@ -92,4 +90,48 @@ public class ProgressBar extends Widget {
     public static void delete() {
         ourInstance = null;
     }
+
+    public static interface ProgressListener {
+        void onChanged(int percents);
+
+        void onFinished();
+
+        void onStarted();
+    }
+
+    public static void subscribe(@NotNull final ProgressListener pl) {
+        ourListeners.add(pl);
+    }
+
+    public static void unsubscribe(@NotNull final ProgressListener pl) {
+        ourListeners.remove(pl);
+    }
+
+    private static void emitChanged(final int percents) {
+        for (final ProgressListener listener : ourListeners) {
+            try {
+                listener.onChanged(percents);
+            } catch (Exception ignored) {
+            }
+        }
+    }
+
+    private static void emitStarted() {
+        for (final ProgressListener listener : ourListeners) {
+            try {
+                listener.onStarted();
+            } catch (Exception ignored) {
+            }
+        }
+    }
+
+    private static void emitFinished() {
+        for (final ProgressListener listener : ourListeners) {
+            try {
+                listener.onFinished();
+            } catch (Exception ignored) {
+            }
+        }
+    }
+
 }

@@ -27,6 +27,7 @@
 package haven;
 
 import org.apache.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
@@ -41,7 +42,7 @@ public class RemoteUI implements UI.Receiver {
         Widget.initbardas();
     }
 
-    public void rcvmsg(final int id, final String name, final Object... args) {
+    public void rcvmsg(final int id, @NotNull final String name, final Object... args) {
         final Message msg = new Message(Message.RMSG_WDGMSG);
         msg.adduint16(id);
         msg.addstring(name);
@@ -49,7 +50,7 @@ public class RemoteUI implements UI.Receiver {
         sess.queuemsg(msg);
     }
 
-    public void run(final UI ui) throws InterruptedException {
+    public void run(@NotNull final UI ui) throws InterruptedException {
         this.ui = ui;
         CustomConfig.ui = ui;
         ui.setreceiver(this);
