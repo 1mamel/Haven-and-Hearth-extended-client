@@ -61,29 +61,16 @@ public class Resource extends Prioritized implements Comparable<Resource>, Seria
 
     static {
         try {
-            final File file = new File("./custom_res");
-            if (file.exists()) {
-                chainloader(new ResourceLoader(new FileSource(file)));
-            }
-        } catch (Exception e) {
-            CustomConfig.logger.error("Cannot load ./custom_res repo", e);
-        }
-        try {
-            final File file = new File("./res");
-            if (file.exists()) {
-                chainloader(new ResourceLoader(new FileSource(file)));
-            }
-        } catch (Exception e) {
-            CustomConfig.logger.error("Cannot load ./res repo", e);
-        }
-        try {
-            String dir = Config.resdir;
-            if (dir == null)
-                dir = System.getenv("HAVEN_RESDIR");
-            if (dir != null) {
-                final File base = new File(dir);
-                if (base.exists()) {
-                    chainloader(new ResourceLoader(new FileSource(base)));
+            String envVar = Config.resdir;
+            if (envVar == null)
+                envVar = System.getenv("HAVEN_RESDIR");
+            if (envVar != null) {
+                final String[] dirs = envVar.split(File.pathSeparator);
+                for (final String dir : dirs) {
+                    final File base = new File(dir);
+                    if (base.exists()) {
+                        chainloader(new ResourceLoader(new FileSource(base)));
+                    }
                 }
             }
         } catch (Exception e) {
