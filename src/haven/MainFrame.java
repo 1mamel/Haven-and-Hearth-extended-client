@@ -117,10 +117,16 @@ public class MainFrame extends Frame implements Runnable, FSMan {
         Image icon = null;
         try {
             final InputStream data = MainFrame.class.getResourceAsStream("icon.png");
+            if (icon!=null){
             icon = javax.imageio.ImageIO.read(data);
-            data.close();
+            data.close();   }
+            else {
+                CustomConfig.logger.error("Failed to load icon.png");
+            }
         } catch (IOException e) {
-            CustomConfig.logger.warn("Cannot set window image", e);
+            CustomConfig.logger.error("Cannot set window image", e);
+        } catch (IllegalArgumentException e) {
+            CustomConfig.logger.error("Cannot set window image", e);
         }
         setIconImage(icon);
     }
