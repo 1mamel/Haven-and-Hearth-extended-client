@@ -1,251 +1,108 @@
 package haven;
 
-import org.xml.sax.Attributes;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.DefaultHandler;
+import com.google.gson.Gson;
+import com.google.gson.JsonIOException;
+import com.google.gson.JsonSyntaxException;
+import org.apache.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 import java.io.*;
 
 /**
- * Created by IntelliJ IDEA.
- * Player: Vlad.Rassokhin@gmail.com
- * Date: 12.01.11
- * Time: 14:26
+ * Custom configuration loader/saver.
+ * Using json for storing configuration. (Gson lib)
+ *
+ * @author Vlad.Rassokhin@gmail.com
+ * @version 2.0
  */
+
 public class CustomConfigProcessor {
-    public static void setDefaultSettings() {
-        CustomConfig.sfxVol = 100;
-        CustomConfig.musicVol = 100;
-        CustomConfig.ircServerAddress = "irc.synirc.net";
-        CustomConfig.ircChannelList.clear();
-        CustomConfig.ircChannelList.add(new Listbox.Option("#Haven", ""));
-        CustomConfig.ircDefNick = "";
-        CustomConfig.ircAltNick = "";
-        CustomConfig.isMusicOn = true;
-        CustomConfig.isSoundOn = true;
-        CustomConfig.hasNightVision = false;
-        CustomConfig.setDebugLogging(true);
-        CustomConfig.setXray(false);
-        CustomConfig.setHideObjects(false);
-    }
+    public static final String CONFIG_DEF_FILE_NAME = "config.json";
 
-    public static boolean loadSettings2() {
-        // TODO: create json formatted config loader
-//        try {
-//            Object obj = JSONValue.parseWithException(new FileReader(new File("config.json")));
-//            if (!(obj instanceof JSONObject)) {
-//                System.err.println("Invalif config.json format");
-//                return false;
-//            }
-//            JSONObject jo = (JSONObject) obj;
-//            Properties props = new Properties();
-//            for (Object key : jo.keySet()) {
-//                Object value = jo.get(key);
-//                if (value instanceof JSONArray) {
-//                    JSONArray a = (JSONArray) value;
-//                    for (Object o : a) {
-//
-//                    }
-//
-//                } else if (value instanceof JSONObject) {
-//
-//                } else {props.put(key, value);}
-//            }
-//
-//        } catch (IOException e) {
-//            System.err.println("Cannot parse settings");
-//            e.printStackTrace();
-//        } catch (ParseException e) {
-//            System.err.println("Cannot parse settings");
-//            e.printStackTrace();
-//        }
-        return false;
-    }
+    protected static final Logger LOG = Logger.getLogger(CustomConfigProcessor.class);
 
-    public static boolean loadSettings() {
-        setDefaultSettings();
-        final BufferedReader reader = null;
+    public static boolean loadConfig() {
+        Reader reader = null;
         try {
-            final SAXParserFactory spFactory = SAXParserFactory.newInstance();
-            final SAXParser saxParser = spFactory.newSAXParser();
+            final Gson gson = new Gson();
 
-            final XMLReader xmlReader = saxParser.getXMLReader();
-            xmlReader.setContentHandler(new DefaultHandler() {
-                private boolean ircElementActive = false;
-                private boolean beltElementActive = false;
-                private boolean beltListElementActive = false;
-                private int activeBelt = 0;
-
-                public void startElement(final String namespaceURI, final String localName,
-                                         final String qName, final Attributes atts) throws SAXException {
-                    String value;
-                    final String key = qName.toUpperCase().trim();
-
-                    //	Logs the loading sequence on the console
-//                    if (CustomConfig.logLoad) {
-//                        CustomConsole.log.append("|| ").append(key).append(" \t ");
-//                        for (int i = 0; i < atts.getLength(); i++) {
-//                            CustomConsole.log.append(" \t ").append(atts.getQName(i)).append(" \t ").append(atts.getValue(i));
-//                        }
-//                        if (CustomConfig.console != null) {
-//                            CustomConsole.out.append(CustomConsole.log.toString());
-//                            CustomConsole.log = new StringBuilder();
-//                        } else {
-//                            CustomConsole.log.append('\n');
-//                        }
-//                    }
-
-                    if (key.equals("SCREENSIZE")) {
-                        value = atts.getValue("width") == null ? "1024" : atts.getValue("width");
-                        final int x = Integer.parseInt(value);
-
-                        value = atts.getValue("height") == null ? "1024" : atts.getValue("height");
-                        final int y = Integer.parseInt(value);
-                        CustomConfig.setWindowSize(x, y);
-                    } else if (key.equals("SOUND")) {
-                        value = atts.getValue("enabled") == null ? "true" : atts.getValue("enabled");
-                        CustomConfig.isSoundOn = Boolean.parseBoolean(value);
-
-                        value = atts.getValue("volume") == null ? "100" : atts.getValue("volume");
-                        CustomConfig.sfxVol = Integer.parseInt(value);
-                    } else if (key.equals("MUSIC")) {
-                        value = atts.getValue("enabled") == null ? "true" : atts.getValue("enabled");
-                        CustomConfig.isMusicOn = Boolean.parseBoolean(value);
-
-                        value = atts.getValue("volume") == null ? "100" : atts.getValue("volume");
-                        CustomConfig.musicVol = Integer.parseInt(value);
-                    } else if (key.equals("IRC") && !(beltElementActive || ircElementActive)) {
-                        ircElementActive = true;
-                        CustomConfig.ircChannelList.clear();
-                        value = atts.getValue("enabled") == null ? "true" : atts.getValue("enabled");
-                        CustomConfig.isIRCOn = Boolean.parseBoolean(value);
-
-                        value = atts.getValue("server") == null ? "irc.synirc.net" : atts.getValue("server");
-                        CustomConfig.ircServerAddress = value;
-
-                        value = atts.getValue("default-nick") == null ? "" : atts.getValue("default-nick");
-                        CustomConfig.ircDefNick = value;
-
-                        value = atts.getValue("alternate-nick") == null ? "" : atts.getValue("alternate-nick");
-                        CustomConfig.ircAltNick = value;
-                    } else if (key.equals("CHANNEL") && atts.getValue("name") != null
-                            && ircElementActive) {
-                        value = atts.getValue("password") == null ? "" : atts.getValue("password");
-                        final Listbox.Option chan = new Listbox.Option(atts.getValue("name"), value.trim());
-                        CustomConfig.ircChannelList.add(chan);
-                    } else if (key.equals("BELT-LIST") && !(beltElementActive || ircElementActive
-                            || beltListElementActive)
-                            && atts.getValue("name") != null) {
-                        beltListElementActive = true;
-                        CustomConfig.activeCharacter = new CustomConfig.CharData(atts.getValue("name"));
-                        CustomConfig.activeCharacter.hudActiveBelt = Integer.parseInt(atts.getValue("active-belt"));
-                        CustomConfig.noChars = false;
-                    } else if (key.equals("BELT") && !(beltElementActive || ircElementActive)
-                            && beltListElementActive) {
-                        beltElementActive = true;
-                        activeBelt = Integer.parseInt(atts.getValue("value"));
-                    } else if (key.equals("SLOT") && atts.getValue("value") != null && atts.getValue("position") != null
-                            && beltElementActive
-                            && beltListElementActive) {
-                        CustomConfig.activeCharacter.hudBelt[activeBelt][Integer.parseInt(atts.getValue("position"))]
-                                = atts.getValue("value").equalsIgnoreCase("null") ? null : atts.getValue("value");
-                    }
-                }
-
-                public void endElement(final String namespaceURI, final String localName,
-                                       final String qName) throws SAXException {
-                    if (ircElementActive && qName.equals("IRC")) {
-                        ircElementActive = false;
-                    } else if (beltElementActive && qName.equals("BELT")) {
-                        beltElementActive = false;
-                    } else if (beltListElementActive && qName.equals("BELT-LIST")) {
-                        beltListElementActive = false;
-                        CustomConfig.characterList.add(CustomConfig.activeCharacter);
-                    }
-                }
-            });
             if (ResCache.global != null) {
-                xmlReader.parse(new InputSource(ResCache.global.fetch("config.xml")));
-            } else {
-                xmlReader.parse("config.xml");
+                try {
+                    reader = new InputStreamReader(ResCache.global.fetch(CONFIG_DEF_FILE_NAME));
+                } catch (IOException e) {
+                    LOG.warn("config file not founded in cache, trying to load from file", e);
+                }
             }
-            if (CustomConfig.getWindowWidth() < 800 || CustomConfig.getWindowHeight() < 600) {
-                System.out.println("Window size must be at least 800x600");
-                CustomConfig.setWindowSize(800, 600);
+            if (reader == null) {
+                reader = new FileReader(new File(CONFIG_DEF_FILE_NAME));
             }
+            final CustomConfig config = gson.fromJson(reader, CustomConfig.class);
+            checkAndFixConfig(config);
+            CustomConfig.setConfig(config);
             return true;
-        } catch (FileNotFoundException fileNotFound) {
-            System.out.println("Config file not found, creating a new one");
-        } catch (IOException IOExcep) {
-            IOExcep.printStackTrace();
-        } catch (NullPointerException NPExcep) {
-            System.out.println("File format corrupted, creating a new one");
-            NPExcep.printStackTrace();
-        } catch (NumberFormatException NFExcep) {
-            System.out.println("Wrong config file format, creating a new one");
-        } catch (ParserConfigurationException pcExcep) {
-            pcExcep.printStackTrace();
-        } catch (SAXException saxExcep) {
-            saxExcep.printStackTrace();
+        } catch (FileNotFoundException e) {
+            LOG.warn("Cannot load config: config file not found", e);
+        } catch (JsonIOException e) {
+            LOG.error("Cannot load config: IO problem", e);
+        } catch (JsonSyntaxException e) {
+            LOG.error("Cannot load config: file has bad syntax", e);
         } finally {
             try {
-                reader.close();
-            } catch (Exception ignored) {
+                if (reader != null) {
+                    reader.close();
+                }
+            } catch (IOException ignored) {
             }
         }
         return false;
     }
 
-    public static synchronized void saveSettings() {
+    public static boolean saveConfig() {
+        Writer writer = null;
         try {
-            final BufferedWriter writer;
-            if (ResCache.global != null) {
-                writer = new BufferedWriter(new OutputStreamWriter(ResCache.global.store("config.xml"), "UTF-8"));
-            } else {
-                writer = new BufferedWriter(new FileWriter(new File("config.xml")));
-            }
-            writer.write("<?xml version=\"1.0\" ?>\n");
-            writer.write("<CONFIG>\n");
-            writer.write("\t<SCREENSIZE width=\"" + CustomConfig.getWindowWidth() + "\" height=\"" + CustomConfig.getWindowHeight() + "\"/>\n");
-            writer.write("\t<SOUND enabled=\"" + Boolean.toString(CustomConfig.isSoundOn)
-                    + "\" volume=\"" + Integer.toString(CustomConfig.sfxVol) + "\"/>\n");
-            writer.write("\t<MUSIC enabled=\"" + Boolean.toString(CustomConfig.isMusicOn)
-                    + "\" volume=\"" + Integer.toString(CustomConfig.musicVol) + "\"/>\n");
-            writer.write("\t<IRC enabled=\"" + Boolean.toString(CustomConfig.isIRCOn)
-                    + "\" server=\"" + CustomConfig.ircServerAddress
-                    + "\" default-nick=\"" + CustomConfig.ircDefNick
-                    + "\" alternate-nick=\"" + CustomConfig.ircAltNick + "\">\n");
-            for (final Listbox.Option channel : CustomConfig.ircChannelList) {
-                writer.write("\t\t<CHANNEL name=\"" + channel.name + "\" password=\"" + channel.disp + "\"/>\n");
-            }
-            writer.write("\t</IRC>\n");
+            final Gson gson = new Gson();
+            final CustomConfig config = CustomConfig.getConfig();
+            checkAndFixConfig(config);
+            final String json = gson.toJson(config);
 
-            for (final CustomConfig.CharData cData : CustomConfig.characterList) {
-                if (CustomConfig.noChars) break;
-                if (cData.name.equals(CustomConfig.activeCharacter.name))
-                    cData.hudActiveBelt = CustomConfig.activeCharacter.hudActiveBelt;
-                writer.write("\t<BELT-LIST name=\"" + cData.name
-                        + "\" active-belt=\"" + Integer.toString(cData.hudActiveBelt) + "\">\n");
-                for (int i = 0; i < cData.hudBelt.length; i++) {
-                    writer.write("\t\t<BELT value=\"" + Integer.toString(i) + "\">\n");
-                    for (int j = 0; j < cData.hudBelt[i].length; j++) {
-                        writer.write("\t\t\t<SLOT value=\"" + cData.hudBelt[i][j]
-                                + "\" position=\"" + Integer.toString(j) + "\"/>\n");
-                    }
-                    writer.write("\t\t</BELT>\n");
+            if (ResCache.global != null) {
+                try {
+                    writer = new BufferedWriter(new OutputStreamWriter(ResCache.global.store(CONFIG_DEF_FILE_NAME), "UTF-8"));
+                } catch (IOException e) {
+                    LOG.warn("Cannot save config into resource cache: IO problem", e);
                 }
-                writer.write("\t</BELT-LIST>\n");
             }
-            writer.write("</CONFIG>");
-            writer.close();
+            if (writer == null) {
+                final File file = new File(CONFIG_DEF_FILE_NAME);
+                if (file.exists()) {
+                    if (!file.delete()) {
+                        LOG.warn("Cannot remove old config file, trying to overwrite");
+                    }
+                }
+                writer = new FileWriter(new File(CONFIG_DEF_FILE_NAME));
+            }
+            writer.append(json);
+            return true;
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.warn("Cannot save config: IO problem", e);
+        } finally {
+            try {
+                if (writer != null) {
+                    writer.close();
+                }
+            } catch (IOException ignored) {
+            }
         }
+        return false;
+    }
+
+
+    private static void checkAndFixConfig(@NotNull final CustomConfig config) {
+        if (config.windowSize.x < 800 || config.windowSize.y < 600) {
+            LOG.warn("Fix config: Window size must be at least 800x600");
+            config.windowSize.set(800, 600);
+        }
+        config.windowCenter = config.windowSize.div(2);
     }
 
 }

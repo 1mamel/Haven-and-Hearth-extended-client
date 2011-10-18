@@ -1,9 +1,6 @@
 package haven.scriptengine.providers;
 
-import haven.Coord;
-import haven.CustomConfig;
-import haven.CustomConfigProcessor;
-import haven.CustomConsole;
+import haven.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -18,58 +15,54 @@ public class Config {
     private static String bot2;
 
     public static void setNightvision(final boolean nightvision) {
-        CustomConfig.hasNightVision = nightvision;
+        CustomConfig.setHasNightVision(nightvision);
     }
 
     public static void setIrc(final boolean irc) {
-        CustomConfig.isIRCOn = irc;
-    }
-
-    public static void setDebugLogging(final boolean dm) {
-        CustomConfig.setDebugLogging(dm);
+        CustomConfig.setIRCOn(irc);
     }
 
     public static void setScreenSize(final int width, final int height) {
         CustomConfig.setWindowSize(Math.max(width, 800), Math.max(height, 600));
-        CustomConfigProcessor.saveSettings();
+        CustomConfigProcessor.saveConfig();
         CustomConsole.logger.warn("Client must be restarted for new settings to take effect.");
     }
 
     public static void setSoundV(int vol) {
         if (vol < 0) vol = 0;
         if (vol > 100) vol = 100;
-        CustomConfig.sfxVol = vol;
+        CustomConfig.setSfxVol(vol);
     }
 
     public static void setSound(final boolean state) {
-        CustomConfig.isSoundOn = state;
+        CustomConfig.setSoundOn(state);
     }
 
     public static void setMusicV(int vol) {
         if (vol < 0) vol = 0;
         if (vol > 100) vol = 100;
-        CustomConfig.musicVol = vol;
+        CustomConfig.setMusicVol(vol);
     }
 
     public static void setMusic(final boolean state) {
-        CustomConfig.isMusicOn = state;
+        CustomConfig.setMusicOn(state);
     }
 
     public static void save() {
-        CustomConfigProcessor.saveSettings();
+        CustomConfigProcessor.saveConfig();
     }
 
     public static void forcesave() {
-        CustomConfig.isSaveable = true;
-        CustomConfigProcessor.saveSettings();
+        CustomConfig.setSaveable(true);
+        CustomConfigProcessor.saveConfig();
     }
 
     public static boolean getNightvision() {
-        return CustomConfig.hasNightVision;
+        return CustomConfig.isHasNightVision();
     }
 
     public static boolean getIrc() {
-        return CustomConfig.isIRCOn;
+        return CustomConfig.isIRCOn();
     }
 
     public static Coord getWindowSize() {
@@ -97,23 +90,19 @@ public class Config {
     }
 
     public static boolean getSound() {
-        return CustomConfig.isSoundOn;
+        return CustomConfig.isSoundOn();
     }
 
     public static int getSoundV() {
-        return CustomConfig.sfxVol;
+        return CustomConfig.getSfxVol();
     }
 
     public static boolean getMusic() {
-        return CustomConfig.isMusicOn;
+        return CustomConfig.isMusicOn();
     }
 
     public static int getMusicV() {
-        return CustomConfig.musicVol;
-    }
-
-    public static boolean getDebugLogging() {
-        return CustomConfig.isDebugLogging();
+        return CustomConfig.getMusicVol();
     }
 
 

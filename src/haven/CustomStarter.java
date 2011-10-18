@@ -17,8 +17,7 @@ import java.awt.event.FocusListener;
  */
 public class CustomStarter {
     public static void main(final String args[]) {
-        if (!CustomConfigProcessor.loadSettings()) {
-            CustomConfigProcessor.setDefaultSettings();
+        if (!CustomConfigProcessor.loadConfig()) {
             final JFrame configFrame = new JFrame("Screen Size");
             final Container contentPane = configFrame.getContentPane();
             final JPanel clientSettingsPanel = new JPanel(new GridBagLayout(), true);
@@ -123,7 +122,7 @@ public class CustomStarter {
 
             ircOn.addActionListener(new ActionListener() {
                 public void actionPerformed(final ActionEvent e) {
-                    CustomConfig.isIRCOn = ircOn.isSelected();
+                    CustomConfig.setIRCOn(ircOn.isSelected());
                 }
             });
 
@@ -195,10 +194,10 @@ public class CustomStarter {
 
                 public void focusLost(final FocusEvent e) {
                     if (ircDefNickField.getText().trim().length() != 0) {
-                        CustomConfig.ircDefNick = ircDefNickField.getText().trim();
+                        CustomConfig.setIrcDefNick(ircDefNickField.getText().trim());
                     }
                     if (ircAltNickField.getText().trim().length() == 0) {
-                        CustomConfig.ircAltNick = ircDefNickField.getText().trim() + "|C";
+                        CustomConfig.setIrcAltNick(ircDefNickField.getText().trim() + "|C");
                     }
                 }
             });
@@ -210,15 +209,15 @@ public class CustomStarter {
                     if (ircAltNickField.getText().trim().length() != 0) {
                         if (ircDefNickField.getText().trim().length() == 0) {
                             ircDefNickField.setText(ircAltNickField.getText().trim());
-                            CustomConfig.ircDefNick = ircDefNickField.getText();
-                            ircAltNickField.setText(CustomConfig.ircDefNick + "|C");
+                            CustomConfig.setIrcDefNick(ircDefNickField.getText());
+                            ircAltNickField.setText(CustomConfig.getIrcDefNick() + "|C");
                             return;
                         }
-                        CustomConfig.ircAltNick = ircAltNickField.getText().trim();
+                        CustomConfig.setIrcAltNick(ircAltNickField.getText().trim());
                         return;
                     }
                     if (ircDefNickField.getText().trim().length() != 0) {
-                        CustomConfig.ircAltNick = ircDefNickField.getText().trim() + "|C";
+                        CustomConfig.setIrcAltNick(ircDefNickField.getText().trim() + "|C");
                     }
                 }
             });
@@ -248,7 +247,7 @@ public class CustomStarter {
     }
 
     public static void runGame(final String[] args) {
-        CustomConfigProcessor.saveSettings();
+        CustomConfigProcessor.saveConfig();
         MainFrame.main(args);
     }
 }

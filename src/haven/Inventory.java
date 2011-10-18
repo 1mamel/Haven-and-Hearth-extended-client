@@ -43,7 +43,7 @@ public class Inventory extends Widget implements DTarget {
             Resource.loadimg("gfx/hud/trashd"),
             Resource.loadimg("gfx/hud/trashh")};
     private final IButton trashButton;
-    private AtomicBoolean wait = new AtomicBoolean(false);
+    private final AtomicBoolean wait = new AtomicBoolean(false);
 
     static {
         invsq = Resource.loadtex("gfx/hud/invsq"); // InvisibleSquare = 1x1 cell
@@ -57,7 +57,7 @@ public class Inventory extends Widget implements DTarget {
         Widget.addtype("inv", new WidgetFactory() {
             public Widget create(@NotNull final Coord c, @NotNull final Widget parent, final Object[] args) {
                 if (parent instanceof StudyWidget) {
-                    return new CuriositiesInventory(c ,(Coord) args[0], parent);
+                    return new CuriositiesInventory(c, (Coord) args[0], parent);
                 }
                 return (new InventoryExt(c, (Coord) args[0], parent)); // Changed for processing inv features
             }
@@ -65,10 +65,10 @@ public class Inventory extends Widget implements DTarget {
     }
 
     public void draw(final GOut g) {
-        final Coord c = new Coord(0,0);
+        final Coord c = new Coord(0, 0);
         final Coord sz = invSqSizeSubOne;
-        for (c.y=0; c.y < isz.y; ++c.y) {
-            for (c.x=0; c.x < isz.x; ++c.x) {
+        for (c.y = 0; c.y < isz.y; ++c.y) {
+            for (c.x = 0; c.x < isz.x; ++c.x) {
                 g.image(invsq, c.mul(sz));
             }
         }
@@ -123,15 +123,20 @@ public class Inventory extends Widget implements DTarget {
             if (wait.get()) {
                 return;
             }
-            wait.set(true);
-            new ConfirmWnd(parent.c.add(c).add(trashButton.c), ui.root, getmsg(), new ConfirmWnd.Callback() {
-                public void result(final Boolean res) {
-                    wait.set(false);
-                    if (res) {
-                        empty();
-                    }
+            synchronized (wait) {
+                if (wait.get()) {
+                    return;
                 }
-            });
+                wait.set(true);
+                new ConfirmWnd(parent.c.add(c).add(trashButton.c), ui.root, getmsg(), new ConfirmWnd.Callback() {
+                    public void result(final Boolean res) {
+                        wait.set(false);
+                        if (res) {
+                            empty();
+                        }
+                    }
+                });
+            }
             return;
         }
         super.wdgmsg(sender, msg, args);
@@ -170,7 +175,7 @@ public class Inventory extends Widget implements DTarget {
         }
     }
 
-    private static Set<String> smallInventoriesNames;
+    private static final Set<String> smallInventoriesNames;
 
     static {
         smallInventoriesNames = new HashSet<String>();

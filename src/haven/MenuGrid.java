@@ -28,6 +28,7 @@ package haven;
 
 import haven.resources.layers.AButton;
 import haven.resources.layers.Pagina;
+import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.event.KeyEvent;
@@ -47,6 +48,8 @@ public class MenuGrid extends Widget {
     private final Resource[][] layout = new Resource[gsz.x][gsz.y];
     private int curoff = 0;
     private final Map<Character, Resource> hotmap = new TreeMap<Character, Resource>();
+    
+    protected static final Logger LOG = Logger.getLogger(MenuGrid.class);
 
     static {
         Widget.addtype("scm", new WidgetFactory() {
@@ -287,7 +290,7 @@ public class MenuGrid extends Widget {
                         }
                     }
                 }
-                CustomConfig.logger.info("Sending menu grid action " + Arrays.toString(ad));
+                LOG.info("Sending menu grid action " + Arrays.toString(ad));
                 wdgmsg("act", (Object[]) ad);
             }
         }

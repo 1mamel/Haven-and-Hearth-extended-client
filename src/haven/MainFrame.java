@@ -26,6 +26,8 @@
 
 package haven;
 
+import org.apache.log4j.Logger;
+
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -42,6 +44,8 @@ public class MainFrame extends Frame implements Runnable, FSMan {
     final ThreadGroup g;
     DisplayMode fsmode = null, prefs = null;
     final Dimension insetsSize;
+    
+    protected static final Logger LOG = Logger.getLogger(MainFrame.class);
 
 //    CustomConfig config;
 
@@ -121,12 +125,12 @@ public class MainFrame extends Frame implements Runnable, FSMan {
             icon = javax.imageio.ImageIO.read(data);
             data.close();   }
             else {
-                CustomConfig.logger.error("Failed to load icon.png");
+                LOG.error("Failed to load icon.png");
             }
         } catch (IOException e) {
-            CustomConfig.logger.error("Cannot set window image", e);
+            LOG.error("Cannot set window image", e);
         } catch (IllegalArgumentException e) {
-            CustomConfig.logger.error("Cannot set window image", e);
+            LOG.error("Cannot set window image", e);
         }
         setIconImage(icon);
     }
@@ -172,7 +176,8 @@ public class MainFrame extends Frame implements Runnable, FSMan {
     public void run() {
         addWindowListener(new WindowAdapter() {
             public void windowClosing(final WindowEvent e) {
-                if (CustomConfig.isSaveable) CustomConfigProcessor.saveSettings();
+                if (CustomConfig.isSaveable()) CustomConfigProcessor.saveConfig();
+                CustomConfigProcessor.saveConfig();
                 g.interrupt();
             }
         });
@@ -214,7 +219,7 @@ public class MainFrame extends Frame implements Runnable, FSMan {
             try {
                 Resource.loadlist(ResCache.global.fetch("tmp/allused"), -10);
             } catch (IOException e) {
-                CustomConfig.logger.error("Failed to load resources from tmp/allused", e);
+                LOG.error("Failed to load resources from tmp/allused", e);
             }
         }
         if (!Config.nopreload) {
@@ -224,7 +229,7 @@ public class MainFrame extends Frame implements Runnable, FSMan {
                     Resource.loadlist(pls, -5);
                 }
             } catch (IOException e) {
-                CustomConfig.logger.error("Failed to load res-preload", e);
+                LOG.error("Failed to load res-preload", e);
             }
             try {
                 final InputStream pls = Resource.class.getResourceAsStream("res-bgload");
@@ -232,7 +237,7 @@ public class MainFrame extends Frame implements Runnable, FSMan {
                     Resource.loadlist(pls, -10);
                 }
             } catch (IOException e) {
-                CustomConfig.logger.error("Failed to load res-bgload", e);
+                LOG.error("Failed to load res-bgload", e);
             }
         }
     }
@@ -265,7 +270,7 @@ public class MainFrame extends Frame implements Runnable, FSMan {
         setupres();
         final MainFrame mainFrame = new MainFrame(CustomConfig.getWindowSize(), threadGroup);
         //noinspection UnusedParameters
-        CustomConfig.isSaveable = true;
+        CustomConfig.setSaveable(true);
         if (Config.fullscreen)
             mainFrame.setfs();
         if (threadGroup instanceof haven.error.ErrorHandler) {

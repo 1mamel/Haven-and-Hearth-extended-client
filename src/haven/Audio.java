@@ -228,7 +228,7 @@ public class Audio {
     }
 
     public static void play(final byte[] clip) {
-        play(clip, CustomConfig.getSFXVolume(), 1.0);
+        play(clip, CustomConfig.getSfxVol()/100.0D, 1.0);
     }
 
     public static void queue(final Runnable d) {

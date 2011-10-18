@@ -122,7 +122,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
                 } else {
                     System.err.println("Creating MapView without specified player object");
                 }
-                CustomConfig.playerId = pgob;
+                CustomConfig.setPlayerId(pgob);
                 return (new MapView(c, sz, parent, mc, pgob));
             }
         });
@@ -1489,7 +1489,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
         map.sendreqs();
         checkplmove();
 //        try {
-        if ((mask.amb = glob.amblight) == null || CustomConfig.hasNightVision)
+        if ((mask.amb = glob.amblight) == null || CustomConfig.isHasNightVision())
             mask.amb = new Color(0, 0, 0, 0);
         drawmap(g);
         drawarrows(g);

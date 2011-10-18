@@ -1,122 +1,321 @@
 /**
- * @(#)CustomConfig.java
- *
- *
- * @author
- * @version 1.00 2009/10/19
+ * Custom Configuration.
+ * For extensions.
+ * @author Vlad.Rassokhin@gmail.com
+ * @version 2.00
  */
 
 package haven;
 
-import org.apache.log4j.*;
-
 import java.awt.*;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-@SuppressWarnings({"UnusedDeclaration"})
 public class CustomConfig {
-    static UI ui;
-    private static boolean xray = false;
-    private static boolean hide = false;
 
-    public static Logger logger;
-    public static Glob glob = null;
-    public static boolean highlightObjectAtMouse = false;
-    private static boolean render = true;
+    private static final AtomicInteger customWidgetIdGenerator = new AtomicInteger(-10); // for Userspace widgets
 
-    static {
-        logger = Logger.getLogger("Main log");
-        try {
-            logger.addAppender(new FileAppender(new SimpleLayout(), "main.log"));
-        } catch (IOException ignored) {
-        }
-        logger.addAppender(new ConsoleAppender(new SimpleLayout()));
-        logger.setLevel(Level.DEBUG);
+    public static int getNextCustomWidgetId() {
+        return customWidgetIdGenerator.decrementAndGet();
     }
 
-    public static boolean isDebugLogging() {
-        return logger.getLevel().isGreaterOrEqual(Level.DEBUG);
+    // Config
+    private boolean isSaveable = false;
+
+    // View
+    private boolean xray = false;
+    private boolean hideObjects = false;
+    private boolean highlightObjectAtMouse = false;
+    private boolean render = true;
+    private boolean hasNightVision = false;
+
+    // IRC
+    private String ircServerAddress = "irc.synirc.net";
+    private List<Listbox.Option> ircChannelList = new ArrayList<Listbox.Option>();
+    private String ircDefNick = "";
+    private String ircAltNick = "";
+    private boolean isIRCOn = true;
+
+
+    // Sound system
+    private int sfxVol = 100;
+    private int musicVol = 100;
+    private boolean isMusicOn = true;
+    private boolean isSoundOn = true;
+
+    // Logging
+    private boolean logLoad = false;
+    private boolean logSave = false;
+    private boolean logIRC = false;
+    private boolean logServerMessages = false;
+
+
+    Coord windowSize;
+    Coord windowCenter;
+
+    public transient Glob glob = null;
+
+    public transient int playerId;
+
+
+    // Belts
+    private static CharData activeCharacter;
+    private List<CharData> characterList = new ArrayList<CharData>();
+    private boolean noChars = true;
+
+    static private CustomConfig ourConfig = new CustomConfig();
+
+    {
+        windowSize = new Coord(800, 600);
+        windowCenter = windowSize.div(2);
+        ircChannelList.add(new Listbox.Option("#Haven", ""));
     }
 
-    public static void setDebugLogging(final boolean debug) {
-        logger.setLevel(debug ? Level.DEBUG : Level.INFO);
+    public static Glob getGlob() {
+        return ourConfig.glob;
+    }
+
+    public static void setGlob(final Glob glob) {
+        ourConfig.glob = glob;
+    }
+
+    public static int getPlayerId() {
+        return ourConfig.playerId;
+    }
+
+    public static void setPlayerId(final int playerId) {
+        ourConfig.playerId = playerId;
+    }
+
+
+    public static void setConfig(final CustomConfig config) {
+        CustomConfig.ourConfig = config;
+    }
+
+    public static CustomConfig getConfig() {
+        return ourConfig;
+    }
+
+
+    public static void toggleXray() {
+        ourConfig.xray = !ourConfig.xray;
     }
 
     public static boolean isXray() {
-        return xray;
+        return ourConfig.xray;
     }
 
     public static void setXray(final boolean xray) {
-        CustomConfig.xray = xray;
+        ourConfig.xray = xray;
     }
 
     public static boolean isHideObjects() {
-        return hide;
+        return ourConfig.hideObjects;
     }
 
     public static void setHideObjects(final boolean hide) {
-        CustomConfig.hide = hide;
+        ourConfig.hideObjects = hide;
     }
 
-    public static void toggleXray() {
-        xray = !xray;
+    public static boolean isHighlightObjectAtMouse() {
+        return ourConfig.highlightObjectAtMouse;
     }
 
-    public static void toggleHideObjects() {
-        hide = !hide;
-    }
-
-    public static Coord getWindowSize() {
-        return windowSize;
-    }
-
-    public static int getWindowWidth() {
-        return windowSize.x;
-    }
-
-    public static int getWindowHeight() {
-        return windowSize.y;
-    }
-
-    public static Coord getWindowCenter() {
-        return windowCenter;
-    }
-
-    public static int getCenterX() {
-        return windowCenter.x;
-    }
-
-    public static int getCenterY() {
-        return windowCenter.y;
-    }
-
-    public static void setWindowSize(final Coord size) {
-        windowSize = size;
-        MainFrame.setWindowSize(size.toDimension());
-    }
-
-    public static void setWindowSize(final int width, final int height) {
-        windowSize = new Coord(width, height);
-        MainFrame.setWindowSize(new Dimension(width, height));
-    }
-
-    public static void updateWindowSize(final int width, final int height) {
-        windowSize = new Coord(width, height);
-    }
-
-    public static void toggleRender() {
-        render = !render;
+    public static void setHighlightObjectAtMouse(final boolean highlightObjectAtMouse) {
+        ourConfig.highlightObjectAtMouse = highlightObjectAtMouse;
     }
 
     public static boolean isRender() {
-        return render;
+        return ourConfig.render;
     }
 
-    public static void setRender(final boolean flag) {
-        render = flag;
+    public static void setRender(final boolean render) {
+        ourConfig.render = render;
+    }
+
+    public static int getSfxVol() {
+        return ourConfig.sfxVol;
+    }
+
+    public static void setSfxVol(final int sfxVol) {
+        ourConfig.sfxVol = sfxVol;
+    }
+
+    public static int getMusicVol() {
+        return ourConfig.musicVol;
+    }
+
+    public static void setMusicVol(final int musicVol) {
+        ourConfig.musicVol = musicVol;
+    }
+
+    public static String getIrcServerAddress() {
+        return ourConfig.ircServerAddress;
+    }
+
+    public static void setIrcServerAddress(final String ircServerAddress) {
+        ourConfig.ircServerAddress = ircServerAddress;
+    }
+
+    public static List<Listbox.Option> getIrcChannelList() {
+        return ourConfig.ircChannelList;
+    }
+
+    public static void setIrcChannelList(final List<Listbox.Option> ircChannelList) {
+        ourConfig.ircChannelList = ircChannelList;
+    }
+
+    public static List<CharData> getCharacterList() {
+        return ourConfig.characterList;
+    }
+
+    public static void setCharacterList(final List<CharData> characterList) {
+        ourConfig.characterList = characterList;
+    }
+
+    public static String getIrcDefNick() {
+        return ourConfig.ircDefNick;
+    }
+
+    public static void setIrcDefNick(final String ircDefNick) {
+        ourConfig.ircDefNick = ircDefNick;
+    }
+
+    public static String getIrcAltNick() {
+        return ourConfig.ircAltNick;
+    }
+
+    public static void setIrcAltNick(final String ircAltNick) {
+        ourConfig.ircAltNick = ircAltNick;
+    }
+
+    public static boolean isMusicOn() {
+        return ourConfig.isMusicOn;
+    }
+
+    public static void setMusicOn(final boolean musicOn) {
+        ourConfig.isMusicOn = musicOn;
+    }
+
+    public static boolean isSoundOn() {
+        return ourConfig.isSoundOn;
+    }
+
+    public static void setSoundOn(final boolean soundOn) {
+        ourConfig.isSoundOn = soundOn;
+    }
+
+    public static boolean isIRCOn() {
+        return ourConfig.isIRCOn;
+    }
+
+    public static void setIRCOn(final boolean IRCOn) {
+        ourConfig.isIRCOn = IRCOn;
+    }
+
+    public static boolean isHasNightVision() {
+        return ourConfig.hasNightVision;
+    }
+
+    public static void setHasNightVision(final boolean hasNightVision) {
+        ourConfig.hasNightVision = hasNightVision;
+    }
+
+    public static boolean isSaveable() {
+        return ourConfig.isSaveable;
+    }
+
+    public static void setSaveable(final boolean saveable) {
+        ourConfig.isSaveable = saveable;
+    }
+
+    public static boolean isNoChars() {
+        return ourConfig.noChars;
+    }
+
+    public static void setNoChars(final boolean noChars) {
+        ourConfig.noChars = noChars;
+    }
+
+    public static boolean isLogLoad() {
+        return ourConfig.logLoad;
+    }
+
+    public static void setLogLoad(final boolean logLoad) {
+        ourConfig.logLoad = logLoad;
+    }
+
+    public static boolean isLogSave() {
+        return ourConfig.logSave;
+    }
+
+    public static void setLogSave(final boolean logSave) {
+        ourConfig.logSave = logSave;
+    }
+
+    public static boolean isLogIRC() {
+        return ourConfig.logIRC;
+    }
+
+    public static void setLogIRC(final boolean logIRC) {
+        ourConfig.logIRC = logIRC;
+    }
+
+    public static boolean isLogServerMessages() {
+        return ourConfig.logServerMessages;
+    }
+
+    public static void setLogServerMessages(final boolean logServerMessages) {
+        ourConfig.logServerMessages = logServerMessages;
+    }
+
+    public static Coord getWindowSize() {
+        return ourConfig.windowSize;
+    }
+
+    public static Coord getWindowCenter() {
+        return ourConfig.windowCenter;
+    }
+
+    public static void setWindowCenter(final Coord windowCenter) {
+        ourConfig.windowCenter = windowCenter;
+    }
+
+    public static int getWindowWidth() {
+        return getWindowSize().x;
+    }
+
+    public static int getWindowHeight() {
+        return getWindowSize().y;
+    }
+
+    public static int getCenterX() {
+        return getWindowCenter().x;
+    }
+
+    public static int getCenterY() {
+        return getWindowCenter().y;
+    }
+
+    public static CharData getActiveCharacter() {
+        return activeCharacter;
+    }
+
+    public static void toggleNightvision() {
+        ourConfig.hasNightVision = !ourConfig.hasNightVision;
+    }
+
+    public static void toggleHideObjects() {
+        ourConfig.hideObjects = !ourConfig.hideObjects;
+    }
+
+    public static void toggleRender() {
+        ourConfig.render = !ourConfig.render;
+    }
+
+    public static void toggleMapGrid() {
+        Config.grid = !Config.grid;
     }
 
     public static void toggleConsole() {
@@ -126,14 +325,6 @@ public class CustomConfig {
             UI.console.toggle();
             UI.console.raise();
         }
-    }
-
-    public static void toggleNightvision() {
-        hasNightVision = !hasNightVision;
-    }
-
-    public static void toggleMapGrid() {
-        Config.grid = !Config.grid;
     }
 
     static class CharData {
@@ -150,52 +341,34 @@ public class CustomConfig {
         }
     }
 
-    public static int playerId;
-    public static Coord invCoord = Coord.z;
-    public static int sfxVol = 100;
-    public static int musicVol = 100;
-    public static String ircServerAddress = "irc.synirc.net";
-    public static List<Listbox.Option> ircChannelList = new ArrayList<Listbox.Option>();
-    public static List<CharData> characterList = new ArrayList<CharData>();
-    public static String ircDefNick = "";
-    public static String ircAltNick = "";
-    public static CharData activeCharacter;
-    private static AtomicInteger customWidgetIdGenerator = new AtomicInteger(-10); // for Userspace widgets
-    public static boolean isMusicOn = true;
-    public static boolean isSoundOn = true;
-    public static boolean isIRCOn = true;
-    public static boolean hasNightVision = false;
-    public static boolean isSaveable = false;
-    public static boolean noChars = true;
 
-    public static boolean logLoad = false;
-    public static boolean logSave = false;
-    public static boolean logIRC = false;
-    public static boolean logServerMessages = false;
+    public static void setWindowSize(final Coord size) {
+        ourConfig.windowSize = size;
+        MainFrame.setWindowSize(size.toDimension());
+    }
+
+    public static void setWindowSize(final int width, final int height) {
+        ourConfig.windowSize = new Coord(width, height);
+        MainFrame.setWindowSize(new Dimension(width, height));
+    }
+
+    public static void updateWindowSize(final int width, final int height) {
+        ourConfig.windowSize = new Coord(width, height);
+    }
 
     public static void setActiveCharacter(final String name) {
-        for (final CharData cData : characterList) {
+        for (final CharData cData : ourConfig.characterList) {
             if (cData.name.equalsIgnoreCase(name)) {
                 activeCharacter = cData;
-                CustomConfig.isSaveable = true;
-                CustomConfig.noChars = false;
+                setSaveable(true);
+                setNoChars(false);
                 return;
             }
         }
         activeCharacter = new CharData(name);
-        characterList.add(activeCharacter);
-        CustomConfig.isSaveable = true;
-        CustomConfig.noChars = false;
+        ourConfig.characterList.add(activeCharacter);
+        setSaveable(true);
+        setNoChars(false);
     }
 
-    public static double getSFXVolume() {
-        return (double) sfxVol / 100;
-    }
-
-    public static int getNextCustomWidgetId() {
-        return customWidgetIdGenerator.decrementAndGet();
-    }
-
-    private static Coord windowSize = new Coord(800, 600);
-    private static Coord windowCenter = windowSize.div(2);
 }

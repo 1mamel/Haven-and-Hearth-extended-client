@@ -374,14 +374,14 @@ public class OptWnd extends Window {
             new Label(new Coord(35, 40), tab, "Volume");
             new Label(new Coord(10, 280), tab, "SFX");
             new Frame(new Coord(15, 65), new Coord(20, 206), tab);
-            final Label sfxvol = new Label(new Coord(40, 69 + (int) ((100 - CustomConfig.sfxVol) * 1.86)), tab, String.valueOf(CustomConfig.sfxVol) + " %");
+            final Label sfxvol = new Label(new Coord(40, 69 + (int) ((100 - CustomConfig.getSfxVol()) * 1.86)), tab, String.valueOf(CustomConfig.getSfxVol()) + " %");
             new Scrollbar(new Coord(30, 70), 196, tab, 0, 100) {
                 {
-                    val = 100 - CustomConfig.sfxVol;
+                    val = 100 - CustomConfig.getSfxVol();
                 }
 
                 public void changed() {
-                    CustomConfig.sfxVol = 100 - val;
+                    CustomConfig.setSfxVol(100 - val);
                     sfxvol.c.setY(69 + (int) ((val) * 1.86));
                     sfxvol.settext(String.valueOf(100 - val) + " %");
                 }
@@ -393,15 +393,15 @@ public class OptWnd extends Window {
                 }
             };
             new Label(new Coord(70, 280), tab, "Music");
-            final Label musVol = new Label(new Coord(95, 69 + (int) ((100 - CustomConfig.musicVol) * 1.86)), tab, String.valueOf(CustomConfig.musicVol) + " %");
+            final Label musVol = new Label(new Coord(95, 69 + (int) ((100 - CustomConfig.getMusicVol()) * 1.86)), tab, String.valueOf(CustomConfig.getMusicVol()) + " %");
             new Frame(new Coord(75, 65), new Coord(20, 206), tab);
             new Scrollbar(new Coord(90, 70), 196, tab, 0, 100) {
                 {
-                    val = 100 - CustomConfig.musicVol;
+                    val = 100 - CustomConfig.getMusicVol();
                 }
 
                 public void changed() {
-                    CustomConfig.musicVol = 100 - val;
+                    CustomConfig.setMusicVol(100 - val);
                     musVol.c.setY(69 + (int) ((val) * 1.86));
                     musVol.settext(String.valueOf(100 - val) + " %");
                 }
@@ -414,20 +414,20 @@ public class OptWnd extends Window {
             };
             new CheckBox(new Coord(120, 40), tab, "Sound enabled") {
                 public void changed(final boolean val) {
-                    CustomConfig.isSoundOn = val;
+                    CustomConfig.setSoundOn(val);
                 }
 
                 {
-                    a = CustomConfig.isSoundOn;
+                    a = CustomConfig.isSoundOn();
                 }
             };
             new CheckBox(new Coord(120, 70), tab, "Music enabled") {
                 public void changed(final boolean val) {
-                    CustomConfig.isMusicOn = val;
+                    CustomConfig.setMusicOn(val);
                 }
 
                 {
-                    a = CustomConfig.isMusicOn;
+                    a = CustomConfig.isMusicOn();
                 }
             };
         }
@@ -447,12 +447,12 @@ public class OptWnd extends Window {
             final Coord textFieldSize = new Coord(180, 15);
 
             // Server entry
-            serverAddress = new TextEntry(new Coord(secondCellXOffset, 40), textFieldSize, tab, CustomConfig.ircServerAddress);
+            serverAddress = new TextEntry(new Coord(secondCellXOffset, 40), textFieldSize, tab, CustomConfig.getIrcServerAddress());
             serverAddress.badchars = " ";
 
             // Channel list entry
             final StringBuilder builder = new StringBuilder();
-            for (final Listbox.Option channel : CustomConfig.ircChannelList) {
+            for (final Listbox.Option channel : CustomConfig.getIrcChannelList()) {
                 final String name = channel.name.trim();
                 final String disp = channel.disp.trim();
                 if (!name.isEmpty()) {
@@ -469,14 +469,14 @@ public class OptWnd extends Window {
 
             // Nickname entries
             defNick = new TextEntry(new Coord(secondCellXOffset, 80), textFieldSize,
-                    tab, CustomConfig.ircDefNick) {
+                    tab, CustomConfig.getIrcDefNick()) {
                 {
                     badchars = someBadChars;
                 }
             };
 
             altNick = new TextEntry(new Coord(secondCellXOffset, 100), textFieldSize,
-                    tab, CustomConfig.ircAltNick) {
+                    tab, CustomConfig.getIrcAltNick()) {
                 {
                     badchars = someBadChars;
                 }
@@ -485,11 +485,11 @@ public class OptWnd extends Window {
             // IRC toggle
             ircToggle = new CheckBox(new Coord((firstCellXOffset + secondCellXOffset) / 2, 130), tab, "IRC On/Off") {
                 public void changed(final boolean val) {
-                    CustomConfig.isIRCOn = val;
+                    CustomConfig.setIRCOn(val);
                 }
 
                 {
-                    a = CustomConfig.isIRCOn;
+                    a = CustomConfig.isIRCOn();
                 }
             };
 
@@ -540,11 +540,11 @@ public class OptWnd extends Window {
             };
             new CheckBox(new Coord(150, y += 30), tab, "NightVision enabled") {
                 public void changed(final boolean val) {
-                    CustomConfig.hasNightVision = val;
+                    CustomConfig.setHasNightVision(val);
                 }
 
                 {
-                    a = CustomConfig.hasNightVision;
+                    a = CustomConfig.isHasNightVision();
                 }
             };
         }
@@ -590,17 +590,18 @@ public class OptWnd extends Window {
 
     void saveSome() {
         Listbox.Option channel = null;
-        CustomConfig.ircServerAddress = serverAddress.text;
-        CustomConfig.ircDefNick = defNick.text;
-        CustomConfig.ircAltNick = altNick.text;
+        CustomConfig.setIrcServerAddress(serverAddress.text);
+        CustomConfig.setIrcDefNick(defNick.text);
+        CustomConfig.setIrcAltNick(altNick.text);
         final String[] channelData = Utils.whitespacePattern.split(channelList.text);
-        CustomConfig.ircChannelList.clear();
+        List<Listbox.Option> ircChannelList = CustomConfig.getIrcChannelList();
+        ircChannelList.clear();
         for (int i = 0; i < channelData.length; i++) {
             channelData[i] = channelData[i].trim();
             if (channelData[i].length() > 0) {
                 if (channelData[i].startsWith("#")) {
                     if (channel != null) {
-                        CustomConfig.ircChannelList.add(channel);
+                        ircChannelList.add(channel);
 //noinspection UnusedAssignment
                         channel = null;
                     }
@@ -612,17 +613,19 @@ public class OptWnd extends Window {
                         channel.disp = (channel.disp + ' ' + channelData[i]).trim();
                 }
                 if (channel != null) {
-                    CustomConfig.ircChannelList.add(channel);
+                    ircChannelList.add(channel);
                     channel = null;
                 }
             }
         }
         if (channel != null) {
-            CustomConfig.ircChannelList.add(channel);
+            ircChannelList.add(channel);
 //noinspection UnusedAssignment
             channel = null;
         }
-        if (CustomConfig.isSaveable) CustomConfigProcessor.saveSettings();
+        if (CustomConfig.isSaveable()) {
+            CustomConfigProcessor.saveConfig();
+        }
     }
 
     private void setcamera(final String camtype) {

@@ -400,11 +400,11 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
 //               TODO:!     belt[activeBelt][(Integer) (args[0])] = null;
                 ToolbarWnd.setbelt((Integer) args[0], null);
                 //noinspection RedundantCast
-                CustomConfig.activeCharacter.hudBelt[activeBelt][(Integer) (args[0])] = null;
+                CustomConfig.getActiveCharacter().hudBelt[activeBelt][(Integer) (args[0])] = null;
             } else {/*
 		    	belt[activeBelt][(Integer)args[0]] = ui.sess.getres((Integer)args[1]).get();
 		    	ToolbarWnd.setbelt((Integer) args[0], ui.sess.getres((Integer) args[1]));
-				CustomConfig.activeCharacter.hudBelt[activeBelt][(Integer)args[0]] = belt[activeBelt][(Integer)args[0]].name;
+				CustomConfig.getActiveCharacter().hudBelt[activeBelt][(Integer)args[0]] = belt[activeBelt][(Integer)args[0]].name;
 		    */
             }
 //            }
@@ -630,7 +630,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
             return (true);
         } else if (ch >= '0' && ch <= '9' && ev.isAltDown()) { // Change belt
             activeBelt = ch - '0';
-            CustomConfig.activeCharacter.hudActiveBelt = activeBelt;
+            CustomConfig.getActiveCharacter().hudActiveBelt = activeBelt;
             final Resource[] ab = belt[activeBelt];
             for (int i = 0; i < ab.length; i++) {
                 wdgmsg("setbelt", i, (ab[i] == null) ? 0 : (ab[i].name));
@@ -654,7 +654,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
     public boolean drop(final Coord cc, final Coord ul, final Item item) {
         final int slot = beltslot(cc);
         if (slot != -1) {
-            if (CustomConfig.noChars)
+            if (CustomConfig.isNoChars())
                 error("You must restart the client to set and save your hotkeys");
             else
                 wdgmsg("setbelt", slot, 0);
@@ -670,7 +670,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
     public boolean dropthing(final Coord c, final Object thing) {
         final int slot = beltslot(c);
         if (slot != -1) {
-            if (CustomConfig.noChars) {
+            if (CustomConfig.isNoChars()) {
                 error("You must restart the client to set and save your hotkeys");
                 return true;
             }
@@ -678,9 +678,9 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
                 final Resource res = (Resource) thing;
                 if (res.layer(Resource.action) != null) {
                     belt[activeBelt][slot] = res;
-                    CustomConfig.activeCharacter.hudBelt[activeBelt][slot] = belt[activeBelt][slot].name;
+                    CustomConfig.getActiveCharacter().hudBelt[activeBelt][slot] = belt[activeBelt][slot].name;
                     wdgmsg("setbelt", slot, res.name);
-                    if (ResCache.global != null) CustomConfigProcessor.saveSettings();
+                    if (ResCache.global != null) CustomConfigProcessor.saveConfig();
                     return (true);
                 }
             }
@@ -689,14 +689,14 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
     }
 
     public void initBelt() {
-        if (CustomConfig.noChars)
+        if (CustomConfig.isNoChars())
             return;
-        activeBelt = CustomConfig.activeCharacter.hudActiveBelt;
+        activeBelt = CustomConfig.getActiveCharacter().hudActiveBelt;
         synchronized (belt) {
             for (int i = 0; i < belt.length; i++) {
                 for (int j = 0; j < belt[i].length; j++) {
-                    if (CustomConfig.activeCharacter.hudBelt[i][j] != null) {
-                        belt[i][j] = Resource.load(CustomConfig.activeCharacter.hudBelt[i][j]);
+                    if (CustomConfig.getActiveCharacter().hudBelt[i][j] != null) {
+                        belt[i][j] = Resource.load(CustomConfig.getActiveCharacter().hudBelt[i][j]);
                     }
                 }
             }

@@ -36,7 +36,7 @@ public class MapProvider {
     }
 
     protected static Glob glob() {
-        return CustomConfig.glob;
+        return CustomConfig.getGlob();
     }
 
     public static Gob getGob(final int id) {

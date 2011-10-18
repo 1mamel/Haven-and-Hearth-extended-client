@@ -52,7 +52,6 @@ public class RemoteUI implements UI.Receiver {
 
     public void run(@NotNull final UI ui) throws InterruptedException {
         this.ui = ui;
-        CustomConfig.ui = ui;
         ui.setreceiver(this);
         while (sess.alive()) {
             Message msg;

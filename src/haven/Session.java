@@ -26,6 +26,7 @@
 
 package haven;
 
+import org.apache.log4j.Logger;
 import org.relayirc.core.IRCConnection;
 
 import java.io.IOException;
@@ -70,6 +71,8 @@ public class Session {
 
     static final int ackthresh = 30;
     static IRCConnection IRC;
+    
+    protected static final Logger LOG = Logger.getLogger(Session.class);
 
     DatagramSocket sk;
     InetAddress server;
@@ -351,7 +354,7 @@ public class Session {
             final int parent = -1;
             final Object[] args = null;
 
-            if (CustomConfig.logServerMessages) {
+            if (CustomConfig.isLogServerMessages()) {
 //                msgClone = msg.clone();
 //                try {
 //                    id = msgClone.uint16();
@@ -419,7 +422,7 @@ public class Session {
             } else if (msg.type == Message.RMSG_PARTY) {
                 glob.party.msg(msg);
             } else if (msg.type == Message.RMSG_SFX) {
-                if (!CustomConfig.isSoundOn) return;        //	Sound effects disabled
+                if (!CustomConfig.isSoundOn()) return;        //	Sound effects disabled
                 final Indir<Resource> res = getres(msg.uint16());
                 final double vol = ((double) msg.uint16()) / 256.0;
                 final double spd = ((double) msg.uint16()) / 256.0;
@@ -539,11 +542,11 @@ public class Session {
                                 Session.this.close();
                             } else {
 //                                throw (new MessageException("Unknown message type: " + msg.type, msg));
-                                CustomConfig.logger.error("Unknown message type: " + msg.type);
+                                LOG.error("Unknown message type: " + msg.type);
                             }
                         }
                     } catch (Exception e) {
-                        CustomConfig.logger.fatal("Error in Session reader", e);
+                        LOG.fatal("Error in Session reader", e);
                     }
                 }
             } finally {
@@ -749,7 +752,7 @@ public class Session {
             IRC.close();
         }
         CustomConfig.setRender(true);
-        CustomConfigProcessor.saveSettings();
+        CustomConfigProcessor.saveConfig();
         sworker.interrupt();
     }
 

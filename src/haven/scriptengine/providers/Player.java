@@ -20,13 +20,14 @@ public class Player implements ProgressBar.ProgressListener {
     private static Coord position;
 
     public static Gob getGob() {
-        synchronized (CustomConfig.glob.oc) {
-            return CustomConfig.glob.oc.getgob(Player.getId());
+        final Glob glob = CustomConfig.getGlob();
+        synchronized (glob.oc) {
+            return glob.oc.getgob(Player.getId());
         }
     }
 
     public static int getId() {
-        return CustomConfig.playerId;
+        return CustomConfig.getPlayerId();
     }
 
     public static int getStamina() {
