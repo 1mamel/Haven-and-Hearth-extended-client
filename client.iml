@@ -18,6 +18,7 @@
     <orderEntry type="library" name="jnlp" level="project" />
     <orderEntry type="library" name="gson" level="project" />
     <orderEntry type="library" name="annotations" level="project" />
+    <orderEntry type="module" module-name="scriptsengine" />
   </component>
 </module>
 
