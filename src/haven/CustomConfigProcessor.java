@@ -1,6 +1,7 @@
 package haven;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import org.apache.log4j.Logger;
@@ -24,17 +25,19 @@ public class CustomConfigProcessor {
     public static boolean loadConfig() {
         Reader reader = null;
         try {
-            final Gson gson = new Gson();
+            final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
             if (ResCache.global != null) {
                 try {
                     reader = new InputStreamReader(ResCache.global.fetch(CONFIG_DEF_FILE_NAME));
+                    LOG.info("Loading config from cache");
                 } catch (IOException e) {
                     LOG.warn("config file not founded in cache, trying to load from file", e);
                 }
             }
             if (reader == null) {
                 reader = new FileReader(new File(CONFIG_DEF_FILE_NAME));
+                LOG.info("Loading config from file");
             }
             final CustomConfig config = gson.fromJson(reader, CustomConfig.class);
             checkAndFixConfig(config);
@@ -68,11 +71,13 @@ public class CustomConfigProcessor {
             if (ResCache.global != null) {
                 try {
                     writer = new BufferedWriter(new OutputStreamWriter(ResCache.global.store(CONFIG_DEF_FILE_NAME), "UTF-8"));
+                    LOG.info("Saving config into cache");
                 } catch (IOException e) {
                     LOG.warn("Cannot save config into resource cache: IO problem", e);
                 }
             }
             if (writer == null) {
+                LOG.info("Saving config into file");
                 final File file = new File(CONFIG_DEF_FILE_NAME);
                 if (file.exists()) {
                     if (!file.delete()) {
@@ -98,9 +103,13 @@ public class CustomConfigProcessor {
 
 
     private static void checkAndFixConfig(@NotNull final CustomConfig config) {
-        if (config.windowSize.x < 800 || config.windowSize.y < 600) {
-            LOG.warn("Fix config: Window size must be at least 800x600");
-            config.windowSize.set(800, 600);
+        if (config.windowSize.x < 800) {
+            LOG.warn("Fix config: Window width must be at least 600px");
+            config.windowSize.x = 800;
+        }
+        if (config.windowSize.y < 600) {
+            LOG.warn("Fix config: Window height must be at least 600px");
+            config.windowSize.y = 600;
         }
         config.windowCenter = config.windowSize.div(2);
     }
