@@ -26,6 +26,7 @@
 
 package haven;
 
+import haven.scriptengine.ScriptsManager;
 import org.apache.log4j.Logger;
 
 import java.awt.*;
@@ -189,6 +190,7 @@ public class MainFrame extends Frame implements Runnable, FSMan {
         });
         final Thread ui = new HackThread(panel, "Haven UI thread");
         panel.setfsm(this);
+        ScriptsManager.initSystem();
         ui.start();
         try {
             // Main Game cycle  Login -> Game -> ...

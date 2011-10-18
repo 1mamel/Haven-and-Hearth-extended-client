@@ -15,7 +15,7 @@ import static haven.MCache.tilesz;
  * Time: 19:15
  */
 @SuppressWarnings({"UnusedDeclaration"})
-public class Player implements ProgressBar.ProgressListener {
+public class Player implements ProgressBar.ProgressListener, IMeter.Listener {
 
     private static Coord position;
 
@@ -80,10 +80,6 @@ public class Player implements ProgressBar.ProgressListener {
 
     public static void iMeterGenerated(@NotNull final IMeter meter, @NotNull final String resName) {
         newMeter(meter, resName);
-    }
-
-    public static void meterUpdated(final IMeter meter, final String tooltip) {
-        meterUp(meter, tooltip);
     }
 
     private static void meterUp(@NotNull final IMeter meter, @NotNull final String tooltip) {
@@ -250,5 +246,19 @@ public class Player implements ProgressBar.ProgressListener {
     @Override
     public void onStarted() {
         updateProgress(0);
+    }
+
+    @Override
+    public void onIMeterAdded(IMeter meter, String resourceName) {
+
+    }
+
+    @Override
+    public void onIMeterRemoved(IMeter meter) {
+    }
+
+    @Override
+    public void onIMeterUpdated(IMeter meter, String tooltip) {
+        meterUp(meter, tooltip);
     }
 }

@@ -26,7 +26,7 @@
 
 package haven;
 
-import ender.GoogleTranslator;
+import translation.MicrosoftTranslatorProvider;
 
 import java.io.*;
 import java.net.MalformedURLException;
@@ -55,7 +55,7 @@ public class Config {
     public static Map<Pattern, String> smileys = new ConcurrentHashMap<Pattern, String>();
     public static String currentCharName;
     public static Properties options;
-    public static GoogleTranslator translator = new GoogleTranslator();
+    public static MicrosoftTranslatorProvider translator = new MicrosoftTranslatorProvider();
 
     public static boolean quick_login = false; // быстрый логин дефолт чаром
     public static boolean ark_state_activate_char = false; // стадия аткивации чара
@@ -86,8 +86,6 @@ public class Config {
             nolocalres = getprop("haven.nolocalres", "").equals("yesimsure");
             resdir = getprop("haven.resdir");
             nopreload = getprop("haven.nopreload", "no").equals("yes");
-            translator.useLanguage("en");
-            translator.stop();
             currentCharName = "";
             options = new Properties();
             loadOptions();
@@ -193,7 +191,7 @@ public class Config {
     }
 
     private static void loadOptions() {
-        translator.useKey(CustomConfig.getGoogleTranslateApiKey());
+        translator.useKey(CustomConfig.getMSTranslateApiKey());
     }
 
 }

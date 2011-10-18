@@ -19,6 +19,7 @@
     <orderEntry type="library" name="gson" level="project" />
     <orderEntry type="library" name="annotations" level="project" />
     <orderEntry type="module" module-name="scriptsengine" />
+    <orderEntry type="library" name="microsoft-translator-java-api" level="project" />
   </component>
 </module>
 

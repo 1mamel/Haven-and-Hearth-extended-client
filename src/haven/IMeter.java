@@ -26,12 +26,13 @@
 
 package haven;
 
-import haven.scriptengine.providers.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 public class IMeter extends Widget {
     static final Coord off = new Coord(13, 7);
@@ -50,7 +51,7 @@ public class IMeter extends Widget {
                     meters.add(new Meter((Color) args[i], (Integer) args[i + 1]));
                 }
                 final IMeter res = new IMeter(c, parent, bg, meters);
-                Player.iMeterGenerated(res, (String) args[0]);
+                emitCreated(res, (String) args[0]);
                 return res;
             }
         });
@@ -99,9 +100,54 @@ public class IMeter extends Widget {
             this.meters = meters;
         } else if (msg.equals("tt")) {
             tooltip = args[0];
-            Player.meterUpdated(this, (String) args[0]);
+            emitUpdated(this, (String) args[0]);
         } else {
             super.uimsg(msg, args);
+        }
+    }
+
+    public static interface Listener {
+        void onIMeterAdded(IMeter meter, String resourceName);
+
+        void onIMeterRemoved(IMeter meter);
+
+        void onIMeterUpdated(IMeter meter, String tooltip);
+    }
+
+    private static final Set<Listener> ourListeners = new CopyOnWriteArraySet<Listener>();
+
+    public static void subscribe(final Listener listener) {
+        ourListeners.add(listener);
+    }
+
+    private static void unsubscribe(final Listener listener) {
+        ourListeners.remove(listener);
+    }
+
+    protected static void emitCreated(final IMeter meter, final String resource) {
+        for (final Listener listener : ourListeners) {
+            try {
+                listener.onIMeterAdded(meter, resource);
+            } catch (Exception ignored) {
+            }
+        }
+    }
+
+    protected static void emitUpdated(final IMeter meter, final String tooltip) {
+        for (final Listener listener : ourListeners) {
+            try {
+                listener.onIMeterUpdated(meter, tooltip);
+            } catch (Exception ignored) {
+            }
+        }
+    }
+
+    protected static void emitRemoved(final IMeter meter) {
+        for (final Listener listener : ourListeners) {
+            try {
+                listener.onIMeterRemoved(meter);
+            } catch (Exception ignored) {
+            }
         }
     }
 }

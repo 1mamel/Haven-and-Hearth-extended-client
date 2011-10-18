@@ -44,7 +44,7 @@ public class CustomConfig {
     private boolean showNames;
     private boolean showOtherNames;
 
-    private String GoogleTranslateApiKey;
+    private String MSTranslateApiKey;
 
     public static int getNextCustomWidgetId() {
         return customWidgetIdGenerator.decrementAndGet();
@@ -620,11 +620,11 @@ public class CustomConfig {
     }
 
 
-    public static String getGoogleTranslateApiKey() {
-        return ourConfig.GoogleTranslateApiKey;
+    public static String getMSTranslateApiKey() {
+        return ourConfig.MSTranslateApiKey;
     }
 
-    public static void setGoogleTranslateApiKey(String googleTranslateApiKey) {
-        ourConfig.GoogleTranslateApiKey = googleTranslateApiKey;
+    public static void setMSTranslateApiKey(String apiKey) {
+        ourConfig.MSTranslateApiKey = apiKey;
     }
 }

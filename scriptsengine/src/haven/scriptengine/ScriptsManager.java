@@ -8,6 +8,8 @@ package haven.scriptengine;
  */
 
 import haven.CustomConfig;
+import haven.IMeter;
+import haven.ProgressBar;
 import haven.scriptengine.providers.Config;
 import haven.scriptengine.providers.Player;
 import haven.scriptengine.providers.UIProvider;
@@ -195,5 +197,11 @@ public class ScriptsManager {
         })) {
             exec("import " + file);
         }
+    }
+
+    public static void initSystem() {
+        final Player player = new Player();
+        IMeter.subscribe(player);
+        ProgressBar.subscribe(player);
     }
 }

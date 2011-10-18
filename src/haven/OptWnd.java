@@ -26,6 +26,9 @@
 
 package haven;
 
+import com.memetix.mst.language.Language;
+import org.jetbrains.annotations.Nullable;
+
 import java.awt.font.TextAttribute;
 import java.util.*;
 
@@ -559,25 +562,26 @@ public class OptWnd extends Window {
 
             new Label(new Coord(150, 35), tab, "Target Language:");
 
-            final RadioGroup langs = new RadioGroup(tab) {
-                public void changed(final int btn, final String lbl) {
-                    Config.translator.useLanguage(lbl);
+            final ScrollableListArea<Language> langs = new ScrollableListArea<Language>(new Coord(150, 45), new Coord(100, 120), tab, Config.translator.getAvailableLanguages()) {
+                @Override
+                public void changed(@Nullable final Option<Language> changed) {
+                    if (changed != null && changed.getStoredObject() != null) {
+                        Config.translator.useLanguage(changed.getStoredObject());
+                    }
                 }
             };
-            langs.add("en", new Coord(150, 45));
-            langs.add("ru", new Coord(150, 70));
-            langs.check(Config.translator.getLanguage());
+            langs.checkByValue(Config.translator.getLanguage());
 
-            new Label(new Coord(25, 125), tab, "Google API Key:");
+            new Label(new Coord(25, 125), tab, "Microsoft Translator API Key:");
             final TextEntry te = new TextEntry(new Coord(25, 150), new Coord(300, 20), tab, Config.translator.getKey());
             new Button(new Coord(330, 150), 50, tab, "set") {
                 public void click() {
                     Config.translator.useKey(te.text);
-                    CustomConfig.setGoogleTranslateApiKey(te.text);
+                    CustomConfig.setMSTranslateApiKey(te.text);
                 }
             };
 
-            new Label(new Coord(100, 190), tab, "Powered by Google Translate");
+            new Label(new Coord(100, 190), tab, "Powered by Microsoft Translator REST API");
         }
 
         new Frame(new Coord(-10, 20), new Coord(420, 330), this);
@@ -594,7 +598,7 @@ public class OptWnd extends Window {
         CustomConfig.setIrcDefNick(defNick.text);
         CustomConfig.setIrcAltNick(altNick.text);
         final String[] channelData = Utils.whitespacePattern.split(channelList.text);
-        List<Listbox.Option> ircChannelList = CustomConfig.getIrcChannelList();
+        final List<Listbox.Option> ircChannelList = CustomConfig.getIrcChannelList();
         ircChannelList.clear();
         for (int i = 0; i < channelData.length; i++) {
             channelData[i] = channelData[i].trim();
@@ -623,9 +627,7 @@ public class OptWnd extends Window {
 //noinspection UnusedAssignment
             channel = null;
         }
-//        if (CustomConfig.isSaveable()) {
-            CustomConfig.save();
-//        }
+        CustomConfig.save();
     }
 
     private void setcamera(final String camtype) {
@@ -652,10 +654,6 @@ public class OptWnd extends Window {
         camargs.put(camtype, args);
         if (args.length > 0 && curcam.equals(camtype))
             Utils.setprefb("camargs", Utils.serialize(args));
-    }
-
-    private static int getsfxvol() {
-        return ((int) (100 - Double.parseDouble(Utils.getpref("sfxvol", "1.0")) * 100));
     }
 
     private void addinfo(final String camtype, final String title, final String text, final Tabs.Tab args) {

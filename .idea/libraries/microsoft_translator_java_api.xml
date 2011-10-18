@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="microsoft-translator-java-api">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/microsoft-translator-java-api-0.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/json-simple.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/junit-4.8.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
