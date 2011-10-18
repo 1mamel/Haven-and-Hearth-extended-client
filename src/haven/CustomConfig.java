@@ -391,11 +391,16 @@ public class CustomConfig {
     }
 
     public static boolean save() {
-        return CustomConfigProcessor.saveConfig();
+        return CustomConfigProcessor.saveConfig(ourConfig);
     }
 
     public static boolean load() {
-        return CustomConfigProcessor.loadConfig();
+        final CustomConfig config = CustomConfigProcessor.loadConfig();
+        if (config == null) {
+            return false;
+        }
+        setConfig(config);
+        return true;
     }
 
     public static boolean isShowRadius() {

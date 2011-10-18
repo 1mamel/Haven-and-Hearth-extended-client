@@ -6,6 +6,7 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 
@@ -22,7 +23,8 @@ public class CustomConfigProcessor {
 
     protected static final Logger LOG = Logger.getLogger(CustomConfigProcessor.class);
 
-    public static boolean loadConfig() {
+    @Nullable
+    public static CustomConfig loadConfig() {
         Reader reader = null;
         try {
             final Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -41,8 +43,7 @@ public class CustomConfigProcessor {
             }
             final CustomConfig config = gson.fromJson(reader, CustomConfig.class);
             checkAndFixConfig(config);
-            CustomConfig.setConfig(config);
-            return true;
+            return config;
         } catch (FileNotFoundException e) {
             LOG.warn("Cannot load config: config file not found", e);
         } catch (JsonIOException e) {
@@ -57,14 +58,13 @@ public class CustomConfigProcessor {
             } catch (IOException ignored) {
             }
         }
-        return false;
+        return null;
     }
 
-    public static boolean saveConfig() {
+    public static boolean saveConfig(@NotNull final CustomConfig config) {
         Writer writer = null;
         try {
             final Gson gson = new Gson();
-            final CustomConfig config = CustomConfig.getConfig();
             checkAndFixConfig(config);
             final String json = gson.toJson(config);
 
