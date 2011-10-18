@@ -128,102 +128,102 @@ public class OptWnd extends Window {
 
             new CheckBox(new Coord(10, 130), tab, "Use new minimap (restart required)") {
                 public void changed(final boolean val) {
-                    Config.new_minimap = val;
-                    Config.saveOptions();
+                    CustomConfig.setNew_minimap(val);
+                    CustomConfig.save();
                 }
 
                 {
-                    a = Config.new_minimap;
+                    a = CustomConfig.isNew_minimap();
                 }
             };
 
             new CheckBox(new Coord(10, 165), tab, "Use new chat (restart required)") {
                 public void changed(final boolean val) {
-                    Config.new_chat = val;
-                    Config.saveOptions();
+                    CustomConfig.setNew_chat(val);
+                    CustomConfig.save();
                 }
 
                 {
-                    a = Config.new_chat;
+                    a = CustomConfig.isNew_chat();
                 }
             };
 
             (new CheckBox(new Coord(10, 200), tab, "Add timestamp in chat") {
                 public void changed(final boolean val) {
-                    Config.timestamp = val;
-                    Config.saveOptions();
+                    CustomConfig.setAddChatTimestamp(val);
+                    CustomConfig.save();
                 }
-            }).a = Config.timestamp;
+            }).a = CustomConfig.isAddChatTimestamp();
 
             (new CheckBox(new Coord(10, 235), tab, "Show dowsing direcion") {
                 public void changed(final boolean val) {
-                    Config.showDirection = val;
-                    Config.saveOptions();
+                    CustomConfig.setShowDirection(val);
+                    CustomConfig.save();
                 }
-            }).a = Config.showDirection;
+            }).a = CustomConfig.isShowDirection();
 
             (new CheckBox(new Coord(10, 270), tab, "Always show heartling names") {
                 public void changed(final boolean val) {
-                    Config.showNames = val;
-                    Config.saveOptions();
+                    CustomConfig.setShowNames(val);
+                    CustomConfig.save();
                 }
-            }).a = Config.showNames;
+            }).a = CustomConfig.isShowNames();
 
             (new CheckBox(new Coord(10, 305), tab, "Always show other kin names") {
                 public void changed(final boolean val) {
-                    Config.showOtherNames = val;
-                    Config.saveOptions();
+                    CustomConfig.setShowOtherNames(val);
+                    CustomConfig.save();
                 }
-            }).a = Config.showOtherNames;
+            }).a = CustomConfig.isShowOtherNames();
 
             (new CheckBox(new Coord(10, 340), tab, "Show smileys in chat") {
                 public void changed(final boolean val) {
-                    Config.use_smileys = val;
-                    Config.saveOptions();
+                    CustomConfig.setUse_smileys(val);
+                    CustomConfig.save();
                 }
-            }).a = Config.use_smileys;
+            }).a = CustomConfig.isUse_smileys();
 
             (new CheckBox(new Coord(10, 375), tab, "Show item quality") {
                 public void changed(final boolean val) {
-                    Config.showq = val;
-                    Config.saveOptions();
+                    CustomConfig.setShowq(val);
+                    CustomConfig.save();
                 }
-            }).a = Config.showq;
+            }).a = CustomConfig.isShowq();
 
             (new CheckBox(new Coord(220, 130), tab, "Fast menu") {
                 public void changed(final boolean val) {
-                    Config.fastFlowerAnim = val;
-                    Config.saveOptions();
+                    CustomConfig.setFastFlowerAnim(val);
+                    CustomConfig.save();
                 }
-            }).a = Config.fastFlowerAnim;
+            }).a = CustomConfig.isFastFlowerAnim();
 
             (new CheckBox(new Coord(220, 165), tab, "Compress screenshots") {
                 public void changed(final boolean val) {
-                    Config.sshot_compress = val;
-                    Config.saveOptions();
+                    CustomConfig.setSshot_compress(val);
+                    CustomConfig.save();
                 }
-            }).a = Config.sshot_compress;
+            }).a = CustomConfig.isSshot_compress();
 
             (new CheckBox(new Coord(220, 200), tab, "Exclude UI from screenshot") {
                 public void changed(final boolean val) {
-                    Config.sshot_noui = val;
-                    Config.saveOptions();
+                    CustomConfig.setSshot_noui(val);
+                    CustomConfig.save();
                 }
-            }).a = Config.sshot_noui;
+            }).a = CustomConfig.isSshot_noui();
 
             (new CheckBox(new Coord(220, 235), tab, "Exclude names from screenshot") {
                 public void changed(final boolean val) {
-                    Config.sshot_nonames = val;
-                    Config.saveOptions();
+                    CustomConfig.setSshot_nonames(val);
+                    CustomConfig.save();
                 }
-            }).a = Config.sshot_nonames;
+            }).a = CustomConfig.isSshot_nonames();
 
             (new CheckBox(new Coord(220, 270), tab, "Use optimized claim higlighting") {
                 public void changed(final boolean val) {
-                    Config.newclaim = val;
-                    Config.saveOptions();
+                    CustomConfig.setNewclaim(val);
+                    CustomConfig.save();
                 }
-            }).a = Config.newclaim;
+            }).a = CustomConfig.isNewclaim();
 
 //        (new CheckBox(new Coord(220, 305), tab, "Show digit toolbar") {
 //        public void changed(boolean val) {
@@ -357,16 +357,16 @@ public class OptWnd extends Window {
             cameras.check(caminfomap.containsKey(curcam) ? caminfomap.get(curcam).name : curcam);
             (new CheckBox(new Coord(50, 270), tab, "Allow zooming with mouse wheel") {
                 public void changed(final boolean val) {
-                    Config.zoom = val;
-                    Config.saveOptions();
+                    CustomConfig.setZoom(val);
+                    CustomConfig.save();
                 }
-            }).a = Config.zoom;
+            }).a = CustomConfig.isZoom();
             (new CheckBox(new Coord(50, 300), tab, "Disable camera borders") {
                 public void changed(final boolean val) {
-                    Config.noborders = val;
-                    Config.saveOptions();
+                    CustomConfig.setNoborders(val);
+                    CustomConfig.save();
                 }
-            }).a = Config.noborders;
+            }).a = CustomConfig.isNoborders();
         }
         { /* AUDIO TAB */
             tab = body.new Tab(new Coord(140, 0), 60, "Audio");
@@ -505,15 +505,15 @@ public class OptWnd extends Window {
 
                     public void changed(final boolean val) {
                         if (val) {
-                            Config.hideObjectList.add(checkbox[1]);
+                            CustomConfig.getHidingObjects().add(checkbox[1]);
                         } else {
-                            Config.hideObjectList.remove(checkbox[1]);
+                            CustomConfig.getHidingObjects().remove(checkbox[1]);
                         }
-                        Config.saveOptions();
+                        CustomConfig.save();
                     }
 
                     {
-                        a = Config.hideObjectList.contains(checkbox[1]);
+                        a = CustomConfig.getHidingObjects().contains(checkbox[1]);
                     }
                 };
             }
@@ -521,7 +521,7 @@ public class OptWnd extends Window {
             new CheckBox(new Coord(150, y += 30), tab, "Hiding enabled") {
                 public void changed(final boolean val) {
                     CustomConfig.setHideObjects(val);
-                    Config.saveOptions();
+                    CustomConfig.save();
                 }
 
                 {
@@ -531,7 +531,7 @@ public class OptWnd extends Window {
             new CheckBox(new Coord(150, y += 30), tab, "XRay enabled") {
                 public void changed(final boolean val) {
                     CustomConfig.setXray(val);
-                    Config.saveOptions();
+                    CustomConfig.save();
                 }
 
                 {
@@ -544,7 +544,7 @@ public class OptWnd extends Window {
                 }
 
                 {
-                    a = CustomConfig.isHasNightVision();
+                    a = CustomConfig.isNightVision();
                 }
             };
         }
@@ -573,7 +573,7 @@ public class OptWnd extends Window {
             new Button(new Coord(330, 150), 50, tab, "set") {
                 public void click() {
                     Config.translator.useKey(te.text);
-                    Config.saveOptions();
+                    CustomConfig.setGoogleTranslateApiKey(te.text);
                 }
             };
 

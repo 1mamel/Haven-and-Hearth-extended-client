@@ -31,7 +31,6 @@ import ender.GoogleTranslator;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
@@ -53,35 +52,9 @@ public class Config {
     public static String resdir;
     public static boolean nopreload;
     public static String loadwaited, allused;
-    public static boolean grid;
-    public static boolean timestamp;
-    public static boolean new_chat;
-    public static boolean highlight = false;
-    public static boolean use_smileys;
-    public static boolean zoom;
-    public static boolean noborders;
-    public static boolean new_minimap;
-    public static boolean simple_plants = false;
-    public static HashSet<String> hideObjectList;
     public static Map<Pattern, String> smileys = new ConcurrentHashMap<Pattern, String>();
     public static String currentCharName;
-    public static Properties options, window_props;
-    public static int sfxVol;
-    public static int musicVol;
-    public static boolean isMusicOn = false;
-    public static boolean isSoundOn = false;
-    public static boolean showRadius = false;
-    public static boolean showHidden = false;
-    public static boolean showBeast = false;
-    public static boolean showDirection;
-    public static boolean showNames;
-    public static boolean showOtherNames;
-    public static boolean fastFlowerAnim;
-    public static boolean sshot_compress;
-    public static boolean sshot_noui;
-    public static boolean sshot_nonames;
-    public static boolean newclaim;
-    public static boolean showq;
+    public static Properties options;
     public static GoogleTranslator translator = new GoogleTranslator();
 
     public static boolean quick_login = false; // быстрый логин дефолт чаром
@@ -95,36 +68,29 @@ public class Config {
     static {
         try {
             String p;
-            if ((p = getprop("haven.authck", null)) != null)
+            if ((p = getprop("haven.authck")) != null)
                 authck = Utils.hex2byte(p);
-            authuser = getprop("haven.authuser", null);
-            authserv = getprop("haven.authserv", null);
-            defaultServer = getprop("haven.defserv", null);
+            authuser = getprop("haven.authuser");
+            authserv = getprop("haven.authserv");
+            defaultServer = getprop("haven.defserv");
             if ((p = getprop("haven.resurl", "https://www.havenandhearth.com/res/")).length() != 0)
                 resurl = new URL(p);
             if (!(p = getprop("haven.mapurl", "http://www.havenandhearth.com/mm/")).isEmpty())
                 mapurl = new URL(p);
             fullscreen = getprop("haven.fullscreen", "off").equals("on");
-            loadwaited = getprop("haven.loadwaited", null);
-            allused = getprop("haven.allused", null);
+            loadwaited = getprop("haven.loadwaited");
+            allused = getprop("haven.allused");
             dbtext = getprop("haven.dbtext", "off").equals("on");
             bounddb = getprop("haven.bounddb", "off").equals("on");
             profile = getprop("haven.profile", "off").equals("on");
             nolocalres = getprop("haven.nolocalres", "").equals("yesimsure");
-            resdir = getprop("haven.resdir", null);
+            resdir = getprop("haven.resdir");
             nopreload = getprop("haven.nopreload", "no").equals("yes");
-            grid = false;
-            timestamp = false;
-            zoom = false;
-            new_minimap = true;
             translator.useLanguage("en");
             translator.stop();
             currentCharName = "";
             options = new Properties();
-            window_props = new Properties();
-            hideObjectList = new HashSet<String>();
             loadOptions();
-            loadWindowOptions();
             loadSmileys();
         } catch (MalformedURLException e) {
             throw (new RuntimeException(e));
@@ -203,14 +169,6 @@ public class Config {
             defaultServer = opt.rest[0];
     }
 
-    public static double getSFXVolume() {
-        return (double) sfxVol / 100;
-    }
-
-    public static int getMusicVolume() {
-        return isMusicOn ? musicVol : 0;
-    }
-
     private static void loadSmileys() {
         smileys.clear();
         try {
@@ -234,125 +192,8 @@ public class Config {
 
     }
 
-    private static void loadWindowOptions() {
-        final File inputFile = new File("windows.conf");
-        if (!inputFile.exists()) {
-            return;
-        }
-        try {
-            window_props.load(new FileInputStream(inputFile));
-        } catch (IOException e) {
-            System.out.println(e);
-        }
-    }
-
     private static void loadOptions() {
-        final File inputFile = new File("haven.conf");
-        if (!inputFile.exists()) {
-            return;
-        }
-        try {
-            options.load(new FileInputStream(inputFile));
-        } catch (IOException e) {
-            System.out.println(e);
-        }
-        final String hideObjects = options.getProperty("hideObjects", "");
-        translator.useKey(options.getProperty("GoogleAPIKey", null));
-        zoom = options.getProperty("zoom", "false").equals("true");
-        noborders = options.getProperty("noborders", "false").equals("true");
-        new_minimap = options.getProperty("new_minimap", "true").equals("true");
-        new_chat = options.getProperty("new_chat", "true").equals("true");
-        use_smileys = options.getProperty("use_smileys", "true").equals("true");
-        isMusicOn = options.getProperty("music_on", "true").equals("true");
-        isSoundOn = options.getProperty("sound_on", "true").equals("true");
-        showDirection = options.getProperty("show_direction", "true").equals("true");
-        showNames = options.getProperty("showNames", "true").equals("true");
-        showOtherNames = options.getProperty("showOtherNames", "false").equals("true");
-        showBeast = options.getProperty("showBeast", "false").equals("true");
-        showRadius = options.getProperty("showRadius", "false").equals("true");
-        showHidden = options.getProperty("showHidden", "false").equals("true");
-        simple_plants = options.getProperty("simple_plants", "false").equals("true");
-        fastFlowerAnim = options.getProperty("fastFlowerAnim", "false").equals("true");
-        sshot_compress = options.getProperty("sshot_compress", "false").equals("true");
-        sshot_noui = options.getProperty("sshot_noui", "false").equals("true");
-        sshot_nonames = options.getProperty("sshot_nonames", "false").equals("true");
-        newclaim = options.getProperty("newclaim", "true").equals("true");
-        showq = options.getProperty("showq", "true").equals("true");
-        sfxVol = Integer.parseInt(options.getProperty("sfx_vol", "100"));
-        musicVol = Integer.parseInt(options.getProperty("music_vol", "100"));
-        hideObjectList.clear();
-        if (!hideObjects.isEmpty()) {
-            for (final String objectName : Utils.commaPattern.split(hideObjects)) {
-                if (!objectName.isEmpty()) {
-                    hideObjectList.add(objectName);
-                }
-            }
-        }
-        timestamp = options.getProperty("timestamp", "false").equals("true");
+        translator.useKey(CustomConfig.getGoogleTranslateApiKey());
     }
 
-    public static synchronized void setWindowOpt(final String key, final String value) {
-        synchronized (window_props) {
-            final String prev_val = window_props.getProperty(key);
-            if ((prev_val != null) && prev_val.equals(value))
-                return;
-            window_props.setProperty(key, value);
-        }
-        saveWindowOpt();
-    }
-
-    public static synchronized void setWindowOpt(final String key, final Boolean value) {
-        setWindowOpt(key, value ? "true" : "false");
-    }
-
-    public static void saveWindowOpt() {
-        synchronized (window_props) {
-            try {
-                window_props.store(new FileOutputStream("windows.conf"), "Window config options");
-            } catch (IOException e) {
-                System.out.println(e);
-            }
-        }
-    }
-
-    public static void saveOptions() {
-        try {
-            final StringBuilder hideObjects = new StringBuilder();
-            for (final String objectName : hideObjectList) {
-                hideObjects.append(objectName).append(',');
-            }
-            options.setProperty("hideObjects", hideObjects.toString());
-            options.setProperty("GoogleAPIKey", translator.getKey());
-            options.setProperty("timestamp", (timestamp) ? "true" : "false");
-            options.setProperty("zoom", zoom ? "true" : "false");
-            options.setProperty("noborders", noborders ? "true" : "false");
-            options.setProperty("new_minimap", new_minimap ? "true" : "false");
-            options.setProperty("new_chat", new_chat ? "true" : "false");
-            options.setProperty("use_smileys", use_smileys ? "true" : "false");
-            options.setProperty("sfx_vol", String.valueOf(sfxVol));
-            options.setProperty("music_vol", String.valueOf(musicVol));
-            options.setProperty("music_on", isMusicOn ? "true" : "false");
-            options.setProperty("sound_on", isSoundOn ? "true" : "false");
-            options.setProperty("show_direction", showDirection ? "true" : "false");
-            options.setProperty("showNames", showNames ? "true" : "false");
-            options.setProperty("showBeast", showBeast ? "true" : "false");
-            options.setProperty("showRadius", showRadius ? "true" : "false");
-            options.setProperty("showHidden", showHidden ? "true" : "false");
-            options.setProperty("simple_plants", simple_plants ? "true" : "false");
-            options.setProperty("fastFlowerAnim", fastFlowerAnim ? "true" : "false");
-            options.setProperty("sshot_compress", sshot_compress ? "true" : "false");
-            options.setProperty("sshot_noui", sshot_noui ? "true" : "false");
-            options.setProperty("sshot_nonames", sshot_nonames ? "true" : "false");
-            options.setProperty("newclaim", newclaim ? "true" : "false");
-            options.setProperty("showq", showq ? "true" : "false");
-
-            try {
-                options.store(new FileOutputStream("haven.conf"), "Custom config options");
-            } catch (IOException e) {
-                System.out.println(e);
-            }
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
-    }
 }

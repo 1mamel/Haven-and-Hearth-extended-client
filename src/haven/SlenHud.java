@@ -83,7 +83,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
                 return (new SlenHud(c, parent));
             }
         });
-        if (Config.new_minimap) {
+        if (CustomConfig.isNew_minimap()) {
             bg = Resource.loadtex("gfx/hud/slen/low2");
         } else {
             bg = Resource.loadtex("gfx/hud/slen/low");
@@ -183,14 +183,14 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
     public SlenHud(final Coord c, final Widget parent) {
         super(new Coord(CustomConfig.getWindowCenter().x - sz.x / 2, CustomConfig.getWindowHeight() - sz.y), sz, parent);
         ui.slen = this;
-        if (Config.new_chat)
+        if (CustomConfig.isNew_chat())
             new ChatHWPanel(new Coord(0, CustomConfig.getWindowHeight() - 300), new Coord(350, 300), ui.root);
         else
             ChatHWPanel.instance = this;
         dy = -sz.y;
         //new Img(fc, flarps, this);
         new Img(mc, mbg, this);
-        if (!Config.new_minimap)
+        if (!CustomConfig.isNew_minimap())
             new Img(dispc, dispbg, this);
 
         //	Hide button
@@ -208,7 +208,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
         //	Kin list button
         budb = new IButton(mc, this, Resource.loadimg("gfx/hud/slen/budu"), Resource.loadimg("gfx/hud/slen/budd"));
         optb = new IButton(mc, this, Resource.loadimg("gfx/hud/slen/optu"), Resource.loadimg("gfx/hud/slen/optd"));
-        if (!Config.new_minimap) {
+        if (!CustomConfig.isNew_minimap()) {
             {
                 new IButton(dispc, this, Resource.loadimg("gfx/hud/slen/dispauth"), Resource.loadimg("gfx/hud/slen/dispauthd")) {
                     private boolean v = false;

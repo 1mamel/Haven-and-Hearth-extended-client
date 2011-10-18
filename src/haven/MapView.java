@@ -96,7 +96,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
     // arksu ------------------------------------------------------------------
 
     public double getScale() {
-        return Config.zoom ? _scale : 1;
+        return CustomConfig.isZoom() ? _scale : 1;
     }
 
     public void setScale(final double value) {
@@ -161,7 +161,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
         }
 
         public static void borderize(final MapView mv, final Gob player, final Coord sz, final Coord border) {
-            if (Config.noborders) {
+            if (CustomConfig.isNoborders()) {
                 return;
             }
             Coord mc = mv.mc;
@@ -709,7 +709,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
     }
 
     public boolean mousewheel(final Coord c, final int amount) {
-        if (!Config.zoom)
+        if (!CustomConfig.isZoom())
             return false;
         si = Math.min(8, Math.max(0, si - amount));
         setScale(scales[si]);
@@ -1126,7 +1126,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
                     sc.x -= tilesz.x * 2;
                     drawtile(g, ctc, sc);
                     sc.x += tilesz.x * 2;
-                    if (!Config.newclaim) {
+                    if (!CustomConfig.isNewclaim()) {
                         drawol(g, ctc, sc);
                     }
                     // arksu : выводим тайл под мышью
@@ -1138,10 +1138,10 @@ public class MapView extends Widget implements DTarget, Console.Directory {
             }
         }
 
-        if (Config.newclaim) {
+        if (CustomConfig.isNewclaim()) {
             drawols(g, oc);
         }
-        if (Config.grid) {
+        if (CustomConfig.isGrid()) {
             g.chcolor(new Color(40, 40, 40));
             Coord c1;
             Coord c2;
@@ -1169,12 +1169,12 @@ public class MapView extends Widget implements DTarget, Console.Directory {
         if (curf != null)
             curf.tick("map");
 
-        if (Config.showRadius)
+        if (CustomConfig.isShowRadius())
             draweffectradius(g);
         else
             drawplobeffect(g);
 
-        if (Config.showBeast) {
+        if (CustomConfig.isShowBeast()) {
             drawbeastradius(g);
         }
 
@@ -1216,7 +1216,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
             }
         }
 
-        if (Config.showHidden && CustomConfig.isHideObjects()) {
+        if (CustomConfig.isShowHidden() && CustomConfig.isHideObjects()) {
             g.chcolor(255, 0, 0, 128);
             synchronized (glob.oc) {
                 for (final Gob gob : glob.oc) {
@@ -1347,7 +1347,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
                 curf.tick("draw");
             g.image(mask, Coord.z);
             final long now = System.currentTimeMillis();
-            RootWidget.names_ready = (RootWidget.screenshot && Config.sshot_nonames);
+            RootWidget.names_ready = (RootWidget.screenshot && CustomConfig.isSshot_nonames());
             if (!RootWidget.names_ready) {
                 for (final KinInfo k : kin) {
                     final Tex t = k.rendered();
@@ -1489,7 +1489,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
         map.sendreqs();
         checkplmove();
 //        try {
-        if ((mask.amb = glob.amblight) == null || CustomConfig.isHasNightVision())
+        if ((mask.amb = glob.amblight) == null || CustomConfig.isNightVision())
             mask.amb = new Color(0, 0, 0, 0);
         drawmap(g);
         drawarrows(g);

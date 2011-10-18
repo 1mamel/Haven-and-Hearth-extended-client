@@ -26,6 +26,9 @@
 
 package haven;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -197,11 +200,21 @@ public class Utils {
         }
     }
 
-    public static String getprop(final String propname, final String def) {
+    @NotNull
+    public static String getprop(@NotNull final String propname, @NotNull final String def) {
         try {
-            return (System.getProperty(propname, def));
+            return System.getProperty(propname, def);
         } catch (SecurityException e) {
-            return (def);
+            return def;
+        }
+    }
+
+    @Nullable
+    public static String getprop(@NotNull final String propname) {
+        try {
+            return System.getProperty(propname, null);
+        } catch (SecurityException e) {
+            return null;
         }
     }
 

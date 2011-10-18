@@ -175,7 +175,7 @@ public class Gob implements Sprite.Owner {
             }
         }
         if (CustomConfig.isHideObjects()) {
-            for (final String objectName : Config.hideObjectList) {
+            for (final String objectName : CustomConfig.getHidingObjects()) {
                 if (resourceName.contains(objectName) && (!resourceName.contains("door"))) {
                     hide = true;
                 }
@@ -197,7 +197,7 @@ public class Gob implements Sprite.Owner {
             }
         } else {
             final Layered ld = getattr(Layered.class);
-            if ((ld != null) && (ld.layers.size() > 0)) {
+            if ((ld != null) && (!ld.layers.isEmpty())) {
                 res = ld.layers.get(0).get();
                 if (res != null)
                     name = res.name;

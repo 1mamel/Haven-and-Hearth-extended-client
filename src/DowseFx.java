@@ -17,7 +17,7 @@ public class DowseFx extends FreeSprite {
         final int a0 = (a1 + a2) / 2;
         final int d = Math.max(Math.abs(a1 - a2) % 360, 5);
         a2 = a1 + d;
-        if (Config.showDirection) {
+        if (CustomConfig.isShowDirection()) {
             new TrackingWnd(a0 + 270, d, a1, a2);
         }
     }

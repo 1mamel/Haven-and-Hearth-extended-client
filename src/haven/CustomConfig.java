@@ -7,28 +7,58 @@
 
 package haven;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class CustomConfig {
 
     private static final AtomicInteger customWidgetIdGenerator = new AtomicInteger(-10); // for Userspace widgets
+    private boolean sshot_compress;
+    private boolean sshot_noui;
+    private boolean sshot_nonames;
+    private boolean fastFlowerAnim;
+    private boolean newclaim;
+    private boolean showq;
+    private boolean grid;
+    private boolean addChatTimestamp;
+    private boolean new_chat;
+    private boolean highlight;
+    private boolean use_smileys;
+    private boolean zoom;
+    private boolean noborders;
+    private boolean new_minimap = true;
+    private boolean simple_plants;
+
+    private final Set<String> hidingObjects = new HashSet<String>();
+
+    // View
+    private boolean showRadius;
+    private boolean showHidden;
+    private boolean showBeast;
+    private boolean showDirection;
+    private boolean showNames;
+    private boolean showOtherNames;
+
+    private String GoogleTranslateApiKey;
 
     public static int getNextCustomWidgetId() {
         return customWidgetIdGenerator.decrementAndGet();
     }
 
     // Config
-    private boolean isSaveable = false;
+    private boolean isSaveable;
 
     // View
-    private boolean xray = false;
-    private boolean hideObjects = false;
-    private boolean highlightObjectAtMouse = false;
+    private boolean xray;
+    private boolean hideObjects;
+    private boolean highlightObjectAtMouse;
     private boolean render = true;
-    private boolean hasNightVision = false;
+    private boolean hasNightVision;
 
     // IRC
     private String ircServerAddress = "irc.synirc.net";
@@ -45,10 +75,13 @@ public class CustomConfig {
     private boolean isSoundOn = true;
 
     // Logging
-    private boolean logLoad = false;
-    private boolean logSave = false;
-    private boolean logIRC = false;
-    private boolean logServerMessages = false;
+    private boolean logLoad;
+    private boolean logSave;
+    private boolean logIRC;
+    private boolean logServerMessages;
+
+    // Other config
+    private final Map<String, String> windowProperties = new HashMap<String, String>();
 
 
     Coord windowSize;
@@ -60,7 +93,7 @@ public class CustomConfig {
 
 
     // Belts
-    private static CharData activeCharacter;
+    private transient CharData activeCharacter;
     private List<CharData> characterList = new ArrayList<CharData>();
     private boolean noChars = true;
 
@@ -214,7 +247,7 @@ public class CustomConfig {
         ourConfig.isIRCOn = IRCOn;
     }
 
-    public static boolean isHasNightVision() {
+    public static boolean isNightVision() {
         return ourConfig.hasNightVision;
     }
 
@@ -299,7 +332,7 @@ public class CustomConfig {
     }
 
     public static CharData getActiveCharacter() {
-        return activeCharacter;
+        return ourConfig.activeCharacter;
     }
 
     public static void toggleNightvision() {
@@ -315,7 +348,7 @@ public class CustomConfig {
     }
 
     public static void toggleMapGrid() {
-        Config.grid = !Config.grid;
+        setGrid(!isGrid());
     }
 
     public static void toggleConsole() {
@@ -325,6 +358,216 @@ public class CustomConfig {
             UI.console.toggle();
             UI.console.raise();
         }
+    }
+
+    public static int getMusicVolume() {
+        return isMusicOn() ? getMusicVol() : 0;
+    }
+
+    public static Map<String, String> getWindowProperties() {
+        return ourConfig.windowProperties;
+    }
+
+    @Nullable
+    public static String getWindowProperty(@NotNull final String key, @Nullable final String defValue) {
+        if (ourConfig.windowProperties.containsKey(key)) {
+            return ourConfig.windowProperties.get(key);
+        } else return defValue;
+    }
+
+    @Nullable
+    public static String getWindowProperty(@NotNull final String key) {
+        return ourConfig.windowProperties.get(key);
+    }
+
+    public static <T> void setWindowOpt(@NotNull final String key, @Nullable final T value) {
+        synchronized (getWindowProperties()) {
+            final String prev_val = getWindowProperties().get(key);
+            if ((prev_val != null) && prev_val.equals(value))
+                return;
+            getWindowProperties().put(key, String.valueOf(value));
+        }
+        save();
+    }
+
+    public static void save() {
+        CustomConfigProcessor.saveConfig();
+    }
+
+    private static void load() {
+        CustomConfigProcessor.loadConfig();
+    }
+
+    public static boolean isShowRadius() {
+        return ourConfig.showRadius;
+    }
+
+    public static void setShowRadius(final boolean showRadius) {
+        ourConfig.showRadius = showRadius;
+    }
+
+    public static boolean isShowHidden() {
+        return ourConfig.showHidden;
+    }
+
+    public static void setShowHidden(final boolean showHidden) {
+        ourConfig.showHidden = showHidden;
+    }
+
+    public static boolean isShowBeast() {
+        return ourConfig.showBeast;
+    }
+
+    public static void setShowBeast(final boolean showBeast) {
+        ourConfig.showBeast = showBeast;
+    }
+
+    public static boolean isShowDirection() {
+        return ourConfig.showDirection;
+    }
+
+    public static void setShowDirection(final boolean showDirection) {
+        ourConfig.showDirection = showDirection;
+    }
+
+    public static boolean isShowNames() {
+        return ourConfig.showNames;
+    }
+
+    public static void setShowNames(final boolean showNames) {
+        ourConfig.showNames = showNames;
+    }
+
+    public static boolean isShowOtherNames() {
+        return ourConfig.showOtherNames;
+    }
+
+    public static void setShowOtherNames(final boolean showOtherNames) {
+        ourConfig.showOtherNames = showOtherNames;
+    }
+
+    public static boolean isSshot_compress() {
+        return ourConfig.sshot_compress;
+    }
+
+    public static void setSshot_compress(final boolean sshot_compress) {
+        ourConfig.sshot_compress = sshot_compress;
+    }
+
+    public static boolean isSshot_noui() {
+        return ourConfig.sshot_noui;
+    }
+
+    public static void setSshot_noui(final boolean sshot_noui) {
+        ourConfig.sshot_noui = sshot_noui;
+    }
+
+    public static boolean isSshot_nonames() {
+        return ourConfig.sshot_nonames;
+    }
+
+    public static void setSshot_nonames(final boolean sshot_nonames) {
+        ourConfig.sshot_nonames = sshot_nonames;
+    }
+
+    public static boolean isFastFlowerAnim() {
+        return ourConfig.fastFlowerAnim;
+    }
+
+    public static void setFastFlowerAnim(final boolean fastFlowerAnim) {
+        ourConfig.fastFlowerAnim = fastFlowerAnim;
+    }
+
+    public static boolean isNewclaim() {
+        return ourConfig.newclaim;
+    }
+
+    public static void setNewclaim(final boolean newclaim) {
+        ourConfig.newclaim = newclaim;
+    }
+
+    public static boolean isShowq() {
+        return ourConfig.showq;
+    }
+
+    public static void setShowq(final boolean showq) {
+        ourConfig.showq = showq;
+    }
+
+    public static boolean isGrid() {
+        return ourConfig.grid;
+    }
+
+    public static void setGrid(final boolean grid) {
+        ourConfig.grid = grid;
+    }
+
+    public static boolean isAddChatTimestamp() {
+        return ourConfig.addChatTimestamp;
+    }
+
+    public static void setAddChatTimestamp(final boolean timestamp) {
+        ourConfig.addChatTimestamp = timestamp;
+    }
+
+    public static boolean isNew_chat() {
+        return ourConfig.new_chat;
+    }
+
+    public static void setNew_chat(final boolean new_chat) {
+        ourConfig.new_chat = new_chat;
+    }
+
+    public static boolean isHighlight() {
+        return ourConfig.highlight;
+    }
+
+    public static void setHighlight(final boolean highlight) {
+        ourConfig.highlight = highlight;
+    }
+
+    public static boolean isUse_smileys() {
+        return ourConfig.use_smileys;
+    }
+
+    public static void setUse_smileys(final boolean use_smileys) {
+        ourConfig.use_smileys = use_smileys;
+    }
+
+    public static boolean isZoom() {
+        return ourConfig.zoom;
+    }
+
+    public static void setZoom(final boolean zoom) {
+        ourConfig.zoom = zoom;
+    }
+
+    public static boolean isNoborders() {
+        return ourConfig.noborders;
+    }
+
+    public static void setNoborders(final boolean noborders) {
+        ourConfig.noborders = noborders;
+    }
+
+    public static boolean isNew_minimap() {
+        return ourConfig.new_minimap;
+    }
+
+    public static void setNew_minimap(final boolean new_minimap) {
+        ourConfig.new_minimap = new_minimap;
+    }
+
+    public static boolean isSimple_plants() {
+        return ourConfig.simple_plants;
+    }
+
+    public static void setSimple_plants(final boolean simple_plants) {
+        ourConfig.simple_plants = simple_plants;
+    }
+
+    public static Set<String> getHidingObjects() {
+        return ourConfig.hidingObjects;
     }
 
     static class CharData {
@@ -359,16 +602,24 @@ public class CustomConfig {
     public static void setActiveCharacter(final String name) {
         for (final CharData cData : ourConfig.characterList) {
             if (cData.name.equalsIgnoreCase(name)) {
-                activeCharacter = cData;
+                ourConfig.activeCharacter = cData;
                 setSaveable(true);
                 setNoChars(false);
                 return;
             }
         }
-        activeCharacter = new CharData(name);
-        ourConfig.characterList.add(activeCharacter);
+        ourConfig.activeCharacter = new CharData(name);
+        ourConfig.characterList.add(ourConfig.activeCharacter);
         setSaveable(true);
         setNoChars(false);
     }
 
+
+    public static String getGoogleTranslateApiKey() {
+        return ourConfig.GoogleTranslateApiKey;
+    }
+
+    public static void setGoogleTranslateApiKey(String googleTranslateApiKey) {
+        ourConfig.GoogleTranslateApiKey = googleTranslateApiKey;
+    }
 }

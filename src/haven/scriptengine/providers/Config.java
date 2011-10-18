@@ -58,7 +58,7 @@ public class Config {
     }
 
     public static boolean getNightvision() {
-        return CustomConfig.isHasNightVision();
+        return CustomConfig.isNightVision();
     }
 
     public static boolean getIrc() {

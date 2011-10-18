@@ -102,18 +102,18 @@ public class RootWidget extends ConsoleHost {
     }
 
     public void draw(final GOut g) {
-        if (screenshot && Config.sshot_noui) {
+        if (screenshot && CustomConfig.isSshot_noui()) {
             visible = false;
         }
         super.draw(g);
         drawcmd(g, new Coord(20, 580));
-        if (screenshot && (!Config.sshot_nonames || names_ready)) {
+        if (screenshot && (!CustomConfig.isSshot_nonames() || names_ready)) {
             visible = true;
             screenshot = false;
             try {
                 final Coord s = CustomConfig.getWindowSize();
                 final String stamp = Utils.sessdate(System.currentTimeMillis());
-                final String ext = Config.sshot_compress ? ".jpg" : ".png";
+                final String ext = CustomConfig.isSshot_compress() ? ".jpg" : ".png";
                 final File f = new File("screenshots/SS_" + stamp + ext);
                 f.mkdirs();
                 Screenshot.writeToFile(f, s.x, s.y);

@@ -149,7 +149,7 @@ public class Item extends Widget implements DTarget {
                 g.chcolor();
             }
             final int tq = (innerLiquidQuality > 0) ? innerLiquidQuality : quality;
-            if (Config.showq && (tq > 0)) {
+            if (CustomConfig.isShowq() && (tq > 0)) {
                 tex = getNumberTex(tq);
                 g.aimage(tex, sz.sub(1, 1), 1, 1);
             }

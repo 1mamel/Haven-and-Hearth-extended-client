@@ -83,7 +83,7 @@ public class ChatHW extends HWindow {
             if ((col != null) && (todarken.contains(col)))
                 col = col.darker();
             str = Config.translator.translate(str);
-            if (Config.timestamp)
+            if (CustomConfig.isAddChatTimestamp())
                 str = Utils.timestamp() + str;
             out.append(str, col);
         } else if (msg.equals("focusme")) {

@@ -111,7 +111,7 @@ public class Textlog extends Widget {
         }
 
         line = RichText.Parser.quote(line);
-        if (Config.use_smileys) {
+        if (CustomConfig.isUse_smileys()) {
             line = Config.mksmiley(line);
         }
         final int lineWidth = sz.x - ((margin * 2) + sflarp.sz().x);

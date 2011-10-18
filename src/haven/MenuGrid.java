@@ -298,40 +298,41 @@ public class MenuGrid extends Widget {
 
     private void usecustom(final String[] list) {
         if (list[1].equals("radius")) {
-            Config.showRadius = !Config.showRadius;
-            final String str = "Radius highlight is turned " + ((Config.showRadius) ? "ON" : "OFF");
+            CustomConfig.setShowRadius(!CustomConfig.isShowRadius());
+            final String str = "Radius highlight is turned " + ((CustomConfig.isShowRadius()) ? "ON" : "OFF");
             ui.cons.out.println(str);
             ui.slen.error(str);
-            Config.saveOptions();
+            CustomConfig.save();
         } else if (list[1].equals("hidden")) {
-            Config.showHidden = !Config.showHidden;
-            final String str = "Hidden object highlight is turned " + ((Config.showHidden) ? "ON" : "OFF");
+            CustomConfig.setShowHidden(!CustomConfig.isShowHidden());
+            final String str = "Hidden object highlight is turned " + ((CustomConfig.isShowHidden()) ? "ON" : "OFF");
             ui.cons.out.println(str);
             ui.slen.error(str);
-            Config.saveOptions();
+            CustomConfig.save();
         } else if (list[1].equals("hide")) {
             for (int i = 2; i < list.length; i++) {
                 final String item = list[i];
-                if (Config.hideObjectList.contains(item)) {
-                    Config.hideObjectList.remove(item);
+                Set<String> hidingObjects = CustomConfig.getHidingObjects();
+                if (hidingObjects.contains(item)) {
+                    hidingObjects.remove(item);
                 } else {
-                    Config.hideObjectList.add(item);
+                    hidingObjects.add(item);
                 }
             }
         } else if (list[1].equals("simple plants")) {
-            Config.simple_plants = !Config.simple_plants;
-            final String str = "Simplified plants is turned " + ((Config.simple_plants) ? "ON" : "OFF");
+            CustomConfig.setSimple_plants(!CustomConfig.isSimple_plants());
+            final String str = "Simplified plants is turned " + ((CustomConfig.isSimple_plants()) ? "ON" : "OFF");
             ui.cons.out.println(str);
             ui.slen.error(str);
-            Config.saveOptions();
+            CustomConfig.save();
         } else if (list[1].equals("timers")) {
             TimerPanel.toggleS();
         } else if (list[1].equals("animal")) {
-            Config.showBeast = !Config.showBeast;
-            final String str = "Animal highlight is turned " + ((Config.showBeast) ? "ON" : "OFF");
+            CustomConfig.setShowBeast(!CustomConfig.isShowBeast());
+            final String str = "Animal highlight is turned " + ((CustomConfig.isShowBeast()) ? "ON" : "OFF");
             ui.cons.out.println(str);
             ui.slen.error(str);
-            Config.saveOptions();
+            CustomConfig.save();
         } else if (list[1].equals("globalchat")) {
             ui.root.wdgmsg("gk", 3);
         } else if (list[1].equals("wiki")) {

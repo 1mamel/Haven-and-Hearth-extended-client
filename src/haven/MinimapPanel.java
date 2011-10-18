@@ -98,10 +98,10 @@ public class MinimapPanel extends Window {
         loadpos();
     }
 
-    private void loadpos(){
-        synchronized (Config.window_props) {
-            c = new Coord(Config.window_props.getProperty("minimap_pos", c.toString()));
-            mm.sz = new Coord(Config.window_props.getProperty("minimap_sz", mm.sz.toString()));
+    private void loadpos() {
+        synchronized (CustomConfig.getWindowProperties()) {
+            c = new Coord(CustomConfig.getWindowProperty("minimap_pos", c.toString()));
+            mm.sz = new Coord(CustomConfig.getWindowProperty("minimap_sz", mm.sz.toString()));
             pack();
         }
     }
@@ -136,13 +136,13 @@ public class MinimapPanel extends Window {
     }
 
     public boolean mouseup(final Coord c, final int button) {
-	if(dm){
-	    Config.setWindowOpt("minimap_pos", this.c.toString());
-	}
+        if (dm) {
+            CustomConfig.setWindowOpt("minimap_pos", this.c.toString());
+        }
         if (rsm) {
             ui.ungrabmouse();
             rsm = false;
-	    Config.setWindowOpt("minimap_sz", mm.sz.toString());
+            CustomConfig.setWindowOpt("minimap_sz", mm.sz.toString());
         } else {
             super.mouseup(c, button);
         }

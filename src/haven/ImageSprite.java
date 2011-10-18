@@ -58,7 +58,7 @@ public abstract class ImageSprite extends Sprite {
 
         public void draw(final GOut g) {
             if (UI.instance.mainview.onmouse != null && owner != null &&
-                    (Config.highlight || UI.instance.mainview.modeSelectObject.get())
+                    (CustomConfig.isHighlight() || UI.instance.mainview.modeSelectObject.get())
                     && ((Gob) owner).id == UI.instance.mainview.onmouse.id) {
                 g.image(img.tex(), sc().add(img.o));
                 drawol(g, java.awt.Color.green);
@@ -68,7 +68,7 @@ public abstract class ImageSprite extends Sprite {
                 drawol(g);
             } else {
                 g.image(img.tex(), sc().add(img.o));
-                if (Config.highlight) {
+                if (CustomConfig.isHighlight()) {
                     final Gob mg = UI.instance.mainview.onmouse;
                     final Gob og = (Gob) owner;
                     if ((mg != null) && (og != null) && (og.id == mg.id)) {
