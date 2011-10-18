@@ -24,7 +24,7 @@ public class Config {
 
     public static void setScreenSize(final int width, final int height) {
         CustomConfig.setWindowSize(Math.max(width, 800), Math.max(height, 600));
-        CustomConfigProcessor.saveConfig();
+        CustomConfig.save();
         CustomConsole.logger.warn("Client must be restarted for new settings to take effect.");
     }
 
@@ -49,12 +49,12 @@ public class Config {
     }
 
     public static void save() {
-        CustomConfigProcessor.saveConfig();
+        CustomConfig.save();
     }
 
     public static void forcesave() {
         CustomConfig.setSaveable(true);
-        CustomConfigProcessor.saveConfig();
+        CustomConfig.save();
     }
 
     public static boolean getNightvision() {

@@ -752,7 +752,7 @@ public class Session {
             IRC.close();
         }
         CustomConfig.setRender(true);
-        CustomConfigProcessor.saveConfig();
+        CustomConfig.save();
         sworker.interrupt();
     }
 

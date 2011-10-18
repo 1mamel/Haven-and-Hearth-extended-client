@@ -176,8 +176,9 @@ public class MainFrame extends Frame implements Runnable, FSMan {
     public void run() {
         addWindowListener(new WindowAdapter() {
             public void windowClosing(final WindowEvent e) {
-                if (CustomConfig.isSaveable()) CustomConfigProcessor.saveConfig();
-                CustomConfigProcessor.saveConfig();
+//                if (CustomConfig.isSaveable()){
+                    CustomConfig.save();
+//                }
                 g.interrupt();
             }
         });

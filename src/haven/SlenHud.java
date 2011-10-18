@@ -680,7 +680,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
                     belt[activeBelt][slot] = res;
                     CustomConfig.getActiveCharacter().hudBelt[activeBelt][slot] = belt[activeBelt][slot].name;
                     wdgmsg("setbelt", slot, res.name);
-                    if (ResCache.global != null) CustomConfigProcessor.saveConfig();
+                    if (ResCache.global != null) CustomConfig.save();
                     return (true);
                 }
             }

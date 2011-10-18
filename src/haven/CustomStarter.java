@@ -17,7 +17,7 @@ import java.awt.event.FocusListener;
  */
 public class CustomStarter {
     public static void main(final String args[]) {
-        if (!CustomConfigProcessor.loadConfig()) {
+        if (!CustomConfig.load()) {
             final JFrame configFrame = new JFrame("Screen Size");
             final Container contentPane = configFrame.getContentPane();
             final JPanel clientSettingsPanel = new JPanel(new GridBagLayout(), true);
@@ -247,7 +247,7 @@ public class CustomStarter {
     }
 
     public static void runGame(final String[] args) {
-        CustomConfigProcessor.saveConfig();
+        CustomConfig.save();
         MainFrame.main(args);
     }
 }

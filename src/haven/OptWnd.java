@@ -623,9 +623,9 @@ public class OptWnd extends Window {
 //noinspection UnusedAssignment
             channel = null;
         }
-        if (CustomConfig.isSaveable()) {
-            CustomConfigProcessor.saveConfig();
-        }
+//        if (CustomConfig.isSaveable()) {
+            CustomConfig.save();
+//        }
     }
 
     private void setcamera(final String camtype) {
