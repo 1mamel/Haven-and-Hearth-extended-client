@@ -82,7 +82,7 @@ public class ChatHW extends HWindow {
             String str = (String) args[0];
             if ((col != null) && (todarken.contains(col)))
                 col = col.darker();
-            str = Config.translator.translate(str);
+            str = CustomConfig.getTranslator().translate(str);
             if (CustomConfig.isAddChatTimestamp())
                 str = Utils.timestamp() + str;
             out.append(str, col);

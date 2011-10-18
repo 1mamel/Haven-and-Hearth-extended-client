@@ -82,9 +82,9 @@ public class OptWnd extends Window {
 
     @SuppressWarnings({"UnusedAssignment"})
     public OptWnd(final Coord c, final Widget parent) {
-        super(c, new Coord(400, 440), parent, "Options");
+        super(c, new Coord(450, 440), parent, "Options");
         UI.optionsWindow.set(this);
-        body = new Tabs(Coord.z, new Coord(400, 430), this) {
+        body = new Tabs(Coord.z, new Coord(450, 430), this) {
             public void changed(final Tab from, final Tab to) {
                 if (to != null) Utils.setpref("optwndtab", to.btn.getText());
                 if (from != null) from.btn.c.setY(0);
@@ -553,35 +553,33 @@ public class OptWnd extends Window {
         }
 
         { /* TRANSLATE OPTIONS TAB */
-            tab = body.new Tab(new Coord(300, 0), 80, "Translation");
-            (new CheckBox(new Coord(10, 30), tab, "Turn on") {
+            tab = body.new Tab(new Coord(370, 0), 80, "Translation");
+            (new CheckBox(new Coord(120, 30), tab, "Turn on") {
                 public void changed(final boolean val) {
-                    Config.translator.turn(val);
+                    CustomConfig.getTranslator().turn(val);
                 }
-            }).a = Config.translator.isWorking();
+            }).a = CustomConfig.getTranslator().isWorking();
 
-            new Label(new Coord(150, 35), tab, "Target Language:");
+            new Label(new Coord(10, 30), tab, "Target Language:");
 
-            final ScrollableListArea<Language> langs = new ScrollableListArea<Language>(new Coord(150, 45), new Coord(100, 120), tab, Config.translator.getAvailableLanguages()) {
+            new ScrollableListArea<Language>(new Coord(10, 50), new Coord(110, 250), tab, CustomConfig.getTranslator().getAvailableLanguages()) {
                 @Override
                 public void changed(@Nullable final Option<Language> changed) {
                     if (changed != null && changed.getStoredObject() != null) {
-                        Config.translator.useLanguage(changed.getStoredObject());
+                        CustomConfig.setTranslatorLanguage(changed.getStoredObject());
                     }
                 }
-            };
-            langs.checkByValue(Config.translator.getLanguage());
+            }.checkByValue(CustomConfig.getTranslatorLanguage());
 
-            new Label(new Coord(25, 125), tab, "Microsoft Translator API Key:");
-            final TextEntry te = new TextEntry(new Coord(25, 150), new Coord(300, 20), tab, Config.translator.getKey());
-            new Button(new Coord(330, 150), 50, tab, "set") {
+            new Label(new Coord(130, 125), tab, "Microsoft Translator API Key:");
+            final TextEntry te = new TextEntry(new Coord(130, 150), new Coord(360, 20), tab, CustomConfig.getTranslator().getKey());
+            new Button(new Coord(330, 175), 50, tab, "set") {
                 public void click() {
-                    Config.translator.useKey(te.text);
-                    CustomConfig.setMSTranslateApiKey(te.text);
+                    CustomConfig.setTranslatorApiKey(te.text);
                 }
             };
 
-            new Label(new Coord(100, 190), tab, "Powered by Microsoft Translator REST API");
+            new Label(new Coord(160, 260), tab, "Powered by Microsoft Translator REST API");
         }
 
         new Frame(new Coord(-10, 20), new Coord(420, 330), this);

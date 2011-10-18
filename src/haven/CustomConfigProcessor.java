@@ -64,7 +64,7 @@ public class CustomConfigProcessor {
     public static boolean saveConfig(@NotNull final CustomConfig config) {
         Writer writer = null;
         try {
-            final Gson gson = new Gson();
+            final Gson gson = new GsonBuilder().setPrettyPrinting().create();
             checkAndFixConfig(config);
             final String json = gson.toJson(config);
 

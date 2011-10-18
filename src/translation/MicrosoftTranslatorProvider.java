@@ -3,6 +3,7 @@ package translation;
 import com.memetix.mst.detect.Detect;
 import com.memetix.mst.language.Language;
 import com.memetix.mst.translate.Translate;
+import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,6 +15,8 @@ import java.util.TreeMap;
  */
 public class MicrosoftTranslatorProvider {
 
+    public static final Logger LOG = Logger.getLogger(MicrosoftTranslatorProvider.class);
+
     @Nullable
     private String myAPIKey;
     @NotNull
@@ -21,23 +24,30 @@ public class MicrosoftTranslatorProvider {
     private boolean myTurnedOn;
 
     public Map<String, Language> getAvailableLanguages() {
+        Map<String, Language> retMap;
         try {
-            return Language.values(myDestLanguage);
+            Translate.setKey(myAPIKey);
+            retMap = Language.values(myDestLanguage);
         } catch (Exception e) {
+            LOG.warn("Some translation error", e);
             final Map<String, Language> map = new TreeMap<String, Language>();
             for (final Language lang : Language.values()) {
                 map.put(lang.name(), lang);
             }
-            return map;
+            retMap = map;
         }
+        retMap.values().remove(Language.AUTO_DETECT);
+        retMap.put("!!ENGLISH!!", Language.ENGLISH);
+        return retMap;
     }
 
     public MicrosoftTranslatorProvider() {
+        Translate.setKey(myAPIKey);
     }
 
-    public void useKey(@NotNull final String key) {
+    public void useKey(@Nullable final String key) {
         myAPIKey = key;
-        Translate.setKey(key);
+        Translate.setKey(key == null ? "" : key);
     }
 
     public String getKey() {
@@ -76,6 +86,7 @@ public class MicrosoftTranslatorProvider {
             sb.append(Translate.execute(string, language, myDestLanguage));
             return sb.toString();
         } catch (Exception e) {
+            LOG.warn("Some translation error", e);
             return string;
         }
     }

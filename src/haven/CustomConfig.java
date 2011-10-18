@@ -7,8 +7,10 @@
 
 package haven;
 
+import com.memetix.mst.language.Language;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import translation.MicrosoftTranslatorProvider;
 
 import java.awt.*;
 import java.util.*;
@@ -44,7 +46,7 @@ public class CustomConfig {
     private boolean showNames;
     private boolean showOtherNames;
 
-    private String MSTranslateApiKey;
+    private final MicrosoftTranslatorProvider translator = new MicrosoftTranslatorProvider();
 
     public static int getNextCustomWidgetId() {
         return customWidgetIdGenerator.decrementAndGet();
@@ -575,6 +577,18 @@ public class CustomConfig {
         return ourConfig.hidingObjects;
     }
 
+    public static void setTranslatorLanguage(@NotNull final Language language) {
+        ourConfig.translator.useLanguage(language);
+    }
+
+    public static Language getTranslatorLanguage() {
+        return ourConfig.translator.getLanguage();
+    }
+
+    public static MicrosoftTranslatorProvider getTranslator() {
+        return ourConfig.translator;
+    }
+
     static class CharData {
         String name;
         int hudActiveBelt = 1;
@@ -620,11 +634,11 @@ public class CustomConfig {
     }
 
 
-    public static String getMSTranslateApiKey() {
-        return ourConfig.MSTranslateApiKey;
+    public static String getTranslatorApiKey() {
+        return ourConfig.translator.getKey();
     }
 
-    public static void setMSTranslateApiKey(String apiKey) {
-        ourConfig.MSTranslateApiKey = apiKey;
+    public static void setTranslatorApiKey(final String apiKey) {
+        ourConfig.translator.useKey(apiKey);
     }
 }

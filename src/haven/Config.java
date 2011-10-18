@@ -26,8 +26,6 @@
 
 package haven;
 
-import translation.MicrosoftTranslatorProvider;
-
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -55,7 +53,6 @@ public class Config {
     public static Map<Pattern, String> smileys = new ConcurrentHashMap<Pattern, String>();
     public static String currentCharName;
     public static Properties options;
-    public static MicrosoftTranslatorProvider translator = new MicrosoftTranslatorProvider();
 
     public static boolean quick_login = false; // быстрый логин дефолт чаром
     public static boolean ark_state_activate_char = false; // стадия аткивации чара
@@ -88,7 +85,6 @@ public class Config {
             nopreload = getprop("haven.nopreload", "no").equals("yes");
             currentCharName = "";
             options = new Properties();
-            loadOptions();
             loadSmileys();
         } catch (MalformedURLException e) {
             throw (new RuntimeException(e));
@@ -188,10 +184,6 @@ public class Config {
         } catch (IOException ignored) {
         }
 
-    }
-
-    private static void loadOptions() {
-        translator.useKey(CustomConfig.getMSTranslateApiKey());
     }
 
 }
