@@ -1,5 +1,7 @@
 package haven;
 
+import haven.scriptengine.ScriptsManager;
+
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -10,10 +12,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
 /**
- * Created by IntelliJ IDEA.
- * Player: Vlad.Rassokhin@gmail.com
- * Date: 12.01.11
- * Time: 14:12
+ * Main game starter
  */
 public class CustomStarter {
     public static void main(final String args[]) {
@@ -248,6 +247,7 @@ public class CustomStarter {
 
     public static void runGame(final String[] args) {
         CustomConfig.save();
+        ScriptsManager.initSystem();
         MainFrame.main(args);
     }
 }

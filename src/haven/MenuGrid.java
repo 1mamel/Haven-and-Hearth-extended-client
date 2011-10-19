@@ -297,6 +297,9 @@ public class MenuGrid extends Widget {
     }
 
     private void usecustom(final String[] list) {
+        if (list.length  < 2) {
+            use(null);
+        }
         if (list[1].equals("radius")) {
             CustomConfig.setShowRadius(!CustomConfig.isShowRadius());
             final String str = "Radius highlight is turned " + ((CustomConfig.isShowRadius()) ? "ON" : "OFF");
@@ -312,7 +315,7 @@ public class MenuGrid extends Widget {
         } else if (list[1].equals("hide")) {
             for (int i = 2; i < list.length; i++) {
                 final String item = list[i];
-                Set<String> hidingObjects = CustomConfig.getHidingObjects();
+                final Set<String> hidingObjects = CustomConfig.getHidingObjects();
                 if (hidingObjects.contains(item)) {
                     hidingObjects.remove(item);
                 } else {

@@ -26,7 +26,6 @@
 
 package haven;
 
-import haven.scriptengine.ScriptsManager;
 import org.apache.log4j.Logger;
 
 import java.awt.*;
@@ -45,7 +44,7 @@ public class MainFrame extends Frame implements Runnable, FSMan {
     final ThreadGroup g;
     DisplayMode fsmode = null, prefs = null;
     final Dimension insetsSize;
-    
+
     protected static final Logger LOG = Logger.getLogger(MainFrame.class);
 
 //    CustomConfig config;
@@ -122,10 +121,10 @@ public class MainFrame extends Frame implements Runnable, FSMan {
         Image icon = null;
         try {
             final InputStream data = MainFrame.class.getResourceAsStream("icon.png");
-            if (icon!=null){
-            icon = javax.imageio.ImageIO.read(data);
-            data.close();   }
-            else {
+            if (icon != null) {
+                icon = javax.imageio.ImageIO.read(data);
+                data.close();
+            } else {
                 LOG.error("Failed to load icon.png");
             }
         } catch (IOException e) {
@@ -178,7 +177,7 @@ public class MainFrame extends Frame implements Runnable, FSMan {
         addWindowListener(new WindowAdapter() {
             public void windowClosing(final WindowEvent e) {
 //                if (CustomConfig.isSaveable()){
-                    CustomConfig.save();
+                CustomConfig.save();
 //                }
                 g.interrupt();
             }
@@ -190,7 +189,6 @@ public class MainFrame extends Frame implements Runnable, FSMan {
         });
         final Thread ui = new HackThread(panel, "Haven UI thread");
         panel.setfsm(this);
-        ScriptsManager.initSystem();
         ui.start();
         try {
             // Main Game cycle  Login -> Game -> ...
