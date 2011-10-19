@@ -1,7 +1,11 @@
 package haven;
 
+import haven.scriptengine.ConsoleCommandListener;
+import haven.scriptengine.ScriptsConsole;
 import haven.scriptengine.ScriptsManager;
-import org.apache.log4j.*;
+import org.apache.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -10,27 +14,19 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomConsole extends Window {
+public class CustomConsole extends Window implements ScriptsConsole {
     private static final Color DEFAULT_TEXT_COLOR = Color.BLACK;
     public static final Logger logger = Logger.getLogger(CustomConsole.class);
-    private static final Appender mainAppender;
 
     private final List<String> enteredCommands = new ArrayList<String>();
     private int lastCommand;
     public final Textlog out;
     private final TextEntry in;
 
-    static {
-        Appender mainAppender1;
-        try {
-            mainAppender1 = new FileAppender(new SimpleLayout(), "console.log");
-        } catch (IOException e) {
-            System.err.println("Cannot create file appender for CustomConsole logger");
-            e.printStackTrace(System.err);
-            mainAppender1 = new ConsoleAppender(new SimpleLayout());
-        }
-        mainAppender = mainAppender1;
-    }
+    @Nullable
+    private ConsoleCommandListener myListener;
+    private final CustomWriter outWriter;
+    private final CustomWriter errWriter;
 
     public void draw(final GOut g) {
         super.draw(g);
@@ -65,17 +61,29 @@ public class CustomConsole extends Window {
         };
         in.canactivate = true;
 
-        final CustomWriter outWriter = new CustomWriter();
-        final CustomWriter errWriter = new CustomWriter(Color.RED.darker());
+        outWriter = new CustomWriter();
+        errWriter = new CustomWriter(Color.RED.darker());
 
-        logger.removeAllAppenders();
-        logger.addAppender(mainAppender);
-        logger.addAppender(new WriterAppender(new SimpleLayout(), outWriter));
-
-        ScriptsManager.registerOut(outWriter);
-        ScriptsManager.registerErr(errWriter);
+        ScriptsManager.registerConsole(this);
 
         setfocus(in);
+    }
+
+    @Override
+    public void setCommandListener(@Nullable final ConsoleCommandListener listener) {
+        myListener = listener;
+    }
+
+    @NotNull
+    @Override
+    public Writer getConsoleStdOutWriter() {
+        return outWriter;
+    }
+
+    @NotNull
+    @Override
+    public Writer getConsoleStdErrWriter() {
+        return errWriter;
     }
 
     public class CustomWriter extends Writer {
@@ -93,7 +101,6 @@ public class CustomConsole extends Window {
         public void write(final char[] cbuf, final int off, final int len) throws IOException {
             final String line = new String(cbuf, off, len);
             try {
-                System.out.println("console writer:" + line);
                 out.append(line, color);
             } catch (Exception ignored) {
             }
@@ -120,69 +127,23 @@ public class CustomConsole extends Window {
         }
 
         final String command = (String) args[0];
-        enteredCommands.add(command);
-        lastCommand++;
-
-        ScriptsManager.exec(command);
-        in.settext("");
-
-
-//        String cmdText = ((String) args[0]).trim().toUpperCase();
-//        String cmd = cmdText.contains(" ") ? cmdText.substring(0, cmdText.indexOf(' ')).trim() : cmdText;
-//        cmdText = cmdText.contains(" ") ? cmdText.substring(cmdText.indexOf(' ')).trim() : "";
-//        String[] cmdArgs = Utils.whitespacePattern.split(cmdText);
-//        String arg0 = cmdArgs[0];
-//        if (cmd.equals("DEBUG")) {
-//            if (arg0.trim().length() != 0) {
-//                if (arg0.equals("IRC")) {
-//                    if (cmdArgs.length >= 2) {
-//                        if (cmdArgs[1].equals("ON") || cmdArgs[1].equals("TRUE")) {
-//                            CustomConfig.logIRC = true;
-//                        } else if (cmdArgs[1].equals("OFF") || cmdArgs[1].equals("FALSE")) {
-//                            CustomConfig.logIRC = false;
-//                        }
-//                    } else {
-//                        append("DEBUG LOGS", Color.BLUE.darker());
-//                        append("IRC - " + (CustomConfig.logIRC ? "ON" : "OFF"), Color.GREEN.darker());
-//                    }
-//                } else if (arg0.equals("SRVMSG")) {
-//                    if (cmdArgs.length >= 2) {
-//                        if (cmdArgs[1].equals("ON") || cmdArgs[1].equals("TRUE")) {
-//                            CustomConfig.logServerMessages = true;
-//                        } else if (cmdArgs[1].equals("OFF") || cmdArgs[1].equals("FALSE")) {
-//                            CustomConfig.logServerMessages = false;
-//                        }
-//                    } else {
-//                        append("DEBUG LOGS", Color.BLUE.darker());
-//                        append("SRVMSG - " + (CustomConfig.logServerMessages ? "ON" : "OFF"), Color.GREEN.darker());
-//                    }
-//                }
-//                if (arg0.equals("LOAD")) {
-//                    if (cmdArgs.length >= 2) {
-//                        if (cmdArgs[1].equals("ON") || cmdArgs[1].equals("TRUE")) {
-//                            CustomConfig.logLoad = true;
-//                        } else if (cmdArgs[1].equals("OFF") || cmdArgs[1].equals("FALSE")) {
-//                            CustomConfig.logLoad = false;
-//                        }
-//                    } else {
-//                        append("DEBUG LOGS", Color.BLUE.darker());
-//                        append("LOAD - " + (CustomConfig.logLoad ? "ON" : "OFF"), Color.GREEN.darker());
-//                    }
-//                }
-//            } else {
-//                append("DEBUG LOGS", Color.BLUE.darker());
-//                append("IRC - " + (CustomConfig.logIRC ? "ON" : "OFF"), Color.GREEN.darker());
-//                append("LOAD - " + (CustomConfig.logLoad ? "ON" : "OFF"), Color.GREEN.darker());
-//                append("SRVMSG - " + (CustomConfig.logServerMessages ? "ON" : "OFF"), Color.GREEN.darker());
-//            }
-//        } else {
-//            ScriptsManager.exec((String) args[0]);
-//        }
+        if (myListener != null) {
+            myListener.onCommandSubmitted(command);
+            enteredCommands.add(command);
+            lastCommand++;
+            in.settext("");
+        }
     }
 
     public boolean toggle() {
         if (super.toggle())
             setfocus(in);
         return visible;
+    }
+
+    @Override
+    public void destroy() {
+        ScriptsManager.unregisterConsole(this);
+        super.destroy();
     }
 }

@@ -297,7 +297,7 @@ public class MenuGrid extends Widget {
     }
 
     private void usecustom(final String[] list) {
-        if (list.length  < 2) {
+        if (list.length  < 2 || list[1] == null) {
             use(null);
         }
         if (list[1].equals("radius")) {

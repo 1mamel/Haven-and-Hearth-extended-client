@@ -79,16 +79,16 @@ public class ScriptsManagerTest extends TestCase {
     }
 
     public void testSoveBot() throws Exception {
-        ScriptsManager.registerOut(new PrintWriter(System.out));
-        ScriptsManager.registerErr(new PrintWriter(System.err));
+        ScriptsManager.ourMulticastOutWriter.addWriter(new PrintWriter(System.out));
+        ScriptsManager.ourMulticastErrWriter.addWriter(new PrintWriter(System.err));
         ScriptsManager.exec("import sovebot");
 //        assertTrue(ScriptsManager.containsBot("sovebot"));
         ScriptsManager.runWait("sovebot");
     }
 
     public void testFiller() throws Exception {
-        ScriptsManager.registerOut(new PrintWriter(System.out));
-        ScriptsManager.registerErr(new PrintWriter(System.err));
+        ScriptsManager.ourMulticastOutWriter.addWriter(new PrintWriter(System.out));
+        ScriptsManager.ourMulticastErrWriter.addWriter(new PrintWriter(System.err));
         ScriptsManager.exec("import barrelfiller");
 //        assertTrue(ScriptsManager.containsBot("sovebot"));
         ScriptsManager.runWait("filler");

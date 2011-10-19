@@ -14,10 +14,7 @@ import haven.scriptengine.providers.Config;
 import haven.scriptengine.providers.Player;
 import haven.scriptengine.providers.UIProvider;
 import haven.scriptengine.providers.Util;
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.FileAppender;
 import org.apache.log4j.Logger;
-import org.apache.log4j.SimpleLayout;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.python.core.Py;
@@ -27,15 +24,13 @@ import org.python.util.PythonInterpreter;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ScriptsManager {
     static PythonInterpreter interpreter;
-    static Logger logger;
+    static Logger LOG;
 
     public static void exec(final String line) {
         try {
@@ -51,13 +46,16 @@ public class ScriptsManager {
         } catch (PyException e) {
             System.err.println("Executing line\"" + line + "\" failed");
             e.printStackTrace();
-            logger.error("Executing line\"" + line + "\" failed", e);
+            LOG.error("Executing line\"" + line + "\" failed", e);
         }
     }
 
     static final HashMap<String, Class<? extends Bot>> botsMap = new HashMap<String, Class<? extends Bot>>();
 
     private static HashMap<String, String> commands = new HashMap<String, String>();
+    protected static final MulticastWriter ourMulticastOutWriter;
+    protected static final MulticastWriter ourMulticastErrWriter;
+    private static final ConsoleCommandListener ourListener;
 
     @SuppressWarnings({"UnusedDeclaration"})
     public static boolean registerBot(@NotNull final String name, @NotNull final Class<? extends Bot> clazz) {
@@ -66,26 +64,26 @@ public class ScriptsManager {
     }
 
     private static void relinkInterpreterScope() {
-        interpreter.setOut(java.lang.System.out);
-        interpreter.setErr(java.lang.System.err);
+        interpreter.setOut(ourMulticastOutWriter);
+        interpreter.setErr(ourMulticastErrWriter);
         interpreter.exec("import includes");
         interpreter.set("ui", UIProvider.class);
         interpreter.set("util", Util.class);
         interpreter.set("player", Player.class);
         interpreter.set("config", Config.class);
         interpreter.set("manager", ScriptsManager.class);
-//        PrintStream stream = new PrintStream(CustomConsole.CustomWriter.getInstance());
-//        interpreter.setOut(stream);
-//        interpreter.setErr(stream);
     }
 
     static {
-        logger = Logger.getLogger(ScriptsManager.class);
-        try {
-            logger.addAppender(new FileAppender(new SimpleLayout(), "scripts_manager.log"));
-        } catch (IOException ignored) {
-        }
-        logger.addAppender(new ConsoleAppender(new SimpleLayout()));
+        LOG = Logger.getLogger(ScriptsManager.class);
+        ourMulticastOutWriter = new MulticastWriter();
+        ourMulticastErrWriter = new MulticastWriter();
+        ourListener = new ConsoleCommandListener() {
+            @Override
+            public void onCommandSubmitted(@NotNull final String command) {
+                exec(command);
+            }
+        };
         try {
             final PySystemState pySysState = new PySystemState();
             pySysState.path.append(Py.newString("scripts"));
@@ -93,17 +91,17 @@ public class ScriptsManager {
             Py.setSystemState(pySysState);
             interpreter = new PythonInterpreter();
         } catch (PyException e) {
-            logger.error("Jython engine initialization exception", e);
+            LOG.error("Jython engine initialization exception", e);
         }
         try {
             relinkInterpreterScope();
         } catch (PyException e) {
-            logger.error("Cannot relink interpreter scope", e);
+            LOG.error("Cannot relink interpreter scope", e);
         }
         try {
             scanDirectory();
         } catch (PyException e) {
-            logger.error("Preloading scripts failed", e);
+            LOG.error("Preloading scripts failed", e);
         }
     }
 
@@ -163,9 +161,9 @@ public class ScriptsManager {
         try {
             return botsMap.get(name).newInstance();
         } catch (InstantiationException e) {
-            logger.error("Bot \"" + name + "\" instanciation error", e);
+            LOG.error("Bot \"" + name + "\" instanciation error", e);
         } catch (IllegalAccessException e) {
-            logger.error("Bot \"" + name + "\" instanciation error", e);
+            LOG.error("Bot \"" + name + "\" instanciation error", e);
         }
         return null;
     }
@@ -176,14 +174,6 @@ public class ScriptsManager {
 
     public static boolean containsBot(@NotNull final Class<? extends Bot> clazz) {
         return botsMap.containsValue(clazz);
-    }
-
-    public static void registerOut(@NotNull final Writer w) {
-        interpreter.setOut(w);
-    }
-
-    public static void registerErr(@NotNull final Writer w) {
-        interpreter.setErr(w);
     }
 
     public static void scanDirectory() {
@@ -204,4 +194,16 @@ public class ScriptsManager {
         IMeter.subscribe(player);
         ProgressBar.subscribe(player);
     }
+
+    public static void registerConsole(@NotNull final ScriptsConsole console) {
+        ourMulticastOutWriter.addWriter(console.getConsoleStdOutWriter());
+        ourMulticastErrWriter.addWriter(console.getConsoleStdErrWriter());
+        console.setCommandListener(ourListener);
+    }
+
+    public static void unregisterConsole(@NotNull final ScriptsConsole console) {
+        ourMulticastOutWriter.removeWriter(console.getConsoleStdOutWriter());
+        ourMulticastErrWriter.removeWriter(console.getConsoleStdErrWriter());
+    }
+
 }

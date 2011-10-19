@@ -5,7 +5,6 @@
       <module fileurl="file://$PROJECT_DIR$/client.iml" filepath="$PROJECT_DIR$/client.iml" />
       <module fileurl="file://$PROJECT_DIR$/scripts/scripts.iml" filepath="$PROJECT_DIR$/scripts/scripts.iml" />
       <module fileurl="file://$PROJECT_DIR$/scriptsengine/scriptsengine.iml" filepath="$PROJECT_DIR$/scriptsengine/scriptsengine.iml" />
-      <module fileurl="file://$PROJECT_DIR$/starter/starter.iml" filepath="$PROJECT_DIR$/starter/starter.iml" />
     </modules>
   </component>
 </project>

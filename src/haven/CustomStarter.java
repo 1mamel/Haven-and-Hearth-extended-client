@@ -248,6 +248,11 @@ public class CustomStarter {
     public static void runGame(final String[] args) {
         CustomConfig.save();
         ScriptsManager.initSystem();
+        final ScriptsConsoleView scriptsConsoleView = new ScriptsConsoleView();
+        scriptsConsoleView.pack();
+        scriptsConsoleView.setVisible(true);
+        scriptsConsoleView.setName("Scripts Console");
+        ScriptsManager.registerConsole(scriptsConsoleView);
         MainFrame.main(args);
     }
 }

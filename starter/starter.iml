@@ -9,6 +9,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="client" />
     <orderEntry type="module" module-name="scriptsengine" />
+    <orderEntry type="library" name="annotations" level="project" />
   </component>
 </module>
 
