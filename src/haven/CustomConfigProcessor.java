@@ -104,7 +104,7 @@ public class CustomConfigProcessor {
 
     private static void checkAndFixConfig(@NotNull final CustomConfig config) {
         if (config.windowSize.x < 800) {
-            LOG.warn("Fix config: Window width must be at least 600px");
+            LOG.warn("Fix config: Window width must be at least 800px");
             config.windowSize.x = 800;
         }
         if (config.windowSize.y < 600) {

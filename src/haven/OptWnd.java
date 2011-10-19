@@ -572,7 +572,7 @@ public class OptWnd extends Window {
             }.checkByValue(CustomConfig.getTranslatorLanguage());
 
             new Label(new Coord(130, 125), tab, "Microsoft Translator API Key:");
-            final TextEntry te = new TextEntry(new Coord(130, 150), new Coord(360, 20), tab, CustomConfig.getTranslator().getKey());
+            final TextEntry te = new TextEntry(new Coord(130, 150), new Coord(330, 20), tab, CustomConfig.getTranslator().getKey());
             new Button(new Coord(330, 175), 50, tab, "set") {
                 public void click() {
                     CustomConfig.setTranslatorApiKey(te.text);

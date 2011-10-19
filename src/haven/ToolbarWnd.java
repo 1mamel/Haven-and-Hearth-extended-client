@@ -21,7 +21,6 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
     private static final BufferedImage ilockch = Resource.loadimg("gfx/hud/lockch");
     private static final BufferedImage ilocko = Resource.loadimg("gfx/hud/locko");
     private static final BufferedImage ilockoh = Resource.loadimg("gfx/hud/lockoh");
-    private static final Indir<Resource>[] defbelt = new Indir[10];
     public final static Coord bgsz = bg.sz().add(-1, -1);
     private static final Properties beltsConfig = new Properties();
     private Coord gsz, off, beltNumC;
@@ -30,18 +29,9 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
     public boolean flipped = false, locked = false;
     public int belt, key;
     private Tex[] nums;
-    private static Tex[] beltNums;
-    private String name;
+    private final String name;
 
     public final static RichText.Foundry ttfnd = new RichText.Foundry(TextAttribute.FAMILY, "SansSerif", TextAttribute.SIZE, 10);
-
-    static {
-        /* Text rendering is slow, so pre-cache the belt numbers. */
-        beltNums = new Tex[BELTS_NUM];
-        for (int i = 0; i < BELTS_NUM; i++) {
-            beltNums[i] = Text.render(Integer.toString(i)).tex();
-        }
-    }
 
     public ToolbarWnd(final Coord c, final Widget parent, final String name) {
         super(c, Coord.z, parent, null);
@@ -206,7 +196,7 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
                 }
             }
         }
-        g.aimage(beltNums[belt], beltNumC, 1, 1);
+        g.aimage(Text.renderNumber(belt).tex(), beltNumC, 1, 1);
         g.chcolor();
         if (dragging != null) {
             final Tex dt = dragging.layer(Resource.imgc).tex();
@@ -252,8 +242,8 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
 
     public void flip() {
         flipped = !flipped;
-        gsz = new Coord(gsz.y, gsz.x);
-        mrgn = new Coord(mrgn.y, mrgn.x);
+        gsz = gsz.swap();
+        mrgn = mrgn.swap();
         pack();
         CustomConfig.setWindowOpt(name + "_flipped", flipped);
     }
@@ -334,7 +324,7 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
         final Resource h = bhit(c);
         if (button == 1) {
             if (dragging != null) {
-                ui.dropthing(ui.root, ui.mc, dragging);
+                UI.dropthing(ui.root, ui.mc, dragging);
                 dragging = pressed = null;
             } else if (pressed != null) {
                 if (pressed == h)
@@ -387,7 +377,7 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
     }
 
     private void setBeltSlot(final int slot, final String icon) {
-        final String key = "belt_" + belt + "_" + slot;
+        final String key = "belt_" + belt + '_' + slot;
         synchronized (beltsConfig) {
             beltsConfig.setProperty(key, icon);
         }
@@ -475,9 +465,4 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
             return true;
     }
 
-    public static void setbelt(final int slot, final Indir<Resource> res) {
-        synchronized (defbelt) {
-            defbelt[slot] = res;
-        }
-    }
 }

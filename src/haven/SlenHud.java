@@ -398,7 +398,6 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
             if (args.length < 2) {
                 //noinspection RedundantCast
 //               TODO:!     belt[activeBelt][(Integer) (args[0])] = null;
-                ToolbarWnd.setbelt((Integer) args[0], null);
                 //noinspection RedundantCast
                 CustomConfig.getActiveCharacter().hudBelt[activeBelt][(Integer) (args[0])] = null;
             } else {/*

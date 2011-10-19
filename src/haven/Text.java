@@ -26,6 +26,9 @@
 
 package haven;
 
+import haven.util.FixedSizeCache;
+import org.jetbrains.annotations.NotNull;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -182,6 +185,19 @@ public class Text {
 
     public static Line render(final String text) {
         return (render(text, Color.WHITE));
+    }
+
+    private static final FixedSizeCache<Integer, Line> ourNumbersLinesCache = new FixedSizeCache<Integer, Line>(100);
+
+    @NotNull
+    public static Line renderNumber(@NotNull final Integer number) {
+        final Line cachedLine = ourNumbersLinesCache.get(number);
+        if (cachedLine != null) {
+            return cachedLine;
+        }
+        final Line line = render(number.toString(), Color.WHITE);
+        ourNumbersLinesCache.put(number, line);
+        return line;
     }
 
     public Tex tex() {
