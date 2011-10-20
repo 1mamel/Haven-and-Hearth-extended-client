@@ -1,6 +1,7 @@
-package haven.scriptengine.providers;
+package haven.scriptengine.providers.providers;
 
 import haven.*;
+import haven.scriptengine.providers.providers.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.regex.Matcher;
@@ -202,7 +203,7 @@ public class Player implements ProgressBar.ProgressListener, IMeter.Listener {
 
     // для начала двигаться к указанному объекту с оффсетом
     public static void move(final int objectId, final int offX, final int offY) {
-        final Gob gob = MapProvider.getGob(objectId);
+        final Gob gob = haven.scriptengine.providers.providers.MapProvider.getGob(objectId);
         if (gob == null) {
             return;
         }
@@ -213,7 +214,7 @@ public class Player implements ProgressBar.ProgressListener, IMeter.Listener {
         final int btn = 1; // левой кнопкой щелкаем
         final int modflags = 0; // никаких клавиш не держим
         oc = oc.add(offX, offY);
-        MapProvider.getMV().wdgmsg("click", MapProvider.getCenterR(), oc, btn, modflags, objectId, oc);
+        haven.scriptengine.providers.providers.MapProvider.getMV().wdgmsg("click", haven.scriptengine.providers.providers.MapProvider.getCenterR(), oc, btn, modflags, objectId, oc);
     }
 
     public static void moveStep(final int x, final int y) {
@@ -226,11 +227,11 @@ public class Player implements ProgressBar.ProgressListener, IMeter.Listener {
         Coord mc = MapView.tilify(pos);
         final Coord offset = tilesz.mul(x, y);
         mc = mc.add(offset);
-        MapProvider.getMV().wdgmsg("click", MapProvider.getCenterR(), mc, button, modflags);
+        haven.scriptengine.providers.providers.MapProvider.getMV().wdgmsg("click", haven.scriptengine.providers.providers.MapProvider.getCenterR(), mc, button, modflags);
     }
 
     public static boolean isMoving() {
-        return MapProvider.getMV().player_moving;
+        return haven.scriptengine.providers.providers.MapProvider.getMV().player_moving;
     }
 
     @Override

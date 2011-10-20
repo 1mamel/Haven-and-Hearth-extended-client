@@ -1,4 +1,4 @@
-package haven.scriptengine.providers;
+package haven.scriptengine.providers.providers;
 
 import haven.UI;
 
