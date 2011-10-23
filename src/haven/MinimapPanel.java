@@ -94,14 +94,14 @@ public class MinimapPanel extends Window {
             }
         };
         pack();
-        this.c = new Coord(CustomConfig.getWindowWidth() - this.sz.x, 7);
+        this.c = new Coord(CustomConfig.current().getWindowWidth() - this.sz.x, 7);
         loadpos();
     }
 
     private void loadpos() {
-        synchronized (CustomConfig.getWindowProperties()) {
-            c = new Coord(CustomConfig.getWindowProperty("minimap_pos", c.toString()));
-            mm.sz = new Coord(CustomConfig.getWindowProperty("minimap_sz", mm.sz.toString()));
+        synchronized (CustomConfig.current().getWindowProperties()) {
+            c = new Coord(CustomConfig.current().getWindowProperty("minimap_pos", c.toString()));
+            mm.sz = new Coord(CustomConfig.current().getWindowProperty("minimap_sz", mm.sz.toString()));
             pack();
         }
     }
@@ -137,12 +137,12 @@ public class MinimapPanel extends Window {
 
     public boolean mouseup(final Coord c, final int button) {
         if (dm) {
-            CustomConfig.setWindowOpt("minimap_pos", this.c.toString());
+            CustomConfig.current().setWindowOpt("minimap_pos", this.c.toString());
         }
         if (rsm) {
             ui.ungrabmouse();
             rsm = false;
-            CustomConfig.setWindowOpt("minimap_sz", mm.sz.toString());
+            CustomConfig.current().setWindowOpt("minimap_sz", mm.sz.toString());
         } else {
             super.mouseup(c, button);
         }

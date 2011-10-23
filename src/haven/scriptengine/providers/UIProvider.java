@@ -1,4 +1,4 @@
-package haven.scriptengine.providers.providers;
+package haven.scriptengine.providers;
 
 import haven.*;
 

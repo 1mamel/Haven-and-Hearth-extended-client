@@ -34,7 +34,7 @@ public class CustomConsole extends Window implements ScriptsConsole {
 
     CustomConsole(final Coord c, final Coord sz, final Widget parent, final String title) {
         super(c, sz, parent, title, false, false);
-        ui.bind(this, CustomConfig.getNextCustomWidgetId());
+        ui.bind(this, CustomConfig.current().getNextCustomWidgetId());
 
         out = new Textlog(Coord.z, sz.add(0, -20), this);
 

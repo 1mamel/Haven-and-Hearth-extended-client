@@ -37,11 +37,11 @@ public class SlenChat extends ChatHW {
         }
 
         public UserList(final SlenChat parent) {
-            super(new Coord(10, CustomConfig.getWindowHeight() - parent.sz.y - 10), new Coord(100, parent.sz.y - 10), parent.parent.parent, "Users", false, true);
+            super(new Coord(10, CustomConfig.current().getWindowHeight() - parent.sz.y - 10), new Coord(100, parent.sz.y - 10), parent.parent.parent, "Users", false, true);
             out = new Listbox(Coord.z, new Coord(100, 105), this, users);
             owner = parent;
-            ui.bind(this, CustomConfig.getNextCustomWidgetId());
-            ui.bind(out, CustomConfig.getNextCustomWidgetId());
+            ui.bind(this, CustomConfig.current().getNextCustomWidgetId());
+            ui.bind(out, CustomConfig.current().getNextCustomWidgetId());
         }
 
         synchronized public void addUser(final String user, final String nick) {

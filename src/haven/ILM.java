@@ -79,7 +79,7 @@ public class ILM extends TexRT {
     }
 
     protected boolean subrend(final GOut g) {
-        if (CustomConfig.isNightVision()) {
+        if (CustomConfig.current().isNightVision()) {
             return false;
         }
         final GL gl = g.gl;

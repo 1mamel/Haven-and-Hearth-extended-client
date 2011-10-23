@@ -1,4 +1,4 @@
-package haven;
+package starter;
 
 import haven.scriptengine.ConsoleCommandListener;
 import haven.scriptengine.ScriptsConsole;

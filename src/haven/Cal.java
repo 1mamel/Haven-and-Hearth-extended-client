@@ -74,7 +74,7 @@ public class Cal extends SSWidget {
     }
 
     public Cal(final Coord c, final Widget parent) {
-        super(new Coord(CustomConfig.getWindowCenter().x - (Utils.imgsz(bg).x / 2), c.y), Utils.imgsz(bg), parent);
+        super(new Coord(CustomConfig.current().getWindowCenter().x - (Utils.imgsz(bg).x / 2), c.y), Utils.imgsz(bg), parent);
         render();
     }
 

@@ -46,17 +46,17 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
     }
 
     private void loadOpts() {
-        if (Boolean.parseBoolean(CustomConfig.getWindowProperty(name + "_locked"))) {
+        if (Boolean.parseBoolean(CustomConfig.current().getWindowProperty(name + "_locked"))) {
             locked = true;
         }
-        if (Boolean.parseBoolean(CustomConfig.getWindowProperty(name + "_flipped"))) {
+        if (Boolean.parseBoolean(CustomConfig.current().getWindowProperty(name + "_flipped"))) {
             flip();
         }
-        if (Boolean.parseBoolean(CustomConfig.getWindowProperty(name + "_folded"))) {
+        if (Boolean.parseBoolean(CustomConfig.current().getWindowProperty(name + "_folded"))) {
             folded = true;
             checkfold();
         }
-        final String pos_prop = CustomConfig.getWindowProperty(name + "_pos");
+        final String pos_prop = CustomConfig.current().getWindowProperty(name + "_pos");
         if (pos_prop != null) {
             c = new Coord(pos_prop);
         }
@@ -83,7 +83,7 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
                     down = ilockc;
                     hover = ilockoh;
                 }
-                CustomConfig.setWindowOpt(name + "_locked", locked);
+                CustomConfig.current().setWindowOpt(name + "_locked", locked);
             }
         };
         lockButton.recthit = true;
@@ -168,7 +168,7 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
         if (checkIsFoldButton(sender))
             super.wdgmsg(sender, msg, args);
         if (_folded != folded) {
-            CustomConfig.setWindowOpt(name + "_folded", folded);
+            CustomConfig.current().setWindowOpt(name + "_folded", folded);
         }
     }
 
@@ -245,7 +245,7 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
         gsz = gsz.swap();
         mrgn = mrgn.swap();
         pack();
-        CustomConfig.setWindowOpt(name + "_flipped", flipped);
+        CustomConfig.current().setWindowOpt(name + "_flipped", flipped);
     }
 
     protected void placecbtn() {
@@ -335,7 +335,7 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
             ui.ungrabmouse();
         }
         if (dm) {
-            CustomConfig.setWindowOpt(name + "_pos", this.c.toString());
+            CustomConfig.current().setWindowOpt(name + "_pos", this.c.toString());
         }
         super.mouseup(c, button);
 

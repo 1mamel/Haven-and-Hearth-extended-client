@@ -65,10 +65,10 @@ public class ChatHWPanel extends Widget implements IHWindowParent {
     }
 
     private void loadOpts() {
-        synchronized (CustomConfig.getWindowProperties()) {
-            final String chat_pos_folded = CustomConfig.getWindowProperties().get("chat_pos_folded");
-            final String chat_size = CustomConfig.getWindowProperties().get("chat_size");
-            final String chat_pos = CustomConfig.getWindowProperties().get("chat_pos");
+        synchronized (CustomConfig.current().getWindowProperties()) {
+            final String chat_pos_folded = CustomConfig.current().getWindowProperties().get("chat_pos_folded");
+            final String chat_size = CustomConfig.current().getWindowProperties().get("chat_size");
+            final String chat_pos = CustomConfig.current().getWindowProperties().get("chat_pos");
             if (chat_pos_folded != null) {
                 sc = new Coord(chat_pos_folded);
             }
@@ -293,11 +293,11 @@ public class ChatHWPanel extends Widget implements IHWindowParent {
         if (dm) {
             ui.ungrabmouse();
             dm = false;
-            CustomConfig.setWindowOpt("chat_pos" + (folded ? "_folded" : ""), this.c.toString());
+            CustomConfig.current().setWindowOpt("chat_pos" + (folded ? "_folded" : ""), this.c.toString());
         } else if (rsm) {
             ui.ungrabmouse();
             rsm = false;
-            CustomConfig.setWindowOpt("chat_size", this.sz.toString());
+            CustomConfig.current().setWindowOpt("chat_size", this.sz.toString());
         } else {
             super.mouseup(c, button);
         }

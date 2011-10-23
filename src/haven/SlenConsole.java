@@ -33,15 +33,15 @@ public class SlenConsole extends ChatHW implements IRCConnectionListener {
         super(parent, "Console", false);
         ui.slenConsole = this;
         this.parent = parent;
-        if (CustomConfig.getIrcDefNick() == null || CustomConfig.getIrcDefNick().length() == 0) {
-            CustomConfig.setIrcDefNick(ui.sess.username);
-            CustomConfig.setIrcAltNick(ui.sess.username + "|C");
+        if (CustomConfig.current().getIrcDefNick() == null || CustomConfig.current().current().getIrcDefNick().length() == 0) {
+            CustomConfig.current().setIrcDefNick(ui.sess.username);
+            CustomConfig.current().setIrcAltNick(ui.sess.username + "|C");
         }
-        user = CustomConfig.getIrcDefNick();
-        if (CustomConfig.getIrcServerAddress().length() != 0 && CustomConfig.isIRCOn()) {
-            IRC = new IRCConnection(CustomConfig.getIrcServerAddress(), 6667,
-                    CustomConfig.getIrcDefNick(), CustomConfig.getIrcAltNick(),
-                    CustomConfig.getIrcDefNick(), CustomConfig.getIrcDefNick());
+        user = CustomConfig.current().getIrcDefNick();
+        if (CustomConfig.current().getIrcServerAddress().length() != 0 && CustomConfig.current().current().isIRCOn()) {
+            IRC = new IRCConnection(CustomConfig.current().getIrcServerAddress(), 6667,
+                    CustomConfig.current().getIrcDefNick(), CustomConfig.current().current().getIrcAltNick(),
+                    CustomConfig.current().getIrcDefNick(), CustomConfig.current().current().getIrcDefNick());
             IRC.setIRCConnectionListener(this);
             IRC.open();
         }
@@ -122,11 +122,11 @@ public class SlenConsole extends ChatHW implements IRCConnectionListener {
             } else if (cmd.equals("/SERVER")) {
                 if (cArgs.length >= 2) {
                     if (IRC != null) IRC.close();
-                    IRC = new IRCConnection(cArgs[1], 6667, CustomConfig.getIrcDefNick(), CustomConfig.getIrcAltNick(),
-                            CustomConfig.getIrcDefNick(), CustomConfig.getIrcDefNick());
+                    IRC = new IRCConnection(cArgs[1], 6667, CustomConfig.current().getIrcDefNick(), CustomConfig.current().current().getIrcAltNick(),
+                            CustomConfig.current().getIrcDefNick(), CustomConfig.current().current().getIrcDefNick());
                     IRC.setIRCConnectionListener(this);
                     IRC.open();
-                    CustomConfig.setIRCOn(true);
+                    CustomConfig.current().setIRCOn(true);
                 } else {
                     src.out.append("FORMAT: /SERVER <SERVERADDRESS>");
                 }
@@ -220,7 +220,7 @@ public class SlenConsole extends ChatHW implements IRCConnectionListener {
 
     public void onConnect() {
         out.append("Successfully connected to: " + IRC.getServer());
-        for (final Listbox.Option channel : CustomConfig.getIrcChannelList()) {
+        for (final Listbox.Option channel : CustomConfig.current().getIrcChannelList()) {
             handleInput("/JOIN " + channel.name + ' ' + channel.disp, this);
         }
         for (final SlenChat tSCWnd : wndList) {
@@ -480,9 +480,9 @@ public class SlenConsole extends ChatHW implements IRCConnectionListener {
 
     public void onErrorNickNameInUse(final String badNick) {
         out.append("Nick: \"" + badNick + "\" already in use");
-        if (!badNick.equals(CustomConfig.getIrcAltNick())) {
-            user = CustomConfig.getIrcAltNick();
-            IRC.sendNick(CustomConfig.getIrcAltNick());
+        if (!badNick.equals(CustomConfig.current().getIrcAltNick())) {
+            user = CustomConfig.current().getIrcAltNick();
+            IRC.sendNick(CustomConfig.current().getIrcAltNick());
         }
     }
 

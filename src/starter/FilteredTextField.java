@@ -1,14 +1,8 @@
-package haven;
+package starter;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 
-/**
- * Created by IntelliJ IDEA.
- * Player: Vlad.Rassokhin@gmail.com
- * Date: 12.01.11
- * Time: 14:15
- */
 class FilteredTextField extends JTextField {
 
     static final String defbadchars = "`~!@#$%^&*()_-+=\\|\"':;?/>.<, ";

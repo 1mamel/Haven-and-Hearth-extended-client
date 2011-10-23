@@ -38,7 +38,7 @@ public class ScriptsManager {
                 @Override
                 public void run() {
                     interpreter.exec(line);
-                    CustomConfig.setRender(true);
+                    CustomConfig.current().setRender(true);
                 }
             });
             thread.setDaemon(true);
@@ -152,7 +152,7 @@ public class ScriptsManager {
     public static void killBot(@NotNull final Bot bot) {
         if (!runningBots.containsKey(bot)) return;
         runningBots.get(bot).interrupt();
-        CustomConfig.setRender(true);
+        CustomConfig.current().setRender(true);
     }
 
     @Nullable

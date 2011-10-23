@@ -243,7 +243,7 @@ public class Window extends Widget implements DTarget {
                 continue;
             if ((isrunestone) && (wdg instanceof Label)) {
                 final Label lbl = (Label) wdg;
-                lbl.settext(CustomConfig.getTranslator().translate(lbl.texts));
+                lbl.settext(CustomConfig.current().getTranslator().translate(lbl.texts));
             }
             final Coord br = wdg.c.add(wdg.sz);
             if (br.x > max.x)

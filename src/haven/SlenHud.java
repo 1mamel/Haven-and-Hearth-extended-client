@@ -83,7 +83,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
                 return (new SlenHud(c, parent));
             }
         });
-        if (CustomConfig.isNew_minimap()) {
+        if (CustomConfig.current().isNew_minimap()) {
             bg = Resource.loadtex("gfx/hud/slen/low2");
         } else {
             bg = Resource.loadtex("gfx/hud/slen/low");
@@ -107,8 +107,8 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
         }
 
         public void draw(final GOut g) {
-            c.setX(CustomConfig.getWindowCenter().x - sz.x / 2);
-            c.setY(CustomConfig.getWindowHeight() + dy);
+            c.setX(CustomConfig.current().getWindowCenter().x - sz.x / 2);
+            c.setY(CustomConfig.current().getWindowHeight() + dy);
             super.draw(g);
             if (urgcols[urgency] != null) {
                 g.chcolor(urgcols[urgency]);
@@ -157,19 +157,19 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
             }
             if (!w && c) {
                 if (ca < 0.6) {
-                    m.c.setY(CustomConfig.getWindowHeight() - (int) (sz.y * (1 - (ca / 0.6))));
+                    m.c.setY(CustomConfig.current().getWindowHeight() - (int) (sz.y * (1 - (ca / 0.6))));
                 } else {
-                    m.c.setY(CustomConfig.getWindowHeight());
-                    sb.c.setY(CustomConfig.getWindowHeight() - (int) (sb.sz.y * ((ca - 0.6) / 0.4)));
+                    m.c.setY(CustomConfig.current().getWindowHeight());
+                    sb.c.setY(CustomConfig.current().getWindowHeight() - (int) (sb.sz.y * ((ca - 0.6) / 0.4)));
                 }
             }
             if (w && !c) {
                 if (ca < 0.6) {
-                    m.c.setY(CustomConfig.getWindowHeight() - (int) (sz.y * (ca / 0.6)));
-                    sb.c.setY(CustomConfig.getWindowHeight() - (int) (sb.sz.y * (1 - (ca / 0.6))));
+                    m.c.setY(CustomConfig.current().getWindowHeight() - (int) (sz.y * (ca / 0.6)));
+                    sb.c.setY(CustomConfig.current().getWindowHeight() - (int) (sb.sz.y * (1 - (ca / 0.6))));
                 } else {
-                    m.c.setY(CustomConfig.getWindowHeight() - sz.y);
-                    sb.c.setY(CustomConfig.getWindowHeight());
+                    m.c.setY(CustomConfig.current().getWindowHeight() - sz.y);
+                    sb.c.setY(CustomConfig.current().getWindowHeight());
                 }
             }
             if (ct >= ms) {
@@ -181,16 +181,16 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
     }
 
     public SlenHud(final Coord c, final Widget parent) {
-        super(new Coord(CustomConfig.getWindowCenter().x - sz.x / 2, CustomConfig.getWindowHeight() - sz.y), sz, parent);
+        super(new Coord(CustomConfig.current().getWindowCenter().x - sz.x / 2, CustomConfig.current().current().getWindowHeight() - sz.y), sz, parent);
         ui.slen = this;
-        if (CustomConfig.isNew_chat())
-            new ChatHWPanel(new Coord(0, CustomConfig.getWindowHeight() - 300), new Coord(350, 300), ui.root);
+        if (CustomConfig.current().isNew_chat())
+            new ChatHWPanel(new Coord(0, CustomConfig.current().getWindowHeight() - 300), new Coord(350, 300), ui.root);
         else
             ChatHWPanel.instance = this;
         dy = -sz.y;
         //new Img(fc, flarps, this);
         new Img(mc, mbg, this);
-        if (!CustomConfig.isNew_minimap())
+        if (!CustomConfig.current().isNew_minimap())
             new Img(dispc, dispbg, this);
 
         //	Hide button
@@ -208,7 +208,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
         //	Kin list button
         budb = new IButton(mc, this, Resource.loadimg("gfx/hud/slen/budu"), Resource.loadimg("gfx/hud/slen/budd"));
         optb = new IButton(mc, this, Resource.loadimg("gfx/hud/slen/optu"), Resource.loadimg("gfx/hud/slen/optd"));
-        if (!CustomConfig.isNew_minimap()) {
+        if (!CustomConfig.current().isNew_minimap()) {
             {
                 new IButton(dispc, this, Resource.loadimg("gfx/hud/slen/dispauth"), Resource.loadimg("gfx/hud/slen/dispauthd")) {
                     private boolean v = false;
@@ -246,7 +246,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
         } else {
             new MinimapPanel(Coord.z, Coord.z, ui.root);
         }
-        vc = new VC(this, fb = new FoldButton(new Coord(CustomConfig.getCenterX() - 20, CustomConfig.getWindowHeight()), parent) {
+        vc = new VC(this, fb = new FoldButton(new Coord(CustomConfig.current().getCenterX() - 20, CustomConfig.current().current().getWindowHeight()), parent) {
             public void click() {
                 vc.show();
             }
@@ -324,8 +324,8 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
                 ircConsole.destroy();
             }
         }
-        c.setX(CustomConfig.getWindowCenter().x - sz.x / 2);
-        c.setY(CustomConfig.getWindowHeight() + dy);
+        c.setX(CustomConfig.current().getWindowCenter().x - sz.x / 2);
+        c.setY(CustomConfig.current().getWindowHeight() + dy);
         final Coord bgc = sz.sub(bg.sz());
         g.image(bg, bgc);
         super.draw(g);
@@ -399,11 +399,11 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
                 //noinspection RedundantCast
 //               TODO:!     belt[activeBelt][(Integer) (args[0])] = null;
                 //noinspection RedundantCast
-                CustomConfig.getActiveCharacter().hudBelt[activeBelt][(Integer) (args[0])] = null;
+                CustomConfig.current().getActiveCharacter().hudBelt[activeBelt][(Integer) (args[0])] = null;
             } else {/*
 		    	belt[activeBelt][(Integer)args[0]] = ui.sess.getres((Integer)args[1]).get();
 		    	ToolbarWnd.setbelt((Integer) args[0], ui.sess.getres((Integer) args[1]));
-				CustomConfig.getActiveCharacter().hudBelt[activeBelt][(Integer)args[0]] = belt[activeBelt][(Integer)args[0]].name;
+				CustomConfig.current().getActiveCharacter().hudBelt[activeBelt][(Integer)args[0]] = belt[activeBelt][(Integer)args[0]].name;
 		    */
             }
 //            }
@@ -629,7 +629,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
             return (true);
         } else if (ch >= '0' && ch <= '9' && ev.isAltDown()) { // Change belt
             activeBelt = ch - '0';
-            CustomConfig.getActiveCharacter().hudActiveBelt = activeBelt;
+            CustomConfig.current().getActiveCharacter().hudActiveBelt = activeBelt;
             final Resource[] ab = belt[activeBelt];
             for (int i = 0; i < ab.length; i++) {
                 wdgmsg("setbelt", i, (ab[i] == null) ? 0 : (ab[i].name));
@@ -647,13 +647,13 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
     }
 
     public int foldheight() {
-        return (CustomConfig.getWindowHeight() - c.y);
+        return (CustomConfig.current().getWindowHeight() - c.y);
     }
 
     public boolean drop(final Coord cc, final Coord ul, final Item item) {
         final int slot = beltslot(cc);
         if (slot != -1) {
-            if (CustomConfig.isNoChars())
+            if (CustomConfig.current().isNoChars())
                 error("You must restart the client to set and save your hotkeys");
             else
                 wdgmsg("setbelt", slot, 0);
@@ -669,7 +669,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
     public boolean dropthing(final Coord c, final Object thing) {
         final int slot = beltslot(c);
         if (slot != -1) {
-            if (CustomConfig.isNoChars()) {
+            if (CustomConfig.current().isNoChars()) {
                 error("You must restart the client to set and save your hotkeys");
                 return true;
             }
@@ -677,9 +677,9 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
                 final Resource res = (Resource) thing;
                 if (res.layer(Resource.action) != null) {
                     belt[activeBelt][slot] = res;
-                    CustomConfig.getActiveCharacter().hudBelt[activeBelt][slot] = belt[activeBelt][slot].name;
+                    CustomConfig.current().getActiveCharacter().hudBelt[activeBelt][slot] = belt[activeBelt][slot].name;
                     wdgmsg("setbelt", slot, res.name);
-                    if (ResCache.global != null) CustomConfig.save();
+                    if (ResCache.global != null) CustomConfig.current().save();
                     return (true);
                 }
             }
@@ -688,14 +688,14 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
     }
 
     public void initBelt() {
-        if (CustomConfig.isNoChars())
+        if (CustomConfig.current().isNoChars())
             return;
-        activeBelt = CustomConfig.getActiveCharacter().hudActiveBelt;
+        activeBelt = CustomConfig.current().getActiveCharacter().hudActiveBelt;
         synchronized (belt) {
             for (int i = 0; i < belt.length; i++) {
                 for (int j = 0; j < belt[i].length; j++) {
-                    if (CustomConfig.getActiveCharacter().hudBelt[i][j] != null) {
-                        belt[i][j] = Resource.load(CustomConfig.getActiveCharacter().hudBelt[i][j]);
+                    if (CustomConfig.current().getActiveCharacter().hudBelt[i][j] != null) {
+                        belt[i][j] = Resource.load(CustomConfig.current().getActiveCharacter().hudBelt[i][j]);
                     }
                 }
             }

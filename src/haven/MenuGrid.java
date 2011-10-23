@@ -301,21 +301,21 @@ public class MenuGrid extends Widget {
             use(null);
         }
         if (list[1].equals("radius")) {
-            CustomConfig.setShowRadius(!CustomConfig.isShowRadius());
-            final String str = "Radius highlight is turned " + ((CustomConfig.isShowRadius()) ? "ON" : "OFF");
+            CustomConfig.current().setShowRadius(!CustomConfig.current().current().isShowRadius());
+            final String str = "Radius highlight is turned " + ((CustomConfig.current().isShowRadius()) ? "ON" : "OFF");
             ui.cons.out.println(str);
             ui.slen.error(str);
-            CustomConfig.save();
+            CustomConfig.current().save();
         } else if (list[1].equals("hidden")) {
-            CustomConfig.setShowHidden(!CustomConfig.isShowHidden());
-            final String str = "Hidden object highlight is turned " + ((CustomConfig.isShowHidden()) ? "ON" : "OFF");
+            CustomConfig.current().setShowHidden(!CustomConfig.current().current().isShowHidden());
+            final String str = "Hidden object highlight is turned " + ((CustomConfig.current().isShowHidden()) ? "ON" : "OFF");
             ui.cons.out.println(str);
             ui.slen.error(str);
-            CustomConfig.save();
+            CustomConfig.current().save();
         } else if (list[1].equals("hide")) {
             for (int i = 2; i < list.length; i++) {
                 final String item = list[i];
-                final Set<String> hidingObjects = CustomConfig.getHidingObjects();
+                final Set<String> hidingObjects = CustomConfig.current().getHidingObjects();
                 if (hidingObjects.contains(item)) {
                     hidingObjects.remove(item);
                 } else {
@@ -323,24 +323,24 @@ public class MenuGrid extends Widget {
                 }
             }
         } else if (list[1].equals("simple plants")) {
-            CustomConfig.setSimple_plants(!CustomConfig.isSimple_plants());
-            final String str = "Simplified plants is turned " + ((CustomConfig.isSimple_plants()) ? "ON" : "OFF");
+            CustomConfig.current().setSimple_plants(!CustomConfig.current().current().isSimple_plants());
+            final String str = "Simplified plants is turned " + ((CustomConfig.current().isSimple_plants()) ? "ON" : "OFF");
             ui.cons.out.println(str);
             ui.slen.error(str);
-            CustomConfig.save();
+            CustomConfig.current().save();
         } else if (list[1].equals("timers")) {
             TimerPanel.toggleS();
         } else if (list[1].equals("animal")) {
-            CustomConfig.setShowBeast(!CustomConfig.isShowBeast());
-            final String str = "Animal highlight is turned " + ((CustomConfig.isShowBeast()) ? "ON" : "OFF");
+            CustomConfig.current().setShowBeast(!CustomConfig.current().current().isShowBeast());
+            final String str = "Animal highlight is turned " + ((CustomConfig.current().isShowBeast()) ? "ON" : "OFF");
             ui.cons.out.println(str);
             ui.slen.error(str);
-            CustomConfig.save();
+            CustomConfig.current().save();
         } else if (list[1].equals("globalchat")) {
             ui.root.wdgmsg("gk", 3);
         } else if (list[1].equals("wiki")) {
             if (ui.wiki == null) {
-                new WikiBrowser(CustomConfig.getWindowCenter().sub(115, 75), Coord.z, ui.root);
+                new WikiBrowser(CustomConfig.current().getWindowCenter().sub(115, 75), Coord.z, ui.root);
             } else {
                 ui.wiki.close();
             }

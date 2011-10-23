@@ -437,15 +437,15 @@ public class Widget {
 
     public boolean keyup(final KeyEvent ev) {
 //        if ((ev.getKeyCode() == KeyEvent.VK_X) && ((ev.getModifiers() & InputEvent.CTRL_MASK) != 0)) {
-//            CustomConfig.toggleXray();
+//            CustomConfig.current().toggleXray();
 //            return (true);
 //        }
 //        if ((ev.getKeyCode() == KeyEvent.VK_N) && ((ev.getModifiers() & InputEvent.CTRL_MASK) != 0)) {
-//            CustomConfig.hasNightVision = !CustomConfig.hasNightVision;
+//            CustomConfig.current().hasNightVision = !CustomConfig.current().current().hasNightVision;
 //            return (true);
 //        }
 //        if ((ev.getKeyCode() == KeyEvent.VK_H) && ((ev.getModifiers() & InputEvent.CTRL_MASK) != 0)) {
-//            CustomConfig.setHideObjects(!CustomConfig.isHideObjects());
+//            CustomConfig.current().setHideObjects(!CustomConfig.current().current().isHideObjects());
 //            return (true);
 //        }
 

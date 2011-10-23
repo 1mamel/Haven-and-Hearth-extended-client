@@ -65,27 +65,27 @@ public class RemoteUI implements UI.Receiver {
 
                     // UI fixes START
                     if (type.equals("cnt")) { // Central welcome widget
-                        args[0] = CustomConfig.getWindowSize();
+                        args[0] = CustomConfig.current().getWindowSize();
                     } else if (type.equals("img") && args.length >= 1 && (args[0] instanceof String)) {
                         final String arg0 = (String) args[0];
                         if (arg0.startsWith("gfx/hud/prog/")) { // Hourglass (progress bar) at center of screen and change widget type
-                            c = CustomConfig.getWindowCenter();
+                            c = CustomConfig.current().getWindowCenter();
                             type = "progressbar";
                             Progress.class.getClass();
                         }
                         if (arg0.equals("gfx/ccscr"))
-                            c = CustomConfig.getWindowCenter().add(-400, -300);
+                            c = CustomConfig.current().getWindowCenter().add(-400, -300);
                         if (arg0.equals("gfx/logo2"))
-                            c = CustomConfig.getWindowCenter().add(-415, -300);
+                            c = CustomConfig.current().getWindowCenter().add(-415, -300);
                     } else if (type.equals("charlist") && args.length >= 1) {
-                        c = CustomConfig.getWindowCenter().add(-380, -50);
+                        c = CustomConfig.current().getWindowCenter().add(-380, -50);
                     } else if (type.equals("ibtn") && args.length >= 2) { // New Player Button
                         if (args[0].equals("gfx/hud/buttons/ncu") && args[1].equals("gfx/hud/buttons/ncd")) {
-                            c = CustomConfig.getWindowCenter().add(86, 214);
+                            c = CustomConfig.current().getWindowCenter().add(86, 214);
                         }
                     } else if (type.equals("wnd") && c.x == 400 && c.y == 200) {
                         LOG.info("Strange window name=" + args[1].toString());
-                        c = CustomConfig.getWindowCenter().add(0, -100);
+                        c = CustomConfig.current().getWindowCenter().add(0, -100);
                     }
                     // UI fixes END
                     if (LOG.isInfoEnabled()) {

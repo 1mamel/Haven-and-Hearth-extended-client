@@ -34,16 +34,6 @@ import java.util.*;
 
 public class OptWnd extends Window {
     public static final RichText.Foundry foundry = new RichText.Foundry(TextAttribute.FAMILY, "SansSerif", TextAttribute.SIZE, 10);
-    private static final String[][] CHECKBOXES_LIST = {{"Walls", "gfx/arch/walls"},
-            {"Gates", "gfx/arch/gates"},
-            {"Wooden Houses", "gfx/arch/cabin"},
-            {"Stone Mansions", "gfx/arch/inn"},
-            {"Plants", "gfx/terobjs/plants"},
-            {"Trees", "gfx/terobjs/trees"},
-            {"Stones", "gfx/terobjs/bumlings"},
-            {"Flavor objects", "flavobjs"},
-            {"Bushes", "gfx/tiles/wald"},
-            {"Thicket", "gfx/tiles/dwald"}};
     private final Tabs body;
     private String curcam;
     private final Map<String, CamInfo> caminfomap = new HashMap<String, CamInfo>();
@@ -131,102 +121,102 @@ public class OptWnd extends Window {
 
             new CheckBox(new Coord(10, 130), tab, "Use new minimap (restart required)") {
                 public void changed(final boolean val) {
-                    CustomConfig.setNew_minimap(val);
-                    CustomConfig.save();
+                    CustomConfig.current().setNew_minimap(val);
+                    CustomConfig.current().save();
                 }
 
                 {
-                    a = CustomConfig.isNew_minimap();
+                    a = CustomConfig.current().isNew_minimap();
                 }
             };
 
             new CheckBox(new Coord(10, 165), tab, "Use new chat (restart required)") {
                 public void changed(final boolean val) {
-                    CustomConfig.setNew_chat(val);
-                    CustomConfig.save();
+                    CustomConfig.current().setNew_chat(val);
+                    CustomConfig.current().save();
                 }
 
                 {
-                    a = CustomConfig.isNew_chat();
+                    a = CustomConfig.current().isNew_chat();
                 }
             };
 
             (new CheckBox(new Coord(10, 200), tab, "Add timestamp in chat") {
                 public void changed(final boolean val) {
-                    CustomConfig.setAddChatTimestamp(val);
-                    CustomConfig.save();
+                    CustomConfig.current().setAddChatTimestamp(val);
+                    CustomConfig.current().save();
                 }
-            }).a = CustomConfig.isAddChatTimestamp();
+            }).a = CustomConfig.current().isAddChatTimestamp();
 
             (new CheckBox(new Coord(10, 235), tab, "Show dowsing direcion") {
                 public void changed(final boolean val) {
-                    CustomConfig.setShowDirection(val);
-                    CustomConfig.save();
+                    CustomConfig.current().setShowDirection(val);
+                    CustomConfig.current().save();
                 }
-            }).a = CustomConfig.isShowDirection();
+            }).a = CustomConfig.current().isShowDirection();
 
             (new CheckBox(new Coord(10, 270), tab, "Always show heartling names") {
                 public void changed(final boolean val) {
-                    CustomConfig.setShowNames(val);
-                    CustomConfig.save();
+                    CustomConfig.current().setShowNames(val);
+                    CustomConfig.current().save();
                 }
-            }).a = CustomConfig.isShowNames();
+            }).a = CustomConfig.current().isShowNames();
 
             (new CheckBox(new Coord(10, 305), tab, "Always show other kin names") {
                 public void changed(final boolean val) {
-                    CustomConfig.setShowOtherNames(val);
-                    CustomConfig.save();
+                    CustomConfig.current().setShowOtherNames(val);
+                    CustomConfig.current().save();
                 }
-            }).a = CustomConfig.isShowOtherNames();
+            }).a = CustomConfig.current().isShowOtherNames();
 
             (new CheckBox(new Coord(10, 340), tab, "Show smileys in chat") {
                 public void changed(final boolean val) {
-                    CustomConfig.setUse_smileys(val);
-                    CustomConfig.save();
+                    CustomConfig.current().setUse_smileys(val);
+                    CustomConfig.current().save();
                 }
-            }).a = CustomConfig.isUse_smileys();
+            }).a = CustomConfig.current().isUse_smileys();
 
             (new CheckBox(new Coord(10, 375), tab, "Show item quality") {
                 public void changed(final boolean val) {
-                    CustomConfig.setShowq(val);
-                    CustomConfig.save();
+                    CustomConfig.current().setShowq(val);
+                    CustomConfig.current().save();
                 }
-            }).a = CustomConfig.isShowq();
+            }).a = CustomConfig.current().isShowq();
 
             (new CheckBox(new Coord(220, 130), tab, "Fast menu") {
                 public void changed(final boolean val) {
-                    CustomConfig.setFastFlowerAnim(val);
-                    CustomConfig.save();
+                    CustomConfig.current().setFastFlowerAnim(val);
+                    CustomConfig.current().save();
                 }
-            }).a = CustomConfig.isFastFlowerAnim();
+            }).a = CustomConfig.current().isFastFlowerAnim();
 
             (new CheckBox(new Coord(220, 165), tab, "Compress screenshots") {
                 public void changed(final boolean val) {
-                    CustomConfig.setSshot_compress(val);
-                    CustomConfig.save();
+                    CustomConfig.current().setSshot_compress(val);
+                    CustomConfig.current().save();
                 }
-            }).a = CustomConfig.isSshot_compress();
+            }).a = CustomConfig.current().isScreenShotsCompressing();
 
             (new CheckBox(new Coord(220, 200), tab, "Exclude UI from screenshot") {
                 public void changed(final boolean val) {
-                    CustomConfig.setSshot_noui(val);
-                    CustomConfig.save();
+                    CustomConfig.current().setSshot_noui(val);
+                    CustomConfig.current().save();
                 }
-            }).a = CustomConfig.isSshot_noui();
+            }).a = CustomConfig.current().isScreenShotExcludeUI();
 
             (new CheckBox(new Coord(220, 235), tab, "Exclude names from screenshot") {
                 public void changed(final boolean val) {
-                    CustomConfig.setSshot_nonames(val);
-                    CustomConfig.save();
+                    CustomConfig.current().setSshot_nonames(val);
+                    CustomConfig.current().save();
                 }
-            }).a = CustomConfig.isSshot_nonames();
+            }).a = CustomConfig.current().isScreenShotsExcludeNames();
 
             (new CheckBox(new Coord(220, 270), tab, "Use optimized claim higlighting") {
                 public void changed(final boolean val) {
-                    CustomConfig.setNewclaim(val);
-                    CustomConfig.save();
+                    CustomConfig.current().setNewclaim(val);
+                    CustomConfig.current().save();
                 }
-            }).a = CustomConfig.isNewclaim();
+            }).a = CustomConfig.current().isNewclaim();
 
 //        (new CheckBox(new Coord(220, 305), tab, "Show digit toolbar") {
 //        public void changed(boolean val) {
@@ -360,16 +350,16 @@ public class OptWnd extends Window {
             cameras.check(caminfomap.containsKey(curcam) ? caminfomap.get(curcam).name : curcam);
             (new CheckBox(new Coord(50, 270), tab, "Allow zooming with mouse wheel") {
                 public void changed(final boolean val) {
-                    CustomConfig.setZoom(val);
-                    CustomConfig.save();
+                    CustomConfig.current().setZoom(val);
+                    CustomConfig.current().save();
                 }
-            }).a = CustomConfig.isZoom();
+            }).a = CustomConfig.current().isZoom();
             (new CheckBox(new Coord(50, 300), tab, "Disable camera borders") {
                 public void changed(final boolean val) {
-                    CustomConfig.setNoborders(val);
-                    CustomConfig.save();
+                    CustomConfig.current().setNoborders(val);
+                    CustomConfig.current().save();
                 }
-            }).a = CustomConfig.isNoborders();
+            }).a = CustomConfig.current().isNoborders();
         }
         { /* AUDIO TAB */
             tab = body.new Tab(new Coord(140, 0), 60, "Audio");
@@ -377,14 +367,14 @@ public class OptWnd extends Window {
             new Label(new Coord(35, 40), tab, "Volume");
             new Label(new Coord(10, 280), tab, "SFX");
             new Frame(new Coord(15, 65), new Coord(20, 206), tab);
-            final Label sfxvol = new Label(new Coord(40, 69 + (int) ((100 - CustomConfig.getSfxVol()) * 1.86)), tab, String.valueOf(CustomConfig.getSfxVol()) + " %");
+            final Label sfxvol = new Label(new Coord(40, 69 + (int) ((100 - CustomConfig.current().getSfxVol()) * 1.86)), tab, String.valueOf(CustomConfig.current().current().getSfxVol()) + " %");
             new Scrollbar(new Coord(30, 70), 196, tab, 0, 100) {
                 {
-                    val = 100 - CustomConfig.getSfxVol();
+                    val = 100 - CustomConfig.current().getSfxVol();
                 }
 
                 public void changed() {
-                    CustomConfig.setSfxVol(100 - val);
+                    CustomConfig.current().setSfxVol(100 - val);
                     sfxvol.c.setY(69 + (int) ((val) * 1.86));
                     sfxvol.settext(String.valueOf(100 - val) + " %");
                 }
@@ -396,15 +386,15 @@ public class OptWnd extends Window {
                 }
             };
             new Label(new Coord(70, 280), tab, "Music");
-            final Label musVol = new Label(new Coord(95, 69 + (int) ((100 - CustomConfig.getMusicVol()) * 1.86)), tab, String.valueOf(CustomConfig.getMusicVol()) + " %");
+            final Label musVol = new Label(new Coord(95, 69 + (int) ((100 - CustomConfig.current().getMusicVol()) * 1.86)), tab, String.valueOf(CustomConfig.current().current().getMusicVol()) + " %");
             new Frame(new Coord(75, 65), new Coord(20, 206), tab);
             new Scrollbar(new Coord(90, 70), 196, tab, 0, 100) {
                 {
-                    val = 100 - CustomConfig.getMusicVol();
+                    val = 100 - CustomConfig.current().getMusicVol();
                 }
 
                 public void changed() {
-                    CustomConfig.setMusicVol(100 - val);
+                    CustomConfig.current().setMusicVol(100 - val);
                     musVol.c.setY(69 + (int) ((val) * 1.86));
                     musVol.settext(String.valueOf(100 - val) + " %");
                 }
@@ -417,20 +407,20 @@ public class OptWnd extends Window {
             };
             new CheckBox(new Coord(120, 40), tab, "Sound enabled") {
                 public void changed(final boolean val) {
-                    CustomConfig.setSoundOn(val);
+                    CustomConfig.current().setSoundOn(val);
                 }
 
                 {
-                    a = CustomConfig.isSoundOn();
+                    a = CustomConfig.current().isSoundOn();
                 }
             };
             new CheckBox(new Coord(120, 70), tab, "Music enabled") {
                 public void changed(final boolean val) {
-                    CustomConfig.setMusicOn(val);
+                    CustomConfig.current().setMusicOn(val);
                 }
 
                 {
-                    a = CustomConfig.isMusicOn();
+                    a = CustomConfig.current().isMusicOn();
                 }
             };
         }
@@ -450,12 +440,12 @@ public class OptWnd extends Window {
             final Coord textFieldSize = new Coord(180, 15);
 
             // Server entry
-            serverAddress = new TextEntry(new Coord(secondCellXOffset, 40), textFieldSize, tab, CustomConfig.getIrcServerAddress());
+            serverAddress = new TextEntry(new Coord(secondCellXOffset, 40), textFieldSize, tab, CustomConfig.current().getIrcServerAddress());
             serverAddress.badchars = " ";
 
             // Channel list entry
             final StringBuilder builder = new StringBuilder();
-            for (final Listbox.Option channel : CustomConfig.getIrcChannelList()) {
+            for (final Listbox.Option channel : CustomConfig.current().getIrcChannelList()) {
                 final String name = channel.name.trim();
                 final String disp = channel.disp.trim();
                 if (!name.isEmpty()) {
@@ -472,14 +462,14 @@ public class OptWnd extends Window {
 
             // Nickname entries
             defNick = new TextEntry(new Coord(secondCellXOffset, 80), textFieldSize,
-                    tab, CustomConfig.getIrcDefNick()) {
+                    tab, CustomConfig.current().getIrcDefNick()) {
                 {
                     badchars = someBadChars;
                 }
             };
 
             altNick = new TextEntry(new Coord(secondCellXOffset, 100), textFieldSize,
-                    tab, CustomConfig.getIrcAltNick()) {
+                    tab, CustomConfig.current().getIrcAltNick()) {
                 {
                     badchars = someBadChars;
                 }
@@ -488,11 +478,11 @@ public class OptWnd extends Window {
             // IRC toggle
             ircToggle = new CheckBox(new Coord((firstCellXOffset + secondCellXOffset) / 2, 130), tab, "IRC On/Off") {
                 public void changed(final boolean val) {
-                    CustomConfig.setIRCOn(val);
+                    CustomConfig.current().setIRCOn(val);
                 }
 
                 {
-                    a = CustomConfig.isIRCOn();
+                    a = CustomConfig.current().isIRCOn();
                 }
             };
 
@@ -502,52 +492,52 @@ public class OptWnd extends Window {
             tab = body.new Tab(new Coord(280, 0), 80, "Hide Objects");
 
             int y = 0;
-            for (final String[] checkbox : CHECKBOXES_LIST) {
+            for (final String[] checkbox : CustomConfig.CHECKBOXES_LIST) {
                 //noinspection ObjectAllocationInLoop
                 new CheckBox(new Coord(10, y += 30), tab, checkbox[0]) {
 
                     public void changed(final boolean val) {
                         if (val) {
-                            CustomConfig.getHidingObjects().add(checkbox[1]);
+                            CustomConfig.current().getHidingObjects().add(checkbox[1]);
                         } else {
-                            CustomConfig.getHidingObjects().remove(checkbox[1]);
+                            CustomConfig.current().getHidingObjects().remove(checkbox[1]);
                         }
-                        CustomConfig.save();
+                        CustomConfig.current().save();
                     }
 
                     {
-                        a = CustomConfig.getHidingObjects().contains(checkbox[1]);
+                        a = CustomConfig.current().getHidingObjects().contains(checkbox[1]);
                     }
                 };
             }
             y = 0;
             new CheckBox(new Coord(150, y += 30), tab, "Hiding enabled") {
                 public void changed(final boolean val) {
-                    CustomConfig.setHideObjects(val);
-                    CustomConfig.save();
+                    CustomConfig.current().setHideObjects(val);
+                    CustomConfig.current().save();
                 }
 
                 {
-                    a = CustomConfig.isHideObjects();
+                    a = CustomConfig.current().isHideObjects();
                 }
             };
             new CheckBox(new Coord(150, y += 30), tab, "XRay enabled") {
                 public void changed(final boolean val) {
-                    CustomConfig.setXray(val);
-                    CustomConfig.save();
+                    CustomConfig.current().setXray(val);
+                    CustomConfig.current().save();
                 }
 
                 {
-                    a = CustomConfig.isXray();
+                    a = CustomConfig.current().isXray();
                 }
             };
             new CheckBox(new Coord(150, y += 30), tab, "NightVision enabled") {
                 public void changed(final boolean val) {
-                    CustomConfig.setHasNightVision(val);
+                    CustomConfig.current().setHasNightVision(val);
                 }
 
                 {
-                    a = CustomConfig.isNightVision();
+                    a = CustomConfig.current().isNightVision();
                 }
             };
         }
@@ -556,26 +546,26 @@ public class OptWnd extends Window {
             tab = body.new Tab(new Coord(370, 0), 80, "Translation");
             (new CheckBox(new Coord(120, 30), tab, "Turn on") {
                 public void changed(final boolean val) {
-                    CustomConfig.getTranslator().turn(val);
+                    CustomConfig.current().getTranslator().turn(val);
                 }
-            }).a = CustomConfig.getTranslator().isWorking();
+            }).a = CustomConfig.current().getTranslator().isWorking();
 
             new Label(new Coord(10, 30), tab, "Target Language:");
 
-            new ScrollableListArea<Language>(new Coord(10, 50), new Coord(110, 250), tab, CustomConfig.getTranslator().getAvailableLanguages()) {
+            new ScrollableListArea<Language>(new Coord(10, 50), new Coord(110, 250), tab, CustomConfig.current().getTranslator().getAvailableLanguages()) {
                 @Override
                 public void changed(@Nullable final Option<Language> changed) {
                     if (changed != null && changed.getStoredObject() != null) {
-                        CustomConfig.setTranslatorLanguage(changed.getStoredObject());
+                        CustomConfig.current().setTranslatorLanguage(changed.getStoredObject());
                     }
                 }
-            }.checkByValue(CustomConfig.getTranslatorLanguage());
+            }.checkByValue(CustomConfig.current().getTranslatorLanguage());
 
             new Label(new Coord(130, 125), tab, "Microsoft Translator API Key:");
-            final TextEntry te = new TextEntry(new Coord(130, 150), new Coord(330, 20), tab, CustomConfig.getTranslator().getKey());
+            final TextEntry te = new TextEntry(new Coord(130, 150), new Coord(330, 20), tab, CustomConfig.current().getTranslator().getKey());
             new Button(new Coord(330, 175), 50, tab, "set") {
                 public void click() {
-                    CustomConfig.setTranslatorApiKey(te.text);
+                    CustomConfig.current().setTranslatorApiKey(te.text);
                 }
             };
 
@@ -592,11 +582,11 @@ public class OptWnd extends Window {
 
     void saveSome() {
         Listbox.Option channel = null;
-        CustomConfig.setIrcServerAddress(serverAddress.text);
-        CustomConfig.setIrcDefNick(defNick.text);
-        CustomConfig.setIrcAltNick(altNick.text);
+        CustomConfig.current().setIrcServerAddress(serverAddress.text);
+        CustomConfig.current().setIrcDefNick(defNick.text);
+        CustomConfig.current().setIrcAltNick(altNick.text);
         final String[] channelData = Utils.whitespacePattern.split(channelList.text);
-        final List<Listbox.Option> ircChannelList = CustomConfig.getIrcChannelList();
+        final List<Listbox.Option> ircChannelList = CustomConfig.current().getIrcChannelList();
         ircChannelList.clear();
         for (int i = 0; i < channelData.length; i++) {
             channelData[i] = channelData[i].trim();
@@ -625,7 +615,7 @@ public class OptWnd extends Window {
 //noinspection UnusedAssignment
             channel = null;
         }
-        CustomConfig.save();
+        CustomConfig.current().save();
     }
 
     private void setcamera(final String camtype) {

@@ -20,6 +20,16 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class CustomConfig {
 
     private static final AtomicInteger customWidgetIdGenerator = new AtomicInteger(-10); // for Userspace widgets
+    public static final String[][] CHECKBOXES_LIST = {{"Walls", "gfx/arch/walls"},
+            {"Gates", "gfx/arch/gates"},
+            {"Wooden Houses", "gfx/arch/cabin"},
+            {"Stone Mansions", "gfx/arch/inn"},
+            {"Plants", "gfx/terobjs/plants"},
+            {"Trees", "gfx/terobjs/trees"},
+            {"Stones", "gfx/terobjs/bumlings"},
+            {"Flavor objects", "flavobjs"},
+            {"Bushes", "gfx/tiles/wald"},
+            {"Thicket", "gfx/tiles/dwald"}};
     private boolean sshot_compress;
     private boolean sshot_noui;
     private boolean sshot_nonames;
@@ -48,7 +58,7 @@ public class CustomConfig {
 
     private final MicrosoftTranslatorProvider translator = new MicrosoftTranslatorProvider();
 
-    public static int getNextCustomWidgetId() {
+    public int getNextCustomWidgetId() {
         return customWidgetIdGenerator.decrementAndGet();
     }
 
@@ -107,25 +117,29 @@ public class CustomConfig {
         ircChannelList.add(new Listbox.Option("#Haven", ""));
     }
 
-    public static Glob getGlob() {
-        return ourConfig.glob;
+    public static CustomConfig current() {
+        return getConfig();
     }
 
-    public static void setGlob(final Glob glob) {
-        ourConfig.glob = glob;
+    public Glob getGlob() {
+        return this.glob;
     }
 
-    public static int getPlayerId() {
-        return ourConfig.playerId;
+    public void setGlob(final Glob glob) {
+        this.glob = glob;
     }
 
-    public static void setPlayerId(final int playerId) {
-        ourConfig.playerId = playerId;
+    public int getPlayerId() {
+        return this.playerId;
+    }
+
+    public void setPlayerId(final int playerId) {
+        this.playerId = playerId;
     }
 
 
     public static void setConfig(final CustomConfig config) {
-        CustomConfig.ourConfig = config;
+        ourConfig = config;
     }
 
     public static CustomConfig getConfig() {
@@ -133,256 +147,256 @@ public class CustomConfig {
     }
 
 
-    public static void toggleXray() {
-        ourConfig.xray = !ourConfig.xray;
+    public void toggleXray() {
+        this.xray = !this.xray;
     }
 
-    public static boolean isXray() {
-        return ourConfig.xray;
+    public boolean isXray() {
+        return this.xray;
     }
 
-    public static void setXray(final boolean xray) {
-        ourConfig.xray = xray;
+    public void setXray(final boolean xray) {
+        this.xray = xray;
     }
 
-    public static boolean isHideObjects() {
-        return ourConfig.hideObjects;
+    public boolean isHideObjects() {
+        return this.hideObjects;
     }
 
-    public static void setHideObjects(final boolean hide) {
-        ourConfig.hideObjects = hide;
+    public void setHideObjects(final boolean hide) {
+        this.hideObjects = hide;
     }
 
-    public static boolean isHighlightObjectAtMouse() {
-        return ourConfig.highlightObjectAtMouse;
+    public boolean isHighlightObjectAtMouse() {
+        return this.highlightObjectAtMouse;
     }
 
-    public static void setHighlightObjectAtMouse(final boolean highlightObjectAtMouse) {
-        ourConfig.highlightObjectAtMouse = highlightObjectAtMouse;
+    public void setHighlightObjectAtMouse(final boolean highlightObjectAtMouse) {
+        this.highlightObjectAtMouse = highlightObjectAtMouse;
     }
 
-    public static boolean isRender() {
-        return ourConfig.render;
+    public boolean isRender() {
+        return this.render;
     }
 
-    public static void setRender(final boolean render) {
-        ourConfig.render = render;
+    public void setRender(final boolean render) {
+        this.render = render;
     }
 
-    public static int getSfxVol() {
-        return ourConfig.sfxVol;
+    public int getSfxVol() {
+        return this.sfxVol;
     }
 
-    public static void setSfxVol(final int sfxVol) {
-        ourConfig.sfxVol = sfxVol;
+    public void setSfxVol(final int sfxVol) {
+        this.sfxVol = sfxVol;
     }
 
-    public static int getMusicVol() {
-        return ourConfig.musicVol;
+    public int getMusicVol() {
+        return this.musicVol;
     }
 
-    public static void setMusicVol(final int musicVol) {
-        ourConfig.musicVol = musicVol;
+    public void setMusicVol(final int musicVol) {
+        this.musicVol = musicVol;
     }
 
-    public static String getIrcServerAddress() {
-        return ourConfig.ircServerAddress;
+    public String getIrcServerAddress() {
+        return this.ircServerAddress;
     }
 
-    public static void setIrcServerAddress(final String ircServerAddress) {
-        ourConfig.ircServerAddress = ircServerAddress;
+    public void setIrcServerAddress(final String ircServerAddress) {
+        this.ircServerAddress = ircServerAddress;
     }
 
-    public static List<Listbox.Option> getIrcChannelList() {
-        return ourConfig.ircChannelList;
+    public List<Listbox.Option> getIrcChannelList() {
+        return this.ircChannelList;
     }
 
-    public static void setIrcChannelList(final List<Listbox.Option> ircChannelList) {
-        ourConfig.ircChannelList = ircChannelList;
+    public void setIrcChannelList(final List<Listbox.Option> ircChannelList) {
+        this.ircChannelList = ircChannelList;
     }
 
-    public static List<CharData> getCharacterList() {
-        return ourConfig.characterList;
+    public List<CharData> getCharacterList() {
+        return this.characterList;
     }
 
-    public static void setCharacterList(final List<CharData> characterList) {
-        ourConfig.characterList = characterList;
+    public void setCharacterList(final List<CharData> characterList) {
+        this.characterList = characterList;
     }
 
-    public static String getIrcDefNick() {
-        return ourConfig.ircDefNick;
+    public String getIrcDefNick() {
+        return this.ircDefNick;
     }
 
-    public static void setIrcDefNick(final String ircDefNick) {
-        ourConfig.ircDefNick = ircDefNick;
+    public void setIrcDefNick(final String ircDefNick) {
+        this.ircDefNick = ircDefNick;
     }
 
-    public static String getIrcAltNick() {
-        return ourConfig.ircAltNick;
+    public String getIrcAltNick() {
+        return this.ircAltNick;
     }
 
-    public static void setIrcAltNick(final String ircAltNick) {
-        ourConfig.ircAltNick = ircAltNick;
+    public void setIrcAltNick(final String ircAltNick) {
+        this.ircAltNick = ircAltNick;
     }
 
-    public static boolean isMusicOn() {
-        return ourConfig.isMusicOn;
+    public boolean isMusicOn() {
+        return this.isMusicOn;
     }
 
-    public static void setMusicOn(final boolean musicOn) {
-        ourConfig.isMusicOn = musicOn;
+    public void setMusicOn(final boolean musicOn) {
+        this.isMusicOn = musicOn;
     }
 
-    public static boolean isSoundOn() {
-        return ourConfig.isSoundOn;
+    public boolean isSoundOn() {
+        return this.isSoundOn;
     }
 
-    public static void setSoundOn(final boolean soundOn) {
-        ourConfig.isSoundOn = soundOn;
+    public void setSoundOn(final boolean soundOn) {
+        this.isSoundOn = soundOn;
     }
 
-    public static boolean isIRCOn() {
-        return ourConfig.isIRCOn;
+    public boolean isIRCOn() {
+        return this.isIRCOn;
     }
 
-    public static void setIRCOn(final boolean IRCOn) {
-        ourConfig.isIRCOn = IRCOn;
+    public void setIRCOn(final boolean IRCOn) {
+        this.isIRCOn = IRCOn;
     }
 
-    public static boolean isNightVision() {
-        return ourConfig.hasNightVision;
+    public boolean isNightVision() {
+        return this.hasNightVision;
     }
 
-    public static void setHasNightVision(final boolean hasNightVision) {
-        ourConfig.hasNightVision = hasNightVision;
+    public void setHasNightVision(final boolean hasNightVision) {
+        this.hasNightVision = hasNightVision;
     }
 
-    public static boolean isSaveable() {
-        return ourConfig.isSaveable;
+    public boolean isSaveable() {
+        return this.isSaveable;
     }
 
-    public static void setSaveable(final boolean saveable) {
-        ourConfig.isSaveable = saveable;
+    public void setSaveable(final boolean saveable) {
+        this.isSaveable = saveable;
     }
 
-    public static boolean isNoChars() {
-        return ourConfig.noChars;
+    public boolean isNoChars() {
+        return this.noChars;
     }
 
-    public static void setNoChars(final boolean noChars) {
-        ourConfig.noChars = noChars;
+    public void setNoChars(final boolean noChars) {
+        this.noChars = noChars;
     }
 
-    public static boolean isLogLoad() {
-        return ourConfig.logLoad;
+    public boolean isLogLoad() {
+        return this.logLoad;
     }
 
-    public static void setLogLoad(final boolean logLoad) {
-        ourConfig.logLoad = logLoad;
+    public void setLogLoad(final boolean logLoad) {
+        this.logLoad = logLoad;
     }
 
-    public static boolean isLogSave() {
-        return ourConfig.logSave;
+    public boolean isLogSave() {
+        return this.logSave;
     }
 
-    public static void setLogSave(final boolean logSave) {
-        ourConfig.logSave = logSave;
+    public void setLogSave(final boolean logSave) {
+        this.logSave = logSave;
     }
 
-    public static boolean isLogIRC() {
-        return ourConfig.logIRC;
+    public boolean isLogIRC() {
+        return this.logIRC;
     }
 
-    public static void setLogIRC(final boolean logIRC) {
-        ourConfig.logIRC = logIRC;
+    public void setLogIRC(final boolean logIRC) {
+        this.logIRC = logIRC;
     }
 
-    public static boolean isLogServerMessages() {
-        return ourConfig.logServerMessages;
+    public boolean isLogServerMessages() {
+        return this.logServerMessages;
     }
 
-    public static void setLogServerMessages(final boolean logServerMessages) {
-        ourConfig.logServerMessages = logServerMessages;
+    public void setLogServerMessages(final boolean logServerMessages) {
+        this.logServerMessages = logServerMessages;
     }
 
-    public static Coord getWindowSize() {
-        return ourConfig.windowSize;
+    public Coord getWindowSize() {
+        return this.windowSize;
     }
 
-    public static Coord getWindowCenter() {
-        return ourConfig.windowCenter;
+    public Coord getWindowCenter() {
+        return this.windowCenter;
     }
 
-    public static void setWindowCenter(final Coord windowCenter) {
-        ourConfig.windowCenter = windowCenter;
+    public void setWindowCenter(final Coord windowCenter) {
+        this.windowCenter = windowCenter;
     }
 
-    public static int getWindowWidth() {
+    public int getWindowWidth() {
         return getWindowSize().x;
     }
 
-    public static int getWindowHeight() {
+    public int getWindowHeight() {
         return getWindowSize().y;
     }
 
-    public static int getCenterX() {
+    public int getCenterX() {
         return getWindowCenter().x;
     }
 
-    public static int getCenterY() {
+    public int getCenterY() {
         return getWindowCenter().y;
     }
 
-    public static CharData getActiveCharacter() {
-        return ourConfig.activeCharacter;
+    public CharData getActiveCharacter() {
+        return this.activeCharacter;
     }
 
-    public static void toggleNightvision() {
-        ourConfig.hasNightVision = !ourConfig.hasNightVision;
+    public void toggleNightvision() {
+        this.hasNightVision = !this.hasNightVision;
     }
 
-    public static void toggleHideObjects() {
-        ourConfig.hideObjects = !ourConfig.hideObjects;
+    public void toggleHideObjects() {
+        this.hideObjects = !this.hideObjects;
     }
 
-    public static void toggleRender() {
-        ourConfig.render = !ourConfig.render;
+    public void toggleRender() {
+        this.render = !this.render;
     }
 
-    public static void toggleMapGrid() {
+    public void toggleMapGrid() {
         setGrid(!isGrid());
     }
 
     public static void toggleConsole() {
         if (UI.console == null) {
-            UI.console = new CustomConsole(Coord.z, new Coord(CustomConfig.getWindowWidth() - 30, 220), UI.instance.root, "Console");
+            UI.console = new CustomConsole(Coord.z, new Coord(CustomConfig.current().getWindowWidth() - 30, 220), UI.instance.root, "Console");
         } else {
             UI.console.toggle();
             UI.console.raise();
         }
     }
 
-    public static int getMusicVolume() {
+    public int getMusicVolume() {
         return isMusicOn() ? getMusicVol() : 0;
     }
 
-    public static Map<String, String> getWindowProperties() {
-        return ourConfig.windowProperties;
+    public Map<String, String> getWindowProperties() {
+        return this.windowProperties;
     }
 
     @Nullable
-    public static String getWindowProperty(@NotNull final String key, @Nullable final String defValue) {
-        if (ourConfig.windowProperties.containsKey(key)) {
-            return ourConfig.windowProperties.get(key);
+    public String getWindowProperty(@NotNull final String key, @Nullable final String defValue) {
+        if (this.windowProperties.containsKey(key)) {
+            return this.windowProperties.get(key);
         } else return defValue;
     }
 
     @Nullable
-    public static String getWindowProperty(@NotNull final String key) {
-        return ourConfig.windowProperties.get(key);
+    public String getWindowProperty(@NotNull final String key) {
+        return this.windowProperties.get(key);
     }
 
-    public static <T> void setWindowOpt(@NotNull final String key, @Nullable final T value) {
+    public <T> void setWindowOpt(@NotNull final String key, @Nullable final T value) {
         synchronized (getWindowProperties()) {
             final String prev_val = getWindowProperties().get(key);
             if ((prev_val != null) && prev_val.equals(value))
@@ -393,7 +407,7 @@ public class CustomConfig {
     }
 
     public static boolean save() {
-        return CustomConfigProcessor.saveConfig(ourConfig);
+        return CustomConfigProcessor.saveConfig(current());
     }
 
     public static boolean load() {
@@ -405,188 +419,195 @@ public class CustomConfig {
         return true;
     }
 
-    public static boolean isShowRadius() {
-        return ourConfig.showRadius;
+    public boolean isShowRadius() {
+        return this.showRadius;
     }
 
-    public static void setShowRadius(final boolean showRadius) {
-        ourConfig.showRadius = showRadius;
+    public void setShowRadius(final boolean showRadius) {
+        this.showRadius = showRadius;
     }
 
-    public static boolean isShowHidden() {
-        return ourConfig.showHidden;
+    public boolean isShowHidden() {
+        return this.showHidden;
     }
 
-    public static void setShowHidden(final boolean showHidden) {
-        ourConfig.showHidden = showHidden;
+    public void setShowHidden(final boolean showHidden) {
+        this.showHidden = showHidden;
     }
 
-    public static boolean isShowBeast() {
-        return ourConfig.showBeast;
+    public boolean isShowBeast() {
+        return this.showBeast;
     }
 
-    public static void setShowBeast(final boolean showBeast) {
-        ourConfig.showBeast = showBeast;
+    public void setShowBeast(final boolean showBeast) {
+        this.showBeast = showBeast;
     }
 
-    public static boolean isShowDirection() {
-        return ourConfig.showDirection;
+    public boolean isShowDirection() {
+        return this.showDirection;
     }
 
-    public static void setShowDirection(final boolean showDirection) {
-        ourConfig.showDirection = showDirection;
+    public void setShowDirection(final boolean showDirection) {
+        this.showDirection = showDirection;
     }
 
-    public static boolean isShowNames() {
-        return ourConfig.showNames;
+    public boolean isShowNames() {
+        return this.showNames;
     }
 
-    public static void setShowNames(final boolean showNames) {
-        ourConfig.showNames = showNames;
+    public void setShowNames(final boolean showNames) {
+        this.showNames = showNames;
     }
 
-    public static boolean isShowOtherNames() {
-        return ourConfig.showOtherNames;
+    public boolean isShowOtherNames() {
+        return this.showOtherNames;
     }
 
-    public static void setShowOtherNames(final boolean showOtherNames) {
-        ourConfig.showOtherNames = showOtherNames;
+    public void setShowOtherNames(final boolean showOtherNames) {
+        this.showOtherNames = showOtherNames;
     }
 
-    public static boolean isSshot_compress() {
-        return ourConfig.sshot_compress;
+    public boolean isScreenShotsCompressing() {
+        return this.sshot_compress;
     }
 
-    public static void setSshot_compress(final boolean sshot_compress) {
-        ourConfig.sshot_compress = sshot_compress;
+    public void setSshot_compress(final boolean sshot_compress) {
+        this.sshot_compress = sshot_compress;
     }
 
-    public static boolean isSshot_noui() {
-        return ourConfig.sshot_noui;
+    public boolean isScreenShotExcludeUI() {
+        return this.sshot_noui;
     }
 
-    public static void setSshot_noui(final boolean sshot_noui) {
-        ourConfig.sshot_noui = sshot_noui;
+    public void setSshot_noui(final boolean sshot_noui) {
+        this.sshot_noui = sshot_noui;
     }
 
-    public static boolean isSshot_nonames() {
-        return ourConfig.sshot_nonames;
+    public boolean isScreenShotsExcludeNames() {
+        return this.sshot_nonames;
     }
 
-    public static void setSshot_nonames(final boolean sshot_nonames) {
-        ourConfig.sshot_nonames = sshot_nonames;
+    public void setSshot_nonames(final boolean sshot_nonames) {
+        this.sshot_nonames = sshot_nonames;
     }
 
-    public static boolean isFastFlowerAnim() {
-        return ourConfig.fastFlowerAnim;
+    public boolean isFastFlowerAnim() {
+        return this.fastFlowerAnim;
     }
 
-    public static void setFastFlowerAnim(final boolean fastFlowerAnim) {
-        ourConfig.fastFlowerAnim = fastFlowerAnim;
+    public void setFastFlowerAnim(final boolean fastFlowerAnim) {
+        this.fastFlowerAnim = fastFlowerAnim;
     }
 
-    public static boolean isNewclaim() {
-        return ourConfig.newclaim;
+    public boolean isNewclaim() {
+        return this.newclaim;
     }
 
-    public static void setNewclaim(final boolean newclaim) {
-        ourConfig.newclaim = newclaim;
+    public void setNewclaim(final boolean newclaim) {
+        this.newclaim = newclaim;
     }
 
-    public static boolean isShowq() {
-        return ourConfig.showq;
+    public boolean isShowq() {
+        return this.showq;
     }
 
-    public static void setShowq(final boolean showq) {
-        ourConfig.showq = showq;
+    public void setShowq(final boolean showq) {
+        this.showq = showq;
     }
 
-    public static boolean isGrid() {
-        return ourConfig.grid;
+    public boolean isGrid() {
+        return this.grid;
     }
 
-    public static void setGrid(final boolean grid) {
-        ourConfig.grid = grid;
+    public void setGrid(final boolean grid) {
+        this.grid = grid;
     }
 
-    public static boolean isAddChatTimestamp() {
-        return ourConfig.addChatTimestamp;
+    public boolean isAddChatTimestamp() {
+        return this.addChatTimestamp;
     }
 
-    public static void setAddChatTimestamp(final boolean timestamp) {
-        ourConfig.addChatTimestamp = timestamp;
+    public void setAddChatTimestamp(final boolean timestamp) {
+        this.addChatTimestamp = timestamp;
     }
 
-    public static boolean isNew_chat() {
-        return ourConfig.new_chat;
+    public boolean isNew_chat() {
+        return this.new_chat;
     }
 
-    public static void setNew_chat(final boolean new_chat) {
-        ourConfig.new_chat = new_chat;
+    public void setNew_chat(final boolean new_chat) {
+        this.new_chat = new_chat;
     }
 
-    public static boolean isHighlight() {
-        return ourConfig.highlight;
+    public boolean isHighlight() {
+        return this.highlight;
     }
 
-    public static void setHighlight(final boolean highlight) {
-        ourConfig.highlight = highlight;
+    public void setHighlight(final boolean highlight) {
+        this.highlight = highlight;
     }
 
-    public static boolean isUse_smileys() {
-        return ourConfig.use_smileys;
+    public boolean isUse_smileys() {
+        return this.use_smileys;
     }
 
-    public static void setUse_smileys(final boolean use_smileys) {
-        ourConfig.use_smileys = use_smileys;
+    public void setUse_smileys(final boolean use_smileys) {
+        this.use_smileys = use_smileys;
     }
 
-    public static boolean isZoom() {
-        return ourConfig.zoom;
+    public boolean isZoom() {
+        return this.zoom;
     }
 
-    public static void setZoom(final boolean zoom) {
-        ourConfig.zoom = zoom;
+    public void setZoom(final boolean zoom) {
+        this.zoom = zoom;
     }
 
-    public static boolean isNoborders() {
-        return ourConfig.noborders;
+    public boolean isNoborders() {
+        return this.noborders;
     }
 
-    public static void setNoborders(final boolean noborders) {
-        ourConfig.noborders = noborders;
+    public void setNoborders(final boolean noborders) {
+        this.noborders = noborders;
     }
 
-    public static boolean isNew_minimap() {
-        return ourConfig.new_minimap;
+    public boolean isNew_minimap() {
+        return this.new_minimap;
     }
 
-    public static void setNew_minimap(final boolean new_minimap) {
-        ourConfig.new_minimap = new_minimap;
+    public void setNew_minimap(final boolean new_minimap) {
+        this.new_minimap = new_minimap;
     }
 
-    public static boolean isSimple_plants() {
-        return ourConfig.simple_plants;
+    public boolean isSimple_plants() {
+        return this.simple_plants;
     }
 
-    public static void setSimple_plants(final boolean simple_plants) {
-        ourConfig.simple_plants = simple_plants;
+    public void setSimple_plants(final boolean simple_plants) {
+        this.simple_plants = simple_plants;
     }
 
-    public static Set<String> getHidingObjects() {
-        return ourConfig.hidingObjects;
+    public Set<String> getHidingObjects() {
+        return this.hidingObjects;
     }
 
-    public static void setTranslatorLanguage(@NotNull final Language language) {
-        ourConfig.translator.useLanguage(language);
+    public void setHidingObjects(@NotNull final Set<String> hidingObjects) {
+        synchronized (this.hidingObjects) {
+            this.hidingObjects.clear();
+            this.hidingObjects.addAll(hidingObjects);
+        }
     }
 
-    public static Language getTranslatorLanguage() {
-        return ourConfig.translator.getLanguage();
+    public void setTranslatorLanguage(@NotNull final Language language) {
+        this.translator.useLanguage(language);
     }
 
-    public static MicrosoftTranslatorProvider getTranslator() {
-        return ourConfig.translator;
+    public Language getTranslatorLanguage() {
+        return this.translator.getLanguage();
+    }
+
+    public MicrosoftTranslatorProvider getTranslator() {
+        return this.translator;
     }
 
     static class CharData {
@@ -604,41 +625,41 @@ public class CustomConfig {
     }
 
 
-    public static void setWindowSize(final Coord size) {
-        ourConfig.windowSize = size;
+    public void setWindowSize(final Coord size) {
+        this.windowSize = size;
         MainFrame.setWindowSize(size.toDimension());
     }
 
-    public static void setWindowSize(final int width, final int height) {
-        ourConfig.windowSize = new Coord(width, height);
+    public void setWindowSize(final int width, final int height) {
+        this.windowSize = new Coord(width, height);
         MainFrame.setWindowSize(new Dimension(width, height));
     }
 
-    public static void updateWindowSize(final int width, final int height) {
-        ourConfig.windowSize = new Coord(width, height);
+    public void updateWindowSize(final int width, final int height) {
+        this.windowSize = new Coord(width, height);
     }
 
-    public static void setActiveCharacter(final String name) {
-        for (final CharData cData : ourConfig.characterList) {
+    public void setActiveCharacter(final String name) {
+        for (final CharData cData : this.characterList) {
             if (cData.name.equalsIgnoreCase(name)) {
-                ourConfig.activeCharacter = cData;
+                this.activeCharacter = cData;
                 setSaveable(true);
                 setNoChars(false);
                 return;
             }
         }
-        ourConfig.activeCharacter = new CharData(name);
-        ourConfig.characterList.add(ourConfig.activeCharacter);
+        this.activeCharacter = new CharData(name);
+        this.characterList.add(this.activeCharacter);
         setSaveable(true);
         setNoChars(false);
     }
 
 
-    public static String getTranslatorApiKey() {
-        return ourConfig.translator.getKey();
+    public String getTranslatorApiKey() {
+        return this.translator.getKey();
     }
 
-    public static void setTranslatorApiKey(final String apiKey) {
-        ourConfig.translator.useKey(apiKey);
+    public void setTranslatorApiKey(final String apiKey) {
+        this.translator.useKey(apiKey);
     }
 }

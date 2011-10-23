@@ -96,7 +96,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
     // arksu ------------------------------------------------------------------
 
     public double getScale() {
-        return CustomConfig.isZoom() ? _scale : 1;
+        return CustomConfig.current().isZoom() ? _scale : 1;
     }
 
     public void setScale(final double value) {
@@ -114,7 +114,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
     static {
         Widget.addtype("mapview", new WidgetFactory() {
             public Widget create(@NotNull final Coord c, @NotNull final Widget parent, final Object[] args) {
-                final Coord sz = CustomConfig.getWindowSize().clone(); //(Coord)args[0];
+                final Coord sz = CustomConfig.current().getWindowSize().clone(); //(Coord)args[0];
                 final Coord mc = (Coord) args[1];
                 int pgob = -1;
                 if (args.length > 2) {
@@ -122,7 +122,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
                 } else {
                     System.err.println("Creating MapView without specified player object");
                 }
-                CustomConfig.setPlayerId(pgob);
+                CustomConfig.current().setPlayerId(pgob);
                 return (new MapView(c, sz, parent, mc, pgob));
             }
         });
@@ -161,7 +161,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
         }
 
         public static void borderize(final MapView mv, final Gob player, final Coord sz, final Coord border) {
-            if (CustomConfig.isNoborders()) {
+            if (CustomConfig.current().isNoborders()) {
                 return;
             }
             Coord mc = mv.mc;
@@ -582,7 +582,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
         setcanfocus(true);
         glob = ui.sess.glob;
         map = glob.map;
-        mask = new ILM(CustomConfig.getWindowSize(), glob.oc);
+        mask = new ILM(CustomConfig.current().getWindowSize(), glob.oc);
         radiuses = new HashMap<String, Integer>();
         ui.mainview = this;
     }
@@ -709,7 +709,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
     }
 
     public boolean mousewheel(final Coord c, final int amount) {
-        if (!CustomConfig.isZoom())
+        if (!CustomConfig.current().isZoom())
             return false;
         si = Math.min(8, Math.max(0, si - amount));
         setScale(scales[si]);
@@ -1126,7 +1126,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
                     sc.x -= tilesz.x * 2;
                     drawtile(g, ctc, sc);
                     sc.x += tilesz.x * 2;
-                    if (!CustomConfig.isNewclaim()) {
+                    if (!CustomConfig.current().isNewclaim()) {
                         drawol(g, ctc, sc);
                     }
                     // arksu : выводим тайл под мышью
@@ -1138,10 +1138,10 @@ public class MapView extends Widget implements DTarget, Console.Directory {
             }
         }
 
-        if (CustomConfig.isNewclaim()) {
+        if (CustomConfig.current().isNewclaim()) {
             drawols(g, oc);
         }
-        if (CustomConfig.isGrid()) {
+        if (CustomConfig.current().isGrid()) {
             g.chcolor(new Color(40, 40, 40));
             Coord c1;
             Coord c2;
@@ -1169,12 +1169,12 @@ public class MapView extends Widget implements DTarget, Console.Directory {
         if (curf != null)
             curf.tick("map");
 
-        if (CustomConfig.isShowRadius())
+        if (CustomConfig.current().isShowRadius())
             draweffectradius(g);
         else
             drawplobeffect(g);
 
-        if (CustomConfig.isShowBeast()) {
+        if (CustomConfig.current().isShowBeast()) {
             drawbeastradius(g);
         }
 
@@ -1216,7 +1216,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
             }
         }
 
-        if (CustomConfig.isShowHidden() && CustomConfig.isHideObjects()) {
+        if (CustomConfig.current().isShowHidden() && CustomConfig.current().current().isHideObjects()) {
             g.chcolor(255, 0, 0, 128);
             synchronized (glob.oc) {
                 for (final Gob gob : glob.oc) {
@@ -1347,7 +1347,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
                 curf.tick("draw");
             g.image(mask, Coord.z);
             final long now = System.currentTimeMillis();
-            RootWidget.names_ready = (RootWidget.screenshot && CustomConfig.isSshot_nonames());
+            RootWidget.names_ready = (RootWidget.screenshot && CustomConfig.current().isScreenShotsExcludeNames());
             if (!RootWidget.names_ready) {
                 for (final KinInfo k : kin) {
                     final Tex t = k.rendered();
@@ -1468,7 +1468,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
     }
 
     public void draw(final GOut og) {
-        hsz = CustomConfig.getWindowSize();
+        hsz = CustomConfig.current().getWindowSize();
         sz = hsz.mul(1 / getScale());
         final GOut g = og.reclip(Coord.z, sz);
         g.gl.glPushMatrix();
@@ -1489,7 +1489,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
         map.sendreqs();
         checkplmove();
 //        try {
-        if ((mask.amb = glob.amblight) == null || CustomConfig.isNightVision())
+        if ((mask.amb = glob.amblight) == null || CustomConfig.current().isNightVision())
             mask.amb = new Color(0, 0, 0, 0);
         drawmap(g);
         drawarrows(g);
@@ -1654,7 +1654,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
             unflashol();
         map.sendreqs();
         checkplmove();
-        sz = CustomConfig.getWindowSize();
+        sz = CustomConfig.current().getWindowSize();
 //        mask.UpdateSize(sz);
         checkmappos();
     }

@@ -66,10 +66,10 @@ public class GrowingPlant extends CSprite {
             final GrowingPlant spr = new GrowingPlant(owner, res);
             spr.addnegative();
             final Random rnd = owner.mkrandoom();
-            final int n = CustomConfig.isSimple_plants() ? 1 : num;
+            final int n = CustomConfig.current().isSimple_plants() ? 1 : num;
             for (int i = 0; i < n; i++) {
                 final Coord c;
-                if (CustomConfig.isSimple_plants()) {
+                if (CustomConfig.current().isSimple_plants()) {
                     c = neg.bc.add(neg.bs).sub(5, 5);
                 } else {
                     c = new Coord(rnd.nextInt(neg.bs.x), rnd.nextInt(neg.bs.y)).add(neg.bc);

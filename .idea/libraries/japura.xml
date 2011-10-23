@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="japura">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/japura-1.14.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

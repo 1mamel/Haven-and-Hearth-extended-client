@@ -354,7 +354,7 @@ public class Session {
             final int parent = -1;
             final Object[] args = null;
 
-            if (CustomConfig.isLogServerMessages()) {
+            if (CustomConfig.current().isLogServerMessages()) {
 //                msgClone = msg.clone();
 //                try {
 //                    id = msgClone.uint16();
@@ -366,12 +366,12 @@ public class Session {
 //                }
             }
             if (msg.type != Message.RMSG_TILES) {
-//                if (CustomConfig.logServerMessages)
+//                if (CustomConfig.current().logServerMessages)
 //                    CustomConsole.log("\nMESSAGE TYPE - " + msg.type);
             }
             if (msg.type == Message.RMSG_NEWWDG) {
                 //	Message Logging
-//                if (CustomConfig.logServerMessages) {
+//                if (CustomConfig.current().logServerMessages) {
 //                    CustomConsole.log("\nCREATE\tID: " + id + "\tType: " + type + "\tCoord:" + c + "\tParent: " + parent + "\tArgs: ");
 //                    for (int i = 0; i < args.length; i++)
 //                        CustomConsole.log("|" + i + "| " + args[i] + '\t');
@@ -381,7 +381,7 @@ public class Session {
                 }
             } else if (msg.type == Message.RMSG_WDGMSG) {
                 //	Message Logging
-//                if (CustomConfig.logServerMessages) {
+//                if (CustomConfig.current().logServerMessages) {
 //                    CustomConsole.log("\nMSG\tID: " + id + ' ' /*+ ui.widgets.get(new Integer(id))*/ + "\tType: " + type + "\tArgs: ");
 //                    if (args != null)
 //                        for (int i = 0; i < args.length; i++)
@@ -392,7 +392,7 @@ public class Session {
                 }
             } else if (msg.type == Message.RMSG_DSTWDG) {
                 //	Message Logging
-//                if (CustomConfig.logServerMessages)
+//                if (CustomConfig.current().logServerMessages)
 //                    CustomConsole.log("DESTROY" + '\t' + id + ' ' /*+ ui.widgets.get(new Integer(id))*/);
                 synchronized (uimsgs) {
                     uimsgs.add(msg);
@@ -401,7 +401,7 @@ public class Session {
                 glob.map.invalblob(msg);
             } else if (msg.type == Message.RMSG_GLOBLOB) {
                 //Message Logging
-//                if (CustomConfig.logServerMessages) {
+//                if (CustomConfig.current().logServerMessages) {
 //                    CustomConsole.log("\nGLOBLOB\tID: " + id + ' ' /*+ ui.widgets.get(new Integer(id))*/ + "\tType: " + type + "\tArgs: ");
 //                    if (args != null)
 //                        for (int i = 0; i < args.length; i++)
@@ -411,7 +411,7 @@ public class Session {
             } else if (msg.type == Message.RMSG_PAGINAE) {
                 glob.paginae(msg);
             } else if (msg.type == Message.RMSG_RESID) {
-//                if (CustomConfig.logServerMessages)
+//                if (CustomConfig.current().logServerMessages)
 //                    CustomConsole.log("\nRESID\tID: " + id + "\tName: " + type + "\tVer: " + parent);
                 final int resid = msg.uint16();
                 final String resname = msg.string();
@@ -422,7 +422,7 @@ public class Session {
             } else if (msg.type == Message.RMSG_PARTY) {
                 glob.party.msg(msg);
             } else if (msg.type == Message.RMSG_SFX) {
-                if (!CustomConfig.isSoundOn()) return;        //	Sound effects disabled
+                if (!CustomConfig.current().isSoundOn()) return;        //	Sound effects disabled
                 final Indir<Resource> res = getres(msg.uint16());
                 final double vol = ((double) msg.uint16()) / 256.0;
                 final double spd = ((double) msg.uint16()) / 256.0;
@@ -430,7 +430,7 @@ public class Session {
             } else if (msg.type == Message.RMSG_CATTR) {
                 glob.cattr(msg);
             } else if (msg.type == Message.RMSG_MUSIC) {
-//                if (CustomConfig.logServerMessages) {
+//                if (CustomConfig.current().logServerMessages) {
 //                    CustomConsole.log("\nMUSIC\tName: " + type + "\tVer: " + id);
 //                }
                 final String resnm = msg.string();
@@ -751,8 +751,8 @@ public class Session {
         if (IRC != null) {
             IRC.close();
         }
-        CustomConfig.setRender(true);
-        CustomConfig.save();
+        CustomConfig.current().setRender(true);
+        CustomConfig.current().save();
         sworker.interrupt();
     }
 

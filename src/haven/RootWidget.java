@@ -62,13 +62,13 @@ public class RootWidget extends ConsoleHost {
             } else if (Config.profile && key == '!') {
                 new Profwnd(ui.slen, ui.mainview.mask.prof, "ILM prof");
             } else if (code == KeyEvent.VK_N && ctrl) {
-                CustomConfig.toggleNightvision();
+                CustomConfig.current().toggleNightvision();
             } else if (code == KeyEvent.VK_X && ctrl) {
-                CustomConfig.toggleXray();
+                CustomConfig.current().toggleXray();
             } else if (code == KeyEvent.VK_H && ctrl) {
-                CustomConfig.toggleHideObjects();
+                CustomConfig.current().toggleHideObjects();
             } else if (code == KeyEvent.VK_Y && ctrl) {
-                CustomConfig.toggleRender();
+                CustomConfig.current().toggleRender();
             } else if (code == KeyEvent.VK_Q && alt) {
                 UI.speedget.get().wdgmsg("set", 0);
             } else if (code == KeyEvent.VK_W && alt) {
@@ -78,7 +78,7 @@ public class RootWidget extends ConsoleHost {
             } else if (code == KeyEvent.VK_R && alt) {
                 UI.speedget.get().wdgmsg("set", 3);
             } else if (code == KeyEvent.VK_G && ctrl) {
-                CustomConfig.toggleMapGrid();
+                CustomConfig.current().toggleMapGrid();
             } else if (key == 2 & ctrl) { // CTRL - B
                 BuddyWnd.instance.toggle();
             } else if (key == 20 & ctrl) {  // CTRL - T
@@ -90,7 +90,7 @@ public class RootWidget extends ConsoleHost {
             } else if (code == KeyEvent.VK_COLON) {
                 entercmd();
             } else if (key == '`' || key == '~') {
-                CustomConfig.toggleConsole();
+                CustomConfig.current().toggleConsole();
             } else if (key != 0) {
 //                System.err.println("gk" + (int) key + " ctrl:" + ctrl + " alt:" + alt);
                 if (key != 20 && key != 2) {
@@ -102,18 +102,18 @@ public class RootWidget extends ConsoleHost {
     }
 
     public void draw(final GOut g) {
-        if (screenshot && CustomConfig.isSshot_noui()) {
+        if (screenshot && CustomConfig.current().isScreenShotExcludeUI()) {
             visible = false;
         }
         super.draw(g);
         drawcmd(g, new Coord(20, 580));
-        if (screenshot && (!CustomConfig.isSshot_nonames() || names_ready)) {
+        if (screenshot && (!CustomConfig.current().isScreenShotsExcludeNames() || names_ready)) {
             visible = true;
             screenshot = false;
             try {
-                final Coord s = CustomConfig.getWindowSize();
+                final Coord s = CustomConfig.current().getWindowSize();
                 final String stamp = Utils.sessdate(System.currentTimeMillis());
-                final String ext = CustomConfig.isSshot_compress() ? ".jpg" : ".png";
+                final String ext = CustomConfig.current().isScreenShotsCompressing() ? ".jpg" : ".png";
                 final File f = new File("screenshots/SS_" + stamp + ext);
                 f.mkdirs();
                 Screenshot.writeToFile(f, s.x, s.y);

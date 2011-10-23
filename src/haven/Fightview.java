@@ -34,9 +34,9 @@ public class Fightview extends Widget {
     static final Tex bg = Resource.loadtex("gfx/hud/bosq");
     static final int height = 5;
     static final int ymarg = 5;
-    static final Coord cavac = new Coord(CustomConfig.getWindowWidth() - 100, 10);
-    static final Coord cgivec = new Coord(CustomConfig.getWindowWidth() - 135, 10);
-    static final Coord meterc = new Coord(CustomConfig.getWindowCenter().x - 85, 10);
+    static final Coord cavac = new Coord(CustomConfig.current().getWindowWidth() - 100, 10);
+    static final Coord cgivec = new Coord(CustomConfig.current().getWindowWidth() - 135, 10);
+    static final Coord meterc = new Coord(CustomConfig.current().getWindowCenter().x - 85, 10);
     final LinkedList<Relation> lsrel = new LinkedList<Relation>();
     public Relation current = null;
     public Indir<Resource> blk, batk, iatk;
@@ -91,7 +91,7 @@ public class Fightview extends Widget {
     static {
         Widget.addtype("frv", new WidgetFactory() {
             public Widget create(@NotNull final Coord c, @NotNull final Widget parent, final Object[] args) {
-                return (new Fightview(new Coord(CustomConfig.getWindowWidth() - 10, c.y), parent));
+                return (new Fightview(new Coord(CustomConfig.current().getWindowWidth() - 10, c.y), parent));
             }
         });
     }
@@ -124,10 +124,10 @@ public class Fightview extends Widget {
     }
 
     public void draw(final GOut g) {
-        curava.c.setX(CustomConfig.getWindowWidth() - 100);
-        curgive.c.setX(CustomConfig.getWindowWidth() - 135);
-        comwdg.c.setX(CustomConfig.getCenterX() - 85);
-        c.setX(CustomConfig.getWindowWidth() - 10 - bg.sz().x);
+        curava.c.setX(CustomConfig.current().getWindowWidth() - 100);
+        curgive.c.setX(CustomConfig.current().getWindowWidth() - 135);
+        comwdg.c.setX(CustomConfig.current().getCenterX() - 85);
+        c.setX(CustomConfig.current().getWindowWidth() - 10 - bg.sz().x);
         int y = 0;
         for (final Relation rel : lsrel) {
             if (rel == current) {

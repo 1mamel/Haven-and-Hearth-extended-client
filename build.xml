@@ -1,10 +1,10 @@
-<?xml version="1.0" ?>
+<?xml version="1.0"  encoding="UTF-8"?>
+<project name="haven" basedir="." default="all">
 
-<project name="haven" default="all">
+    <property file="haven.properties"/>
 
     <!--Uncomment the following property if no tests compilation is needed -->
     <property name="skip.tests" value="true"/>
-
 
     <!-- Compiler options -->
 
@@ -36,6 +36,7 @@
     </patternset>
     <patternset id="library.patterns">
         <include name="*.zip"/>
+        <include name="*.apk"/>
         <include name="*.war"/>
         <include name="*.egg"/>
         <include name="*.ear"/>
@@ -413,7 +414,7 @@
     <target name="update-zips" depends="signer, update-zips-all"/>
 
     <target name="update-zips-all"
-                depends="update-zips-patch, update-zips-linux, update-zips-windows, update-zips-macosx"/>
+            depends="update-zips-patch, update-zips-linux, update-zips-windows, update-zips-macosx"/>
 
     <target name="update-zips-patch">
         <zip destfile="${haven.archives.dir}/update-patch-current.zip" basedir="${haven.dist.dir}"

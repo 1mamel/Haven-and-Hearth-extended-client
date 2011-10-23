@@ -176,15 +176,15 @@ public class MainFrame extends Frame implements Runnable, FSMan {
     public void run() {
         addWindowListener(new WindowAdapter() {
             public void windowClosing(final WindowEvent e) {
-//                if (CustomConfig.isSaveable()){
-                CustomConfig.save();
+//                if (CustomConfig.current().isSaveable()){
+                CustomConfig.current().save();
 //                }
                 g.interrupt();
             }
         });
         addComponentListener(new ComponentAdapter() {
             public void componentResized(final ComponentEvent evt) {
-                CustomConfig.updateWindowSize(getWidth() - insetsSize.width, getHeight() - insetsSize.height);
+                CustomConfig.current().updateWindowSize(getWidth() - insetsSize.width, getHeight() - insetsSize.height);
             }
         });
         final Thread ui = new HackThread(panel, "Haven UI thread");
@@ -269,9 +269,9 @@ public class MainFrame extends Frame implements Runnable, FSMan {
         Config.cmdline(args);
         final ThreadGroup threadGroup = HackThread.tg();
         setupres();
-        final MainFrame mainFrame = new MainFrame(CustomConfig.getWindowSize(), threadGroup);
+        final MainFrame mainFrame = new MainFrame(CustomConfig.current().getWindowSize(), threadGroup);
         //noinspection UnusedParameters
-        CustomConfig.setSaveable(true);
+        CustomConfig.current().setSaveable(true);
         if (Config.fullscreen)
             mainFrame.setfs();
         if (threadGroup instanceof haven.error.ErrorHandler) {

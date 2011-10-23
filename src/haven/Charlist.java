@@ -124,7 +124,7 @@ public class Charlist extends Widget {
                 for (final Char c : chars) {
                     if (sender == c.plb) {
                         wdgmsg("play", c.name);
-                        CustomConfig.setActiveCharacter(c.name);
+                        CustomConfig.current().setActiveCharacter(c.name);
                         MainFrame.setWindowTitle(c.name);
                         final SlenHud hud = ui.slen;//parent.findchild(SlenHud.class);
                         if (hud != null) {

@@ -90,7 +90,7 @@ public class Music {
                     seq.setSequence(res.layer(MusicL.class).getSeq());
                     synth.open();
                     seq.getTransmitter().setReceiver(synth.getReceiver());
-                    setVolume(CustomConfig.getMusicVolume());
+                    setVolume(CustomConfig.current().getMusicVolume());
                 } catch (MidiUnavailableException e) {
                     return;
                 } catch (InvalidMidiDataException e) {
