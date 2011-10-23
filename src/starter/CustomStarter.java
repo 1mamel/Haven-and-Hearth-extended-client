@@ -20,7 +20,7 @@ import java.awt.event.FocusListener;
  */
 public class CustomStarter {
 
-    private static final JFrame settingsFrame = new JFrame("<class name>");
+    private static final JFrame settingsFrame = new JFrame("Settings");
 
     public static void main(final String args[]) {
         final SettingsForm settingsForm = new SettingsForm(new SettingsForm.Callback() {
